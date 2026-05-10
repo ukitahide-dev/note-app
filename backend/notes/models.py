@@ -1,6 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+from users.models import User
+
 
 class Note(models.Model):
     title = models.CharField(max_length=100)

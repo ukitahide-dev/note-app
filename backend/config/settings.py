@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # ---- 追記----
     'rest_framework',
     'notes',  # 自分で作成したnotesアプリ(フォルダ)  python manage.py startapp notes
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# ---- 追記 ----
+AUTH_USER_MODEL = 'users.User'  # Django標準Userじゃなくusers.User を使う
 
 
 # Internationalization
