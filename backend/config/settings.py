@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'notes',  # 自分で作成したnotesアプリ(フォルダ)  python manage.py startapp notes
     'users',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 

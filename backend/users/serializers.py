@@ -13,8 +13,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
+    def create(self, validated_data):  # validated_data は、バリデーション済みの安全なデータ。
+        user = User.objects.create_user(  # create_user は内部でpasswordをハッシュ化してくれる
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password']
