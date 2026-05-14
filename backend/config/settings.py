@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'notes',  # 自分で作成したnotesアプリ(フォルダ)  python manage.py startapp notes
     'users',
     'rest_framework_simplejwt.token_blacklist',
+    "corsheaders",
 ]
 
 
@@ -56,6 +57,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # 追記
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -129,6 +131,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+
+# ---- 追記 ----
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 
 # Static files (CSS, JavaScript, Images)
