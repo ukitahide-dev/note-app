@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useNavigate } from 'react-router-dom'
 
 import { login } from "../api/authApi";
 
@@ -11,7 +12,7 @@ import styles from "./LoginPage.module.css";
 export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+    const navigate = useNavigate();
 
     const handleLogin = async (
         e: React.SyntheticEvent
@@ -26,6 +27,9 @@ export default function LoginPage() {
             localStorage.setItem("refresh", data.refresh);
 
             alert("ログイン成功");
+            navigate("/notes");  // NotesPage.tsxへ
+
+
 
         } catch (error) {
             console.error(error);

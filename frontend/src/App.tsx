@@ -9,6 +9,7 @@ import './App.css'
 // import NoteDetail from './pages/NoteDetail'
 
 import LoginPage from './features/auth/pages/LoginPage'
+import NotesPage from './features/notes/pages/NotesPage'
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />}/>
                 <Route path="/login" element={<LoginPage />} />
+
+                <Route path="/notes" element={<NotesPage />} />
                     {/* <Route path="/register" element={<RegisterPage />} /> */}
                     {/* <Route path="/" element={<Layout />}> */}
                         {/* <Route index element={<Home />} /> */}
