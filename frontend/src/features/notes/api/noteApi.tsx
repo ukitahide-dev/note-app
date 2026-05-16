@@ -18,3 +18,29 @@ export const getNotes = async () =>  {
     return res.data;
 
 }
+
+
+
+
+// ノートを投稿する
+export const createNote = async (title: string, content: string) => {
+    const token = localStorage.getItem("access");
+
+    const res = await api.post(
+        "/notes/",
+        {
+            title,
+            content,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+    );
+
+    return res.data;
+
+
+}

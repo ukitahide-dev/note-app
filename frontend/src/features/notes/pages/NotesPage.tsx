@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
+
+// ----api----
 import { getNotes } from "../api/noteApi";
+
+
+// ----components----
+import NoteForm from "../components/NoteForm/Noteform";
 
 
 
@@ -8,6 +14,8 @@ type Note = {
         title: string,
         content: string,
     };
+
+
 
 
 export default function NotesPage() {
@@ -35,6 +43,9 @@ export default function NotesPage() {
 
     return (
         <div>
+            <NoteForm />
+
+
             {notes.map((note) => (
                 <div key={note.id}>
                     <h3>{note.title}</h3>

@@ -9,10 +9,23 @@ export default function NoteForm() {
 
 
 
+    const handleSubmit = async (
+        e: React.SyntheticEvent
+    ) => {
+
+        e.preventDefault();
+
+        console.log(title);
+        console.log(content);
+
+    }
+
+
+
 
     return (
 
-        <form action="">
+        <form onSubmit={handleSubmit}>
             <div>
                 <input
                     type="text"
