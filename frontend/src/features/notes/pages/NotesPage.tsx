@@ -8,6 +8,11 @@ import { getNotes } from "../api/noteApi";
 import NoteForm from "../components/NoteForm/Noteform";
 
 
+// ----css----
+import styles from "./NotesPage.module.css";
+import { useNavigate } from "react-router-dom";
+
+
 
 type Note = {
         id: number,
@@ -21,8 +26,10 @@ type Note = {
 export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
-
+    const navigate = useNavigate();
     
+
+
     const handleAddNote = (
         newNote: Note
     ) => {
@@ -54,18 +61,22 @@ export default function NotesPage() {
 
 
     return (
-        <div>
+        <div className={styles.container}>
             <NoteForm
                 onAddNote={handleAddNote}
             />
 
 
-            {notes.map((note) => (
-                <div key={note.id}>
-                    <h3>{note.title}</h3>
-                    <p>{note.content}</p>
-                </div>
-            ))}
+            <div className={styles.notesContainer}>
+                {notes.map((note) => (
+                    <div key={note.id} className={styles.card} onClick={() => navigate(`/notes/${note.id}`)}>
+                        <h3>{note.title}</h3>
+                        <p>{note.content}</p>
+                    </div>
+
+                ))}
+            </div>
+
         </div>
     )
 

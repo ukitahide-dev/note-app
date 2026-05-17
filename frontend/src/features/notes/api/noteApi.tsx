@@ -22,6 +22,26 @@ export const getNotes = async () =>  {
 
 
 
+// ノート詳細を取得する
+export const getNote = async(id: number) => {
+    const token = localStorage.getItem("access");
+
+    const res = await api.get(
+        `/notes/${id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    return res.data;
+
+
+}
+
+
+
 // ノートを投稿する
 export const createNote = async (title: string, content: string) => {
     const token = localStorage.getItem("access");

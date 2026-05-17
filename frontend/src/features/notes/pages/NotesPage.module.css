@@ -1,0 +1,26 @@
+.container {
+    padding: 32px;
+}
+
+
+.notesContainer {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+
+.card {
+    width: 250px;
+    flex-shrink: 0;  /* スペースが足りない場合でも、250pxから絶対縮まないようにする*/
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.08);
+    word-break: break-word;
+}
+
+
+
