@@ -1,10 +1,28 @@
 import { useState } from "react";
+import { createNote } from "../../api/noteApi";
 
 
 
-export default function NoteForm() {
+type Note = {
+        id: number;
+        title: string;
+        content: string;
+    };
+
+
+// Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
+type Props = {
+    onAddNote: (
+        newNote: Note   // newNoteという変数はNote型という意味
+    ) => void;
+};
+
+
+
+export default function NoteForm({onAddNote}: Props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
 
 
 
@@ -15,8 +33,23 @@ export default function NoteForm() {
 
         e.preventDefault();
 
-        console.log(title);
-        console.log(content);
+        try {
+
+            const newNote = await createNote(title, content);
+
+            onAddNote(newNote);
+
+            alert("投稿成功");
+
+            setTitle("");
+            setContent("");
+
+    } catch (error) {
+
+            console.error(error.response.data)
+
+            alert("投稿失敗");
+        }
 
     }
 

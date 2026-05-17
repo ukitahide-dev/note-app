@@ -22,6 +22,18 @@ export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
 
+    
+    const handleAddNote = (
+        newNote: Note
+    ) => {
+
+        setNotes((prev) => [
+            newNote,
+            ...prev
+        ]);
+    };
+
+
     useEffect(() => {
         const fetchNotes = async () => {
 
@@ -43,7 +55,9 @@ export default function NotesPage() {
 
     return (
         <div>
-            <NoteForm />
+            <NoteForm
+                onAddNote={handleAddNote}
+            />
 
 
             {notes.map((note) => (
