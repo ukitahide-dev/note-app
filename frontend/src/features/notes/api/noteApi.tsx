@@ -61,6 +61,21 @@ export const createNote = async (title: string, content: string) => {
     );
 
     return res.data;
+}
+
+
+
+// ノートのタイトル内容を変更する
+export const updateNote = async(id: number, title: string, content: string) => {
+    const res = await api.patch(
+        "/notes/",
+        {
+            title,
+            content,
+        }
+    );
+
+    return res.data;
 
 
 }
