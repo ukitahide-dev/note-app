@@ -62,7 +62,7 @@ export default function NotesPage() {
     return (
 
         <>
-            <Header />
+            {/* <Header /> */}
 
             <div className={styles.container}>
                 <NoteForm

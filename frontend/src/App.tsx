@@ -4,10 +4,13 @@ import './App.css'
 
 
 
-
+// ---- features ----
 import LoginPage from './features/auth/pages/LoginPage'
 import NotesPage from './features/notes/pages/NotesPage'
 import NoteDetailPage from './features/notes/pages/NoteDetailPage'
+
+// ---- shared ----
+import Layout from './shared/layout/Layout'
 
 
 function App() {
@@ -17,8 +20,16 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />}/>
                 <Route path="/login" element={<LoginPage />} />
-
-                <Route path="/notes" element={<NotesPage />} />
+                <Route
+                    path="/notes"
+                    element={
+                        <Layout>
+                            <NotesPage />
+                        </Layout>
+                    }
+                />
+                
+                {/* <Route path="/notes" element={<NotesPage />} /> */}
                 <Route path="/notes/:id" element={<NoteDetailPage />} />
                     {/* <Route path="/register" element={<RegisterPage />} /> */}
                     {/* <Route path="/" element={<Layout />}> */}
