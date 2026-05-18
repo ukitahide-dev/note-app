@@ -67,11 +67,17 @@ export const createNote = async (title: string, content: string) => {
 
 // ノートのタイトル内容を変更する
 export const updateNote = async(id: number, title: string, content: string) => {
+    const token = localStorage.getItem("access");
     const res = await api.patch(
-        "/notes/",
+        `/notes/${id}/`,
         {
             title,
             content,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         }
     );
 

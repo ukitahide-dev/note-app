@@ -1,6 +1,11 @@
+// ---- react ----
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getNote } from "../api/noteApi";
+
+
+
+// ---- api ----
+import { getNote, updateNote } from "../api/noteApi";
 
 
 //  ---- css ----
@@ -43,10 +48,23 @@ export default function NoteDetail() {
 
 
 
+    const handleClose = async () => {
+        try {
+            await updateNote(Number(id), title, content);
+            navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
+        } catch (error) {
+            console.error(error);
+            alert("保存失敗");
+        }
+
+    }
+
+
+
     return (
         <div
             className={styles.overlay}
-            onClick={() => navigate("/notes")}
+            onClick={handleClose}
         >
 
             <div
@@ -69,7 +87,7 @@ export default function NoteDetail() {
 
                 <button
                     className={styles.button}
-                    onClick={() => navigate("/notes")}
+                    onClick={handleClose}
                 >
                     閉じる
                 </button>
