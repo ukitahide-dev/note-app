@@ -4,12 +4,10 @@ import './App.css'
 
 
 
-// import Layout from './Layout'
-// import Home from './pages/Home'
-// import NoteDetail from './pages/NoteDetail'
 
 import LoginPage from './features/auth/pages/LoginPage'
 import NotesPage from './features/notes/pages/NotesPage'
+import NoteDetailPage from './features/notes/pages/NoteDetailPage'
 
 
 function App() {
@@ -21,7 +19,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
 
                 <Route path="/notes" element={<NotesPage />} />
-                {/* <Route path="/notes/:id" element={} /> */}
+                <Route path="/notes/:id" element={<NoteDetailPage />} />
                     {/* <Route path="/register" element={<RegisterPage />} /> */}
                     {/* <Route path="/" element={<Layout />}> */}
                         {/* <Route index element={<Home />} /> */}

@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { getNote } from "../api/noteApi";
 
 
+//  ---- css ----
+import styles from "./NoteDetailPage.module.css";
+
 
 
 type Note = {
@@ -15,15 +18,21 @@ type Note = {
 
 export default function NoteDetail() {
     const { id } = useParams();
+    console.log(`id: ${id}`);
+
     const navigate = useNavigate();
 
     const [note, setNote] = useState<Note | null>(null);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
 
-    
+
     useEffect(() => {
         const fetchNote = async () => {
             const data = await getNote(Number(id));
             setNote(data);
+            setTitle(data.title);
+            setContent(data.content);
         };
 
         fetchNote();
@@ -36,35 +45,37 @@ export default function NoteDetail() {
 
     return (
         <div
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0,0,0,0.5)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }}
+            className={styles.overlay}
             onClick={() => navigate("/notes")}
         >
+
             <div
-                style={{
-                    background: "white",
-                    width: 500,
-                    padding: 20,
-                    borderRadius: 10,
-                }}
+                className={styles.modal}
                 onClick={(e) => e.stopPropagation()}
             >
-                <h2>{note.title}</h2>
-                <p>{note.content}</p>
 
-                <button onClick={() => navigate("/notes")}>
+                <input
+                    className={styles.titleInput}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+
+                <textarea
+                    className={styles.contentInput}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                />
+
+
+                <button
+                    className={styles.button}
+                    onClick={() => navigate("/notes")}
+                >
                     閉じる
                 </button>
+
             </div>
+
         </div>
     );
 }
