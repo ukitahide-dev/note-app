@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createNote } from "../../api/noteApi";
 
 
@@ -33,8 +33,8 @@ export default function NoteForm({ onAddNote }: Props) {
     const [content, setContent] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null);  // textarea要素を保存する箱を作る
-
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);  // useRefは値を保存する箱を作る。ここでは、textarea要素を保存する箱を作っている。
+    const formRef = useRef<HTMLFormElement | null>(null);
 
 
 
@@ -66,7 +66,7 @@ export default function NoteForm({ onAddNote }: Props) {
 
 
     const handleContentChange = (
-        e: React.ChangeEvent<HTMLTextAreaElement>
+        e: React.ChangeEvent<HTMLTextAreaElement>  // eはtextareaで発生したchangeイベントであるという型定義。
     ) => {
 
         setContent(e.target.value);
@@ -78,6 +78,38 @@ export default function NoteForm({ onAddNote }: Props) {
     };
 
 
+    // useEffectは画面レンダリング後(DOM要素完成後)に実行される。だから、ここにaddEventListenerなどの副作用処理を書く。
+    useEffect(() => {
+
+        const handleClickOutside = (
+            e: MouseEvent
+        ) => {
+
+            // form存在する &&
+            // クリック場所がform外
+            if (
+                formRef.current &&
+                !formRef.current.contains(e.target as Node)
+            ) {
+                setIsExpanded(false);
+                console.log(`formRef.current: ${formRef.current}`);
+                console.log(e.target);
+            }
+            console.log(e.target);
+        };
+
+
+
+        document.addEventListener("mousedown", handleClickOutside);  // document全体でmousedownを監視する。mousedownはマウスを押した瞬間のこと。画面どこクリックしてもhandleClickOutsideを実行する。
+
+
+        // useEffectのreturnはクリーンアップの役割。このコンポーネントが消えるときに実行される。mousedownイベントを解除する。これを書かないと、このNoteFormコンポーネントが消えた後も、mousedownイベントが登録されたままになってしまう。
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+
+    }, []);  // []は初回レンダリング時の時だけ、useEffect内を実行するという意味。
+
 
 
 
@@ -86,6 +118,7 @@ export default function NoteForm({ onAddNote }: Props) {
     return (
 
         <form
+            ref={formRef}
             onSubmit={handleSubmit}
             className={styles.form}
         >
@@ -108,9 +141,7 @@ export default function NoteForm({ onAddNote }: Props) {
                 ref={textareaRef}   // こう書くと、textarea実物をtextareaRef.currentで取得できる
                 placeholder="ノートを入力..."
                 value={content}
-                onFocus={() =>
-                    setIsExpanded(true)
-                }
+                onFocus={() => setIsExpanded(true)}
                 onChange={handleContentChange}
                 className={styles.contentInput}
             />
