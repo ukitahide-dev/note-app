@@ -37,6 +37,7 @@ export default function Layout({ children }: Props) {  // 分割代入でchildre
 
                 <Sidebar isOpen={isOpen}/>
 
+                {/* App.tsxで <Layout>〜</Layout> の中に書いたものが children に入る */}
                 <main className={styles.main}>
                     {children}
                 </main>

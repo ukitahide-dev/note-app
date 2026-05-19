@@ -7,7 +7,7 @@ import { getNotes } from "../api/noteApi";
 
 // ----components----
 import NoteForm from "../components/NoteForm/Noteform";
-import Header from "../../../shared/components/Header/Header";
+// import Header from "../../../shared/components/Header/Header";
 
 
 // ----css----
