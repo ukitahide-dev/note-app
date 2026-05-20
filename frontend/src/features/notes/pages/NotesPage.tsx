@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+
+
+// ---- drag & drop ----
+import {DndContext, closestCenter,} from "@dnd-kit/core";
+import {arrayMove, SortableContext, rectSortingStrategy,} from "@dnd-kit/sortable";
+
 
 // ----api----
 import { getNotes } from "../api/noteApi";
@@ -7,6 +13,7 @@ import { getNotes } from "../api/noteApi";
 
 // ----components----
 import NoteForm from "../components/NoteForm/Noteform";
+import SortableNoteCard from "../components/SortableNoteCard/SortableNoteCard";
 // import Header from "../../../shared/components/Header/Header";
 
 
@@ -27,7 +34,7 @@ type Note = {
 export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
 
@@ -58,19 +65,60 @@ export default function NotesPage() {
     }, [])
 
 
+    // ドラッグ終了時に実行される関数
+    const handleDragEnd = (event: any) => {
+
+        const { active, over } = event;  // event.active, event.overを分割代入で取得。active: ドラッグしてた要素。over: 上に乗った(移動先の)相手。
+
+        if (!over) return;  // 上に乗った相手がいないなら終了
+        if (active.id === over.id) return;  // 同じ場所なら何もしない
+
+        setNotes((prev) => {  // prevは更新直前の最新のstate
+
+            const oldIndex = prev.findIndex((note) => note.id === active.id);
+            const newIndex = prev.findIndex((note) => note.id === over.id);
+
+            return arrayMove(
+                prev,  // 並び替え対象の配列
+                oldIndex,  // 移動させたい要素の現在位置
+                newIndex  // 移動先位置
+            );
+        });
+    };
+
+
 
     return (
 
         <>
-            {/* <Header /> */}
 
             <div className={styles.container}>
-                <NoteForm
-                    onAddNote={handleAddNote}
-                />
+                <NoteForm onAddNote={handleAddNote}/>
+
+                <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}  // ドラッグ修了時に実行される
+                >
+
+                    <SortableContext  // SortableContextは並び替え機能。
+                        items={notes.map((note) => note.id)}  // 並び替え対象はid一覧という意味。
+                        strategy={rectSortingStrategy}  // グリッド並び替え。カードUI向け。
+                    >
+                        <div className={styles.notesContainer}>
+                            {notes.map((note) => (
+                                <SortableNoteCard
+                                    key={note.id}
+                                    note={note}
+                                />
+                            ))}
+                        </div>
+
+                    </SortableContext>
+
+                </DndContext>
 
 
-                <div className={styles.notesContainer}>
+                {/* <div className={styles.notesContainer}>
                     {notes.map((note) => (
                         <div key={note.id} className={styles.card} onClick={() => navigate(`/notes/${note.id}`)}>
                             <h3>{note.title}</h3>
@@ -78,7 +126,7 @@ export default function NotesPage() {
                         </div>
 
                     ))}
-                </div>
+                </div> */}
 
             </div>
         </>
