@@ -1,5 +1,6 @@
+// ---- react ----
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+
 
 
 // ---- drag & drop ----
@@ -14,7 +15,7 @@ import { getNotes } from "../api/noteApi";
 // ----components----
 import NoteForm from "../components/NoteForm/Noteform";
 import SortableNoteCard from "../components/SortableNoteCard/SortableNoteCard";
-// import Header from "../../../shared/components/Header/Header";
+
 
 
 // ----css----
@@ -116,17 +117,6 @@ export default function NotesPage() {
                     </SortableContext>
 
                 </DndContext>
-
-
-                {/* <div className={styles.notesContainer}>
-                    {notes.map((note) => (
-                        <div key={note.id} className={styles.card} onClick={() => navigate(`/notes/${note.id}`)}>
-                            <h3>{note.title}</h3>
-                            <p>{note.content}</p>
-                        </div>
-
-                    ))}
-                </div> */}
 
             </div>
         </>
