@@ -83,5 +83,25 @@ export const updateNote = async(id: number, title: string, content: string) => {
 
     return res.data;
 
+}
 
+
+
+
+export const moveToTrash = async(id: Number) => {
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `/notes/${id}`,
+        {
+            is_deleted: true,
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return res.data;
 }

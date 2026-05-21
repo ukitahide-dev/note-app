@@ -6,6 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Note
 from .serializers import NoteSerializer
 
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+
 
 
 class NoteViewSet(ModelViewSet):
@@ -14,7 +18,7 @@ class NoteViewSet(ModelViewSet):
 
 
     def get_queryset(self):  # get_querysetは、どのデータを返すか決める
-        return Note.objects.filter(user=self.request.user)
+        return Note.objects.filter(user=self.request.user, is_deleted=False)
 
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所
@@ -22,5 +26,12 @@ class NoteViewSet(ModelViewSet):
 
 
 
+
+    @action(detail=False, methods=["get"])
+    def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
+        notes = Note.objects.filter(user=request.user, is_deleted=True)
+        serializer = self.get_serializer(notes, many=True)
+
+        return Response(serializer.data)
 
 
