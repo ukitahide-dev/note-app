@@ -28,9 +28,13 @@ function App() {
                         </Layout>
                     }
                 />
-                
+
                 {/* <Route path="/notes" element={<NotesPage />} /> */}
                 <Route path="/notes/:id" element={<NoteDetailPage />} />
+
+
+
+                
                     {/* <Route path="/register" element={<RegisterPage />} /> */}
                     {/* <Route path="/" element={<Layout />}> */}
                         {/* <Route index element={<Home />} /> */}
