@@ -35,6 +35,7 @@ type Note = {
 export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     // const navigate = useNavigate();
 
 
@@ -110,6 +111,8 @@ export default function NotesPage() {
                                 <SortableNoteCard
                                     key={note.id}
                                     note={note}
+                                    openMenuId={openMenuId}
+                                    setOpenMenuId={setOpenMenuId}
                                 />
                             ))}
                         </div>

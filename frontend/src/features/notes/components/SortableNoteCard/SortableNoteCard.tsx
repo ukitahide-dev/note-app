@@ -8,8 +8,9 @@ import {
     CSS,
 } from "@dnd-kit/utilities";
 
-import styles from "../../pages/NotesPage.module.css";
+// import styles from "../../pages/NotesPage.module.css";
 import cardStyles from "./SortableNoteCard.module.css";
+import { useState } from "react";
 
 
 type Note = {
@@ -20,11 +21,22 @@ type Note = {
 
 type Props = {
     note: Note;
+    openMenuId: number | null;
+
+    setOpenMenuId:
+        React.Dispatch<
+            React.SetStateAction<
+                number | null
+            >
+        >;
 };
 
 
 
-export default function SortableNoteCard({ note }: Props) {
+
+
+export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Props) {
+    // const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     // 分割代入で、useSortableが取得したものを取り出している。
@@ -39,6 +51,7 @@ export default function SortableNoteCard({ note }: Props) {
     });
 
 
+    // const isMenuOpen = openMenuId === note.id;
 
     const style = {
         transform: CSS.Transform.toString(
@@ -51,9 +64,9 @@ export default function SortableNoteCard({ note }: Props) {
 
     return (
         <div
+            className={cardStyles.card}
             ref={setNodeRef}
             style={style}
-            className={styles.card}
             onClick={() => navigate(`/notes/${note.id}`)}
         >
 
@@ -67,6 +80,45 @@ export default function SortableNoteCard({ note }: Props) {
 
             <h3>{note.title}</h3>
             <p>{note.content}</p>
+
+            <button
+                className={cardStyles.menuButton}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenuId((prev) =>
+                        prev === note.id ? null : note.id
+                    );
+                }}
+            >
+                ⋮
+            </button>
+
+            {/* menu */}
+            {openMenuId === note.id && (
+
+                <div
+                    className={cardStyles.menu}
+                    onClick={(e) =>e.stopPropagation()}
+                >
+
+                    <button>
+                        ラベル編集
+                    </button>
+
+                    <button>
+                        色変更
+                    </button>
+
+                    <button>
+                        ピン留め
+                    </button>
+
+                    <button>
+                        削除
+                    </button>
+
+                </div>
+            )}
 
         </div>
 

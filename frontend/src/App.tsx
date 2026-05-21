@@ -8,9 +8,13 @@ import './App.css'
 import LoginPage from './features/auth/pages/LoginPage'
 import NotesPage from './features/notes/pages/NotesPage'
 import NoteDetailPage from './features/notes/pages/NoteDetailPage'
+import TrashNotesPage from './features/notes/pages/TrashNotesPage'
+
+
 
 // ---- shared ----
 import Layout from './shared/layout/Layout'
+
 
 
 function App() {
@@ -28,13 +32,21 @@ function App() {
                         </Layout>
                     }
                 />
+                <Route
+                    path="/notes/trash"
+                    element={
+                        <Layout>
+                            <TrashNotesPage />
+                        </Layout>
+                    }
+                />
 
                 {/* <Route path="/notes" element={<NotesPage />} /> */}
                 <Route path="/notes/:id" element={<NoteDetailPage />} />
 
 
 
-                
+
                     {/* <Route path="/register" element={<RegisterPage />} /> */}
                     {/* <Route path="/" element={<Layout />}> */}
                         {/* <Route index element={<Home />} /> */}

@@ -1,5 +1,6 @@
 
 // ---- css ----
+import { useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 
 
@@ -11,6 +12,7 @@ type Props = {
 
 
 export default function Sidebar({ isOpen }: Props) {
+    const navigate = useNavigate();
 
     return (
 
@@ -22,7 +24,7 @@ export default function Sidebar({ isOpen }: Props) {
             }
         >
 
-            <div className={styles.item}>
+            <div className={styles.item} onClick={() => navigate("/notes")}>
                 📝
 
                 {isOpen && (
@@ -30,7 +32,7 @@ export default function Sidebar({ isOpen }: Props) {
                 )}
             </div>
 
-            <div className={styles.item}>
+            <div className={styles.item} onClick={() => navigate("/notes/trash")}>
                 🗑
 
                 {isOpen && (

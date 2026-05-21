@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 
 // ---- api ----
-import { getTrashNotes } from "../api/noteApi";
+import { deleteNoteForever, getTrashNotes, restoreNote } from "../api/noteApi";
 
 
 
@@ -35,6 +35,35 @@ export default function TrashNotesPage() {
         fetchTrashNotes();
 
     }, []);
+
+
+
+
+    const handleRestore = async (id: number) => {
+        try {
+            await restoreNote(id);
+            setNotes((prev) =>
+                prev.filter((note) => note.id !== id)
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteNoteForever(id);
+
+            setNotes((prev) =>
+                prev.filter((note) => note.id !== id)
+            );
+
+        } catch(error) {
+            console.error(error);
+        }
+    }
 
 
 
