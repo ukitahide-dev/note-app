@@ -105,3 +105,21 @@ export const moveToTrash = async(id: Number) => {
 
     return res.data;
 }
+
+
+
+// ゴミ箱に入れたノートを取得する
+export const getTrashNotes = async () => {
+    const token = localStorage.getItem("access");
+
+    const res = await api.get(
+        "/notes/trash",
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return res.data;
+}
