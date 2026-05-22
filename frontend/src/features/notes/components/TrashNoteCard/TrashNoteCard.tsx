@@ -1,9 +1,11 @@
 
-
+// ---- react ----
+import { useState } from "react";
 
 
 // ---- shared ui ----
 import Card from "../../../../shared/ui/Card/Card";
+import ConfirmModal from "../../../../shared/ui/ConfirmModal/ConfirmModal";
 
 
 
@@ -39,8 +41,12 @@ export default function TrashNoteCard({
     onDelete,
 }: Props) {
 
-    return (
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+
+    return (
+        <>
         <Card className={styles.trashCard}>
             <h3>{note.title}</h3>
             <p>{note.content}</p>
@@ -48,10 +54,23 @@ export default function TrashNoteCard({
                 <button onClick={() => onRestore(note.id)}>
                     復元
                 </button>
-                <button onClick={() => onDelete(note.id)}>
+                <button onClick={() => setIsModalOpen(true)}>
                     完全削除
                 </button>
             </div>
         </Card>
+
+        <ConfirmModal
+            isOpen={isModalOpen}
+            title="本当に削除しますか？"
+            message="この操作は取り消せません。"
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={() => {
+                onDelete(note.id);
+                setIsModalOpen(false);
+            }}
+        />
+
+        </>
     );
 }

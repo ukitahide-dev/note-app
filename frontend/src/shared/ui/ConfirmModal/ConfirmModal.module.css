@@ -1,0 +1,41 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.modal {
+    width: 320px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 24px;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.cancelButton {
+    padding: 8px 14px;
+}
+
+.confirmButton {
+    padding: 8px 14px;
+
+    background: crimson;
+    color: white;
+}
