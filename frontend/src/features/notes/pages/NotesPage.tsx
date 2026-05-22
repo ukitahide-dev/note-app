@@ -9,7 +9,7 @@ import {arrayMove, SortableContext, rectSortingStrategy,} from "@dnd-kit/sortabl
 
 
 // ----api----
-import { getNotes } from "../api/noteApi";
+import { getNotes, moveToTrash } from "../api/noteApi";
 
 
 // ----components----
@@ -89,6 +89,23 @@ export default function NotesPage() {
     };
 
 
+    
+
+    const handleMoveToTrash = async (id: number) => {
+        try {
+            await moveToTrash(id);
+            setNotes((prev) =>
+                prev.filter(
+                    (note) => note.id !== id
+                )
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
+
 
     return (
 
@@ -113,6 +130,7 @@ export default function NotesPage() {
                                     note={note}
                                     openMenuId={openMenuId}
                                     setOpenMenuId={setOpenMenuId}
+                                    onMoveToTrash={handleMoveToTrash}
                                 />
                             ))}
                         </div>

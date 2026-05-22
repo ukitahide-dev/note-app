@@ -12,6 +12,10 @@ import styles from "./TrashNoteCard.module.css"
 
 
 
+
+// 親: TrashNotesPage.tsx
+
+
 type Note = {
     id: number;
     title: string;
@@ -38,31 +42,16 @@ export default function TrashNoteCard({
     return (
 
         <Card className={styles.trashCard}>
-
             <h3>{note.title}</h3>
-
             <p>{note.content}</p>
-
             <div className={styles.actions}>
-
-                <button
-                    onClick={() =>
-                        onRestore(note.id)
-                    }
-                >
+                <button onClick={() => onRestore(note.id)}>
                     復元
                 </button>
-
-                <button
-                    onClick={() =>
-                        onDelete(note.id)
-                    }
-                >
+                <button onClick={() => onDelete(note.id)}>
                     完全削除
                 </button>
-
             </div>
-
         </Card>
     );
 }

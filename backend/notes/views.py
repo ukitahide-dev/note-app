@@ -17,8 +17,17 @@ class NoteViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]  # ログイン済みのユーザーだけ許可する
 
 
-    def get_queryset(self):  # get_querysetは、どのデータを返すか決める
+    def get_queryset(self):  # get_querysetは、どのデータを返すか決める。ViewSetが対象データを探す時の基準として使われる。
+        if self.action in [
+            "partial_update",
+            "update",
+            "destroy",
+        ]:  # self.actionはDRFのViewSetが今どの操作を実行してるかを表す値
+            return Note.objects.filter(user=self.request.user)
+
         return Note.objects.filter(user=self.request.user, is_deleted=False)
+
+
 
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所

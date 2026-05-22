@@ -14,6 +14,10 @@ import Card from "../../../../shared/ui/Card/Card";
 
 
 
+
+// 親: NotesPage.tsx
+
+
 type Note = {
     id: number;
     title: string;
@@ -23,6 +27,7 @@ type Note = {
 type Props = {
     note: Note;
     openMenuId: number | null;
+    onMoveToTrash: (id: number) => void;
 
     setOpenMenuId:
         React.Dispatch<
@@ -36,7 +41,7 @@ type Props = {
 
 
 
-export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Props) {
+export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const navigate = useNavigate();
 
     // 分割代入で、useSortableが取得したものを取り出している。
@@ -118,7 +123,7 @@ export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Pro
                             ピン留め
                         </button>
 
-                        <button>
+                        <button  onClick={() => onMoveToTrash(note.id)}>
                             削除
                         </button>
 

@@ -88,16 +88,17 @@ export const updateNote = async(id: number, title: string, content: string) => {
 
 
 
+// ノートをゴミ箱に移動させる
 export const moveToTrash = async(id: number) => {
     const token = localStorage.getItem("access");
 
-    const res = await api.patch(
-        `/notes/${id}`,
+    const res = await api.patch(  // patchは一部だけ更新という意味。
+        `/notes/${id}/`,
         {
-            is_deleted: true,
+            is_deleted: true,  // is_deletedをtrue に変えてという意味。
         },
         {
-            headers: {
+            headers: { // headersはリクエストの追加情報。
                 Authorization: `Bearer ${token}`
             }
         }
@@ -113,7 +114,7 @@ export const getTrashNotes = async () => {
     const token = localStorage.getItem("access");
 
     const res = await api.get(
-        "/notes/trash",
+        "/notes/trash/",
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -131,7 +132,7 @@ export const getTrashNotes = async () => {
 export const restoreNote = async (id: number) => {
     const token = localStorage.getItem("access");
     const res = await api.patch(
-        `/notes/${id}`,
+        `/notes/${id}/`,
         {
             is_deleted: false
         },
@@ -156,7 +157,7 @@ export const deleteNoteForever = async (id: number) => {
     const token = localStorage.getItem("access");
 
     await api.delete(
-        `/notes/${id}`,
+        `/notes/${id}/`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
