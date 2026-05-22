@@ -8,11 +8,16 @@ import { deleteNoteForever, getTrashNotes, restoreNote } from "../api/noteApi";
 
 
 
+// ---- css ----
+import styles from "./TrashNotesPage.module.css";
+import TrashNoteCard from "../components/TrashNoteCard/TrashNoteCard";
+
+
 
 type Note = {
     id: number,
-    title: String,
-    content: String,
+    title: string,
+    content: string,
 }
 
 
@@ -71,12 +76,21 @@ export default function TrashNotesPage() {
 
 
     return (
-
-        <div>
-
+        <div className={styles.container}>
             <h1>ゴミ箱</h1>
 
-            {notes.map((note) => (
+            <div className={styles.notesContainer}>
+
+                {notes.map((note) => (
+                    <TrashNoteCard
+                        key={note.id}
+                        note={note}
+                        onRestore={handleRestore}
+                        onDelete={handleDelete}
+                    />
+                ))}
+
+            {/* {notes.map((note) => (
 
                 <div
                     key={note.id}
@@ -107,8 +121,12 @@ export default function TrashNotesPage() {
                         完全削除
                     </button>
                 </div>
-            ))}
+            ))} */}
+            </div>
+
         </div>
+
+
     );
 
 

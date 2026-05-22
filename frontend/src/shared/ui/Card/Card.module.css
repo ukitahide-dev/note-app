@@ -1,0 +1,28 @@
+/* .card {
+    position: relative;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    transition: 0.2s;
+    cursor: pointer;
+} */
+
+.card {
+    width: 250px;
+    flex-shrink: 0;  /* スペースが足りない場合でも、250pxから絶対縮まないようにする*/
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    word-break: break-word;
+    position: relative;
+}
+
+
+
+
+.card:hover {
+    box-shadow:
+        0 2px 10px rgba(0,0,0,0.1);
+}

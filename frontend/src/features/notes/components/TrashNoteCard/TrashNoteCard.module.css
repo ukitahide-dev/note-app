@@ -1,0 +1,15 @@
+.trashCard {
+
+    min-height: 180px;
+}
+
+
+
+.actions {
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 16px;
+}

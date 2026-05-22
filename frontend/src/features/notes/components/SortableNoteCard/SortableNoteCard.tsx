@@ -10,7 +10,8 @@ import {
 
 // import styles from "../../pages/NotesPage.module.css";
 import cardStyles from "./SortableNoteCard.module.css";
-import { useState } from "react";
+import Card from "../../../../shared/ui/Card/Card";
+
 
 
 type Note = {
@@ -36,7 +37,6 @@ type Props = {
 
 
 export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Props) {
-    // const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
 
     // 分割代入で、useSortableが取得したものを取り出している。
@@ -51,8 +51,6 @@ export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Pro
     });
 
 
-    // const isMenuOpen = openMenuId === note.id;
-
     const style = {
         transform: CSS.Transform.toString(
             transform
@@ -62,64 +60,71 @@ export default function SortableNoteCard({ note, openMenuId, setOpenMenuId}: Pro
 
 
 
+
+
+
     return (
         <div
-            className={cardStyles.card}
             ref={setNodeRef}
             style={style}
-            onClick={() => navigate(`/notes/${note.id}`)}
+            // className={cardStyles.card}
+            // onClick={() => navigate(`/notes/${note.id}`)}
         >
-
-            <div
-                {...attributes}
-                {...listeners}  // drag開始用イベントまとめ。☰を掴んだ時だけdrag開始
-                className={cardStyles.dragHandle}
+            <Card
+                // className={cardStyles.card}
+                onClick={() => navigate(`/notes/${note.id}`)}
             >
-                ☰
-            </div>
-
-            <h3>{note.title}</h3>
-            <p>{note.content}</p>
-
-            <button
-                className={cardStyles.menuButton}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenMenuId((prev) =>
-                        prev === note.id ? null : note.id
-                    );
-                }}
-            >
-                ⋮
-            </button>
-
-            {/* menu */}
-            {openMenuId === note.id && (
 
                 <div
-                    className={cardStyles.menu}
-                    onClick={(e) =>e.stopPropagation()}
+                    {...attributes}
+                    {...listeners}  // drag開始用イベントまとめ。☰を掴んだ時だけdrag開始
+                    className={cardStyles.dragHandle}
                 >
-
-                    <button>
-                        ラベル編集
-                    </button>
-
-                    <button>
-                        色変更
-                    </button>
-
-                    <button>
-                        ピン留め
-                    </button>
-
-                    <button>
-                        削除
-                    </button>
-
+                    ☰
                 </div>
-            )}
 
+                <h3>{note.title}</h3>
+                <p>{note.content}</p>
+
+                <button
+                    className={cardStyles.menuButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuId((prev) =>
+                            prev === note.id ? null : note.id
+                        );
+                    }}
+                >
+                    ⋮
+                </button>
+
+                {/* menu */}
+                {openMenuId === note.id && (
+
+                    <div
+                        className={cardStyles.menu}
+                        onClick={(e) =>e.stopPropagation()}
+                    >
+
+                        <button>
+                            ラベル編集
+                        </button>
+
+                        <button>
+                            色変更
+                        </button>
+
+                        <button>
+                            ピン留め
+                        </button>
+
+                        <button>
+                            削除
+                        </button>
+
+                    </div>
+                )}
+            </Card>
         </div>
 
     );

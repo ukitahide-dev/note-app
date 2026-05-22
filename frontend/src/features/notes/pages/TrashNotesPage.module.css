@@ -1,0 +1,11 @@
+.container {
+    padding: 32px;
+}
+
+
+.notesContainer {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
