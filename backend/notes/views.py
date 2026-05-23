@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Note
-from .serializers import NoteSerializer
+from .models import Note, Label
+from .serializers import NoteSerializer, LabelSerializer
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -44,3 +44,14 @@ class NoteViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
+
+
+class LabelViewSet(ModelViewSet):
+    serializer_class = LabelSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Label.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
