@@ -168,3 +168,28 @@ export const deleteNoteForever = async (id: number) => {
 
 
 
+
+
+//
+export const updateNoteLabels = async (
+    noteId: number,
+    labelIds: number[]
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `/notes/${noteId}/`,
+        {
+            labels: labelIds,
+        },
+        {
+            headers: {
+                Authorization:
+                    `Bearer ${token}`
+            }
+        }
+    );
+
+    return res.data;
+};

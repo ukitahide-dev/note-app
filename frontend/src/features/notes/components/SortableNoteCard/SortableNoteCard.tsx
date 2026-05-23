@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -8,9 +9,19 @@ import {
     CSS,
 } from "@dnd-kit/utilities";
 
+
+// ---- components ----
+import LabelPanel from "./LabelPanel/LabelPanel";
+
+
+//  ---- css ----
 // import styles from "../../pages/NotesPage.module.css";
 import cardStyles from "./SortableNoteCard.module.css";
 import Card from "../../../../shared/ui/Card/Card";
+import { createLabel, getLabels } from "../../api/labelApi";
+import { updateNoteLabels } from "../../api/noteApi";
+
+
 
 
 
@@ -23,6 +34,13 @@ type Note = {
     title: string;
     content: string;
 };
+
+
+type Label = {
+    id: number;
+    name: string;
+};
+
 
 type Props = {
     note: Note;
@@ -42,7 +60,10 @@ type Props = {
 
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
+    const [isLabelOpen, setIsLabelOpen] = useState(false);
+    const [labels, setLabels] = useState<Label[]>([]);
     const navigate = useNavigate();
+
 
     // 分割代入で、useSortableが取得したものを取り出している。
     const {
@@ -56,11 +77,72 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
     });
 
 
+
     const style = {
         transform: CSS.Transform.toString(
             transform
         ),
         transition,
+    };
+
+
+
+
+    useEffect(() => {
+        const fetchLabels = async () => {
+            try {
+
+                const data = await getLabels();
+                setLabels(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        fetchLabels();
+
+    }, []);
+
+
+
+
+    const handleCreateLabel = async (
+        name: string
+    ) => {
+
+        try {
+
+            const newLabel = await createLabel(name);
+
+            setLabels((prev) => [
+                ...prev,
+                newLabel,
+            ]);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
+
+    const handleSelectLabel = async (
+        labelId: number
+    ) => {
+
+        try {
+
+            await updateNoteLabels(note.id,[labelId]);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
     };
 
 
@@ -72,8 +154,6 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
         <div
             ref={setNodeRef}
             style={style}
-            // className={cardStyles.card}
-            // onClick={() => navigate(`/notes/${note.id}`)}
         >
             <Card
                 // className={cardStyles.card}
@@ -105,14 +185,23 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
                 {/* menu */}
                 {openMenuId === note.id && (
+                    isLabelOpen ? (
+                        <LabelPanel
+                            labels={labels}
+                            onBack={() => setIsLabelOpen(false)}
+                            onCreateLabel={handleCreateLabel}
+                            onSelectLabel={handleSelectLabel}
+                            // onSelectLabel={() => console.log('hoge')}
+                        />
+                    ) : (
 
                     <div
                         className={cardStyles.menu}
                         onClick={(e) =>e.stopPropagation()}
                     >
 
-                        <button>
-                            ラベル編集
+                        <button onClick={() => setIsLabelOpen(true)}>
+                            ラベル追加
                         </button>
 
                         <button>
@@ -128,6 +217,7 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                         </button>
 
                     </div>
+                    )
                 )}
             </Card>
         </div>

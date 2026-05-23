@@ -36,7 +36,7 @@ export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-    // const navigate = useNavigate();
+    
 
 
 
@@ -89,7 +89,7 @@ export default function NotesPage() {
     };
 
 
-    
+
 
     const handleMoveToTrash = async (id: number) => {
         try {

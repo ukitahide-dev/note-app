@@ -3,7 +3,7 @@ from .views import NoteViewSet, LabelViewSet
 
 router = DefaultRouter()
 router.register('notes', NoteViewSet, basename='note')
-router.register("labels", LabelViewSet)
+router.register("labels", LabelViewSet, basename='label')
 
 
 
