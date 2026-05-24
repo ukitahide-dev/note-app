@@ -22,11 +22,17 @@ import SortableNoteCard from "../components/SortableNoteCard/SortableNoteCard";
 import styles from "./NotesPage.module.css";
 
 
+type Label = {
+    id: number;
+    name: string;
+};
+
 
 type Note = {
         id: number,
         title: string,
         content: string,
+        labels:  Label[]
     };
 
 
@@ -35,8 +41,8 @@ type Note = {
 export default function NotesPage() {
 
     const [notes, setNotes] = useState<Note[]>([]);
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-    
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // どのノートのメニューが開いているか」を全ノートで共有したいから、SortableNoteCardではなくて、このコンポーネントで定義する。
+
 
 
 

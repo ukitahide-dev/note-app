@@ -1,6 +1,7 @@
+// ---- react ----
+import { useNavigate } from "react-router-dom";
 
 // ---- css ----
-import { useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 
 
@@ -31,6 +32,8 @@ export default function Sidebar({ isOpen }: Props) {
                     <span>ノート</span>
                 )}
             </div>
+
+            
 
             <div className={styles.item} onClick={() => navigate("/notes/trash")}>
                 🗑

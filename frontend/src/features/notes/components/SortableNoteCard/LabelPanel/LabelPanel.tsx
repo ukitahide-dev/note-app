@@ -30,13 +30,14 @@ type Props = {
 
 
 
+
+
 // 親: SortableNoteCard.tsx
 
 export default function LabelPanel({
     labels,
     labelPanelRef,
     selectedLabels,
-    // onBack,
     onCreateLabel,
     onSelectLabel,
 }: Props) {

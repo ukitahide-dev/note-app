@@ -14,12 +14,17 @@ import {
 import LabelPanel from "./LabelPanel/LabelPanel";
 
 
-//  ---- css ----
-// import styles from "../../pages/NotesPage.module.css";
-import cardStyles from "./SortableNoteCard.module.css";
+// ---- shared ----
 import Card from "../../../../shared/ui/Card/Card";
+
+
+// ---- api ----
 import { createLabel, getLabels } from "../../api/labelApi";
 import { updateNoteLabels } from "../../api/noteApi";
+
+//  ---- css ----
+import cardStyles from "./SortableNoteCard.module.css";
+
 
 
 
@@ -242,6 +247,7 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                     className={cardStyles.menuButton}
                     onClick={(e) => {
                         e.stopPropagation();
+                        setIsLabelOpen(false);
                         setOpenMenuId((prev) =>
                             prev === note.id ? null : note.id
                         );
@@ -262,15 +268,17 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                         />
                     ) : (
 
+                    // ---- menu ----
                     <div
                         ref={menuRef}
                         className={cardStyles.menu}
-                        onClick={(e) =>e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                     >
 
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
+
+                            onClick={() => {
+                                // e.stopPropagation();
                                 setIsLabelOpen((prev) => !prev);
                             }}
                         >
