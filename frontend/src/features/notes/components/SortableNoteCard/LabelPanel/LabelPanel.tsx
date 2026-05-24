@@ -1,18 +1,23 @@
-// ---- css ----
+// ---- react ----
 import { useState } from "react";
 
 
 //  ---- css ----
 import styles from "./LabelPanel.module.css";
 
+
+
 type Label = {
     id: number;
     name: string;
 };
 
+
 type Props = {
     labels: Label[];
-    onBack: () => void;
+    labelPanelRef: React.RefObject<HTMLDivElement | null>;
+    selectedLabels: number[];
+    // onBack: () => void;
     onCreateLabel: (
         name: string
     ) => void;
@@ -23,11 +28,15 @@ type Props = {
 
 
 
+
+
 // 親: SortableNoteCard.tsx
 
 export default function LabelPanel({
     labels,
-    onBack,
+    labelPanelRef,
+    selectedLabels,
+    // onBack,
     onCreateLabel,
     onSelectLabel,
 }: Props) {
@@ -39,18 +48,14 @@ export default function LabelPanel({
 
 
 
-    
+
     return (
 
-        <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
-
-            <button
-                className={styles.backButton}
-                onClick={onBack}
-            >
-                ← 戻る
-            </button>
-
+        <div
+            ref={labelPanelRef}
+            className={styles.panel}
+            onClick={(e) => e.stopPropagation()}
+        >
             <input
                 className={styles.input}
                 value={newLabel}
@@ -83,9 +88,9 @@ export default function LabelPanel({
 
                             <input
                                 type="checkbox"
-                                onChange={() =>onSelectLabel(label.id)}
+                                checked={selectedLabels.includes(label.id)}
+                                onChange={() => onSelectLabel(label.id)}
                             />
-
                             <span>
                                 {label.name}
                             </span>

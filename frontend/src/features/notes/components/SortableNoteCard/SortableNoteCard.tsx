@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -28,18 +28,19 @@ import { updateNoteLabels } from "../../api/noteApi";
 
 // 親: NotesPage.tsx
 
+type Label = {
+    id: number;
+    name: string;
+};
 
 type Note = {
     id: number;
     title: string;
     content: string;
+    labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
 };
 
 
-type Label = {
-    id: number;
-    name: string;
-};
 
 
 type Props = {
@@ -61,8 +62,18 @@ type Props = {
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const [isLabelOpen, setIsLabelOpen] = useState(false);
-    const [labels, setLabels] = useState<Label[]>([]);
+    const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
+    const [selectedLabels, setSelectedLabels] = useState<number[]>(
+        note.labels.map(
+            (label) => label.id
+        )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
+    );
+
     const navigate = useNavigate();
+    const cardRef = useRef<HTMLDivElement | null>(null);
+    const menuRef = useRef<HTMLDivElement | null>(null);
+    const labelPanelRef = useRef<HTMLDivElement | null>(null);
+
 
 
     // 分割代入で、useSortableが取得したものを取り出している。
@@ -109,6 +120,45 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
 
 
+    useEffect(() => {
+
+        const handleClickOutside = (
+            event: MouseEvent
+        ) => {
+
+
+            if (
+                cardRef.current &&
+                !cardRef.current.contains(event.target as Node) &&  // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
+                (!menuRef.current || !menuRef.current.contains(event.target as Node)) &&
+                (!labelPanelRef.current || !labelPanelRef.current.contains(event.target as Node))
+            ) {
+                setOpenMenuId(null);
+                setIsLabelOpen(false);
+            }
+
+        };
+
+        document.addEventListener(
+            "click",
+            // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
+            handleClickOutside
+        );
+
+
+        return () => {
+            document.removeEventListener(
+                "click",
+                // "mousedown",
+                handleClickOutside
+            );
+        };
+
+    }, [setOpenMenuId]);
+
+
+
+
     const handleCreateLabel = async (
         name: string
     ) => {
@@ -130,19 +180,31 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
     };
 
 
-    const handleSelectLabel = async (
-        labelId: number
-    ) => {
+    const handleSelectLabel = async (labelId: number) => {
 
         try {
 
-            await updateNoteLabels(note.id,[labelId]);
+            let newIds;
+
+            if (selectedLabels.includes(labelId)) {
+
+                newIds = selectedLabels.filter((id) => id !== labelId);
+
+            } else {
+
+                newIds = [...selectedLabels, labelId];
+            }
+
+            setSelectedLabels(newIds);
+
+            await updateNoteLabels(note.id, newIds);
 
         } catch (error) {
 
             console.error(error);
 
         }
+
     };
 
 
@@ -152,10 +214,15 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
     return (
         <div
-            ref={setNodeRef}
             style={style}
+            ref={(node) => {
+                setNodeRef(node);
+                cardRef.current = node;
+            }}
+            // ref={setNodeRef}
         >
             <Card
+                // ref={cardRef}
                 // className={cardStyles.card}
                 onClick={() => navigate(`/notes/${note.id}`)}
             >
@@ -188,19 +255,25 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                     isLabelOpen ? (
                         <LabelPanel
                             labels={labels}
-                            onBack={() => setIsLabelOpen(false)}
+                            labelPanelRef={labelPanelRef}
+                            selectedLabels={selectedLabels}
                             onCreateLabel={handleCreateLabel}
                             onSelectLabel={handleSelectLabel}
-                            // onSelectLabel={() => console.log('hoge')}
                         />
                     ) : (
 
                     <div
+                        ref={menuRef}
                         className={cardStyles.menu}
                         onClick={(e) =>e.stopPropagation()}
                     >
 
-                        <button onClick={() => setIsLabelOpen(true)}>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsLabelOpen((prev) => !prev);
+                            }}
+                        >
                             ラベル追加
                         </button>
 

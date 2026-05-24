@@ -170,7 +170,7 @@ export const deleteNoteForever = async (id: number) => {
 
 
 
-//
+// 各ノートのラベルを更新する
 export const updateNoteLabels = async (
     noteId: number,
     labelIds: number[]
@@ -181,7 +181,7 @@ export const updateNoteLabels = async (
     const res = await api.patch(
         `/notes/${noteId}/`,
         {
-            labels: labelIds,
+            label_ids: labelIds,
         },
         {
             headers: {
