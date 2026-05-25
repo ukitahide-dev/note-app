@@ -24,6 +24,7 @@ import { updateNoteLabels } from "../../api/noteApi";
 
 //  ---- css ----
 import cardStyles from "./SortableNoteCard.module.css";
+import useLabels from "../../../labels/hooks/useLabels";
 
 
 
@@ -67,17 +68,27 @@ type Props = {
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const [isLabelOpen, setIsLabelOpen] = useState(false);
-    const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
-    const [selectedLabels, setSelectedLabels] = useState<number[]>(
-        note.labels.map(
-            (label) => label.id
-        )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
-    );
+    // const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
+    // const [selectedLabels, setSelectedLabels] = useState<number[]>(
+    //     note.labels.map(
+    //         (label) => label.id
+    //     )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
+    // );
 
     const navigate = useNavigate();
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
+
+    const {
+        labels,
+        selectedLabels,
+        handleCreateLabel,
+        handleSelectLabel,
+    } = useLabels(
+        note.id,
+        note.labels
+    );
 
 
 
@@ -104,23 +115,23 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
 
 
-    useEffect(() => {
-        const fetchLabels = async () => {
-            try {
+    // useEffect(() => {
+    //     const fetchLabels = async () => {
+    //         try {
 
-                const data = await getLabels();
-                setLabels(data);
+    //             const data = await getLabels();
+    //             setLabels(data);
 
-            } catch (error) {
+    //         } catch (error) {
 
-                console.error(error);
+    //             console.error(error);
 
-            }
-        };
+    //         }
+    //     };
 
-        fetchLabels();
+    //     fetchLabels();
 
-    }, []);
+    // }, []);
 
 
 
@@ -164,53 +175,53 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
 
 
-    const handleCreateLabel = async (
-        name: string
-    ) => {
+    // const handleCreateLabel = async (
+    //     name: string
+    // ) => {
 
-        try {
+    //     try {
 
-            const newLabel = await createLabel(name);
+    //         const newLabel = await createLabel(name);
 
-            setLabels((prev) => [
-                ...prev,
-                newLabel,
-            ]);
+    //         setLabels((prev) => [
+    //             ...prev,
+    //             newLabel,
+    //         ]);
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
+    //         console.error(error);
 
-        }
-    };
+    //     }
+    // };
 
 
-    const handleSelectLabel = async (labelId: number) => {
+    // const handleSelectLabel = async (labelId: number) => {
 
-        try {
+    //     try {
 
-            let newIds;
+    //         let newIds;
 
-            if (selectedLabels.includes(labelId)) {
+    //         if (selectedLabels.includes(labelId)) {
 
-                newIds = selectedLabels.filter((id) => id !== labelId);
+    //             newIds = selectedLabels.filter((id) => id !== labelId);
 
-            } else {
+    //         } else {
 
-                newIds = [...selectedLabels, labelId];
-            }
+    //             newIds = [...selectedLabels, labelId];
+    //         }
 
-            setSelectedLabels(newIds);
+    //         setSelectedLabels(newIds);
 
-            await updateNoteLabels(note.id, newIds);
+    //         await updateNoteLabels(note.id, newIds);
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
+    //         console.error(error);
 
-        }
+    //     }
 
-    };
+    // };
 
 
 

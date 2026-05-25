@@ -8,7 +8,7 @@ import styles from "./NoteForm.module.css";
 
 
 
-// 親: NotesPage.tsx
+
 
 
 
@@ -26,6 +26,9 @@ type Props = {
     ) => void;
 };
 
+
+
+// 親：NotesPage.jsx
 
 
 export default function NoteForm({ onAddNote }: Props) {
@@ -119,8 +122,8 @@ export default function NoteForm({ onAddNote }: Props) {
 
         <form
             ref={formRef}
-            onSubmit={handleSubmit}
             className={styles.form}
+            onSubmit={handleSubmit}
         >
 
             {isExpanded && (
@@ -149,16 +152,22 @@ export default function NoteForm({ onAddNote }: Props) {
 
             {/* 投稿ボタン */}
             {isExpanded && (
-                <div className={styles.actions}>
+                <>
+                    <div className={styles.menuArea}>
+                        <button>...</button>
 
-                    <button
-                        type="submit"
-                        className={styles.submitButton}
-                    >
-                        投稿
-                    </button>
+                    </div>
+                    <div className={styles.actions}>
 
-                </div>
+                        <button
+                            type="submit"
+                            className={styles.submitButton}
+                        >
+                            投稿
+                        </button>
+
+                    </div>
+                </>
             )}
 
         </form>

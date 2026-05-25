@@ -13,7 +13,7 @@ import { getNotes,  } from "../api/noteApi";
 // moveToTrash
 
 // ----components----
-import NoteForm from "../components/NoteForm/Noteform";
+import NoteForm from "../components/NoteForm/NoteForm";
 import NoteList from "../components/NoteList/NoteList";
 // import SortableNoteCard from "../components/SortableNoteCard/SortableNoteCard";
 
@@ -129,7 +129,7 @@ export default function NotesPage() {
 
 
 
-                
+
                 {/* <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}  // ドラッグ修了時に実行される
