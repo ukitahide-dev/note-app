@@ -31,7 +31,7 @@ import cardStyles from "./SortableNoteCard.module.css";
 
 
 
-// 親: NotesPage.tsx
+
 
 type Label = {
     id: number;
@@ -63,7 +63,7 @@ type Props = {
 
 
 
-
+// 親: NotesPage.tsx
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const [isLabelOpen, setIsLabelOpen] = useState(false);
