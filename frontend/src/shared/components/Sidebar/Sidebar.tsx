@@ -6,13 +6,25 @@ import styles from "./Sidebar.module.css";
 
 
 
+
+type Label = {
+    id: number;
+    name: string
+}
+
 type Props = {
+    labels: Label[];
     isOpen: boolean;
+
 };
 
 
 
-export default function Sidebar({ isOpen }: Props) {
+
+
+
+
+export default function Sidebar({ labels, isOpen }: Props) {
     const navigate = useNavigate();
 
     return (
@@ -33,7 +45,23 @@ export default function Sidebar({ isOpen }: Props) {
                 )}
             </div>
 
-            
+            {labels.map((label) => (
+
+                <div key={label.id}
+                     className={styles.item}
+                     onClick={() => navigate(`/labels/${label.name}`)}
+                >
+
+                    {isOpen && (
+                        <span>{label.name}</span>
+                    )}
+
+                </div>
+
+
+            ))}
+
+
 
             <div className={styles.item} onClick={() => navigate("/notes/trash")}>
                 🗑
