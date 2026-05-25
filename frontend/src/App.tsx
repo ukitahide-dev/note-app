@@ -14,6 +14,7 @@ import TrashNotesPage from './features/notes/pages/TrashNotesPage'
 
 // ---- shared ----
 import Layout from './shared/layout/Layout'
+import LabelNotesPage from './features/notes/pages/LabelNotesPage/LabelNotesPage'
 
 
 
@@ -29,6 +30,14 @@ function App() {
                     element={
                         <Layout>
                             <NotesPage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/labels/:labelName"
+                    element={
+                        <Layout>
+                            <LabelNotesPage />
                         </Layout>
                     }
                 />
