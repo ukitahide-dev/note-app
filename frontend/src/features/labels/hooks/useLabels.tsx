@@ -1,12 +1,12 @@
 
-
+// ---- react ----
 import { useEffect, useState } from "react";
 
 
 
 // ---- api ----
 import { createLabel, getLabels } from "../../notes/api/labelApi";
-import { updateNoteLabels } from "../../notes/api/noteApi";
+
 
 
 
@@ -18,28 +18,20 @@ type Label = {
 
 
 
+// 役割: ラベル一覧管理　Sidebar、NoteForm、SortableNoteCard、LabelPanelでも使う。だから共通データとしてここにまとめて、使いたいファイルから呼び出す形にする。
+
 
 export default function useLabels(
-    noteId: number,
-    initialLabels: Label[]
+    // noteId: number,
+    // initialLabels: Label[]
 ) {
+
 
     // ---- 全ラベル一覧 ----
     const [labels, setLabels] = useState<Label[]>([]);
 
 
-    // ---- ノートに付いてるラベルid ----
-    const [selectedLabels, setSelectedLabels] = useState<number[]>(
-
-        initialLabels.map(
-            (label) => label.id
-        )
-
-    );
-
-
-
-    // ---- ラベル一覧取得 ----
+    // ラベル一覧取得
     useEffect(() => {
 
         const fetchLabels = async () => {
@@ -47,7 +39,6 @@ export default function useLabels(
             try {
 
                 const data = await getLabels();
-
                 setLabels(data);
 
             } catch (error) {
@@ -64,15 +55,14 @@ export default function useLabels(
 
 
 
-    // ---- 新規ラベル作成 ----
+    // ラベル作成
     const handleCreateLabel = async (
         name: string
     ) => {
 
         try {
 
-            const newLabel =
-                await createLabel(name);
+            const newLabel = await createLabel(name);
 
             setLabels((prev) => [
                 ...prev,
@@ -88,54 +78,10 @@ export default function useLabels(
 
 
 
-
-    // ---- ラベル選択 ----
-    const handleSelectLabel = async (
-        labelId: number
-    ) => {
-
-        try {
-
-            let newIds;
-
-            if (
-                selectedLabels.includes(labelId)
-            ) {
-
-                newIds =
-                    selectedLabels.filter(
-                        (id) => id !== labelId
-                    );
-
-            } else {
-
-                newIds = [
-                    ...selectedLabels,
-                    labelId,
-                ];
-            }
-
-            setSelectedLabels(newIds);
-
-            await updateNoteLabels(
-                noteId,
-                newIds
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-    };
-
-
     return {
 
         labels,
-        selectedLabels,
-
         handleCreateLabel,
-        handleSelectLabel,
+
     };
 }

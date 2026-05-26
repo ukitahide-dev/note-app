@@ -3,10 +3,6 @@ import { useEffect, useState } from "react";
 
 
 
-// ---- drag & drop ----
-// import {DndContext, closestCenter,} from "@dnd-kit/core";
-// import {arrayMove, SortableContext, rectSortingStrategy,} from "@dnd-kit/sortable";
-
 
 // ----api----
 import { getNotes,  } from "../api/noteApi";
@@ -15,7 +11,7 @@ import { getNotes,  } from "../api/noteApi";
 // ----components----
 import NoteForm from "../components/NoteForm/NoteForm";
 import NoteList from "../components/NoteList/NoteList";
-// import SortableNoteCard from "../components/SortableNoteCard/SortableNoteCard";
+
 
 
 
@@ -39,12 +35,11 @@ type Note = {
 
 
 
-export default function NotesPage() {
 
+
+export default function NotesPage() {
     const [notes, setNotes] = useState<Note[]>([]);
     // const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // どのノートのメニューが開いているか」を全ノートで共有したいから、SortableNoteCardではなくて、このコンポーネントで定義する。
-
-
 
 
     const handleAddNote = (
@@ -74,7 +69,42 @@ export default function NotesPage() {
     }, [])
 
 
-    // ドラッグ終了時に実行される関数
+
+
+    return (
+        <>
+            <div className={styles.container}>
+                <NoteForm onAddNote={handleAddNote}/>
+
+                <NoteList
+                    notes={notes}
+                    setNotes={setNotes}
+                    // onMoveToTrash={handleMoveToTrash}
+                />
+            </div>
+        </>
+    )
+}
+
+
+
+
+// const handleMoveToTrash = async (id: number) => {
+    //     try {
+    //         await moveToTrash(id);
+    //         setNotes((prev) =>
+    //             prev.filter(
+    //                 (note) => note.id !== id
+    //             )
+    //         );
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
+
+
+ // ドラッグ終了時に実行される関数
     // const handleDragEnd = (event: any) => {
 
     //     const { active, over } = event;  // event.active, event.overを分割代入で取得。active: ドラッグしてた要素。over: 上に乗った(移動先の)相手。
@@ -96,41 +126,7 @@ export default function NotesPage() {
     // };
 
 
-
-
-    // const handleMoveToTrash = async (id: number) => {
-    //     try {
-    //         await moveToTrash(id);
-    //         setNotes((prev) =>
-    //             prev.filter(
-    //                 (note) => note.id !== id
-    //             )
-    //         );
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-
-
-
-    return (
-
-        <>
-
-            <div className={styles.container}>
-                <NoteForm onAddNote={handleAddNote}/>
-
-                <NoteList
-                    notes={notes}
-                    setNotes={setNotes}
-                    // onMoveToTrash={handleMoveToTrash}
-                />
-
-
-
-
-                {/* <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
+{/* <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}  // ドラッグ修了時に実行される
                 >
@@ -154,9 +150,3 @@ export default function NotesPage() {
                     </SortableContext>
 
                 </DndContext> */}
-
-            </div>
-        </>
-    )
-
-}

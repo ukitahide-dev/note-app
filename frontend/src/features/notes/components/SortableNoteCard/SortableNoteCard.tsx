@@ -19,15 +19,12 @@ import Card from "../../../../shared/ui/Card/Card";
 
 
 // ---- api ----
-import { createLabel, getLabels } from "../../api/labelApi";
+// import { createLabel, getLabels } from "../../api/labelApi";
 import { updateNoteLabels } from "../../api/noteApi";
 
 //  ---- css ----
 import cardStyles from "./SortableNoteCard.module.css";
 import useLabels from "../../../labels/hooks/useLabels";
-
-
-
 
 
 
@@ -64,30 +61,33 @@ type Props = {
 
 
 
+
+
 // 親: NotesPage.tsx
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const [isLabelOpen, setIsLabelOpen] = useState(false);
     // const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
-    // const [selectedLabels, setSelectedLabels] = useState<number[]>(
-    //     note.labels.map(
-    //         (label) => label.id
-    //     )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
-    // );
+    const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
+        note.labels.map(
+            (label) => label.id
+        )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
+    );
 
     const navigate = useNavigate();
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
 
+
     const {
         labels,
-        selectedLabels,
         handleCreateLabel,
-        handleSelectLabel,
+        // selectedLabels,
+        // handleSelectLabel,
     } = useLabels(
-        note.id,
-        note.labels
+        // note.id,
+        // note.labels
     );
 
 
@@ -111,28 +111,6 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
         ),
         transition,
     };
-
-
-
-
-    // useEffect(() => {
-    //     const fetchLabels = async () => {
-    //         try {
-
-    //             const data = await getLabels();
-    //             setLabels(data);
-
-    //         } catch (error) {
-
-    //             console.error(error);
-
-    //         }
-    //     };
-
-    //     fetchLabels();
-
-    // }, []);
-
 
 
 
@@ -175,53 +153,35 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
 
 
-    // const handleCreateLabel = async (
-    //     name: string
-    // ) => {
-
-    //     try {
-
-    //         const newLabel = await createLabel(name);
-
-    //         setLabels((prev) => [
-    //             ...prev,
-    //             newLabel,
-    //         ]);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
 
 
-    // const handleSelectLabel = async (labelId: number) => {
 
-    //     try {
+    const handleSelectLabel = async (labelId: number) => {
 
-    //         let newIds;
+        try {
 
-    //         if (selectedLabels.includes(labelId)) {
+            let newIds;
 
-    //             newIds = selectedLabels.filter((id) => id !== labelId);
+            if (selectedLabels.includes(labelId)) {
 
-    //         } else {
+                newIds = selectedLabels.filter((id) => id !== labelId);
 
-    //             newIds = [...selectedLabels, labelId];
-    //         }
+            } else {
 
-    //         setSelectedLabels(newIds);
+                newIds = [...selectedLabels, labelId];
+            }
 
-    //         await updateNoteLabels(note.id, newIds);
+            setSelectedLabels(newIds);
 
-    //     } catch (error) {
+            await updateNoteLabels(note.id, newIds);
 
-    //         console.error(error);
+        } catch (error) {
 
-    //     }
+            console.error(error);
 
-    // };
+        }
+
+    };
 
 
 
@@ -316,3 +276,45 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
     );
 }
+
+
+
+
+
+// useEffect(() => {
+    //     const fetchLabels = async () => {
+    //         try {
+
+    //             const data = await getLabels();
+    //             setLabels(data);
+
+    //         } catch (error) {
+
+    //             console.error(error);
+
+    //         }
+    //     };
+
+    //     fetchLabels();
+
+    // }, []);
+
+// const handleCreateLabel = async (
+    //     name: string
+    // ) => {
+
+    //     try {
+
+    //         const newLabel = await createLabel(name);
+
+    //         setLabels((prev) => [
+    //             ...prev,
+    //             newLabel,
+    //         ]);
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // };

@@ -3,17 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 // ---- css ----
 import styles from "./Sidebar.module.css";
+import { useLabelStore } from "../../../features/labels/store/labelStore";
+import { useEffect } from "react";
 
 
 
 
-type Label = {
-    id: number;
-    name: string
-}
+// type Label = {
+//     id: number;
+//     name: string
+// }
 
 type Props = {
-    labels: Label[];
+    // labels: Label[];
     isOpen: boolean;
 
 };
@@ -26,8 +28,25 @@ type Props = {
 
 
 
-export default function Sidebar({ labels, isOpen }: Props) {
+export default function Sidebar({ isOpen }: Props) {
+    // labels,
+
+    const {
+        labels,
+        fetchLabels,
+    } = useLabelStore();
+
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        fetchLabels();
+    }, []);
+
+
+
+
+
 
     return (
 
