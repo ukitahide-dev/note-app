@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // ---- css ----
 import styles from "./Sidebar.module.css";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
-import { useEffect } from "react";
+
 
 
 
@@ -29,19 +29,11 @@ type Props = {
 
 
 export default function Sidebar({ isOpen }: Props) {
-    // labels,
-
-    const {
-        labels,
-        fetchLabels,
-    } = useLabelStore();
+    const { labels } = useLabelStore();
 
     const navigate = useNavigate();
 
 
-    useEffect(() => {
-        fetchLabels();
-    }, []);
 
 
 

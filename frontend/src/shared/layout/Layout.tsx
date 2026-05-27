@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Header from "../components/Header/Header";
 import Sidebar from "../components/Sidebar/Sidebar";
 
 import styles from "./Layout.module.css";
+import { useLabelStore } from "../../features/labels/store/labelStore";
 // import { getLabels } from "../../features/notes/api/labelApi";
 
 
@@ -38,14 +39,20 @@ export default function Layout({ children }: Props) {  // 分割代入でchildre
     // const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
     const [isOpen, setIsOpen] = useState(true);
 
+    const { fetchLabels } = useLabelStore();
+
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
 
 
+    useEffect(() => {
+        fetchLabels();
+    }, []);
 
 
+    // Zustand使うと、これも不要になった。
     // useEffect(() => {
     //     const fetchLabels = async () => {
     //         try {

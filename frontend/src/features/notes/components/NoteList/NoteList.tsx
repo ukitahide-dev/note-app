@@ -59,7 +59,7 @@ export default function NoteList({
     setNotes,
 }: Props) {
 
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);  
 
 
 

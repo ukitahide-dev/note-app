@@ -18,13 +18,19 @@ import LabelPanel from "./LabelPanel/LabelPanel";
 import Card from "../../../../shared/ui/Card/Card";
 
 
+// ---- Zustand ----
+import { useLabelStore } from "../../../labels/store/labelStore";
+
+
 // ---- api ----
 // import { createLabel, getLabels } from "../../api/labelApi";
 import { updateNoteLabels } from "../../api/noteApi";
 
 //  ---- css ----
 import cardStyles from "./SortableNoteCard.module.css";
-import useLabels from "../../../labels/hooks/useLabels";
+import NoteMenu from "./NoteMenu/NoteMenu";
+// import useLabels from "../../../labels/hooks/useLabels";
+
 
 
 
@@ -80,15 +86,18 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
 
 
-    const {
-        labels,
-        handleCreateLabel,
-        // selectedLabels,
-        // handleSelectLabel,
-    } = useLabels(
-        // note.id,
-        // note.labels
-    );
+    // const { labels } = useLabelStore();
+
+
+    // const {
+    //     labels,
+    //     handleCreateLabel,
+    //     // selectedLabels,
+    //     // handleSelectLabel,
+    // } = useLabels(
+    //     // note.id,
+    //     // note.labels
+    // );
 
 
 
@@ -219,9 +228,7 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                     onClick={(e) => {
                         e.stopPropagation();
                         setIsLabelOpen(false);
-                        setOpenMenuId((prev) =>
-                            prev === note.id ? null : note.id
-                        );
+                        setOpenMenuId((prev) => prev === note.id ? null : note.id);
                     }}
                 >
                     ⋮
@@ -231,44 +238,52 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                 {openMenuId === note.id && (
                     isLabelOpen ? (
                         <LabelPanel
-                            labels={labels}
+                            // labels={labels}
                             labelPanelRef={labelPanelRef}
                             selectedLabels={selectedLabels}
-                            onCreateLabel={handleCreateLabel}
+                            // onCreateLabel={handleCreateLabel}
                             onSelectLabel={handleSelectLabel}
                         />
                     ) : (
 
                     // ---- menu ----
-                    <div
-                        ref={menuRef}
-                        className={cardStyles.menu}
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    <NoteMenu
+                        menuRef={menuRef}
+                        setIsLabelOpen={setIsLabelOpen}
+                        onMoveToTrash={onMoveToTrash}
+                        noteId={note.id}
+                    />
 
-                        <button
 
-                            onClick={() => {
-                                // e.stopPropagation();
-                                setIsLabelOpen((prev) => !prev);
-                            }}
-                        >
-                            ラベル追加
-                        </button>
+                    // <div
+                    //     ref={menuRef}
+                    //     className={cardStyles.menu}
+                    //     onClick={(e) => e.stopPropagation()}
+                    // >
 
-                        <button>
-                            色変更
-                        </button>
+                    //     <button
 
-                        <button>
-                            ピン留め
-                        </button>
+                    //         onClick={() => {
+                    //             // e.stopPropagation();
+                    //             setIsLabelOpen((prev) => !prev);
+                    //         }}
+                    //     >
+                    //         ラベル追加
+                    //     </button>
 
-                        <button  onClick={() => onMoveToTrash(note.id)}>
-                            削除
-                        </button>
+                    //     <button>
+                    //         色変更
+                    //     </button>
 
-                    </div>
+                    //     <button>
+                    //         ピン留め
+                    //     </button>
+
+                    //     <button  onClick={() => onMoveToTrash(note.id)}>
+                    //         削除
+                    //     </button>
+
+                    // </div>
                     )
                 )}
             </Card>

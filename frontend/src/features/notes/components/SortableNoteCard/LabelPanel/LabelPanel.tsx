@@ -2,25 +2,29 @@
 import { useState } from "react";
 
 
+// ---- Zustand ----
+import { useLabelStore } from "../../../../labels/store/labelStore";
+
+
 //  ---- css ----
 import styles from "./LabelPanel.module.css";
 
 
 
-type Label = {
-    id: number;
-    name: string;
-};
+
+// type Label = {
+//     id: number;
+//     name: string;
+// };
 
 
 type Props = {
-    labels: Label[];
+    // labels: Label[];
     labelPanelRef: React.RefObject<HTMLDivElement | null>;
     selectedLabels: number[];
-    // onBack: () => void;
-    onCreateLabel: (
-        name: string
-    ) => void;
+    // onCreateLabel: (
+    //     name: string
+    // ) => void;
     onSelectLabel: (
         labelId: number
     ) => void;
@@ -35,17 +39,17 @@ type Props = {
 // 親: SortableNoteCard.tsx
 
 export default function LabelPanel({
-    labels,
+    // labels,
     labelPanelRef,
     selectedLabels,
-    onCreateLabel,
+    // onCreateLabel,
     onSelectLabel,
 }: Props) {
 
     const [newLabel, setNewLabel] = useState("");
     const isTyping = newLabel.trim() !== "";
 
-
+    const { labels, handleCreateLabel } = useLabelStore();  // Zustandで定義した。labelsを直接取得。
 
 
 
@@ -69,7 +73,7 @@ export default function LabelPanel({
                 <button
                     className={styles.createButton}
                     onClick={() => {
-                        onCreateLabel(newLabel);
+                        handleCreateLabel(newLabel);
                         setNewLabel("");
                     }}
                 >
