@@ -73,7 +73,6 @@ type Props = {
 
 export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
     const [isLabelOpen, setIsLabelOpen] = useState(false);
-    // const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
     const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map(
             (label) => label.id
@@ -81,6 +80,7 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
     );
 
     const navigate = useNavigate();
+    
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);

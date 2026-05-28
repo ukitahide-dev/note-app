@@ -4,6 +4,8 @@ import { createNote } from "../../api/noteApi";
 
 //  ---- css ----
 import styles from "./NoteForm.module.css";
+import NoteFormMenu from "./NoteFormMenu/NoteFormMenu";
+import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 
 
 
@@ -35,6 +37,9 @@ export default function NoteForm({ onAddNote }: Props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLabelOpen, setIsLabelOpen] = useState(false);
+    const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);  // useRefは値を保存する箱を作る。ここでは、textarea要素を保存する箱を作っている。
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -49,7 +54,7 @@ export default function NoteForm({ onAddNote }: Props) {
 
         try {
 
-            const newNote = await createNote(title, content);
+            const newNote = await createNote(title, content, selectedLabels);
 
             onAddNote(newNote);
 
@@ -81,6 +86,24 @@ export default function NoteForm({ onAddNote }: Props) {
     };
 
 
+
+    const handleSelectLabel = (
+        labelId: number
+    ) => {
+        if (selectedLabels.includes(labelId)) {
+
+            setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
+
+        } else {
+
+            setSelectedLabels([
+                ...selectedLabels,
+                labelId
+            ]);
+        }
+    }
+
+
     // useEffectは画面レンダリング後(DOM要素完成後)に実行される。だから、ここにaddEventListenerなどの副作用処理を書く。
     useEffect(() => {
 
@@ -95,6 +118,9 @@ export default function NoteForm({ onAddNote }: Props) {
                 !formRef.current.contains(e.target as Node)
             ) {
                 setIsExpanded(false);
+                setIsMenuOpen(false);
+                setIsLabelOpen(false);
+
                 console.log(`formRef.current: ${formRef.current}`);
                 console.log(e.target);
             }
@@ -153,8 +179,13 @@ export default function NoteForm({ onAddNote }: Props) {
             {/* 投稿ボタン */}
             {isExpanded && (
                 <>
-                    <div className={styles.menuArea}>
-                        <button>...</button>
+                    <div className={styles.menuButton}>
+                        <button
+                            type="button"
+                            onClick={() => setIsMenuOpen(true)}
+                        >
+                                ...
+                        </button>
 
                     </div>
                     <div className={styles.actions}>
@@ -167,13 +198,26 @@ export default function NoteForm({ onAddNote }: Props) {
                         </button>
 
                     </div>
+
+                    {isMenuOpen && (
+                        <NoteFormMenu
+                            setIsMenuOpen={setIsMenuOpen}
+                            setIsLabelOpen={setIsLabelOpen}
+
+                        />
+                    )}
+
+                    {isLabelOpen && (
+                        <LabelPanel
+                            selectedLabels={selectedLabels}
+                            onSelectLabel={handleSelectLabel}
+                        />
+                    )}
                 </>
             )}
 
         </form>
     )
-
-
 
 
 }

@@ -5,7 +5,7 @@ import styles from "./Menu.module.css";
 
 type Props = {
     children: React.ReactNode;
-    menuRef: React.RefObject<HTMLDivElement | null>;
+    menuRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 

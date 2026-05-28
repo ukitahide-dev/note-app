@@ -43,7 +43,7 @@ export const getNote = async(id: number) => {
 
 
 // ノートを投稿する
-export const createNote = async (title: string, content: string) => {
+export const createNote = async (title: string, content: string, labelIds: number[]) => {
     const token = localStorage.getItem("access");
 
     const res = await api.post(
@@ -51,6 +51,7 @@ export const createNote = async (title: string, content: string) => {
         {
             title,
             content,
+            label_ids: labelIds,
         },
         {
             headers: {

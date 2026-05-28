@@ -12,19 +12,11 @@ import styles from "./LabelPanel.module.css";
 
 
 
-// type Label = {
-//     id: number;
-//     name: string;
-// };
-
-
 type Props = {
-    // labels: Label[];
-    labelPanelRef: React.RefObject<HTMLDivElement | null>;
+
+    labelPanelRef?: React.RefObject<HTMLDivElement | null>;
     selectedLabels: number[];
-    // onCreateLabel: (
-    //     name: string
-    // ) => void;
+
     onSelectLabel: (
         labelId: number
     ) => void;
@@ -39,10 +31,8 @@ type Props = {
 // 親: SortableNoteCard.tsx
 
 export default function LabelPanel({
-    // labels,
     labelPanelRef,
     selectedLabels,
-    // onCreateLabel,
     onSelectLabel,
 }: Props) {
 
