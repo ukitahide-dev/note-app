@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import styles from "./LabelNotesPage.module.css"
 import NoteList from "../../components/NoteList/NoteList";
-import NoteForm from "../../components/NoteForm/Noteform";
+import NoteForm from "../../components/NoteForm/NoteForm";
 
 
 type Label = {
@@ -58,19 +58,37 @@ export default function LabelNotesPage() {
 
 
 
+    const handleAddNote = (
+        newNote: Note
+    ) => {
+
+        const hasCurrentLabel = newNote.labels.some(
+            (label) => label.name === labelName
+        );
+
+        if(!hasCurrentLabel) return;
+
+        setNotes((prev) => [
+            ...prev,
+            newNote
+        ]);
+
+
+    }
+
+
+
 
     return (
         <div className={styles.container}>
 
 
-            {/* <NoteForm onAddNote={handleAddNote}/> */}
+            <NoteForm onAddNote={handleAddNote}/>
                 <NoteList
                     notes={notes}
                     setNotes={setNotes}
                     // onMoveToTrash={handleMoveToTrash}
                 />
-
-
         </div>
 
 

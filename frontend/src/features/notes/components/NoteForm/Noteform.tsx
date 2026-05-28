@@ -178,8 +178,8 @@ export default function NoteForm({ onAddNote }: Props) {
 
             {/* 投稿ボタン */}
             {isExpanded && (
-                <>
-                    <div className={styles.menuButton}>
+                <div className={styles.bottom}>
+                    <div className={styles.menus}>
                         <button
                             type="button"
                             onClick={() => setIsMenuOpen(true)}
@@ -213,7 +213,7 @@ export default function NoteForm({ onAddNote }: Props) {
                             onSelectLabel={handleSelectLabel}
                         />
                     )}
-                </>
+                </div>
             )}
 
         </form>

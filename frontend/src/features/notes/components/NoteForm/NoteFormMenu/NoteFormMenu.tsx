@@ -30,7 +30,7 @@ export default function NoteFormMenu({
             <button
                 onClick={() => {
                     setIsMenuOpen(false);
-                    setIsLabelOpen((prev) => !prev);
+                    setIsLabelOpen(true);
                 }}
             >
                 ラベル追加
