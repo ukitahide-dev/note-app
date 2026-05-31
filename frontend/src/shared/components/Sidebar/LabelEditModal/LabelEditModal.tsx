@@ -39,6 +39,24 @@ export default function LabelEditModal() {
 
 
 
+    const handleSave = async () => {
+
+        for (const label of labels) {
+
+            const newName = editedNames[label.id];
+
+            if (newName !== label.name) {
+
+                await
+
+            }
+
+
+        }
+    }
+
+
+
 
 
     return (
@@ -115,6 +133,7 @@ export default function LabelEditModal() {
                 >
                     <button
                         className={styles.save}
+                        onClick={handleSave}
                     >
                         完了
                     </button>

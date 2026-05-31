@@ -7,6 +7,8 @@ import { create } from "zustand";
 import {
     getLabels,
     createLabel,
+    updateLabel,
+    deleteLabel,
 } from "../../notes/api/labelApi";
 
 
@@ -74,4 +76,60 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
         }
     },
+
+
+
+    // ラベル編集
+    handleUpdateLabel: async (
+        id: number,
+        name: string
+    ) => {
+
+        try {
+
+            const newLabel = await updateLabel(id, name);
+
+            set((state) => {
+                labels: state.labels.map(
+                    (label) =>
+                        label.id === id ? newLabel : label
+                )
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
 }));
+
+
+
+
+
+    // ラベルを削除する
+    handleDeleteLabel: async (
+        id: number
+    ) => {
+
+        try {
+
+            await deleteLabel(id);
+
+            set((state) => ({
+                labels: state.labels.filter(
+                    (label) => label.id !== id
+                )
+            }));
+
+        } catch (error) {
+
+            console.error(error)
+        }
+
+
+    }
