@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 // ---- css ----
 import styles from "./Sidebar.module.css";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
+import { useState } from "react";
+import LabelEditModal from "./LabelEditModal/LabelEditModal";
 
 
 
@@ -30,6 +32,7 @@ type Props = {
 
 export default function Sidebar({ isOpen }: Props) {
     const { labels } = useLabelStore();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -41,7 +44,7 @@ export default function Sidebar({ isOpen }: Props) {
 
 
     return (
-
+        <>
         <aside
             className={
                 isOpen
@@ -74,6 +77,16 @@ export default function Sidebar({ isOpen }: Props) {
 
             ))}
 
+            <div
+                className={styles.labelEdit}
+                onClick={() => setIsModalOpen(true)}
+            >
+                {isOpen && (
+                    <span>ラベルの編集</span>
+                )}
+
+            </div>
+
 
 
             <div className={styles.item} onClick={() => navigate("/notes/trash")}>
@@ -85,5 +98,14 @@ export default function Sidebar({ isOpen }: Props) {
             </div>
 
         </aside>
+
+
+        {isModalOpen && (
+            <LabelEditModal
+
+
+            />
+        )}
+        </>
     );
 }
