@@ -20,12 +20,21 @@ type Label = {
 
 
 type LabelStore = {
-    labels: Label[];
+    labels: Label[];  // labelsはLabel型の配列
 
     fetchLabels: () => Promise<void>;
 
     handleCreateLabel: (
         name: string
+    ) => Promise<void>;
+
+    handleUpdateLabel: (
+        id: number,
+        name: string
+    ) => Promise<void>;
+
+    handleDeleteLabel: (
+        id: number
     ) => Promise<void>;
 };
 
@@ -89,12 +98,24 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
             const newLabel = await updateLabel(id, name);
 
-            set((state) => {
-                labels: state.labels.map(
-                    (label) =>
-                        label.id === id ? newLabel : label
-                )
+            set((state) => {  // set() に渡してるのは関数。(state) => { }という関数。
+
+                return {
+                    labels: state.labels.map(
+                        (label) =>
+                            label.id === id
+                                ? newLabel
+                                : label
+                    )
+                };
+
             });
+
+            // set((state) => ({  省略形
+            //     labels: state.labels.map(
+            //         (label) => label.id === id ? newLabel: label
+            //     )
+            // }));
 
 
         } catch (error) {
@@ -103,11 +124,7 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
         }
 
-    }
-
-}));
-
-
+    },
 
 
 
@@ -133,3 +150,11 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
 
     }
+
+}));
+
+
+
+
+
+

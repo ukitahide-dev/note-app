@@ -73,7 +73,7 @@ export const deleteLabel = async (
     const token = localStorage.getItem("access");
 
     await api.delete(
-        `/labels/${id}`,
+        `/labels/${id}/`,
 
         {
             headers: {

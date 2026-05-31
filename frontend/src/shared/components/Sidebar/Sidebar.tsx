@@ -102,7 +102,7 @@ export default function Sidebar({ isOpen }: Props) {
 
         {isModalOpen && (
             <LabelEditModal
-
+                onClose={() => setIsModalOpen(false)}
 
             />
         )}

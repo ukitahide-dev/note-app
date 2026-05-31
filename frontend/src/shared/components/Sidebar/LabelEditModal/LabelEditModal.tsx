@@ -1,23 +1,37 @@
+// ---- react ----
 import { useEffect, useState } from "react";
-import useLabels from "../../../../features/labels/hooks/useLabels";
+
+
+
+// ---- labelStore ----
 import { useLabelStore } from "../../../../features/labels/store/labelStore";
 
 
+
+// ---- css ----
 import styles from "./LabelEditModal.module.css"
 
 
+
+type Props = {
+    onClose: () => void
+}
 
 
 // 親: Sidebar.tsx
 
 
-export default function LabelEditModal() {
+export default function LabelEditModal({
+    onClose
+}: Props) {
+
     const [editingId, setEditingId] = useState<number | null>(null);
-    const [editedNames, setEditedNames] = useState<Record<number, string>>({});
+    const [editedNames, setEditedNames] = useState<Record<number, string>>({});  // ID（number）をキーにして、ラベル名（string）を保存するオブジェクトの型
 
     const {
         labels,
-
+        handleUpdateLabel,
+        handleDeleteLabel,
     } = useLabelStore();
 
 
@@ -25,14 +39,13 @@ export default function LabelEditModal() {
 
     useEffect(() => {
         setEditedNames(
-            Object.fromEntries(
+            Object.fromEntries(  // Object.fromEntriesはキーと値のペアの二次元配列を、オブジェクトに変換するメソッド。
                 labels.map((label) => [
                     label.id,
                     label.name
                 ])
             )
         );
-
 
     }, [labels])
 
@@ -47,12 +60,13 @@ export default function LabelEditModal() {
 
             if (newName !== label.name) {
 
-                await
+                await handleUpdateLabel(label.id, newName);
 
             }
-
-
         }
+
+        setEditingId(null);
+        onClose();
     }
 
 
@@ -60,9 +74,14 @@ export default function LabelEditModal() {
 
 
     return (
-        <div className={styles.modalOverlay}>
+        <div className={styles.modalOverlay}
+            onClick={onClose}
+        >
 
-            <div className={styles.modal}>
+            <div
+                className={styles.modal}
+                onClick={(e) => e.stopPropagation()}
+            >
 
                 <h2>ラベルの編集</h2>
 
@@ -73,6 +92,7 @@ export default function LabelEditModal() {
                     >
                         <button
                             className={styles.iconButton}
+                            onClick={() => handleDeleteLabel(label.id)}
 
                         >
                             <span className={styles.note}>
