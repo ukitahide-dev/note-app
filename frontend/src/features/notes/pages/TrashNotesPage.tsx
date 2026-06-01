@@ -73,6 +73,7 @@ export default function TrashNotesPage() {
     }
 
 
+    
     const handleEmptyTrash = async () => {
 
         try {

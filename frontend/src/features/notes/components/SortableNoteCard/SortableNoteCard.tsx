@@ -18,8 +18,8 @@ import LabelPanel from "./LabelPanel/LabelPanel";
 import Card from "../../../../shared/ui/Card/Card";
 
 
-// ---- Zustand ----
-import { useLabelStore } from "../../../labels/store/labelStore";
+// // ---- Zustand ----
+// import { useLabelStore } from "../../../labels/store/labelStore";
 
 
 // ---- api ----
@@ -54,6 +54,10 @@ type Note = {
 
 type Props = {
     note: Note;
+    setNotes: React.Dispatch<
+        React.SetStateAction<Note[]>
+    >;
+
     openMenuId: number | null;
     onMoveToTrash: (id: number) => void;
 
@@ -71,7 +75,14 @@ type Props = {
 
 // 親: NotesPage.tsx
 
-export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setOpenMenuId}: Props) {
+export default function SortableNoteCard({
+    note,
+    setNotes,
+    openMenuId,
+    onMoveToTrash,
+    setOpenMenuId}: Props)
+{
+
     const [isLabelOpen, setIsLabelOpen] = useState(false);
     const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map(
@@ -80,24 +91,11 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
     );
 
     const navigate = useNavigate();
-    
+
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
 
-
-    // const { labels } = useLabelStore();
-
-
-    // const {
-    //     labels,
-    //     handleCreateLabel,
-    //     // selectedLabels,
-    //     // handleSelectLabel,
-    // } = useLabels(
-    //     // note.id,
-    //     // note.labels
-    // );
 
 
 
@@ -182,7 +180,15 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
 
             setSelectedLabels(newIds);
 
-            await updateNoteLabels(note.id, newIds);
+            const updatedNote = await updateNoteLabels(note.id, newIds);
+
+            // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+            setNotes((prev) =>
+                prev.map((n) =>
+                    n.id === note.id ? updatedNote : note
+                )
+            );
+
 
         } catch (error) {
 
@@ -223,6 +229,18 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                 <h3>{note.title}</h3>
                 <p>{note.content}</p>
 
+                <div className={cardStyles.labels}>
+                    {note.labels.map((label) => (
+                        <span
+                            key={label.id}
+                            className={cardStyles.label}
+                        >
+                            {label.name}
+                        </span>
+                    ))}
+
+                </div>
+
                 <button
                     className={cardStyles.menuButton}
                     onClick={(e) => {
@@ -254,36 +272,6 @@ export default function SortableNoteCard({ note, openMenuId, onMoveToTrash, setO
                         noteId={note.id}
                     />
 
-
-                    // <div
-                    //     ref={menuRef}
-                    //     className={cardStyles.menu}
-                    //     onClick={(e) => e.stopPropagation()}
-                    // >
-
-                    //     <button
-
-                    //         onClick={() => {
-                    //             // e.stopPropagation();
-                    //             setIsLabelOpen((prev) => !prev);
-                    //         }}
-                    //     >
-                    //         ラベル追加
-                    //     </button>
-
-                    //     <button>
-                    //         色変更
-                    //     </button>
-
-                    //     <button>
-                    //         ピン留め
-                    //     </button>
-
-                    //     <button  onClick={() => onMoveToTrash(note.id)}>
-                    //         削除
-                    //     </button>
-
-                    // </div>
                     )
                 )}
             </Card>

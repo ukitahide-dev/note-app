@@ -59,7 +59,7 @@ export default function NoteList({
     setNotes,
 }: Props) {
 
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null);  
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
 
 
@@ -139,6 +139,7 @@ export default function NoteList({
                         <SortableNoteCard
                             key={note.id}
                             note={note}
+                            setNotes={setNotes}
                             openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
                             onMoveToTrash={handleMoveToTrash}
