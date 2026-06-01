@@ -10,6 +10,7 @@ import { useLabelStore } from "../../../../features/labels/store/labelStore";
 
 // ---- css ----
 import styles from "./LabelEditModal.module.css"
+import ConfirmModal from "../../../ui/ConfirmModal/ConfirmModal";
 
 
 
@@ -27,6 +28,8 @@ export default function LabelEditModal({
 
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedNames, setEditedNames] = useState<Record<number, string>>({});  // ID（number）をキーにして、ラベル名（string）を保存するオブジェクトの型
+    const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
 
     const {
         labels,
@@ -74,6 +77,8 @@ export default function LabelEditModal({
 
 
     return (
+
+        <>
         <div className={styles.modalOverlay}
             onClick={onClose}
         >
@@ -92,7 +97,7 @@ export default function LabelEditModal({
                     >
                         <button
                             className={styles.iconButton}
-                            onClick={() => handleDeleteLabel(label.id)}
+                            onClick={() => setDeleteTargetId(label.id)}
 
                         >
                             <span className={styles.note}>
@@ -162,6 +167,24 @@ export default function LabelEditModal({
             </div>
 
         </div>
+
+
+        <ConfirmModal
+            isOpen={deleteTargetId !== null}
+            title="このラベルを削除し、全てのノートから削除します"
+            message="ノートは削除されません。"
+            onClose={() => setDeleteTargetId(null)}
+            onConfirm={() => {
+                if (deleteTargetId === null) {
+                    return;
+                }
+
+                handleDeleteLabel(deleteTargetId);
+                setDeleteTargetId(null);
+            }}
+        />
+
+        </>
     )
 
 

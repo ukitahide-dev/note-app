@@ -6,7 +6,7 @@ import styles from "./ConfirmModal.module.css";
 
 
 
-// 親: TrashNoteCard.tsx
+// 親: TrashNoteCard.tsx、LabelEditModal
 
 
 
@@ -34,7 +34,7 @@ export default function ConfirmModal({
 
 
 
-    
+
     return (
 
         <div

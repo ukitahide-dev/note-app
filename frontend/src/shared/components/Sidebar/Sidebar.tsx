@@ -78,7 +78,7 @@ export default function Sidebar({ isOpen }: Props) {
             ))}
 
             <div
-                className={styles.labelEdit}
+                className={styles.item}
                 onClick={() => setIsModalOpen(true)}
             >
                 {isOpen && (
@@ -89,7 +89,10 @@ export default function Sidebar({ isOpen }: Props) {
 
 
 
-            <div className={styles.item} onClick={() => navigate("/notes/trash")}>
+            <div
+                className={styles.item}
+                onClick={() => navigate("/notes/trash")}
+            >
                 🗑
 
                 {isOpen && (
