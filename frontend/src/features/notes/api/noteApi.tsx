@@ -48,7 +48,7 @@ export const createNote = async (
     content: string,
     labelIds: number[]
 ) => {
-    
+
     const token = localStorage.getItem("access");
 
     const res = await api.post(
@@ -170,6 +170,23 @@ export const deleteNoteForever = async (id: number) => {
             }
         }
     );
+}
+
+
+
+// ゴミ箱内のノートを全て一括で削除する
+export const emptyTrash = async () => {
+    const token = localStorage.getItem("access");
+
+    await api.delete(
+        "/notes/trash/all/",
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
 }
 
 

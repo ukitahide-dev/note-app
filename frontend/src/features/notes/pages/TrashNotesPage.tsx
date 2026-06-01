@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 
 
 // ---- api ----
-import { deleteNoteForever, getTrashNotes, restoreNote } from "../api/noteApi";
+import { deleteNoteForever, emptyTrash, getTrashNotes, restoreNote } from "../api/noteApi";
 
 
 
 // ---- css ----
 import styles from "./TrashNotesPage.module.css";
 import TrashNoteCard from "../components/TrashNoteCard/TrashNoteCard";
+import ConfirmModal from "../../../shared/ui/ConfirmModal/ConfirmModal";
 
 
 
@@ -25,6 +26,7 @@ type Note = {
 
 export default function TrashNotesPage() {
     const [notes, setNotes] = useState<Note[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     useEffect(() => {
@@ -71,13 +73,38 @@ export default function TrashNotesPage() {
     }
 
 
+    const handleEmptyTrash = async () => {
+
+        try {
+
+            await emptyTrash();
+
+            setNotes([]);
+            setIsModalOpen(false);
+
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+
 
 
 
 
     return (
+        <>
         <div className={styles.container}>
             <h1>ゴミ箱</h1>
+
+            <button
+                onClick={() => setIsModalOpen(true)}
+            >
+                ゴミ箱を空にする
+
+            </button>
 
             <div className={styles.notesContainer}>
 
@@ -125,6 +152,17 @@ export default function TrashNotesPage() {
             </div>
 
         </div>
+
+
+        <ConfirmModal
+            isOpen={isModalOpen}
+            title="ゴミ箱を空にしますか？"
+            message="ゴミ箱内の全てのノートが完全に削除されます。"
+            onConfirm={handleEmptyTrash}
+            onClose={() => setIsModalOpen(false)}
+        />
+
+        </>
 
 
     );

@@ -44,6 +44,30 @@ class NoteViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
+    
+    # ゴミ箱内のノートを一括削除する
+    @action(detail=False,methods=["delete"], url_path="trash/all")
+    def empty_trash(self, request):
+        count = Note.objects.filter(
+            user=request.user,
+            is_deleted=True
+        ).count()
+
+        Note.objects.filter(
+            user=request.user,
+            is_deleted=True
+        ).delete()
+
+
+        return Response(
+            {
+                "deleted_count": count
+            }
+        )
+
+
+
+
 
 
 class LabelViewSet(ModelViewSet):
