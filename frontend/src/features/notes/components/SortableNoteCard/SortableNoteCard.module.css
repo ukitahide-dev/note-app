@@ -46,8 +46,24 @@
 
 
 .label {
-    padding: 2px 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
     border-radius: 12px;
-    background: #e3f2fd;
-    font-size: 12px;
+    background: #eee;
+    cursor: pointer;
+}
+
+
+.removeLabel {
+    display: none;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+
+.label:hover .removeLabel {
+    display: block;
 }

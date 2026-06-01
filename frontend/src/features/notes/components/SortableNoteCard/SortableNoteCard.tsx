@@ -185,7 +185,7 @@ export default function SortableNoteCard({
             // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
             setNotes((prev) =>
                 prev.map((n) =>
-                    n.id === note.id ? updatedNote : note
+                    n.id === note.id ? updatedNote : n
                 )
             );
 
@@ -198,6 +198,35 @@ export default function SortableNoteCard({
 
     };
 
+
+
+
+    const handleRemoveLabel = async (
+        labelId: number
+    ) => {
+
+        try {
+
+            const newIds = selectedLabels.filter((id) => id !== labelId);
+
+            setSelectedLabels(newIds);
+
+            const updatedNote = await updateNoteLabels(note.id, newIds);
+
+            setNotes((prev) =>
+                prev.map((n) =>
+                    n.id === note.id
+                        ? updatedNote
+                        : n
+                )
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
 
 
 
@@ -231,12 +260,29 @@ export default function SortableNoteCard({
 
                 <div className={cardStyles.labels}>
                     {note.labels.map((label) => (
-                        <span
+                        <div
                             key={label.id}
                             className={cardStyles.label}
                         >
-                            {label.name}
-                        </span>
+                            <span
+
+                            >
+                                {label.name}
+                            </span>
+
+                            <button
+                                className={cardStyles.removeLabel}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveLabel(
+                                        label.id
+                                    );
+                                }}
+                            >
+                                ×
+                            </button>
+
+                        </div>
                     ))}
 
                 </div>
@@ -281,43 +327,3 @@ export default function SortableNoteCard({
 }
 
 
-
-
-
-// useEffect(() => {
-    //     const fetchLabels = async () => {
-    //         try {
-
-    //             const data = await getLabels();
-    //             setLabels(data);
-
-    //         } catch (error) {
-
-    //             console.error(error);
-
-    //         }
-    //     };
-
-    //     fetchLabels();
-
-    // }, []);
-
-// const handleCreateLabel = async (
-    //     name: string
-    // ) => {
-
-    //     try {
-
-    //         const newLabel = await createLabel(name);
-
-    //         setLabels((prev) => [
-    //             ...prev,
-    //             newLabel,
-    //         ]);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
