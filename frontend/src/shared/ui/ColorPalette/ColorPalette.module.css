@@ -1,0 +1,31 @@
+.palette {
+    position: absolute;
+    top: 200px;
+    right: 0px;
+    display: grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap: 8px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow:0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+}
+
+
+.palette button {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    border: 1px solid #ccc;
+
+    cursor: pointer;
+}
+
+
+.palette button:hover {
+    transform: scale(1.1);
+}

@@ -216,3 +216,32 @@ export const updateNoteLabels = async (
 
     return res.data;
 };
+
+
+
+
+
+// ノートの背景を変更する
+export const updateNoteColor = async (
+    id: number,
+    color: string
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `notes/${id}/`,
+        {
+            color
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+    );
+
+    return res.data;
+
+}

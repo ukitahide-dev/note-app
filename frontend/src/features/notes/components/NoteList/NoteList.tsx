@@ -59,8 +59,8 @@ export default function NoteList({
     setNotes,
 }: Props) {
 
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
+    const [openColorId, setOpenColorId] = useState<number | null>(null);
 
 
 
@@ -142,6 +142,8 @@ export default function NoteList({
                             setNotes={setNotes}
                             openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
+                            openColorId={openColorId}
+                            setOpenColorId={setOpenColorId}
                             onMoveToTrash={handleMoveToTrash}
                         />
 

@@ -24,11 +24,12 @@ import Card from "../../../../shared/ui/Card/Card";
 
 // ---- api ----
 // import { createLabel, getLabels } from "../../api/labelApi";
-import { updateNoteLabels } from "../../api/noteApi";
+import { updateNoteColor, updateNoteLabels } from "../../api/noteApi";
 
 //  ---- css ----
 import cardStyles from "./SortableNoteCard.module.css";
 import NoteMenu from "./NoteMenu/NoteMenu";
+import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 // import useLabels from "../../../labels/hooks/useLabels";
 
 
@@ -46,6 +47,7 @@ type Note = {
     id: number;
     title: string;
     content: string;
+    color: string;
     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
 };
 
@@ -59,6 +61,14 @@ type Props = {
     >;
 
     openMenuId: number | null;
+
+    openColorId: number | null;
+    setOpenColorId: React.Dispatch<
+            React.SetStateAction<
+                number | null
+            >
+        >;
+
     onMoveToTrash: (id: number) => void;
 
     setOpenMenuId:
@@ -79,11 +89,14 @@ export default function SortableNoteCard({
     note,
     setNotes,
     openMenuId,
+    openColorId,
+    setOpenColorId,
     onMoveToTrash,
     setOpenMenuId}: Props)
 {
 
     const [isLabelOpen, setIsLabelOpen] = useState(false);
+    const [tempColor, setTempColor] = useState(note.color);
     const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map(
             (label) => label.id
@@ -160,6 +173,23 @@ export default function SortableNoteCard({
 
 
 
+    const updateLabels = async (
+        newIds: number[]
+    ) => {
+
+        setSelectedLabels(newIds);
+
+        const updatedNote = await updateNoteLabels(note.id, newIds);
+
+        // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+        setNotes((prev) =>
+            prev.map((n) =>
+                n.id === note.id ? updatedNote : n
+            )
+        );
+
+    }
+
 
 
 
@@ -178,17 +208,7 @@ export default function SortableNoteCard({
                 newIds = [...selectedLabels, labelId];
             }
 
-            setSelectedLabels(newIds);
-
-            const updatedNote = await updateNoteLabels(note.id, newIds);
-
-            // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-            setNotes((prev) =>
-                prev.map((n) =>
-                    n.id === note.id ? updatedNote : n
-                )
-            );
-
+            updateLabels(newIds);
 
         } catch (error) {
 
@@ -209,17 +229,7 @@ export default function SortableNoteCard({
 
             const newIds = selectedLabels.filter((id) => id !== labelId);
 
-            setSelectedLabels(newIds);
-
-            const updatedNote = await updateNoteLabels(note.id, newIds);
-
-            setNotes((prev) =>
-                prev.map((n) =>
-                    n.id === note.id
-                        ? updatedNote
-                        : n
-                )
-            );
+            updateLabels(newIds);
 
         } catch (error) {
 
@@ -228,6 +238,36 @@ export default function SortableNoteCard({
         }
     };
 
+
+    const handleSelectColor = (
+        color: string
+    ) => {
+        setTempColor(color);
+    }
+
+
+
+    const handleClosePalette = async () => {
+
+        try {
+
+            const updatedNote = await updateNoteColor(note.id, tempColor);
+
+            setNotes((prev) => (
+                prev.map((n) =>
+                    n.id === note.id ? updatedNote : n
+                )
+            ));
+
+            setOpenColorId(null);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
 
 
 
@@ -242,9 +282,10 @@ export default function SortableNoteCard({
             // ref={setNodeRef}
         >
             <Card
+                style={{ backgroundColor: tempColor, }}
+                onClick={() => navigate(`/notes/${note.id}`)}
                 // ref={cardRef}
                 // className={cardStyles.card}
-                onClick={() => navigate(`/notes/${note.id}`)}
             >
 
                 <div
@@ -287,18 +328,33 @@ export default function SortableNoteCard({
 
                 </div>
 
-                <button
-                    className={cardStyles.menuButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsLabelOpen(false);
-                        setOpenMenuId((prev) => prev === note.id ? null : note.id);
-                    }}
-                >
-                    ⋮
-                </button>
+                <div className={cardStyles.buttons}>
 
-                {/* menu */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuId(null);
+                            setOpenColorId((prev) => prev === note.id ? null : note.id);
+                        }}
+                    >
+                        🎨
+                    </button>
+
+                    <button
+                        className={cardStyles.menuButton}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsLabelOpen(false);
+                            setOpenColorId(null);
+                            setOpenMenuId((prev) => prev === note.id ? null : note.id);
+                        }}
+                    >
+                        ⋮
+                    </button>
+
+                </div>
+
+
                 {openMenuId === note.id && (
                     isLabelOpen ? (
                         <LabelPanel
@@ -320,6 +376,20 @@ export default function SortableNoteCard({
 
                     )
                 )}
+
+
+                {/* 背景色 */}
+                {openColorId === note.id && (
+                    <ColorPalette
+                        onSelectColor={handleSelectColor}
+                        onClose={handleClosePalette}
+
+                    />
+
+
+                )}
+
+
             </Card>
         </div>
 
