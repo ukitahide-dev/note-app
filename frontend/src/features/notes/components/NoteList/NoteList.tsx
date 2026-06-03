@@ -52,7 +52,7 @@ type Props = {
 
 
 
-// 親: NotesPage.tsx
+// 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx
 
 export default function NoteList({
     notes,

@@ -18,6 +18,7 @@ class Note(models.Model):
     content = models.TextField()
     labels = models.ManyToManyField(Label, blank=True)
     color = models.CharField(max_length=20, default="#ffffff")
+    is_favorite = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

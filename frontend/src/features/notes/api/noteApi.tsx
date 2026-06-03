@@ -245,3 +245,31 @@ export const updateNoteColor = async (
     return res.data;
 
 }
+
+
+
+// ノートのお気に入りを切り替える
+export const updateNoteFavorite = async (
+    id: number,
+    is_favorite: boolean
+
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `notes/${id}/`,
+        {
+            is_favorite
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return res.data;
+
+
+}

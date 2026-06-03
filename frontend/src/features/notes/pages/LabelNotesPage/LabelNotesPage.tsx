@@ -84,11 +84,11 @@ export default function LabelNotesPage() {
 
 
             <NoteForm onAddNote={handleAddNote}/>
-                <NoteList
-                    notes={notes}
-                    setNotes={setNotes}
-                    // onMoveToTrash={handleMoveToTrash}
-                />
+            <NoteList
+                notes={notes}
+                setNotes={setNotes}
+                // onMoveToTrash={handleMoveToTrash}
+            />
         </div>
 
 

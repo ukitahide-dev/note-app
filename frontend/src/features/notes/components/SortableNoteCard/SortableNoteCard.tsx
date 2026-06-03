@@ -18,19 +18,19 @@ import LabelPanel from "./LabelPanel/LabelPanel";
 import Card from "../../../../shared/ui/Card/Card";
 
 
-// // ---- Zustand ----
-// import { useLabelStore } from "../../../labels/store/labelStore";
-
-
 // ---- api ----
-// import { createLabel, getLabels } from "../../api/labelApi";
-import { updateNoteColor, updateNoteLabels } from "../../api/noteApi";
+import { updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
+
+
+// ---- shared ----
+import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
+
 
 //  ---- css ----
 import cardStyles from "./SortableNoteCard.module.css";
 import NoteMenu from "./NoteMenu/NoteMenu";
-import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-// import useLabels from "../../../labels/hooks/useLabels";
+
+
 
 
 
@@ -48,6 +48,7 @@ type Note = {
     title: string;
     content: string;
     color: string;
+    is_favorite: boolean;
     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
 };
 
@@ -247,6 +248,7 @@ export default function SortableNoteCard({
 
 
 
+    // ColorPaletteを閉じたときだけ、DBに変更を伝える。
     const handleClosePalette = async () => {
 
         try {
@@ -271,6 +273,31 @@ export default function SortableNoteCard({
 
 
 
+    const handleToggleFavorite = async (
+
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
+
+            setNotes((prev) =>
+                prev.map((n) =>
+                    n.id === note.id ? updatedNote : n
+                )
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    }
+
+
+
 
     return (
         <div
@@ -282,7 +309,7 @@ export default function SortableNoteCard({
             // ref={setNodeRef}
         >
             <Card
-                style={{ backgroundColor: tempColor, }}
+                style={{ backgroundColor: tempColor }}
                 onClick={() => navigate(`/notes/${note.id}`)}
                 // ref={cardRef}
                 // className={cardStyles.card}
@@ -338,6 +365,17 @@ export default function SortableNoteCard({
                         }}
                     >
                         🎨
+                    </button>
+
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleFavorite();
+                        }}
+
+                    >
+                        {note.is_favorite ? "❤️" : "🤍"}
+
                     </button>
 
                     <button

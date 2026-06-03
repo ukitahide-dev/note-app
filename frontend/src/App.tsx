@@ -15,6 +15,7 @@ import TrashNotesPage from './features/notes/pages/TrashNotesPage'
 // ---- shared ----
 import Layout from './shared/layout/Layout'
 import LabelNotesPage from './features/notes/pages/LabelNotesPage/LabelNotesPage'
+import FavoriteNotesPage from './features/notes/pages/FavoriteNotesPage/FavoriteNotesPage'
 
 
 
@@ -46,6 +47,14 @@ function App() {
                     element={
                         <Layout>
                             <TrashNotesPage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/notes/favorites"
+                    element={
+                        <Layout>
+                            <FavoriteNotesPage />
                         </Layout>
                     }
                 />

@@ -44,13 +44,13 @@ export default function ColorPalette({
             event: MouseEvent
         ) => {
 
-            if (
-                paletteRef.current &&
-                !paletteRef.current.contains(
+            if ( // ColorPaletteが存在していて、クリックされた場所がColorPaletteの外だった場合。
+                paletteRef.current &&  // paletteRef.currentは<div class="palette">のDOMを指している。
+                !paletteRef.current.contains(  // event.targetは実際にクリックされた要素。ex) <button>赤</button>
                     event.target as Node
                 )
             ) {
-                
+
                 onClose();
             }
         };

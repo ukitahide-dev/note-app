@@ -61,6 +61,16 @@ export default function Sidebar({ isOpen }: Props) {
                 )}
             </div>
 
+            <div
+                className={styles.item}
+                onClick={() => navigate("/notes/favorites")}
+            >
+                ❤️
+                {isOpen && (
+                    <span>お気に入り</span>
+                )}
+            </div>
+
             {labels.map((label) => (
 
                 <div key={label.id}
