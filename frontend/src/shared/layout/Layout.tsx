@@ -38,6 +38,7 @@ export default function Layout({ children }: Props) {  // 分割代入でchildre
 
     // const [labels, setLabels] = useState<Label[]>([]);  // labelsはLabel型の配列。初期値は空の配列。
     const [isOpen, setIsOpen] = useState(true);
+    // const [searchText, setSearchText] = useState("");
 
     const { fetchLabels } = useLabelStore();
 
@@ -79,7 +80,11 @@ export default function Layout({ children }: Props) {  // 分割代入でchildre
 
         <div className={styles.layout}>
 
-            <Header onMenuClick={toggleSidebar}/>
+            <Header
+                // searchText={searchText}
+                // setSearchText={setSearchText}
+                onMenuClick={toggleSidebar}
+            />
 
             <div className={styles.body}>
 

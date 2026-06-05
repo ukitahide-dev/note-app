@@ -16,6 +16,7 @@ import TrashNotesPage from './features/notes/pages/TrashNotesPage'
 import Layout from './shared/layout/Layout'
 import LabelNotesPage from './features/notes/pages/LabelNotesPage/LabelNotesPage'
 import FavoriteNotesPage from './features/notes/pages/FavoriteNotesPage/FavoriteNotesPage'
+import SearchResultsPage from './features/search/pages/SearchResultsPage/SearchResultsPage'
 
 
 
@@ -55,6 +56,14 @@ function App() {
                     element={
                         <Layout>
                             <FavoriteNotesPage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/search"
+                    element={
+                        <Layout>
+                            <SearchResultsPage />
                         </Layout>
                     }
                 />

@@ -49,9 +49,7 @@ export default function TrashNotesPage() {
     const handleRestore = async (id: number) => {
         try {
             await restoreNote(id);
-            setNotes((prev) =>
-                prev.filter((note) => note.id !== id)
-            );
+            setNotes((prev) => prev.filter((note) => note.id !== id));
         } catch (error) {
             console.error(error);
         }
@@ -73,7 +71,7 @@ export default function TrashNotesPage() {
     }
 
 
-    
+
     const handleEmptyTrash = async () => {
 
         try {

@@ -84,8 +84,8 @@ type Props = {
 
 
 
-// 親: NotesPage.tsx
-
+// 親: NoteList.tsx
+List
 export default function SortableNoteCard({
     note,
     setNotes,

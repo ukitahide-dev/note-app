@@ -34,6 +34,8 @@ type Props = {
 
 
 
+// 親: TrashNotesPage.tsx
+
 
 export default function TrashNoteCard({
     note,
