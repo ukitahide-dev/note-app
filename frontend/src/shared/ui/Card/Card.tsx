@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import styles from "./Card.module.css";
 
 
@@ -10,24 +11,36 @@ type Props = {
 
 
 
+const Card = forwardRef<
+    HTMLDivElement,
+    Props
+>(
+    (
+        {
+            children,
+            className,
+            onClick,
+            style,
+        },
+        ref
+    ) => {
 
-export default function Card({
-    children,
-    className,
-    onClick,
-    style,
-}: Props) {
+        return (
+            <div
+                ref={ref}
+                className={`
+                    ${styles.card}
+                    ${className || ""}
+                `}
+                onClick={onClick}
+                style={style}
+            >
+                {children}
+            </div>
+        );
+    }
+);
 
-    return (
-        <div
-            className={`
-                ${styles.card}
-                ${className || ""}
-            `}
-            onClick={onClick}
-            style={style}
-        >
-            {children}
-        </div>
-    );
-}
+
+
+export default Card;

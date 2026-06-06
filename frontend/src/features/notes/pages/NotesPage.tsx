@@ -80,6 +80,7 @@ export default function NotesPage() {
                 <NoteList
                     notes={notes}
                     setNotes={setNotes}
+                    enableSort={true}
                     // onMoveToTrash={handleMoveToTrash}
                 />
             </div>

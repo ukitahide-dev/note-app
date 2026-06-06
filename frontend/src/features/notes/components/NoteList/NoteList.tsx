@@ -21,6 +21,7 @@ import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
 
 // ---- css ----
 import styles from "./NoteList.module.css";
+import NoteCard from "../NoteCard/NoteCard";
 
 
 
@@ -36,6 +37,8 @@ type Note = {
     id: number;
     title: string;
     content: string;
+    color: string;
+    is_favorite: boolean;
     labels: Label[];
 };
 
@@ -46,17 +49,21 @@ type Props = {
     setNotes: React.Dispatch<
         React.SetStateAction<Note[]>
     >;
+
+    enableSort: boolean;
+
 };
 
 
 
 
 
-// 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx
+// 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx、SearchResultsPage.tsx
 
 export default function NoteList({
     notes,
     setNotes,
+    enableSort,
 }: Props) {
 
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
@@ -122,6 +129,8 @@ export default function NoteList({
 
     return (
 
+        enableSort ? (
+
         <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}  // ドラッグ修了時に実行される
@@ -146,7 +155,6 @@ export default function NoteList({
                             setOpenColorId={setOpenColorId}
                             onMoveToTrash={handleMoveToTrash}
                         />
-
                     ))}
 
                 </div>
@@ -154,5 +162,30 @@ export default function NoteList({
             </SortableContext>
 
         </DndContext>
+
+
+        ) : (
+
+            <div className={styles.notesContainer}>
+
+                {notes.map((note) => (
+
+                    <NoteCard
+                        key={note.id}
+                        note={note}
+                        setNotes={setNotes}
+                        openMenuId={openMenuId}
+                        setOpenMenuId={setOpenMenuId}
+                        openColorId={openColorId}
+                        setOpenColorId={setOpenColorId}
+                        onMoveToTrash={handleMoveToTrash}
+                    />
+
+                ))}
+
+            </div>
+
+        )
+
     );
 }

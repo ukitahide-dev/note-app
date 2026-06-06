@@ -28,7 +28,7 @@ export default function SearchResultsPage () {
     const [notes, setNotes] = useState<Note[]>([]);
     const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
 
-    // const { labels } = useLabelStore();
+
     const { searchText } = useSearchStore();
 
     const showLabels = searchText.trim() === "" && selectedLabel === null;
@@ -56,6 +56,7 @@ export default function SearchResultsPage () {
     }, [])
 
 
+    // すでに使われているラベルだけを取得する
     const usedLabels = notes.flatMap((note) => note.labels);
 
     const uniqueLabels = [
@@ -119,7 +120,12 @@ export default function SearchResultsPage () {
 
         ) : (
 
-            <NoteList />
+            <NoteList
+                notes={filteredNotes}
+                setNotes={setNotes}
+                enableSort={false}
+
+            />
 
 
         )
