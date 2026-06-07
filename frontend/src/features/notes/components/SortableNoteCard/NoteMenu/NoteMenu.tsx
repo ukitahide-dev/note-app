@@ -26,7 +26,9 @@ export default function NoteMenu({
 
 
     return (
-        <Menu menuRef={menuRef}>
+        <Menu
+            menuRef={menuRef}
+        >
             <button
                 onClick={() => {
                     setIsLabelOpen((prev) => !prev);

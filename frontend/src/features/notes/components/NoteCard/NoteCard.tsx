@@ -8,6 +8,7 @@ import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 
 import cardStyles from "./NoteCard.module.css";
+import { useSearchStore } from "../../../search/store/SearchStore";
 
 
 type Label = {
@@ -89,6 +90,7 @@ export default function NoteCard({
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
 
 
+    const { searchText } = useSearchStore();
 
 
 
@@ -257,13 +259,57 @@ export default function NoteCard({
 
 
 
+    const highlightText = (
+        text: string
+    ) => {
+
+        if (!searchText.trim()) {
+            return text;
+        }
+
+        const escapedSearchText =
+            searchText.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+
+        const regex = new RegExp(
+            `(${escapedSearchText})`,
+            "gi"
+        );
+
+        const parts = text.split(regex);
+
+        return parts.map(
+            (part, index) => (
+
+                part.toLowerCase() ===
+                searchText.toLowerCase()
+
+                    ? ( // markは、HTMLの <mark> タグの標準スタイル。自動で背景黄色が当たる。
+                        <mark key={index}>
+                            {part}
+                        </mark>
+                    )
+                    : (
+                        <span key={index}>
+                            {part}
+                        </span>
+                    )
+
+            )
+        );
+    };
+
+
+
+
     return (
 
             <Card
                 style={{ backgroundColor: tempColor }}
                 onClick={() => navigate(`/notes/${note.id}`)}
                 ref={cardRef}
-                // className={cardStyles.card}
             >
                 <div
                     {...dragHandleProps}
@@ -280,8 +326,14 @@ export default function NoteCard({
                     ☰
                 </div> */}
 
-                <h3>{note.title}</h3>
-                <p>{note.content}</p>
+                <h3>
+                    {highlightText(note.title)}
+                </h3>
+
+                <p>
+                    {highlightText(note.content)}
+                </p>
+
 
                 <div className={cardStyles.labels}>
                     {note.labels.map((label) => (
@@ -363,7 +415,7 @@ export default function NoteCard({
 
                     // ---- menu ----
                     <NoteMenu
-                        menuRef={menuRef}
+                        menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                         setIsLabelOpen={setIsLabelOpen}
                         onMoveToTrash={onMoveToTrash}
                         noteId={note.id}

@@ -12,8 +12,8 @@ type Props = {
 
 
 const Card = forwardRef<
-    HTMLDivElement,
-    Props
+    HTMLDivElement,  //  refの型
+    Props  // propsの型
 >(
     (
         {

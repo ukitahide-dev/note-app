@@ -18,7 +18,7 @@ export default function Menu({ children, menuRef }: Props) {
 
     return (
         <div
-            ref={menuRef}
+            ref={menuRef} // このDOM要素を menuRef.current にしてという意味。
             className={styles.menu}
             onClick={(e) => e.stopPropagation()}  // これがないと、SortableNoteCard.tsxの、onClick={() => navigate(`/notes/${note.id}`)}が発動してしまう。
         >

@@ -1,11 +1,19 @@
 
-
+// ---- react ----
 import { useEffect, useState } from "react";
-import { useLabelStore } from "../../../labels/store/labelStore";
+
 import styles from "./SearchResultsPage.module.css";
+
+// ----notes/components ----
 import NoteList from "../../../notes/components/NoteList/NoteList";
+
+// ---- searchStrore ----
 import { useSearchStore } from "../../store/SearchStore";
+
+// ---- notes/api ----
 import { getNotes } from "../../../notes/api/noteApi";
+
+
 
 
 type Label = {
