@@ -21,7 +21,11 @@ type Note = {
 
 
 
+
+
+
 export default function NoteDetail() {
+    
     const { id } = useParams();
     console.log(`id: ${id}`);
 

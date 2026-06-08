@@ -33,7 +33,7 @@ export default function Header({
     } = useSearchStore();
 
 
-    
+
 
     return (
 
@@ -46,7 +46,10 @@ export default function Header({
                 ☰
             </button>
 
-            <h1 className={styles.logo}>
+            <h1
+                className={styles.logo}
+                onClick={() => navigate("/notes")}
+            >
                 My Keep
             </h1>
 

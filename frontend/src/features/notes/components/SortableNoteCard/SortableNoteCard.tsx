@@ -79,6 +79,19 @@ type Props = {
                 number | null
             >
         >;
+
+    openNoteDetailId: number | null;
+    setOpenNoteDetailId: React.Dispatch<
+            React.SetStateAction<
+                number | null
+            >
+        >;
+
+    onSave: (
+        id: number,
+        title: string,
+        content: string,
+    ) => Promise<void>
 };
 
 
@@ -96,6 +109,9 @@ export default function SortableNoteCard({
     setOpenMenuId,
     openColorId,
     setOpenColorId,
+    openNoteDetailId,
+    setOpenNoteDetailId,
+    onSave,
     onMoveToTrash,
 }: Props)
 {
@@ -153,6 +169,9 @@ export default function SortableNoteCard({
                 openColorId={openColorId}
                 setOpenColorId={setOpenColorId}
                 onMoveToTrash={onMoveToTrash}
+                openNoteDetailId={openNoteDetailId}
+                setOpenNoteDetailId={setOpenNoteDetailId}
+                onSave={onSave}
 
                 dragHandleProps={{
                     ...attributes,

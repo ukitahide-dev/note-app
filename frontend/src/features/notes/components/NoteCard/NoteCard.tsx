@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 import { useNavigate } from "react-router-dom";
-import { updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
+import { updateNote, updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
@@ -9,6 +9,7 @@ import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 import cardStyles from "./NoteCard.module.css";
 import { useSearchStore } from "../../../search/store/SearchStore";
+import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 
 
 type Label = {
@@ -54,6 +55,19 @@ type Props = {
             >
         >;
 
+    openNoteDetailId: number | null;
+    setOpenNoteDetailId: React.Dispatch<
+            React.SetStateAction<
+                number | null
+            >
+        >;
+
+    onSave: (
+        id: number,
+        title: string,
+        content: string,
+    ) => Promise<void>
+
     dragHandleProps?: any;
 };
 
@@ -69,6 +83,9 @@ export default function NoteCard({
     openColorId,
     setOpenColorId,
     onMoveToTrash,
+    openNoteDetailId,
+    setOpenNoteDetailId,
+    onSave,
     dragHandleProps
 }: Props) {
 
@@ -303,12 +320,34 @@ export default function NoteCard({
 
 
 
+    // const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+
+    // ) => {
+
+    //     try {
+    //         await updateNote(Number(id), title, content);
+    //         navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("保存失敗");
+    //     }
+
+    //     setOpenNoteDetailId(null);
+
+    // }
+
+
+
+
 
     return (
 
             <Card
                 style={{ backgroundColor: tempColor }}
-                onClick={() => navigate(`/notes/${note.id}`)}
+                onClick={() => setOpenNoteDetailId(note.id)}
                 ref={cardRef}
             >
                 <div
@@ -430,6 +469,17 @@ export default function NoteCard({
                     <ColorPalette
                         onSelectColor={handleSelectColor}
                         onClose={handleClosePalette}
+
+                    />
+
+
+                )}
+
+
+                {openNoteDetailId === note.id && (
+                    <NoteDetailModal
+                        note={note}
+                        onSave={onSave}
 
                     />
 
