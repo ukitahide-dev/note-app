@@ -7,7 +7,7 @@ import './App.css'
 // ---- features ----
 import LoginPage from './features/auth/pages/LoginPage'
 import NotesPage from './features/notes/pages/NotesPage'
-import NoteDetailPage from './features/notes/pages/NoteDetailPage'
+// import NoteDetailPage from './features/notes/pages/NoteDetailPage'
 import TrashNotesPage from './features/notes/pages/TrashNotesPage'
 
 
@@ -69,7 +69,7 @@ function App() {
                 />
 
                 {/* <Route path="/notes" element={<NotesPage />} /> */}
-                <Route path="/notes/:id" element={<NoteDetailPage />} />
+                {/* <Route path="/notes/:id" element={<NoteDetailPage />} /> */}
 
 
 

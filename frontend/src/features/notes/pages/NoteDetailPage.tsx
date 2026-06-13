@@ -1,103 +1,103 @@
-// ---- react ----
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+// // ---- react ----
+// import { useParams, useNavigate } from "react-router-dom";
+// import { useEffect, useState } from "react";
+
+// //
+
+// // ---- api ----
+// import { getNote, updateNote } from "../api/noteApi";
+
+
+// //  ---- css ----
+// import styles from "./NoteDetailPage.module.css";
 
 
 
-// ---- api ----
-import { getNote, updateNote } from "../api/noteApi";
-
-
-//  ---- css ----
-import styles from "./NoteDetailPage.module.css";
-
-
-
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-};
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+// };
 
 
 
 
 
 
-export default function NoteDetail() {
-    
-    const { id } = useParams();
-    console.log(`id: ${id}`);
+// export default function NoteDetail() {
 
-    const navigate = useNavigate();
+//     const { id } = useParams();
+//     console.log(`id: ${id}`);
 
-    const [note, setNote] = useState<Note | null>(null);
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+//     const navigate = useNavigate();
 
-
-    useEffect(() => {
-        const fetchNote = async () => {
-            const data = await getNote(Number(id));
-            setNote(data);
-            setTitle(data.title);
-            setContent(data.content);
-        };
-
-        fetchNote();
-    }, [id]);
+//     const [note, setNote] = useState<Note | null>(null);
+//     const [title, setTitle] = useState("");
+//     const [content, setContent] = useState("");
 
 
-    if (!note) return null;
+//     useEffect(() => {
+//         const fetchNote = async () => {
+//             const data = await getNote(Number(id));
+//             setNote(data);
+//             setTitle(data.title);
+//             setContent(data.content);
+//         };
+
+//         fetchNote();
+//     }, [id]);
 
 
-
-    const handleClose = async () => {
-        try {
-            await updateNote(Number(id), title, content);
-            navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
-        } catch (error) {
-            console.error(error);
-            alert("保存失敗");
-        }
-
-    }
+//     if (!note) return null;
 
 
 
-    return (
-        <div
-            className={styles.overlay}
-            onClick={handleClose}
-        >
+//     const handleClose = async () => {
+//         try {
+//             await updateNote(Number(id), title, content);
+//             navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
+//         } catch (error) {
+//             console.error(error);
+//             alert("保存失敗");
+//         }
 
-            <div
-                className={styles.modal}
-                onClick={(e) => e.stopPropagation()}
-            >
-
-                <input
-                    className={styles.titleInput}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-
-                <textarea
-                    className={styles.contentInput}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
+//     }
 
 
-                <button
-                    className={styles.button}
-                    onClick={handleClose}
-                >
-                    閉じる
-                </button>
 
-            </div>
+//     return (
+//         <div
+//             className={styles.overlay}
+//             onClick={handleClose}
+//         >
 
-        </div>
-    );
-}
+//             <div
+//                 className={styles.modal}
+//                 onClick={(e) => e.stopPropagation()}
+//             >
+
+//                 <input
+//                     className={styles.titleInput}
+//                     value={title}
+//                     onChange={(e) => setTitle(e.target.value)}
+//                 />
+
+//                 <textarea
+//                     className={styles.contentInput}
+//                     value={content}
+//                     onChange={(e) => setContent(e.target.value)}
+//                 />
+
+
+//                 <button
+//                     className={styles.button}
+//                     onClick={handleClose}
+//                 >
+//                     閉じる
+//                 </button>
+
+//             </div>
+
+//         </div>
+//     );
+// }

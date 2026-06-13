@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 
 // ---- api ----
-import { moveToTrash, updateNote } from "../../api/noteApi";
+import { moveToTrash, updateNote, updateNoteColor } from "../../api/noteApi";
 
 // ---- components ----
 import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
@@ -69,6 +69,8 @@ export default function NoteList({
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
+
+
 
 
 
@@ -139,14 +141,39 @@ export default function NoteList({
                 (n) => n.id === updatedNote.id ? updatedNote : n
             ))
 
-
-            // navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
         } catch (error) {
             console.error(error);
             alert("保存失敗");
         }
 
         setOpenNoteDetailId(null);
+
+    }
+
+
+
+    const handleUpdateColor = async (
+        id: number,
+        color: string,
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNoteColor(Number(id), color);
+
+            setNotes((prev) => (
+                prev.map((n) =>
+                    n.id === updatedNote.id ? updatedNote : n
+                    )
+                ));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+        setOpenColorId(null);
 
     }
 
@@ -184,6 +211,7 @@ export default function NoteList({
                             openNoteDetailId={openNoteDetailId}
                             setOpenNoteDetailId={setOpenNoteDetailId}
                             onSave={handleSave}
+                            onUpdateColor={handleUpdateColor}
                             onMoveToTrash={handleMoveToTrash}
                         />
                     ))}
@@ -212,6 +240,7 @@ export default function NoteList({
                         openNoteDetailId={openNoteDetailId}
                         setOpenNoteDetailId={setOpenNoteDetailId}
                         onSave={handleSave}
+                        onUpdateColor={handleUpdateColor}
                         onMoveToTrash={handleMoveToTrash}
                     />
 

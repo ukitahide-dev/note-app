@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Card from "../../../../shared/ui/Card/Card";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { updateNote, updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
@@ -68,6 +68,11 @@ type Props = {
         content: string,
     ) => Promise<void>
 
+    onUpdateColor: (
+        id: number,
+        color: string,
+    ) => Promise<void>
+
     dragHandleProps?: any;
 };
 
@@ -86,6 +91,7 @@ export default function NoteCard({
     openNoteDetailId,
     setOpenNoteDetailId,
     onSave,
+    onUpdateColor,
     dragHandleProps
 }: Props) {
 
@@ -99,7 +105,7 @@ export default function NoteCard({
         )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
     );
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -217,36 +223,29 @@ export default function NoteCard({
     };
 
 
-    const handleSelectColor = (
-        color: string
-    ) => {
-        setTempColor(color);
-    }
-
-
 
         // ColorPaletteを閉じたときだけ、DBに変更を伝える。
-        const handleClosePalette = async () => {
+        // const handleClosePalette = async () => {
 
-            try {
+        //     try {
 
-                const updatedNote = await updateNoteColor(note.id, tempColor);
+        //         const updatedNote = await updateNoteColor(note.id, tempColor);
 
-                setNotes((prev) => (
-                    prev.map((n) =>
-                        n.id === note.id ? updatedNote : n
-                    )
-                ));
+        //         setNotes((prev) => (
+        //             prev.map((n) =>
+        //                 n.id === note.id ? updatedNote : n
+        //             )
+        //         ));
 
-                setOpenColorId(null);
+        //         setOpenColorId(null);
 
-            } catch (error) {
+        //     } catch (error) {
 
-                console.error(error);
+        //         console.error(error);
 
-            }
+        //     }
 
-        }
+        // }
 
 
 
@@ -339,14 +338,31 @@ export default function NoteCard({
 
     // }
 
+    // console.log(note.color);
 
+
+    // 色の選択をUIに表示する
+    const handleSelectColor = (
+        color: string
+    ) => {
+        setTempColor(color);
+    }
+
+    ;
+    // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
+    useEffect(() => {
+        setTempColor(note.color);
+    }, [note.color]);
 
 
 
     return (
 
+
+
             <Card
                 style={{ backgroundColor: tempColor }}
+                // style={{ backgroundColor: note.color }}
                 onClick={() => setOpenNoteDetailId(note.id)}
                 ref={cardRef}
             >
@@ -468,7 +484,10 @@ export default function NoteCard({
                 {openColorId === note.id && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        onClose={handleClosePalette}
+                        onUpdateColor={onUpdateColor}
+                        note={note}
+                        tempColor={tempColor}
+                        // onClose={handleClosePalette}
 
                     />
 
@@ -480,6 +499,8 @@ export default function NoteCard({
                     <NoteDetailModal
                         note={note}
                         onSave={onSave}
+                        onUpdateColor={onUpdateColor}
+                        // setNotes={setNotes}
 
                     />
 

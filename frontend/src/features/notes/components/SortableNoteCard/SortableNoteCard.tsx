@@ -91,7 +91,13 @@ type Props = {
         id: number,
         title: string,
         content: string,
+    ) => Promise<void>;
+
+    onUpdateColor: (
+        id: number,
+        color: string,
     ) => Promise<void>
+
 };
 
 
@@ -112,6 +118,7 @@ export default function SortableNoteCard({
     openNoteDetailId,
     setOpenNoteDetailId,
     onSave,
+    onUpdateColor,
     onMoveToTrash,
 }: Props)
 {
@@ -172,6 +179,7 @@ export default function SortableNoteCard({
                 openNoteDetailId={openNoteDetailId}
                 setOpenNoteDetailId={setOpenNoteDetailId}
                 onSave={onSave}
+                onUpdateColor={onUpdateColor}
 
                 dragHandleProps={{
                     ...attributes,
