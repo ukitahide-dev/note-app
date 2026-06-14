@@ -39,7 +39,9 @@ export default function LabelPanel({
     const [newLabel, setNewLabel] = useState("");
     const isTyping = newLabel.trim() !== "";
 
-    const { labels, handleCreateLabel } = useLabelStore();  // Zustandで定義した。labelsを直接取得。
+
+    // Zustandで定義した。labelsを直接取得。
+    const { labels, handleCreateLabel } = useLabelStore();
 
 
 
@@ -86,6 +88,7 @@ export default function LabelPanel({
                                 checked={selectedLabels.includes(label.id)}
                                 onChange={() => onSelectLabel(label.id)}
                             />
+                            
                             <span>
                                 {label.name}
                             </span>

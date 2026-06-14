@@ -1,13 +1,16 @@
 import Menu from "../../../../../shared/ui/Menu/Menu";
+import { useNoteLabels } from "../../../hooks/useNoteLabels";
 
 
 
 type Props = {
-    menuRef: React.RefObject<HTMLDivElement | null>;
+    menuRef?: React.RefObject<HTMLDivElement | null>;
 
-    setIsLabelOpen: React.Dispatch<
-        React.SetStateAction<boolean>
-    >;
+    // setIsLabelOpen: React.Dispatch<
+    //     React.SetStateAction<boolean>
+    // >;
+
+    onOpenLabel: () => void;
 
     onMoveToTrash: (id: number) => void;
 
@@ -19,10 +22,13 @@ type Props = {
 
 export default function NoteMenu({
     menuRef,
-    setIsLabelOpen,
+    onOpenLabel,
     onMoveToTrash,
     noteId,
+
 }: Props) {
+
+
 
 
     return (
@@ -30,9 +36,7 @@ export default function NoteMenu({
             menuRef={menuRef}
         >
             <button
-                onClick={() => {
-                    setIsLabelOpen((prev) => !prev);
-                }}
+                onClick={onOpenLabel}
             >
                 ラベル追加
             </button>

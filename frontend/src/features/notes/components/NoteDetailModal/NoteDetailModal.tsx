@@ -7,6 +7,9 @@ import { useState } from "react";
 import styles from "./NoteDetailModal.module.css";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 import { updateNoteColor } from "../../api/noteApi";
+import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
+import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
+import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 
 
@@ -39,12 +42,14 @@ type Props = {
     onUpdateColor: (
         id: number,
         color: string,
-    ) => Promise<void>
+    ) => Promise<void>;
+
+    onMoveToTrash: (id: number) => void;
 
 
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
+    setNotes: React.Dispatch<
+        React.SetStateAction<Note[]>
+    >;
 
 }
 
@@ -57,8 +62,12 @@ type Props = {
 
 export default function NoteDetailModal({
     note,
+    setNotes,
     onSave,
     onUpdateColor,
+    // menuRef,
+    onMoveToTrash,
+    // setIsLabelOpen,
     // setNotes,
 
 
@@ -72,6 +81,9 @@ export default function NoteDetailModal({
     const [isColorOpen, setIsColorOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
 
+    // const [isLabelOpen, setIsLabelOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
 
 
@@ -83,27 +95,21 @@ export default function NoteDetailModal({
     }
 
 
-    // handleUpdateColorをNoteListに書いたから、これが不要になった。
-    // ColorPaletteを閉じたときだけ、DBに変更を伝える。
-    // const handleClosePalette = async () => {
 
-    //     try {
 
-    //         const updatedNote = await updateNoteColor(note.id, tempColor);
+    // useNoteLabels hooksを使う
+    const {
+        isLabelOpen,
+        handleOpenLabel,
+        selectedLabels,
+        handleSelectLabel,
+        handleRemoveLabel,
+    } = useNoteLabels({
+        note,
+        setNotes,
+    });
 
-    //         setNotes((prev) => (
-    //             prev.map((n) =>
-    //                 n.id === note.id ? updatedNote : n
-    //             )
-    //         ));
 
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    // }
 
 
 
@@ -153,6 +159,7 @@ export default function NoteDetailModal({
                         className={styles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
+                            setIsMenuOpen(true);
                             // setIsLabelOpen(false);
                             // setOpenColorId(null);
                             // setOpenMenuId((prev) => prev === note.id ? null : note.id);
@@ -191,8 +198,30 @@ export default function NoteDetailModal({
                 )}
 
 
+                {isMenuOpen && (
+
+                    isLabelOpen ? (
+
+                        <LabelPanel
+                            selectedLabels={selectedLabels}
+                            onSelectLabel={handleSelectLabel}
+
+                        />
+
+                    ) : (
+
+                        <NoteMenu
+                            noteId={note.id}
+                            onOpenLabel={handleOpenLabel}
+                            onMoveToTrash={onMoveToTrash}
+
+                        />
 
 
+                    )
+
+
+                )}
 
             </div>
 

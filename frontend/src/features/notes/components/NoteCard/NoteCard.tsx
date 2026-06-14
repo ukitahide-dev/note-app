@@ -10,6 +10,7 @@ import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 import cardStyles from "./NoteCard.module.css";
 import { useSearchStore } from "../../../search/store/SearchStore";
 import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
+import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 
 type Label = {
@@ -97,15 +98,15 @@ export default function NoteCard({
 
 
 
-    const [isLabelOpen, setIsLabelOpen] = useState(false);
+    // const [isLabelOpen, setIsLabelOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
-    const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
-        note.labels.map(
-            (label) => label.id
-        )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
-    );
+    // const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
+    //     note.labels.map(
+    //         (label) => label.id
+    //     )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
+    // );
 
-    // const navigate = useNavigate();
+
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -114,6 +115,21 @@ export default function NoteCard({
 
 
     const { searchText } = useSearchStore();
+
+
+
+    // useNoteLabels hooksを使う
+    const {
+        isLabelOpen,
+        handleOpenLabel,
+        selectedLabels,
+        handleSelectLabel,
+        handleRemoveLabel,
+    } = useNoteLabels({
+        note,
+        setNotes,
+    });
+
 
 
 
@@ -132,7 +148,8 @@ export default function NoteCard({
                 (!labelPanelRef.current || !labelPanelRef.current.contains(event.target as Node))
             ) {
                 setOpenMenuId(null);
-                setIsLabelOpen(false);
+                handleOpenLabel();
+                // setIsLabelOpen(false);
             }
 
         };
@@ -157,95 +174,81 @@ export default function NoteCard({
 
 
 
-    const updateLabels = async (
-        newIds: number[]
-    ) => {
 
-        setSelectedLabels(newIds);
-
-        const updatedNote = await updateNoteLabels(note.id, newIds);
-
-        // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-        setNotes((prev) =>
-            prev.map((n) =>
-                n.id === note.id ? updatedNote : n
-            )
-        );
-
-    }
+    // const handleOpenLabel = () => {
+    //     setIsLabelOpen((prev) => !prev);
+    //     // setIsLabelOpen(true);
+    // }
 
 
 
 
-    const handleSelectLabel = async (labelId: number) => {
+    // const updateLabels = async (
+    //     newIds: number[]
+    // ) => {
 
-        try {
+    //     setSelectedLabels(newIds);
 
-            let newIds;
+    //     const updatedNote = await updateNoteLabels(note.id, newIds);
 
-            if (selectedLabels.includes(labelId)) {
+    //     // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+    //     setNotes((prev) =>
+    //         prev.map((n) =>
+    //             n.id === note.id ? updatedNote : n
+    //         )
+    //     );
 
-                newIds = selectedLabels.filter((id) => id !== labelId);
-
-            } else {
-
-                newIds = [...selectedLabels, labelId];
-            }
-
-            updateLabels(newIds);
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-    };
+    // }
 
 
 
 
-    const handleRemoveLabel = async (
-        labelId: number
-    ) => {
+    // const handleSelectLabel = async (labelId: number) => {
 
-        try {
+    //     try {
 
-            const newIds = selectedLabels.filter((id) => id !== labelId);
+    //         let newIds;
 
-            updateLabels(newIds);
+    //         if (selectedLabels.includes(labelId)) {
 
-        } catch (error) {
+    //             newIds = selectedLabels.filter((id) => id !== labelId);
 
-            console.error(error);
+    //         } else {
 
-        }
-    };
+    //             newIds = [...selectedLabels, labelId];
+    //         }
+
+    //         updateLabels(newIds);
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    // };
 
 
 
-        // ColorPaletteを閉じたときだけ、DBに変更を伝える。
-        // const handleClosePalette = async () => {
 
-        //     try {
+    // const handleRemoveLabel = async (
+    //     labelId: number
+    // ) => {
 
-        //         const updatedNote = await updateNoteColor(note.id, tempColor);
+    //     try {
 
-        //         setNotes((prev) => (
-        //             prev.map((n) =>
-        //                 n.id === note.id ? updatedNote : n
-        //             )
-        //         ));
+    //         const newIds = selectedLabels.filter((id) => id !== labelId);
 
-        //         setOpenColorId(null);
+    //         updateLabels(newIds);
 
-        //     } catch (error) {
+    //     } catch (error) {
 
-        //         console.error(error);
+    //         console.error(error);
 
-        //     }
+    //     }
+    // };
 
-        // }
+
 
 
 
@@ -319,26 +322,6 @@ export default function NoteCard({
 
 
 
-    // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-
-    // ) => {
-
-    //     try {
-    //         await updateNote(Number(id), title, content);
-    //         navigate("/notes");  // NotesPage.tsxへ飛ばす。保存後にノート一覧画面を見せるため。
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("保存失敗");
-    //     }
-
-    //     setOpenNoteDetailId(null);
-
-    // }
-
-    // console.log(note.color);
 
 
     // 色の選択をUIに表示する
@@ -356,9 +339,10 @@ export default function NoteCard({
 
 
 
+
+
+
     return (
-
-
 
             <Card
                 style={{ backgroundColor: tempColor }}
@@ -446,7 +430,7 @@ export default function NoteCard({
                         className={cardStyles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
-                            setIsLabelOpen(false);
+                            // setIsLabelOpen(false);
                             setOpenColorId(null);
                             setOpenMenuId((prev) => prev === note.id ? null : note.id);
                         }}
@@ -460,7 +444,6 @@ export default function NoteCard({
                 {openMenuId === note.id && (
                     isLabelOpen ? (
                         <LabelPanel
-                            // labels={labels}
                             labelPanelRef={labelPanelRef}
                             selectedLabels={selectedLabels}
                             // onCreateLabel={handleCreateLabel}
@@ -471,7 +454,7 @@ export default function NoteCard({
                     // ---- menu ----
                     <NoteMenu
                         menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
-                        setIsLabelOpen={setIsLabelOpen}
+                        onOpenLabel={handleOpenLabel}
                         onMoveToTrash={onMoveToTrash}
                         noteId={note.id}
                     />
@@ -498,12 +481,12 @@ export default function NoteCard({
                 {openNoteDetailId === note.id && (
                     <NoteDetailModal
                         note={note}
+                        setNotes={setNotes}
                         onSave={onSave}
                         onUpdateColor={onUpdateColor}
-                        // setNotes={setNotes}
+                        onMoveToTrash={onMoveToTrash}
 
                     />
-
 
                 )}
 
