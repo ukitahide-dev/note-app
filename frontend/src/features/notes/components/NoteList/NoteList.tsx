@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 
 // ---- api ----
-import { moveToTrash, updateNote, updateNoteColor } from "../../api/noteApi";
+import { createNote, moveToTrash, updateNote, updateNoteColor } from "../../api/noteApi";
 
 // ---- components ----
 import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
@@ -180,6 +180,39 @@ export default function NoteList({
 
 
 
+    const handleDuplicateNote = async (
+        note: Note,
+    ) => {
+
+        try {
+
+            const copiedNote = await createNote (
+                note.title,
+                note.content,
+                note.labels.map((label) => label.id),
+                note.color,
+            );
+
+            setNotes(prev => [
+
+                copiedNote,
+                ...prev,
+
+            ]);
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    }
+
+
+
+
 
 
     return (
@@ -213,6 +246,7 @@ export default function NoteList({
                             onSave={handleSave}
                             onUpdateColor={handleUpdateColor}
                             onMoveToTrash={handleMoveToTrash}
+                            onDuplicateNote={handleDuplicateNote}
                         />
                     ))}
 
@@ -242,6 +276,7 @@ export default function NoteList({
                         onSave={handleSave}
                         onUpdateColor={handleUpdateColor}
                         onMoveToTrash={handleMoveToTrash}
+                        onDuplicateNote={handleDuplicateNote}
                     />
 
                 ))}

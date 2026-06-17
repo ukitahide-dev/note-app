@@ -12,10 +12,16 @@ type Props = {
 
     onOpenLabel: () => void;
 
-    onMoveToTrash: (id: number) => void;
+    onMoveToTrash: () => void;
 
-    noteId: number;
+    // noteId: number;
+
+    onDuplicateNote: (
+
+    ) => void;
 };
+
+
 
 
 
@@ -24,7 +30,9 @@ export default function NoteMenu({
     menuRef,
     onOpenLabel,
     onMoveToTrash,
-    noteId,
+    // noteId,
+
+    onDuplicateNote,
 
 }: Props) {
 
@@ -50,7 +58,13 @@ export default function NoteMenu({
             </button>
 
             <button
-                onClick={() => onMoveToTrash(noteId)}
+                onClick={onDuplicateNote}
+            >
+                コピーを作成
+            </button>
+
+            <button
+                onClick={onMoveToTrash}
             >
                 削除
 

@@ -96,8 +96,12 @@ type Props = {
     onUpdateColor: (
         id: number,
         color: string,
-    ) => Promise<void>
+    ) => Promise<void>;
 
+
+    onDuplicateNote: (
+        note: Note,
+    ) => Promise<void>
 };
 
 
@@ -120,6 +124,7 @@ export default function SortableNoteCard({
     onSave,
     onUpdateColor,
     onMoveToTrash,
+    onDuplicateNote
 }: Props)
 {
 
@@ -185,6 +190,8 @@ export default function SortableNoteCard({
                     ...attributes,
                     ...listeners,
                 }}
+
+                onDuplicateNote={onDuplicateNote}
             />
         </div>
 

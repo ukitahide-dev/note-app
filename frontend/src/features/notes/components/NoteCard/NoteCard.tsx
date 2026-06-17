@@ -75,6 +75,10 @@ type Props = {
     ) => Promise<void>
 
     dragHandleProps?: any;
+
+    onDuplicateNote: (
+        note: Note,
+    ) => Promise<void>
 };
 
 
@@ -93,7 +97,8 @@ export default function NoteCard({
     setOpenNoteDetailId,
     onSave,
     onUpdateColor,
-    dragHandleProps
+    dragHandleProps,
+    onDuplicateNote,
 }: Props) {
 
 
@@ -278,6 +283,9 @@ export default function NoteCard({
 
 
 
+
+
+
     return (
 
             <Card
@@ -390,8 +398,9 @@ export default function NoteCard({
                     <NoteMenu
                         menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                         onOpenLabel={handleOpenLabel}
-                        onMoveToTrash={onMoveToTrash}
-                        noteId={note.id}
+                        onMoveToTrash={() => onMoveToTrash(note.id)}
+                        // noteId={note.id}
+                        onDuplicateNote={() => onDuplicateNote(note)}
                     />
 
                     )
