@@ -141,13 +141,50 @@ export default function NoteDetailModal({
                     onChange={(e) => setContent(e.target.value)}
                 />
 
+                {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
+                <div className={styles.labels}>
 
+                    {note.labels.map((label) =>
+
+                        <div
+                            key={label.id}
+                            className={styles.label}
+                        >
+                            <span
+
+                            >
+                                {label.name}
+                            </span>
+
+                            <button
+                                className={styles.removeLabel}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRemoveLabel(
+                                        label.id
+                                    );
+                                }}
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+
+                    )}
+
+
+
+                </div>
+
+                {/* ボタン表示もNoteCardと被っている */}
                 <div className={styles.bottom}>
 
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            setIsColorOpen(true);
+                            setIsColorOpen((prev) => !prev);
+                            setIsMenuOpen(false)
                             // setOpenMenuId(null);
                             // setOpenColorId((prev) => prev === note.id ? null : note.id);
                         }}
@@ -159,7 +196,8 @@ export default function NoteDetailModal({
                         className={styles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
-                            setIsMenuOpen(true);
+                            setIsMenuOpen((prev) => !prev);
+                            setIsColorOpen(false)
                             // setIsLabelOpen(false);
                             // setOpenColorId(null);
                             // setOpenMenuId((prev) => prev === note.id ? null : note.id);

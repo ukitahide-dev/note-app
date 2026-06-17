@@ -3,12 +3,16 @@ import Menu from "../../../../../shared/ui/Menu/Menu";
 
 type Props = {
     // formRef:
-    setIsMenuOpen: React.Dispatch<
-        React.SetStateAction<boolean>
-    >;
-    setIsLabelOpen: React.Dispatch<
-        React.SetStateAction<boolean>
-    >;
+    // setIsMenuOpen: React.Dispatch<
+    //     React.SetStateAction<boolean>
+    // >;
+    // setIsLabelOpen: React.Dispatch<
+    //     React.SetStateAction<boolean>
+    // >;
+
+    onOpenLabel: () => void;
+
+    
 }
 
 
@@ -17,8 +21,7 @@ type Props = {
 
 
 export default function NoteFormMenu({
-    setIsMenuOpen,
-    setIsLabelOpen,
+    onOpenLabel,
 }: Props)
     {
 
@@ -28,10 +31,8 @@ export default function NoteFormMenu({
 
         <Menu>
             <button
-                onClick={() => {
-                    setIsMenuOpen(false);
-                    setIsLabelOpen(true);
-                }}
+                onClick={onOpenLabel}
+
             >
                 ラベル追加
             </button>

@@ -105,22 +105,22 @@ export function useNoteLabels({
 
 
 
-        const handleRemoveLabel = async (
-            labelId: number
-        ) => {
+    const handleRemoveLabel = async (
+        labelId: number
+    ) => {
 
-            try {
+        try {
 
-                const newIds = selectedLabels.filter((id) => id !== labelId);
+            const newIds = selectedLabels.filter((id) => id !== labelId);
 
-                updateLabels(newIds);
+            updateLabels(newIds);
 
-            } catch (error) {
+        } catch (error) {
 
-                console.error(error);
+            console.error(error);
 
-            }
-        };
+        }
+    };
 
 
 

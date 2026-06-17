@@ -20,6 +20,11 @@ type Props = {
     onSelectLabel: (
         labelId: number
     ) => void;
+
+    onSelectLabelName?: (
+        labelName: string
+    ) => void;
+
 };
 
 
@@ -28,12 +33,13 @@ type Props = {
 
 
 
-// 親: SortableNoteCard.tsx
+// 親: NoteCard.tsx、NoteDetailModal.tsx、
 
 export default function LabelPanel({
     labelPanelRef,
     selectedLabels,
     onSelectLabel,
+    // onSelectLabelName,
 }: Props) {
 
     const [newLabel, setNewLabel] = useState("");
@@ -86,9 +92,15 @@ export default function LabelPanel({
                             <input
                                 type="checkbox"
                                 checked={selectedLabels.includes(label.id)}
-                                onChange={() => onSelectLabel(label.id)}
+                                
+
+                                onChange={() => {
+                                    onSelectLabel(label.id);
+                                    // onSelectLabel(label.id, label.name);
+                                    // onSelectLabelName(label.name);
+                                }}
                             />
-                            
+
                             <span>
                                 {label.name}
                             </span>

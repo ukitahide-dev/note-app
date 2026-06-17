@@ -175,79 +175,6 @@ export default function NoteCard({
 
 
 
-    // const handleOpenLabel = () => {
-    //     setIsLabelOpen((prev) => !prev);
-    //     // setIsLabelOpen(true);
-    // }
-
-
-
-
-    // const updateLabels = async (
-    //     newIds: number[]
-    // ) => {
-
-    //     setSelectedLabels(newIds);
-
-    //     const updatedNote = await updateNoteLabels(note.id, newIds);
-
-    //     // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-    //     setNotes((prev) =>
-    //         prev.map((n) =>
-    //             n.id === note.id ? updatedNote : n
-    //         )
-    //     );
-
-    // }
-
-
-
-
-    // const handleSelectLabel = async (labelId: number) => {
-
-    //     try {
-
-    //         let newIds;
-
-    //         if (selectedLabels.includes(labelId)) {
-
-    //             newIds = selectedLabels.filter((id) => id !== labelId);
-
-    //         } else {
-
-    //             newIds = [...selectedLabels, labelId];
-    //         }
-
-    //         updateLabels(newIds);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    // };
-
-
-
-
-    // const handleRemoveLabel = async (
-    //     labelId: number
-    // ) => {
-
-    //     try {
-
-    //         const newIds = selectedLabels.filter((id) => id !== labelId);
-
-    //         updateLabels(newIds);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
-
 
 
 
@@ -502,3 +429,79 @@ export default function NoteCard({
 
 
 }
+
+
+
+// const handleOpenLabel = () => {
+    //     setIsLabelOpen((prev) => !prev);
+    //     // setIsLabelOpen(true);
+    // }
+
+
+
+
+    // const updateLabels = async (
+    //     newIds: number[]
+    // ) => {
+
+    //     setSelectedLabels(newIds);
+
+    //     const updatedNote = await updateNoteLabels(note.id, newIds);
+
+    //     // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+    //     setNotes((prev) =>
+    //         prev.map((n) =>
+    //             n.id === note.id ? updatedNote : n
+    //         )
+    //     );
+
+    // }
+
+
+
+
+    // const handleSelectLabel = async (labelId: number) => {
+
+    //     try {
+
+    //         let newIds;
+
+    //         if (selectedLabels.includes(labelId)) {
+
+    //             newIds = selectedLabels.filter((id) => id !== labelId);
+
+    //         } else {
+
+    //             newIds = [...selectedLabels, labelId];
+    //         }
+
+    //         updateLabels(newIds);
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    // };
+
+
+
+
+    // const handleRemoveLabel = async (
+    //     labelId: number
+    // ) => {
+
+    //     try {
+
+    //         const newIds = selectedLabels.filter((id) => id !== labelId);
+
+    //         updateLabels(newIds);
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // };
+
