@@ -46,7 +46,8 @@ export const getNote = async(id: number) => {
 export const createNote = async (
     title: string,
     content: string,
-    labelIds: number[]
+    labelIds: number[],
+    color: string,
 ) => {
 
     const token = localStorage.getItem("access");
@@ -57,6 +58,7 @@ export const createNote = async (
             title,
             content,
             label_ids: labelIds,
+            color: color
         },
         {
             headers: {

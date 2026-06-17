@@ -19,14 +19,13 @@ type Props = {
         color: string
     ) => void;
 
-    // onClose: () => void;
 
     onUpdateColor: (
         id: number,
         color: string,
     ) => Promise<void>;
 
-    note: Note;
+    note?: Note;
 
     tempColor: string;
 }
@@ -46,10 +45,12 @@ const colors = [
 
 
 
+// 親: NoteCard.tsx、NoteDetailModal.tsx、NoteForm.tsx、
+
+
 export default function ColorPalette({
     onSelectColor,
     onUpdateColor,
-    // onClose,
     note,
     tempColor,
 }: Props) {
@@ -106,9 +107,11 @@ export default function ColorPalette({
 
                 <button
                     key={color}
+                    type="button"
                     style={{
                         backgroundColor: color,
                     }}
+
                     onClick={(e) => {
                             e.stopPropagation();
                             onSelectColor(color);

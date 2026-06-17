@@ -35,7 +35,12 @@ type Props = {
 // 親：NotesPage.jsx
 
 
-export default function NoteForm({ onAddNote }: Props) {
+export default function NoteForm({
+    onAddNote
+
+}: Props) {
+
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
@@ -57,7 +62,10 @@ export default function NoteForm({ onAddNote }: Props) {
         .map(label => label.name);
 
 
-    // const [labels, setLabels] = useState<string[]>([]);
+    const [tempColor, setTempColor] = useState("");
+
+
+
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);  // useRefは値を保存する箱を作る。ここでは、textarea要素を保存する箱を作っている。
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -72,7 +80,7 @@ export default function NoteForm({ onAddNote }: Props) {
 
         try {
 
-            const newNote = await createNote(title, content, selectedLabels);
+            const newNote = await createNote(title, content, selectedLabels, tempColor);
 
             onAddNote(newNote);
 
@@ -84,6 +92,7 @@ export default function NoteForm({ onAddNote }: Props) {
             // setLabels([]);
             setSelectedLabels([]);
             setActivePanel(null);
+            setTempColor("");
 
 
     } catch (error) {
@@ -111,13 +120,12 @@ export default function NoteForm({ onAddNote }: Props) {
 
     const handleSelectLabel = (
         labelId: number,
-        // labelName: string
+
     ) => {
         if (selectedLabels.includes(labelId)) {
 
             setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
             // setLabels(labels.filter((name) => name !== labelName));
-
 
         } else {
 
@@ -126,41 +134,19 @@ export default function NoteForm({ onAddNote }: Props) {
                 labelId
             ]);
 
-            // setLabels(
-            //     [
-            //         ...labels,
-            //         labelName
-            //     ]
-            // );
+
         }
     }
 
 
 
+    const handleSelectColor = (
+        color: string
+    ) => {
+        setTempColor(color);
+    }
 
 
-    // const handleSelectLabelName = (
-    //     labelName: string,
-    // ) => {
-
-    //     if (labels.includes(labelName)) {
-    //         // setLabels((prev) => prev.filter((l) => l.name !== labelName));
-    //         setLabels(labels.filter((name) => name !== labelName));
-
-    //     } else {
-
-    //         setLabels(
-    //             [
-    //                 ...labels,
-    //                 labelName
-    //             ]
-    //         );
-
-    //     }
-
-
-
-    // }
 
 
     // useEffectは画面レンダリング後(DOM要素完成後)に実行される。だから、ここにaddEventListenerなどの副作用処理を書く。
@@ -219,6 +205,7 @@ export default function NoteForm({ onAddNote }: Props) {
 
         <form
             ref={formRef}
+            style={{ backgroundColor: tempColor }}
             className={styles.form}
             onSubmit={handleSubmit}
         >
@@ -322,7 +309,8 @@ export default function NoteForm({ onAddNote }: Props) {
                     {activePanel === "color" && (
 
                         <ColorPalette
-
+                            tempColor={tempColor}
+                            onSelectColor={handleSelectColor}
 
                         />
 
