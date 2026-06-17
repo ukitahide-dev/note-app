@@ -19,15 +19,17 @@ type Props = {
         color: string
     ) => void;
 
-
-    onUpdateColor: (
-        id: number,
-        color: string,
-    ) => Promise<void>;
-
-    note?: Note;
-
     tempColor: string;
+
+    // onUpdateColor?: (
+    //     id: number,
+    //     color: string,
+    // ) => Promise<void>;
+
+    // note?: Note;
+
+    onClose: () => void;  // onCloseを実行して、親で色変更のapiを呼ぶ形にする。onUpdateColorやnoteを渡してもらう必要がなくなる。
+
 }
 
 
@@ -50,9 +52,10 @@ const colors = [
 
 export default function ColorPalette({
     onSelectColor,
-    onUpdateColor,
-    note,
+    // onUpdateColor,
+    // note,
     tempColor,
+    onClose,
 }: Props) {
 
     const paletteRef = useRef<HTMLDivElement | null>(null);
@@ -72,7 +75,8 @@ export default function ColorPalette({
                 )
             ) {
 
-                onUpdateColor(note.id, tempColor);
+                // onUpdateColor(note.id, tempColor);
+                onClose();
             }
         };
 

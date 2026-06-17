@@ -258,7 +258,7 @@ export default function NoteCard({
         setTempColor(color);
     }
 
-    
+
     // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
     useEffect(() => {
         setTempColor(note.color);
@@ -268,12 +268,20 @@ export default function NoteCard({
 
 
 
+    const handleClosePalette = () => {
+
+        setOpenColorId(null);
+        onUpdateColor(note.id, tempColor);
+
+    }
+
+
+
 
     return (
 
             <Card
                 style={{ backgroundColor: tempColor }}
-                // style={{ backgroundColor: note.color }}
                 onClick={() => setOpenNoteDetailId(note.id)}
                 ref={cardRef}
             >
@@ -394,10 +402,10 @@ export default function NoteCard({
                 {openColorId === note.id && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        onUpdateColor={onUpdateColor}
-                        note={note}
+                        // onUpdateColor={onUpdateColor}
+                        // note={note}
                         tempColor={tempColor}
-                        // onClose={handleClosePalette}
+                        onClose={handleClosePalette}
 
                     />
 

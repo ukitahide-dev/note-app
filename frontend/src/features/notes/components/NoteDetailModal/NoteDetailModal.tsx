@@ -110,6 +110,14 @@ export default function NoteDetailModal({
     });
 
 
+    const handleClosePalette = () => {
+
+        setIsColorOpen(false);
+        onUpdateColor(note.id, tempColor);
+
+    }
+
+
 
 
 
@@ -198,9 +206,7 @@ export default function NoteDetailModal({
                             e.stopPropagation();
                             setIsMenuOpen((prev) => !prev);
                             setIsColorOpen(false)
-                            // setIsLabelOpen(false);
-                            // setOpenColorId(null);
-                            // setOpenMenuId((prev) => prev === note.id ? null : note.id);
+
                         }}
                     >
                         ⋮
@@ -212,7 +218,7 @@ export default function NoteDetailModal({
                                     () => {
                                         onSave(note.id, title, content);
                                         onUpdateColor(note.id, tempColor);
-                                        // handleClosePalette();
+
                                     }
                             }
                     >
@@ -227,10 +233,10 @@ export default function NoteDetailModal({
 
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        onUpdateColor={onUpdateColor}
-                        note={note}
+                        // onUpdateColor={onUpdateColor}
+                        // note={note}
                         tempColor={tempColor}
-                        // onClose={handleClosePalette}
+                        onClose={handleClosePalette}
 
                     />
                 )}

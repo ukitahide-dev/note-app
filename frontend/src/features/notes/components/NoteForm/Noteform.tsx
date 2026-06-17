@@ -300,7 +300,7 @@ export default function NoteForm({
                         <LabelPanel
                             selectedLabels={selectedLabels}
                             onSelectLabel={handleSelectLabel}
-                            // onSelectLabelName={handleSelectLabelName}
+                            
 
                         />
                     )}
