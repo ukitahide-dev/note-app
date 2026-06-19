@@ -58,13 +58,13 @@ export default function NoteMenu({
             </button>
 
             <button
-                onClick={onDuplicateNote}
+                onClick={onDuplicateNote}  // 複製したことを親に通知するだけ。親がどんな状態を持っているかとかは、子は把握していない。
             >
                 コピーを作成
             </button>
 
             <button
-                onClick={onMoveToTrash}
+                onClick={onMoveToTrash}  // 削除したことを親に通知するだけ。
             >
                 削除
 

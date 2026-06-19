@@ -99,6 +99,12 @@ type Props = {
     ) => Promise<void>;
 
 
+    onToggleFavorite: (
+        id: number,
+        is_favorite: boolean,
+    ) => Promise<void>;
+
+
     onDuplicateNote: (
         note: Note,
     ) => Promise<void>
@@ -124,6 +130,7 @@ export default function SortableNoteCard({
     onSave,
     onUpdateColor,
     onMoveToTrash,
+    onToggleFavorite,
     onDuplicateNote
 }: Props)
 {
@@ -190,6 +197,8 @@ export default function SortableNoteCard({
                     ...attributes,
                     ...listeners,
                 }}
+
+                onToggleFavorite={onToggleFavorite}
 
                 onDuplicateNote={onDuplicateNote}
             />

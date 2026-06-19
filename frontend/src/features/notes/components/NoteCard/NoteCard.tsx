@@ -26,6 +26,7 @@ type Note = {
     content: string;
     color: string;
     is_favorite: boolean;
+    is_pinned: boolean;
     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
 };
 
@@ -76,9 +77,14 @@ type Props = {
 
     dragHandleProps?: any;
 
+    onToggleFavorite: (
+        id: number,
+        is_favorite: boolean,
+    ) => Promise<void>;
+
     onDuplicateNote: (
         note: Note,
-    ) => Promise<void>
+    ) => Promise<void>;
 };
 
 
@@ -98,6 +104,7 @@ export default function NoteCard({
     onSave,
     onUpdateColor,
     dragHandleProps,
+    onToggleFavorite,
     onDuplicateNote,
 }: Props) {
 
@@ -184,28 +191,28 @@ export default function NoteCard({
 
 
 
-        const handleToggleFavorite = async (
+        // const handleToggleFavorite = async (
 
-        ) => {
+        // ) => {
 
-            try {
+        //     try {
 
-                const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
+        //         const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
 
-                setNotes((prev) =>
-                    prev.map((n) =>
-                        n.id === note.id ? updatedNote : n
-                    )
-                );
+        //         setNotes((prev) =>
+        //             prev.map((n) =>
+        //                 n.id === note.id ? updatedNote : n
+        //             )
+        //         );
 
-            } catch (error) {
+        //     } catch (error) {
 
-                console.error(error);
+        //         console.error(error);
 
-            }
+        //     }
 
 
-        }
+        // }
 
 
 
@@ -300,6 +307,20 @@ export default function NoteCard({
                     ☰
                 </div>
 
+                <div>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+
+                        }}
+
+                    >
+                        {note.is_pinned ? "📌" : "📍"}
+
+                    </button>
+
+                </div>
+
                 {/* <div
                     {...attributes}
                     {...listeners}  // drag開始用イベントまとめ。☰を掴んだ時だけdrag開始
@@ -361,7 +382,8 @@ export default function NoteCard({
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleToggleFavorite();
+                            onToggleFavorite(note.id, note.is_favorite)
+                            // handleToggleFavorite();
                         }}
 
                     >
