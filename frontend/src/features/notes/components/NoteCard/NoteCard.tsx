@@ -82,6 +82,12 @@ type Props = {
         is_favorite: boolean,
     ) => Promise<void>;
 
+    onTogglePin: (
+        id: number,
+        is_pinned: boolean,
+    ) => Promise<void>;
+
+
     onDuplicateNote: (
         note: Note,
     ) => Promise<void>;
@@ -105,6 +111,7 @@ export default function NoteCard({
     onUpdateColor,
     dragHandleProps,
     onToggleFavorite,
+    onTogglePin,
     onDuplicateNote,
 }: Props) {
 
@@ -184,35 +191,6 @@ export default function NoteCard({
     }, [setOpenMenuId]);
 
 
-
-
-
-
-
-
-
-        // const handleToggleFavorite = async (
-
-        // ) => {
-
-        //     try {
-
-        //         const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
-
-        //         setNotes((prev) =>
-        //             prev.map((n) =>
-        //                 n.id === note.id ? updatedNote : n
-        //             )
-        //         );
-
-        //     } catch (error) {
-
-        //         console.error(error);
-
-        //     }
-
-
-        // }
 
 
 
@@ -311,6 +289,7 @@ export default function NoteCard({
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
+                            onTogglePin(note.id, note.is_pinned);
 
                         }}
 
@@ -471,6 +450,16 @@ export default function NoteCard({
 
 
 
+
+
+
+
+
+// ---- 元々NoteCardに書いていたけど、修正で不要になったもの ----
+
+
+
+
 // const handleOpenLabel = () => {
     //     setIsLabelOpen((prev) => !prev);
     //     // setIsLabelOpen(true);
@@ -544,3 +533,29 @@ export default function NoteCard({
     //     }
     // };
 
+
+
+
+
+    // const handleToggleFavorite = async (
+
+        // ) => {
+
+        //     try {
+
+        //         const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
+
+        //         setNotes((prev) =>
+        //             prev.map((n) =>
+        //                 n.id === note.id ? updatedNote : n
+        //             )
+        //         );
+
+        //     } catch (error) {
+
+        //         console.error(error);
+
+        //     }
+
+
+        // }

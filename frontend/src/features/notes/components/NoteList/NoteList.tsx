@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 
 // ---- api ----
-import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite } from "../../api/noteApi";
+import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite, updateNotePinned } from "../../api/noteApi";
 
 // ---- components ----
 import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
@@ -22,6 +22,7 @@ import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
 // ---- css ----
 import styles from "./NoteList.module.css";
 import NoteCard from "../NoteCard/NoteCard";
+import NoteGrid from "../NoteGrid/NoteGrid";
 
 
 
@@ -39,6 +40,7 @@ type Note = {
     content: string;
     color: string;
     is_favorite: boolean;
+    is_pinned: boolean;
     labels: Label[];
 };
 
@@ -69,6 +71,10 @@ export default function NoteList({
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
+
+
+    const pinnedNotes = notes.filter((note) => note.is_pinned);
+    const normalNotes = notes.filter((note) => !note.is_pinned);
 
 
 
@@ -206,6 +212,30 @@ export default function NoteList({
 
 
 
+    const handleTogglePin = async (
+        id: number,
+        is_pinned: boolean,
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNotePinned(id, !is_pinned);
+
+            setNotes((prev) =>
+                prev.map((n) =>
+                    id === n.id ? updatedNote : n
+                )
+            );
+
+        } catch (error) {
+
+            console.error(error);
+        }
+
+    }
+
+
+
 
     const handleDuplicateNote = async (
         note: Note,
@@ -256,7 +286,153 @@ export default function NoteList({
                 strategy={rectSortingStrategy}  // グリッド並び替え。カードUI向け。
             >
 
-                <div className={styles.notesContainer}>
+                <>
+
+                    {pinnedNotes.length > 0 && (
+
+                    <>
+                        <h3>📌 固定済み</h3>
+
+                        <NoteGrid
+                            enableSort={enableSort}
+                            notes={pinnedNotes}
+                            setNotes={setNotes}
+                            openMenuId={openMenuId}
+                            setOpenMenuId={setOpenMenuId}
+                            openColorId={openColorId}
+                            setOpenColorId={setOpenColorId}
+                            openNoteDetailId={openNoteDetailId}
+                            setOpenNoteDetailId={setOpenNoteDetailId}
+                            onSave={handleSave}
+                            onUpdateColor={handleUpdateColor}
+                            onMoveToTrash={handleMoveToTrash}
+                            onToggleFavorite={handleToggleFavorite}
+                            onTogglePin={handleTogglePin}
+                            onDuplicateNote={handleDuplicateNote}
+                        />
+
+                        <h3>その他</h3>
+
+                    </>
+
+                    )}
+
+
+                <NoteGrid
+                    enableSort={enableSort}
+                    notes={normalNotes}
+                    setNotes={setNotes}
+                    openMenuId={openMenuId}
+                    setOpenMenuId={setOpenMenuId}
+                    openColorId={openColorId}
+                    setOpenColorId={setOpenColorId}
+                    openNoteDetailId={openNoteDetailId}
+                    setOpenNoteDetailId={setOpenNoteDetailId}
+                    onSave={handleSave}
+                    onUpdateColor={handleUpdateColor}
+                    onMoveToTrash={handleMoveToTrash}
+                    onToggleFavorite={handleToggleFavorite}
+                    onTogglePin={handleTogglePin}
+                    onDuplicateNote={handleDuplicateNote}
+                />
+
+                </>
+
+
+            </SortableContext>
+
+        </DndContext>
+
+
+        ) : (
+
+            <>
+                {pinnedNotes.length > 0 && (
+
+                <>
+                    <h3>📌 固定済み</h3>
+
+                    <NoteGrid
+                        enableSort={enableSort}
+                        notes={pinnedNotes}
+                        setNotes={setNotes}
+                        openMenuId={openMenuId}
+                        setOpenMenuId={setOpenMenuId}
+                        openColorId={openColorId}
+                        setOpenColorId={setOpenColorId}
+                        openNoteDetailId={openNoteDetailId}
+                        setOpenNoteDetailId={setOpenNoteDetailId}
+                        onSave={handleSave}
+                        onUpdateColor={handleUpdateColor}
+                        onMoveToTrash={handleMoveToTrash}
+                        onToggleFavorite={handleToggleFavorite}
+                        onTogglePin={handleTogglePin}
+                        onDuplicateNote={handleDuplicateNote}
+                    />
+
+                    <h3>その他</h3>
+
+                </>
+
+                )}
+
+                <NoteGrid
+                    enableSort={enableSort}
+                    notes={normalNotes}
+                    setNotes={setNotes}
+                    openMenuId={openMenuId}
+                    setOpenMenuId={setOpenMenuId}
+                    openColorId={openColorId}
+                    setOpenColorId={setOpenColorId}
+                    openNoteDetailId={openNoteDetailId}
+                    setOpenNoteDetailId={setOpenNoteDetailId}
+                    onSave={handleSave}
+                    onUpdateColor={handleUpdateColor}
+                    onMoveToTrash={handleMoveToTrash}
+                    onToggleFavorite={handleToggleFavorite}
+                    onTogglePin={handleTogglePin}
+                    onDuplicateNote={handleDuplicateNote}
+                />
+
+            </>
+
+        )
+
+    );
+}
+
+
+
+// <div className={styles.notesContainer}>
+
+            //     {notes.map((note) => (
+
+            //         <NoteCard
+            //             key={note.id}
+            //             note={note}
+            //             setNotes={setNotes}
+            //             openMenuId={openMenuId}
+            //             setOpenMenuId={setOpenMenuId}
+            //             openColorId={openColorId}
+            //             setOpenColorId={setOpenColorId}
+            //             openNoteDetailId={openNoteDetailId}
+            //             setOpenNoteDetailId={setOpenNoteDetailId}
+            //             onSave={handleSave}
+            //             onUpdateColor={handleUpdateColor}
+            //             onMoveToTrash={handleMoveToTrash}
+            //             onToggleFavorite={handleToggleFavorite}
+            //             onTogglePin={handleTogglePin}
+            //             onDuplicateNote={handleDuplicateNote}
+            //         />
+
+            //     ))}
+
+            // </div>
+
+
+
+
+{/* <div className={styles.notesContainer}>
 
                     {notes.map((note) => (
 
@@ -274,45 +450,9 @@ export default function NoteList({
                             onUpdateColor={handleUpdateColor}
                             onMoveToTrash={handleMoveToTrash}
                             onToggleFavorite={handleToggleFavorite}
+                            onTogglePin={handleTogglePin}
                             onDuplicateNote={handleDuplicateNote}
                         />
                     ))}
 
-                </div>
-
-            </SortableContext>
-
-        </DndContext>
-
-
-        ) : (
-
-            <div className={styles.notesContainer}>
-
-                {notes.map((note) => (
-
-                    <NoteCard
-                        key={note.id}
-                        note={note}
-                        setNotes={setNotes}
-                        openMenuId={openMenuId}
-                        setOpenMenuId={setOpenMenuId}
-                        openColorId={openColorId}
-                        setOpenColorId={setOpenColorId}
-                        openNoteDetailId={openNoteDetailId}
-                        setOpenNoteDetailId={setOpenNoteDetailId}
-                        onSave={handleSave}
-                        onUpdateColor={handleUpdateColor}
-                        onMoveToTrash={handleMoveToTrash}
-                        onToggleFavorite={handleToggleFavorite}
-                        onDuplicateNote={handleDuplicateNote}
-                    />
-
-                ))}
-
-            </div>
-
-        )
-
-    );
-}
+                </div> */}

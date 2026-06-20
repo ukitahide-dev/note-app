@@ -105,6 +105,12 @@ type Props = {
     ) => Promise<void>;
 
 
+    onTogglePin: (
+        id: number,
+        is_pinned: boolean,
+    ) => Promise<void>;
+
+
     onDuplicateNote: (
         note: Note,
     ) => Promise<void>
@@ -131,6 +137,7 @@ export default function SortableNoteCard({
     onUpdateColor,
     onMoveToTrash,
     onToggleFavorite,
+    onTogglePin,
     onDuplicateNote
 }: Props)
 {
@@ -199,6 +206,7 @@ export default function SortableNoteCard({
                 }}
 
                 onToggleFavorite={onToggleFavorite}
+                onTogglePin={onTogglePin}
 
                 onDuplicateNote={onDuplicateNote}
             />

@@ -275,3 +275,32 @@ export const updateNoteFavorite = async (
 
 
 }
+
+
+
+
+export const updateNotePinned = async (
+    id: number,
+    is_pinned: boolean,
+) => {
+
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `notes/${id}/`,
+        {
+            is_pinned
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+    );
+
+    return res.data;
+
+
+}
