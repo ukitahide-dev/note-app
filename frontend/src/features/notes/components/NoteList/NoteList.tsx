@@ -26,23 +26,26 @@ import NoteGrid from "../NoteGrid/NoteGrid";
 
 
 
+// ---- types ----
+import type { Note } from "../../../../types/note";
 
 
-type Label = {
-    id: number;
-    name: string;
-};
+
+// type Label = {
+//     id: number;
+//     name: string;
+// };
 
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-    is_favorite: boolean;
-    is_pinned: boolean;
-    labels: Label[];
-};
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     color: string;
+//     is_favorite: boolean;
+//     is_pinned: boolean;
+//     labels: Label[];
+// };
 
 
 type Props = {

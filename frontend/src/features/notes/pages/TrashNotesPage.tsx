@@ -15,11 +15,15 @@ import ConfirmModal from "../../../shared/ui/ConfirmModal/ConfirmModal";
 
 
 
-type Note = {
-    id: number,
-    title: string,
-    content: string,
-}
+// ---- types ----
+import type { Note } from "../../../types/note";
+
+
+// type Note = {
+//     id: number,
+//     title: string,
+//     content: string,
+// }
 
 
 

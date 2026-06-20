@@ -6,13 +6,18 @@ import { getNotes } from "../../api/noteApi";
 import NoteList from "../../components/NoteList/NoteList";
 
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-    is_favorite: boolean;
-};
+// ---- types ----
+import type { Note } from "../../../../types/note";
+
+
+
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     color: string;
+//     is_favorite: boolean;
+// };
 
 
 

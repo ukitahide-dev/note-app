@@ -13,22 +13,25 @@ import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 
-type Label = {
-    id: number;
-    name: string;
-};
+// type Label = {
+//     id: number;
+//     name: string;
+// };
 
 
+// ---- types ----
+import type { Note } from "../../../../types/note";
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-    is_favorite: boolean;
-    is_pinned: boolean;
-    labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
-};
+
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     color: string;
+//     is_favorite: boolean;
+//     is_pinned: boolean;
+//     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
+// };
 
 
 

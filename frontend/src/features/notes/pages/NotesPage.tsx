@@ -19,19 +19,24 @@ import NoteList from "../components/NoteList/NoteList";
 import styles from "./NotesPage.module.css";
 
 
-type Label = {
-    id: number;
-    name: string;
-};
+
+// ---- types ----
+import type { Note } from "../../../types/note";
 
 
-type Note = {
-        id: number,
-        title: string,
-        content: string,
-        color: string,
-        labels:  Label[]
-    };
+// type Label = {
+//     id: number;
+//     name: string;
+// };
+
+
+// type Note = {
+//         id: number,
+//         title: string,
+//         content: string,
+//         color: string,
+//         labels:  Label[]
+//     };
 
 
 

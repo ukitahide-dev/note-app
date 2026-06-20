@@ -33,25 +33,26 @@ import NoteCard from "../NoteCard/NoteCard";
 
 
 
+// ---- types ----
+import type { Note } from "../../../../types/note";
 
 
 
 
 
+// type Label = {
+//     id: number;
+//     name: string;
+// };
 
-type Label = {
-    id: number;
-    name: string;
-};
-
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-    is_favorite: boolean;
-    labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
-};
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     color: string;
+//     is_favorite: boolean;
+//     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
+// };
 
 
 

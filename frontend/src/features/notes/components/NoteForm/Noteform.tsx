@@ -11,16 +11,16 @@ import { useLabelStore } from "../../../labels/store/labelStore";
 
 
 
+// ---- types ----
+import type { Note } from "../../../../types/note";
 
 
 
-
-
-type Note = {
-        id: number;
-        title: string;
-        content: string;
-    };
+// type Note = {
+//         id: number;
+//         title: string;
+//         content: string;
+//     };
 
 
 // Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
@@ -300,7 +300,7 @@ export default function NoteForm({
                         <LabelPanel
                             selectedLabels={selectedLabels}
                             onSelectLabel={handleSelectLabel}
-                            
+
 
                         />
                     )}

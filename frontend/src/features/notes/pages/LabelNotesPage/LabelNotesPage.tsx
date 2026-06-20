@@ -8,17 +8,22 @@ import NoteList from "../../components/NoteList/NoteList";
 import NoteForm from "../../components/NoteForm/NoteForm";
 
 
-type Label = {
-    id: number;
-    name: string;
-}
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    labels: Label[];
-}
+// ---- types ----
+import type { Note } from "../../../../types/note";
+
+
+// type Label = {
+//     id: number;
+//     name: string;
+// }
+
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     labels: Label[];
+// }
 
 
 
