@@ -1,7 +1,7 @@
 // Zustandは「共有stateをまとめたオブジェクト」を作るライブラリ。
 import { create } from "zustand";
 
-
+import type { Label } from "../../../types/note";
 
 // ---- api ----
 import {
@@ -12,10 +12,11 @@ import {
 } from "../../notes/api/labelApi";
 
 
-type Label = {
-    id: number;
-    name: string;
-};
+
+// type Label = {
+//     id: number;
+//     name: string;
+// };
 
 
 
@@ -63,6 +64,8 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
         }
     },
 
+
+    
     // ラベル作成
     handleCreateLabel: async (
         name: string

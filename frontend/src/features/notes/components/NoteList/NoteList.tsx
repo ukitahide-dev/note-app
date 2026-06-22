@@ -13,16 +13,19 @@ import {
     rectSortingStrategy,
 } from "@dnd-kit/sortable";
 
+
 // ---- api ----
 import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite, updateNotePinned } from "../../api/noteApi";
 
+
 // ---- components ----
 import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
+import NoteCard from "../NoteCard/NoteCard";
+import NoteGrid from "../NoteGrid/NoteGrid";
+
 
 // ---- css ----
 import styles from "./NoteList.module.css";
-import NoteCard from "../NoteCard/NoteCard";
-import NoteGrid from "../NoteGrid/NoteGrid";
 
 
 
@@ -31,21 +34,6 @@ import type { Note } from "../../../../types/note";
 
 
 
-// type Label = {
-//     id: number;
-//     name: string;
-// };
-
-
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     color: string;
-//     is_favorite: boolean;
-//     is_pinned: boolean;
-//     labels: Label[];
-// };
 
 
 type Props = {
@@ -74,6 +62,9 @@ export default function NoteList({
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
+
+    const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
+
 
 
     const pinnedNotes = notes.filter((note) => note.is_pinned);
@@ -269,6 +260,11 @@ export default function NoteList({
 
 
     }
+
+
+
+
+    
 
 
 

@@ -21,17 +21,8 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
+import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 
-
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     color: string;
-//     is_favorite: boolean;
-//     is_pinned: boolean;
-//     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
-// };
 
 
 
@@ -119,16 +110,7 @@ export default function NoteCard({
 }: Props) {
 
 
-
-    // const [isLabelOpen, setIsLabelOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
-    // const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
-    //     note.labels.map(
-    //         (label) => label.id
-    //     )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
-    // );
-
-
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -154,6 +136,14 @@ export default function NoteCard({
 
 
 
+    // useNoteSelectionStoreを使う
+    const {
+        selectedNoteIds,
+        toggleSelect,
+    } = useNoteSelectionStore();
+
+
+
 
 
     useEffect(() => {
@@ -171,7 +161,7 @@ export default function NoteCard({
             ) {
                 setOpenMenuId(null);
                 handleOpenLabel();
-                // setIsLabelOpen(false);
+
             }
 
         };
@@ -281,6 +271,14 @@ export default function NoteCard({
                 onClick={() => setOpenNoteDetailId(note.id)}
                 ref={cardRef}
             >
+
+                <button
+                    onClick={() => toggleSelect(note.id)}
+
+                >
+                    ✅
+                </button>
+
                 <div
                     {...dragHandleProps}
                     className={cardStyles.dragHandle}
@@ -365,7 +363,6 @@ export default function NoteCard({
                         onClick={(e) => {
                             e.stopPropagation();
                             onToggleFavorite(note.id, note.is_favorite)
-                            // handleToggleFavorite();
                         }}
 
                     >
@@ -377,7 +374,6 @@ export default function NoteCard({
                         className={cardStyles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
-                            // setIsLabelOpen(false);
                             setOpenColorId(null);
                             setOpenMenuId((prev) => prev === note.id ? null : note.id);
                         }}
@@ -403,7 +399,6 @@ export default function NoteCard({
                         menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                         onOpenLabel={handleOpenLabel}
                         onMoveToTrash={() => onMoveToTrash(note.id)}
-                        // noteId={note.id}
                         onDuplicateNote={() => onDuplicateNote(note)}
                     />
 
@@ -415,8 +410,6 @@ export default function NoteCard({
                 {openColorId === note.id && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        // onUpdateColor={onUpdateColor}
-                        // note={note}
                         tempColor={tempColor}
                         onClose={handleClosePalette}
 

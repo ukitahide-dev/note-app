@@ -83,7 +83,7 @@ export default function NoteDetailModal({
     const [isColorOpen, setIsColorOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
 
-    // const [isLabelOpen, setIsLabelOpen] = useState(false);
+    
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 
