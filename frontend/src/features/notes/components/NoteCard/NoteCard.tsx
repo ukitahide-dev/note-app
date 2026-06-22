@@ -273,7 +273,10 @@ export default function NoteCard({
             >
 
                 <button
-                    onClick={() => toggleSelect(note.id)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(note.id);
+                    }}
 
                 >
                     ✅
