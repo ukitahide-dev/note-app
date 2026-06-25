@@ -4,14 +4,15 @@
 // ---- css ----
 import { useEffect, useRef } from "react";
 import styles from "./ColorPalette.module.css";
+import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
 
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-}
+// type Note = {
+//     id: number;
+//     title: string;
+//     content: string;
+//     color: string;
+// }
 
 
 type Props = {
@@ -19,7 +20,7 @@ type Props = {
         color: string
     ) => void;
 
-    tempColor: string;
+    tempColor?: string;
 
     // onUpdateColor?: (
     //     id: number,
@@ -47,18 +48,28 @@ const colors = [
 
 
 
-// 親: NoteCard.tsx、NoteDetailModal.tsx、NoteForm.tsx、
+// 親: NoteCard.tsx、NoteDetailModal.tsx、NoteForm.tsx、Header.tsx、
 
 
 export default function ColorPalette({
     onSelectColor,
     // onUpdateColor,
     // note,
-    tempColor,
+    // tempColor,
     onClose,
 }: Props) {
 
     const paletteRef = useRef<HTMLDivElement | null>(null);
+
+    console.log('ColorPalette再レンダリング');
+
+
+
+    // const {
+    //     previewColor
+    // } = useNoteSelectionStore();
+
+
 
 
 
@@ -68,14 +79,16 @@ export default function ColorPalette({
             event: MouseEvent
         ) => {
 
+            console.log("ColorPalette mounted");
+
+
             if ( // ColorPaletteが存在していて、クリックされた場所がColorPaletteの外だった場合。
                 paletteRef.current &&  // paletteRef.currentは<div class="palette">のDOMを指している。
                 !paletteRef.current.contains(  // event.targetは実際にクリックされた要素。ex) <button>赤</button>
                     event.target as Node
                 )
             ) {
-
-                // onUpdateColor(note.id, tempColor);
+                console.log("outside");
                 onClose();
             }
         };
@@ -90,14 +103,14 @@ export default function ColorPalette({
         return () => {
             document.removeEventListener(
                 "click",
-                handleOutsideClick
+                handleOutsideClick,
             );
         };
 
-    }, [tempColor]);  // []だと初回マウント時のみuseEffect内が実行される。[tempColor]にしないと、ColorPaletteが最初に開かれた時点でのtempColorが登録されたままになる。onSelectColor(color)で色変更して、NoteCard再レンダリング → ColorPalette再レンダリングされても、[]だと、useEffect内は再実行されないから、最初のtempColorをずっと保持したままになる。
+    }, [onClose]);  // []だと初回マウント時のみuseEffect内が実行される。[tempColor]にしないと、ColorPaletteが最初に開かれた時点でのtempColorが登録されたままになる。onSelectColor(color)で色変更して、NoteCard再レンダリング → ColorPalette再レンダリングされても、[]だと、useEffect内は再実行されないから、最初のtempColorをずっと保持したままになる。
 
-
-
+    // [tempColor, previewColor]
+    // [onClose]
 
 
     return (
@@ -105,6 +118,7 @@ export default function ColorPalette({
         <div
             ref={paletteRef}
             className={styles.palette}
+            onClick={(e) => e.stopPropagation()}
         >
 
             {colors.map((color) => (
@@ -117,8 +131,10 @@ export default function ColorPalette({
                     }}
 
                     onClick={(e) => {
+                            console.log("選択した色", color);
                             e.stopPropagation();
                             onSelectColor(color);
+                            // setPreviewColor(color);
                         }
 
                     }

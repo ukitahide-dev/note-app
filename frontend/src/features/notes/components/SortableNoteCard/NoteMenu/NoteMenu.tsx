@@ -6,15 +6,10 @@ import { useNoteLabels } from "../../../hooks/useNoteLabels";
 type Props = {
     menuRef?: React.RefObject<HTMLDivElement | null>;
 
-    // setIsLabelOpen: React.Dispatch<
-    //     React.SetStateAction<boolean>
-    // >;
 
     onOpenLabel: () => void;
 
     onMoveToTrash: () => void;
-
-    // noteId: number;
 
     onDuplicateNote: (
 
@@ -30,8 +25,6 @@ export default function NoteMenu({
     menuRef,
     onOpenLabel,
     onMoveToTrash,
-    // noteId,
-
     onDuplicateNote,
 
 }: Props) {
@@ -49,13 +42,6 @@ export default function NoteMenu({
                 ラベル追加
             </button>
 
-            <button>
-                色変更
-            </button>
-
-            <button>
-                ピン留め
-            </button>
 
             <button
                 onClick={onDuplicateNote}  // 複製したことを親に通知するだけ。親がどんな状態を持っているかとかは、子は把握していない。

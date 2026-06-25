@@ -110,7 +110,9 @@ export default function NoteCard({
 }: Props) {
 
 
-    const [tempColor, setTempColor] = useState(note.color);
+
+
+    const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -135,13 +137,26 @@ export default function NoteCard({
     });
 
 
+    console.log("isLabelOpen", isLabelOpen);
+
 
     // useNoteSelectionStoreを使う
     const {
         selectedNoteIds,
         toggleSelect,
+        previewColor,  // 複数のNoteCard色変更用
     } = useNoteSelectionStore();
 
+
+
+    const displayColor =
+        selectedNoteIds.includes(note.id)
+            && previewColor
+            ? previewColor
+            : tempColor;
+
+
+    console.log("NoteCardサイレンだリング");
 
 
 
@@ -159,7 +174,12 @@ export default function NoteCard({
                 (!menuRef.current || !menuRef.current.contains(event.target as Node)) &&
                 (!labelPanelRef.current || !labelPanelRef.current.contains(event.target as Node))
             ) {
-                setOpenMenuId(null);
+
+                console.log("NoteCard outside");
+                console.log(openColorId);
+
+                // setOpenMenuId(null);
+                // setOpenColorId(null);
                 handleOpenLabel();
 
             }
@@ -181,7 +201,7 @@ export default function NoteCard({
             );
         };
 
-    }, [setOpenMenuId]);
+    }, [openColorId,]);
 
 
 
@@ -250,8 +270,10 @@ export default function NoteCard({
 
 
 
-
+    // ノート単体の色を変える。ノートカードから色を変えたときの用途。
     const handleClosePalette = () => {
+
+        console.log("handleClosePalette実行");
 
         setOpenColorId(null);
         onUpdateColor(note.id, tempColor);
@@ -267,7 +289,7 @@ export default function NoteCard({
     return (
 
             <Card
-                style={{ backgroundColor: tempColor }}
+                style={{ backgroundColor: displayColor }}
                 onClick={() => setOpenNoteDetailId(note.id)}
                 ref={cardRef}
             >
@@ -354,7 +376,7 @@ export default function NoteCard({
 
                     <button
                         onClick={(e) => {
-                            e.stopPropagation();
+                            e.stopPropagation();  // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
                             setOpenMenuId(null);
                             setOpenColorId((prev) => prev === note.id ? null : note.id);
                         }}
@@ -429,6 +451,7 @@ export default function NoteCard({
                         onSave={onSave}
                         onUpdateColor={onUpdateColor}
                         onMoveToTrash={onMoveToTrash}
+                        onDuplicateNote={onDuplicateNote}
 
                     />
 

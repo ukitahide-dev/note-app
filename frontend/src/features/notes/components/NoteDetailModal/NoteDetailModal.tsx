@@ -53,6 +53,10 @@ type Props = {
         React.SetStateAction<Note[]>
     >;
 
+    onDuplicateNote: (
+        note: Note,
+    ) => Promise<void>;
+
 }
 
 
@@ -67,12 +71,8 @@ export default function NoteDetailModal({
     setNotes,
     onSave,
     onUpdateColor,
-    // menuRef,
     onMoveToTrash,
-    // setIsLabelOpen,
-    // setNotes,
-
-
+    onDuplicateNote,
 
 }: Props) {
 
@@ -83,7 +83,7 @@ export default function NoteDetailModal({
     const [isColorOpen, setIsColorOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
 
-    
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 
@@ -110,6 +110,9 @@ export default function NoteDetailModal({
         note,
         setNotes,
     });
+
+
+
 
 
     const handleClosePalette = () => {
@@ -257,9 +260,9 @@ export default function NoteDetailModal({
                     ) : (
 
                         <NoteMenu
-                            noteId={note.id}
                             onOpenLabel={handleOpenLabel}
-                            onMoveToTrash={onMoveToTrash}
+                            onMoveToTrash={() => onMoveToTrash(note.id)}
+                            onDuplicateNote={() => onDuplicateNote(note)}
 
                         />
 

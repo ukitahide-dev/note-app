@@ -7,6 +7,14 @@ type NoteSelectionStore = {
 
     selectedNoteIds: number[];
 
+
+    previewColor: string | null;
+
+    setPreviewColor: (
+        color: string,
+    ) => void;
+
+
     toggleSelect: (
         id: number
     ) => void;
@@ -22,6 +30,19 @@ type NoteSelectionStore = {
 export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
 
     selectedNoteIds: [],
+
+    previewColor: null,
+
+    setPreviewColor: (color) => {
+
+        console.log("setPreviewColor", color);
+
+        set({
+            previewColor: color
+        });
+
+    },
+
 
 
     toggleSelect: (id) =>

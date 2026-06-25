@@ -42,6 +42,8 @@ export default function LabelPanel({
     // onSelectLabelName,
 }: Props) {
 
+    console.log("LabelPanelマウントされた");
+
     const [newLabel, setNewLabel] = useState("");
     const isTyping = newLabel.trim() !== "";
 
@@ -92,7 +94,7 @@ export default function LabelPanel({
                             <input
                                 type="checkbox"
                                 checked={selectedLabels.includes(label.id)}
-                                
+
 
                                 onChange={() => {
                                     onSelectLabel(label.id);
