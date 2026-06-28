@@ -65,10 +65,10 @@ type Props = {
     //     is_favorite: boolean,
     // ) => Promise<void>;
 
-    onTogglePin: (
-        id: number,
-        is_pinned: boolean,
-    ) => Promise<void>;
+    // onTogglePin: (
+    //     id: number,
+    //     is_pinned: boolean,
+    // ) => Promise<void>;
 
 
     // onDuplicateNote: (
@@ -92,7 +92,7 @@ export default function NoteGrid ({
     // onUpdateColor,    // useNoteStoreを使うことで、不要になった。
     // onMoveToTrash,   // useNoteStoreを使うことで、不要になった。
     // onToggleFavorite,  // useNoteStoreを使うことで、不要になった。
-    onTogglePin,
+    // onTogglePin,
     // onDuplicateNote,  // useNoteStoreを使うことで、不要になった。
 
 }: Props) {
@@ -125,8 +125,8 @@ export default function NoteGrid ({
                             // onSave={onSave}
                             // onUpdateColor={onUpdateColor}
                             // onMoveToTrash={onMoveToTrash}
-                            onToggleFavorite={onToggleFavorite}
-                            onTogglePin={onTogglePin}
+                            // onToggleFavorite={onToggleFavorite}
+                            // onTogglePin={onTogglePin}
                             // onDuplicateNote={onDuplicateNote}
                         />
             ))}

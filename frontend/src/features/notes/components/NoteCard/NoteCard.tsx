@@ -77,10 +77,10 @@ type Props = {
     //     is_favorite: boolean,
     // ) => Promise<void>;
 
-    onTogglePin: (
-        id: number,
-        is_pinned: boolean,
-    ) => Promise<void>;
+    // onTogglePin: (
+    //     id: number,
+    //     is_pinned: boolean,
+    // ) => Promise<void>;
 
 
     // onDuplicateNote: (
@@ -106,7 +106,7 @@ export default function NoteCard({
     // onUpdateColor,
     dragHandleProps,
     // onToggleFavorite,
-    onTogglePin,
+    // onTogglePin,
     // onDuplicateNote,
 }: Props) {
 
@@ -157,6 +157,7 @@ export default function NoteCard({
         createNote,
         moveToTrash,
         toggleFavorite,
+        togglePin,
     } = useNoteStore();
 
 
@@ -353,7 +354,8 @@ export default function NoteCard({
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            onTogglePin(note.id, note.is_pinned);
+                            togglePin(note.id, note.is_pinned);
+                            // onTogglePin(note.id, note.is_pinned);
 
                         }}
 

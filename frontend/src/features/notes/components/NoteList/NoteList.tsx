@@ -227,28 +227,28 @@ export default function NoteList({
     // }
 
 
+    // useNoteStoreを使うことで、不要になった。
+    // const handleTogglePin = async (
+    //     id: number,
+    //     is_pinned: boolean,
+    // ) => {
 
-    const handleTogglePin = async (
-        id: number,
-        is_pinned: boolean,
-    ) => {
+    //     try {
 
-        try {
+    //         const updatedNote = await updateNotePinned(id, !is_pinned);
 
-            const updatedNote = await updateNotePinned(id, !is_pinned);
+    //         setNotes((prev) =>
+    //             prev.map((n) =>
+    //                 id === n.id ? updatedNote : n
+    //             )
+    //         );
 
-            setNotes((prev) =>
-                prev.map((n) =>
-                    id === n.id ? updatedNote : n
-                )
-            );
+    //     } catch (error) {
 
-        } catch (error) {
+    //         console.error(error);
+    //     }
 
-            console.error(error);
-        }
-
-    }
+    // }
 
 
 
@@ -328,7 +328,7 @@ export default function NoteList({
                             // onUpdateColor={handleUpdateColor}
                             // onMoveToTrash={handleMoveToTrash}
                             // onToggleFavorite={handleToggleFavorite}
-                            onTogglePin={handleTogglePin}
+                            // onTogglePin={handleTogglePin}
                             // onDuplicateNote={handleDuplicateNote}
                         />
 
@@ -353,7 +353,7 @@ export default function NoteList({
                     // onUpdateColor={handleUpdateColor}
                     // onMoveToTrash={handleMoveToTrash}
                     // onToggleFavorite={handleToggleFavorite}
-                    onTogglePin={handleTogglePin}
+                    // onTogglePin={handleTogglePin}
                     // onDuplicateNote={handleDuplicateNote}
                 />
 
@@ -387,7 +387,7 @@ export default function NoteList({
                         // onUpdateColor={handleUpdateColor}
                         // onMoveToTrash={handleMoveToTrash}
                         // onToggleFavorite={handleToggleFavorite}
-                        onTogglePin={handleTogglePin}
+                        // onTogglePin={handleTogglePin}
                         // onDuplicateNote={handleDuplicateNote}
                     />
 
@@ -411,7 +411,7 @@ export default function NoteList({
                     // onUpdateColor={handleUpdateColor}
                     // onMoveToTrash={handleMoveToTrash}
                     // onToggleFavorite={handleToggleFavorite}
-                    onTogglePin={handleTogglePin}
+                    // onTogglePin={handleTogglePin}
                     // onDuplicateNote={handleDuplicateNote}
                 />
 
