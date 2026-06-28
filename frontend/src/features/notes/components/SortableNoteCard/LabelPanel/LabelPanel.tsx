@@ -33,7 +33,7 @@ type Props = {
 
 
 
-// 親: NoteCard.tsx、NoteDetailModal.tsx、
+// 親: NoteCard.tsx、NoteDetailModal.tsx、Header.tsx
 
 export default function LabelPanel({
     labelPanelRef,
@@ -42,10 +42,11 @@ export default function LabelPanel({
     // onSelectLabelName,
 }: Props) {
 
-    console.log("LabelPanelマウントされた");
+    // console.log("LabelPanelマウントされた");
 
     const [newLabel, setNewLabel] = useState("");
     const isTyping = newLabel.trim() !== "";
+
 
 
     // Zustandで定義した。labelsを直接取得。

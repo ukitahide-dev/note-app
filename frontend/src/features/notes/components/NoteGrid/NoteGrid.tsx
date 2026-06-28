@@ -60,10 +60,10 @@ type Props = {
 
     dragHandleProps?: any;
 
-    onToggleFavorite: (
-        id: number,
-        is_favorite: boolean,
-    ) => Promise<void>;
+    // onToggleFavorite: (
+    //     id: number,
+    //     is_favorite: boolean,
+    // ) => Promise<void>;
 
     onTogglePin: (
         id: number,
@@ -88,12 +88,12 @@ export default function NoteGrid ({
     setOpenColorId,
     openNoteDetailId,
     setOpenNoteDetailId,
-    // onSave,
-    // onUpdateColor,
-    // onMoveToTrash,
-    onToggleFavorite,
+    // onSave,           // useNoteStoreを使うことで、不要になった。
+    // onUpdateColor,    // useNoteStoreを使うことで、不要になった。
+    // onMoveToTrash,   // useNoteStoreを使うことで、不要になった。
+    // onToggleFavorite,  // useNoteStoreを使うことで、不要になった。
     onTogglePin,
-    // onDuplicateNote,
+    // onDuplicateNote,  // useNoteStoreを使うことで、不要になった。
 
 }: Props) {
 

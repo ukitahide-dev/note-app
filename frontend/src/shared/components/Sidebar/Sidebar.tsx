@@ -11,15 +11,9 @@ import LabelEditModal from "./LabelEditModal/LabelEditModal";
 
 
 
-// type Label = {
-//     id: number;
-//     name: string
-// }
 
 type Props = {
-    // labels: Label[];
     isOpen: boolean;
-
 };
 
 

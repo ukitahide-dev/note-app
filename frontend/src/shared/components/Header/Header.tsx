@@ -64,15 +64,15 @@ export default function Header({
         selectedNoteIds,
         previewColor,
         setPreviewColor,
-        clearSelection,
+        // clearSelection,
     } = useNoteSelectionStore();
 
 
     // useNoteStoreを使う
     const {
-        notes,
+        // notes,
         moveSelectedToTrash,
-        createNote,
+        // createNote,
         updateSelectedNoteColor,
         duplicateSelectedNotes,
     } = useNoteStore();
@@ -106,32 +106,7 @@ export default function Header({
         updateSelectedNoteColor(selectedNoteIds, previewColor);
 
 
-        // useNoteStoreにapi呼び出しも書くことで、不要になった
-        // try {
-
-        //     await Promise.all(
-        //         selectedNoteIds.map((id) =>
-        //             updateNoteColor(id, previewColor)
-        //         )
-        //     );
-
-
-
-
-        // } catch (error) {
-
-        //      console.log(error.response?.status);
-
-        //     // console.log(error.response?.data);
-        //     // console.error(error);
-
-        // }
-
-
         // clearSelection();  // これ書くとバグる
-
-
-
 
     }
 
@@ -183,24 +158,7 @@ export default function Header({
 
         setPanelType(null);
 
-        moveSelectedToTrash(selectedNoteIds);
-
-
-        // useNoteStoreにmoveSelectedToTrashを作り、api呼び出しもそこに書いたことで、ここから不要になった。
-        // try {
-
-        //     await Promise.all(
-        //         selectedNoteIds.map(
-        //             (id) => moveToTrashApi(id)
-        //         )
-        //     )
-
-
-        // } catch (error) {
-
-        //     console.error(error);
-
-        // }
+        await moveSelectedToTrash(selectedNoteIds);
 
 
     }
@@ -212,53 +170,7 @@ export default function Header({
 
         await duplicateSelectedNotes(selectedNoteIds);
 
-
-        // useNoteStoreにduplicateSelectedNotes関数作ることで、これ以降いらなくなった。
-        // 書き方1
-        // for (const note of notes) {
-
-        //     if (selectedNoteIds.includes(note.id)) {
-        //         createNote(
-        //             note.title,
-        //             note.content,
-        //             note.labels.map((label) => label.id),
-        //             note.color
-        //         )
-        //     }
-
-        // }
-
-        // 書き方2
-        // await Promise.all(
-        //     notes
-        //         .filter(note => selectedNoteIds.includes(note.id))
-        //         .map(note =>
-        //             createNote(
-        //                 note.title,
-        //                 note.content,
-        //                 note.labels.map(label => label.id),
-        //                 note.color
-        //             )
-        //         )
-        //     );
-
-
     }
-
-
-
-
-
-
-
-    // 変えたいのは選択したノートカードの色だから、ここに書くのはおかしい。この関数をZustandに書くのかも。
-    // // 色の選択をUIに表示する
-    // const handleSelectColor = (
-    //     color: string
-    // ) => {
-    //     setTempColor(color);
-    // }
-
 
 
 
@@ -380,3 +292,75 @@ export default function Header({
 
     );
 }
+
+
+
+// useNoteStoreにmoveSelectedToTrashを作り、api呼び出しもそこに書いたことで、ここから不要になった。
+        // try {
+
+        //     await Promise.all(
+        //         selectedNoteIds.map(
+        //             (id) => moveToTrashApi(id)
+        //         )
+        //     )
+
+
+        // } catch (error) {
+
+        //     console.error(error);
+
+        // }
+
+
+
+// useNoteStoreにapi呼び出しも書くことで、不要になった
+        // try {
+
+        //     await Promise.all(
+        //         selectedNoteIds.map((id) =>
+        //             updateNoteColor(id, previewColor)
+        //         )
+        //     );
+
+
+
+
+        // } catch (error) {
+
+        //      console.log(error.response?.status);
+
+        //     // console.log(error.response?.data);
+        //     // console.error(error);
+
+        // }
+
+
+
+// useNoteStoreにduplicateSelectedNotes関数作ることで、これ以降いらなくなった。
+        // 書き方1
+        // for (const note of notes) {
+
+        //     if (selectedNoteIds.includes(note.id)) {
+        //         createNote(
+        //             note.title,
+        //             note.content,
+        //             note.labels.map((label) => label.id),
+        //             note.color
+        //         )
+        //     }
+
+        // }
+
+        // 書き方2
+        // await Promise.all(
+        //     notes
+        //         .filter(note => selectedNoteIds.includes(note.id))
+        //         .map(note =>
+        //             createNote(
+        //                 note.title,
+        //                 note.content,
+        //                 note.labels.map(label => label.id),
+        //                 note.color
+        //             )
+        //         )
+        //     );

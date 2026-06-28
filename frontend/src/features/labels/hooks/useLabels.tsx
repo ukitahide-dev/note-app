@@ -19,6 +19,9 @@ type Label = {
 
 
 // 役割: ラベル一覧管理　Sidebar、NoteForm、SortableNoteCard、LabelPanelでも使う。だから共通データとしてここにまとめて、使いたいファイルから呼び出す形にする。
+// useLabelStoreで、labelsやsetLabels、handleCreateLabelは共有して使える状態にしたから、
+// このファイルはもう不要。
+
 
 
 export default function useLabels(

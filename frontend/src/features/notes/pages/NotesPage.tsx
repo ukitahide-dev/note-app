@@ -1,11 +1,11 @@
 // ---- react ----
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 
 
 
 // ----api----
-import { getNotes,  } from "../api/noteApi";
+// import { getNotes,  } from "../api/noteApi";
 // moveToTrash
 
 // ----components----

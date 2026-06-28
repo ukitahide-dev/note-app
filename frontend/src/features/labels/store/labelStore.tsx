@@ -13,10 +13,7 @@ import {
 
 
 
-// type Label = {
-//     id: number;
-//     name: string;
-// };
+
 
 
 
@@ -65,7 +62,7 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
     },
 
 
-    
+
     // ラベル作成
     handleCreateLabel: async (
         name: string
@@ -131,7 +128,7 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
 
 
-    // ラベルを削除する
+    // ラベル削除
     handleDeleteLabel: async (
         id: number
     ) => {

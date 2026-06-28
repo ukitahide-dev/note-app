@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { Note } from "../../../types/note"
-import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNoteColor as updateNoteColorApi } from "../api/noteApi";
+import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite } from "../api/noteApi";
 
 
 
@@ -26,8 +26,9 @@ type NoteStore = {
 
     moveSelectedToTrash: (ids: number[]) => Promise<void>;
 
-    updateSelectedNoteColor: (ids: number[], color: string) => Promise<void>;
+    toggleFavorite: (id: number, is_favorite: boolean) => Promise<void>;
 
+    updateSelectedNoteColor: (ids: number[], color: string) => Promise<void>;
 
     duplicateSelectedNotes: (ids: number[]) => Promise<void>;
 
@@ -174,6 +175,35 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
 
 
+
+    },
+
+
+
+
+    // お気に入りを切り替える
+    toggleFavorite: async (
+        id: number,
+        is_favorite: boolean,
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNoteFavorite(id, !is_favorite);
+
+            set((state) => ({
+                notes: state.notes.map(
+                    (note) => note.id === id ? updatedNote : note
+
+                )
+
+            }))
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     },
 

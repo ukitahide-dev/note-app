@@ -31,6 +31,9 @@ type Props = {
 }
 
 
+// カスタムフックは、ある機能をまとめたもの。ここでは、ラベル機能を扱うロジックを再利用できるようにしたもの。
+// コンポーネント専用のロジックをまとめたもの。ここではNoteCard専用。
+
 
 
 export function useNoteLabels({
@@ -51,7 +54,7 @@ export function useNoteLabels({
 
 
     const handleCloseLabel = () => {
-        console.log("handleOpenLabelが実行された");
+        // console.log("handleOpenLabelが実行された");
         // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
         setIsLabelOpen(false);
         // setIsLabelOpen(true);

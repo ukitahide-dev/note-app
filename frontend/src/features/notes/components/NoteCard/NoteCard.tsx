@@ -72,10 +72,10 @@ type Props = {
 
     dragHandleProps?: any;
 
-    onToggleFavorite: (
-        id: number,
-        is_favorite: boolean,
-    ) => Promise<void>;
+    // onToggleFavorite: (
+    //     id: number,
+    //     is_favorite: boolean,
+    // ) => Promise<void>;
 
     onTogglePin: (
         id: number,
@@ -105,7 +105,7 @@ export default function NoteCard({
     // onSave,
     // onUpdateColor,
     dragHandleProps,
-    onToggleFavorite,
+    // onToggleFavorite,
     onTogglePin,
     // onDuplicateNote,
 }: Props) {
@@ -156,6 +156,7 @@ export default function NoteCard({
         updateNote,
         createNote,
         moveToTrash,
+        toggleFavorite,
     } = useNoteStore();
 
 
@@ -424,7 +425,8 @@ export default function NoteCard({
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            onToggleFavorite(note.id, note.is_favorite)
+                            toggleFavorite(note.id, note.is_favorite);
+                            // onToggleFavorite(note.id, note.is_favorite)
                         }}
 
                     >
