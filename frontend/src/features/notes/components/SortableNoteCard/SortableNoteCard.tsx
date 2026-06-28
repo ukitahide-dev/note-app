@@ -72,7 +72,7 @@ type Props = {
             >
         >;
 
-    onMoveToTrash: (id: number) => void;
+    // onMoveToTrash: (id: number) => void;
 
     setOpenMenuId:
         React.Dispatch<
@@ -88,16 +88,16 @@ type Props = {
             >
         >;
 
-    onSave: (
-        id: number,
-        title: string,
-        content: string,
-    ) => Promise<void>;
+    // onSave: (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+    // ) => Promise<void>;
 
-    onUpdateColor: (
-        id: number,
-        color: string,
-    ) => Promise<void>;
+    // onUpdateColor: (
+    //     id: number,
+    //     color: string,
+    // ) => Promise<void>;
 
 
     onToggleFavorite: (
@@ -112,9 +112,9 @@ type Props = {
     ) => Promise<void>;
 
 
-    onDuplicateNote: (
-        note: Note,
-    ) => Promise<void>
+    // onDuplicateNote: (
+    //     note: Note,
+    // ) => Promise<void>
 };
 
 
@@ -134,12 +134,12 @@ export default function SortableNoteCard({
     setOpenColorId,
     openNoteDetailId,
     setOpenNoteDetailId,
-    onSave,
-    onUpdateColor,
-    onMoveToTrash,
+    // onSave,
+    // onUpdateColor,
+    // onMoveToTrash,
     onToggleFavorite,
     onTogglePin,
-    onDuplicateNote
+    // onDuplicateNote
 }: Props)
 {
 
@@ -195,11 +195,11 @@ export default function SortableNoteCard({
                 setOpenMenuId={setOpenMenuId}
                 openColorId={openColorId}
                 setOpenColorId={setOpenColorId}
-                onMoveToTrash={onMoveToTrash}
+                // onMoveToTrash={onMoveToTrash}
                 openNoteDetailId={openNoteDetailId}
                 setOpenNoteDetailId={setOpenNoteDetailId}
-                onSave={onSave}
-                onUpdateColor={onUpdateColor}
+                // onSave={onSave}
+                // onUpdateColor={onUpdateColor}
 
                 dragHandleProps={{
                     ...attributes,
@@ -209,7 +209,7 @@ export default function SortableNoteCard({
                 onToggleFavorite={onToggleFavorite}
                 onTogglePin={onTogglePin}
 
-                onDuplicateNote={onDuplicateNote}
+                // onDuplicateNote={onDuplicateNote}
             />
         </div>
 

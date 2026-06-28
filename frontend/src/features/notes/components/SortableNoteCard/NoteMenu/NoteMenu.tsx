@@ -7,11 +7,11 @@ type Props = {
     menuRef?: React.RefObject<HTMLDivElement | null>;
 
 
-    onOpenLabel: () => void;
+    onOpenLabel?: () => void;
 
-    onMoveToTrash: () => void;
+    onMoveToTrash?: () => void;
 
-    onDuplicateNote: (
+    onDuplicateNote?: (
 
     ) => void;
 };
@@ -29,6 +29,8 @@ export default function NoteMenu({
 
 }: Props) {
 
+
+    console.log("NoteMenuマウント")
 
 
 

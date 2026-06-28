@@ -6,7 +6,7 @@
 import { useState } from "react";
 import styles from "./NoteDetailModal.module.css";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-import { updateNoteColor } from "../../api/noteApi";
+import { updateNote as updateNoteApi, updateNoteColor } from "../../api/noteApi";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
@@ -14,48 +14,34 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
-
-// type Label = {
-//     id: number;
-//     name: string;
+import { useNoteStore } from "../../store/useNoteStore";
 
 
-// }
-
-
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     color: string;
-//     is_favorite: boolean;
-//     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
-// };
 
 
 type Props = {
     note: Note;
-    onSave: (
-        id: number,
-        title: string,
-        content: string,
-    ) => Promise<void>;
+    // onSave: (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+    // ) => Promise<void>;
 
-    onUpdateColor: (
-        id: number,
-        color: string,
-    ) => Promise<void>;
+    // onUpdateColor: (
+    //     id: number,
+    //     color: string,
+    // ) => Promise<void>;
 
-    onMoveToTrash: (id: number) => void;
+    // onMoveToTrash: (id: number) => void;
 
 
     setNotes: React.Dispatch<
         React.SetStateAction<Note[]>
     >;
 
-    onDuplicateNote: (
-        note: Note,
-    ) => Promise<void>;
+    // onDuplicateNote: (
+    //     note: Note,
+    // ) => Promise<void>;
 
 }
 
@@ -69,10 +55,10 @@ type Props = {
 export default function NoteDetailModal({
     note,
     setNotes,
-    onSave,
-    onUpdateColor,
-    onMoveToTrash,
-    onDuplicateNote,
+    // onSave,
+    // onUpdateColor,
+    // onMoveToTrash,
+    // onDuplicateNote,
 
 }: Props) {
 
@@ -114,11 +100,54 @@ export default function NoteDetailModal({
 
 
 
+    const {
+        updateNote,
+        createNote,
+    } = useNoteStore();
 
-    const handleClosePalette = () => {
+
+
+
+
+    const handleClosePalette = async () => {
 
         setIsColorOpen(false);
-        onUpdateColor(note.id, tempColor);
+
+        try {
+
+            const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+            updateNote(updatedNote);  // useNoteStore
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    }
+
+
+
+
+    const handleSave = async (
+        id: number,
+        title: string,
+        content: string,
+
+    ) => {
+
+        try {
+            const updatedNote = await updateNoteApi(Number(id), title, content);
+            updateNote(updatedNote);  // useNoteStore
+
+        } catch (error) {
+            console.error(error);
+            alert("保存失敗");
+        }
+
+        // setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
 
     }
 
@@ -127,12 +156,27 @@ export default function NoteDetailModal({
 
 
 
+
+
+
+    const {
+        moveToTrash,
+    } = useNoteStore();
+
+
+
+
     return (
 
         <div
             className={styles.overlay}
-            onClick={() => onSave(note.id, title, content)}
-        >
+            onClick={() => {
+                handleSave(note.id, title, content);
+                handleClosePalette();
+
+            }}
+            // onClick={() => onSave(note.id, title, content)}
+            >
 
             <div
                 className={styles.modal}
@@ -221,8 +265,10 @@ export default function NoteDetailModal({
                         className={styles.button}
                         onClick={
                                     () => {
-                                        onSave(note.id, title, content);
-                                        onUpdateColor(note.id, tempColor);
+                                        handleSave(note.id, title, content);
+                                        handleClosePalette();
+                                        // onSave(note.id, title, content);
+                                        // onUpdateColor(note.id, tempColor);
 
                                     }
                             }
@@ -261,8 +307,17 @@ export default function NoteDetailModal({
 
                         <NoteMenu
                             onOpenLabel={handleOpenLabel}
-                            onMoveToTrash={() => onMoveToTrash(note.id)}
-                            onDuplicateNote={() => onDuplicateNote(note)}
+                            onMoveToTrash={() => moveToTrash(note.id)}
+                            onDuplicateNote={
+                                () =>
+                                    createNote(
+                                        note.title,
+                                        note.content,
+                                        note.labels.map((label) => label.id),
+                                        note.color
+                                    )
+                            }
+                            // onDuplicateNote={() => onDuplicateNote(note)}
 
                         />
 

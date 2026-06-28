@@ -1,14 +1,27 @@
+// ----react ----
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+
+
+// ---- store ----
+import { useSearchStore } from "../../../features/search/store/SearchStore";
+import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
+
+
+// ---- component ----
+import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
+import ColorPalette from "../../ui/ColorPalette/ColorPalette";
+
+
+// ---- api ----
+// import { createNote as createNoteApi, moveToTrash as moveToTrashApi, updateNoteColor } from "../../../features/notes/api/noteApi";
 
 
 // ---- css ----
-import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
-import { useSearchStore } from "../../../features/search/store/SearchStore";
-import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
-import { useState } from "react";
-import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
-import ColorPalette from "../../ui/ColorPalette/ColorPalette";
-import { updateNoteColor } from "../../../features/notes/api/noteApi";
+import { useNoteStore } from "../../../features/notes/store/useNoteStore";
+
+
 
 
 
@@ -36,6 +49,9 @@ export default function Header({
 
     const navigate = useNavigate();
 
+
+    const paletteRef = useRef<HTMLDivElement | null>(null);
+
     const {
         searchText,
         setSearchText
@@ -48,11 +64,21 @@ export default function Header({
         selectedNoteIds,
         previewColor,
         setPreviewColor,
+        clearSelection,
     } = useNoteSelectionStore();
 
 
-    console.log("Header", previewColor);
+    // useNoteStoreを使う
+    const {
+        notes,
+        moveSelectedToTrash,
+        createNote,
+        updateSelectedNoteColor,
+        duplicateSelectedNotes,
+    } = useNoteStore();
 
+
+    // console.log("Header", previewColor);
 
 
 
@@ -64,7 +90,6 @@ export default function Header({
 
         console.log("store", state.previewColor);
 
-        // if (!previewColor) return;
 
         console.log("保存時", previewColor);
 
@@ -72,31 +97,154 @@ export default function Header({
         // console.log("color:", previewColor);
         console.log("ids:", selectedNoteIds);
 
-        try {
 
-            await Promise.all(
-                selectedNoteIds.map((id) =>
-                    updateNoteColor(id, previewColor)
-                )
-            );
-
-            // await selectedNoteIds.map((id) => updateNoteColor(id, previewColor))
-
-            // setPreviewColor(null);
+        setPanelType(null);
 
 
-        } catch (error) {
+        if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。
 
-             console.log(error.response?.status);
+        updateSelectedNoteColor(selectedNoteIds, previewColor);
 
-            // console.log(error.response?.data);
-            // console.error(error);
 
-        }
+        // useNoteStoreにapi呼び出しも書くことで、不要になった
+        // try {
+
+        //     await Promise.all(
+        //         selectedNoteIds.map((id) =>
+        //             updateNoteColor(id, previewColor)
+        //         )
+        //     );
+
+
+
+
+        // } catch (error) {
+
+        //      console.log(error.response?.status);
+
+        //     // console.log(error.response?.data);
+        //     // console.error(error);
+
+        // }
+
+
+        // clearSelection();  // これ書くとバグる
+
 
 
 
     }
+
+
+
+    // 外クリック処理
+    useEffect(() => {
+
+            const handleClickOutside = (
+                event: MouseEvent
+            ) => {
+
+
+                if (
+                    (!paletteRef.current || !paletteRef.current.contains(event.target as Node))
+                ) {
+
+                    handleSaveSelectedColor();
+
+                }
+
+            };
+
+            document.addEventListener(
+                "click",
+                // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
+                handleClickOutside
+            );
+
+
+            return () => {
+                document.removeEventListener(
+                    "click",
+                    // "mousedown",
+                    handleClickOutside
+                );
+            };
+
+        }, [previewColor]);  // previewColorを書かないと、previewColorの値が初回マウント時のまま、外クリックイベントに登録されてしまう。
+
+
+
+
+    const handleMoveToTrash = async (
+
+    ) => {
+
+        console.log("handleMoveTrash実行");
+
+        setPanelType(null);
+
+        moveSelectedToTrash(selectedNoteIds);
+
+
+        // useNoteStoreにmoveSelectedToTrashを作り、api呼び出しもそこに書いたことで、ここから不要になった。
+        // try {
+
+        //     await Promise.all(
+        //         selectedNoteIds.map(
+        //             (id) => moveToTrashApi(id)
+        //         )
+        //     )
+
+
+        // } catch (error) {
+
+        //     console.error(error);
+
+        // }
+
+
+    }
+
+
+
+
+    const handleDuplicateNotes = async () => {
+
+        await duplicateSelectedNotes(selectedNoteIds);
+
+
+        // useNoteStoreにduplicateSelectedNotes関数作ることで、これ以降いらなくなった。
+        // 書き方1
+        // for (const note of notes) {
+
+        //     if (selectedNoteIds.includes(note.id)) {
+        //         createNote(
+        //             note.title,
+        //             note.content,
+        //             note.labels.map((label) => label.id),
+        //             note.color
+        //         )
+        //     }
+
+        // }
+
+        // 書き方2
+        // await Promise.all(
+        //     notes
+        //         .filter(note => selectedNoteIds.includes(note.id))
+        //         .map(note =>
+        //             createNote(
+        //                 note.title,
+        //                 note.content,
+        //                 note.labels.map(label => label.id),
+        //                 note.color
+        //             )
+        //         )
+        //     );
+
+
+    }
+
 
 
 
@@ -148,7 +296,11 @@ export default function Header({
                     </button>
 
                     <button
-                        onClick={() => setPanelType("menu")}
+                        onClick={(e) => {
+                            e.stopPropagation(); // これがないとdocumentにクリックが伝播してバグる
+                            setPanelType("menu");
+                        }}
+
                     >
                         ⋮
                     </button>
@@ -161,16 +313,17 @@ export default function Header({
                 {panelType === "color" && (
                     <ColorPalette
                         onSelectColor={setPreviewColor}
-                        onClose={() => {
+                        paletteRef={paletteRef}
+                        // onClose={() => {
 
-                            console.log("onClose");
-                            console.log("onClose previewColor", previewColor);
+                        //     console.log("onClose");
+                        //     console.log("onClose previewColor", previewColor);
 
-                            handleSaveSelectedColor();
-                            setPanelType(null);
+                        //     handleSaveSelectedColor();
+                        //     setPanelType(null);
 
 
-                        }}
+                        // }}
                     />
 
 
@@ -180,7 +333,8 @@ export default function Header({
                 {panelType === "menu" && (
 
                     <NoteMenu
-
+                        onMoveToTrash={handleMoveToTrash}
+                        onDuplicateNote={handleDuplicateNotes}
 
                     />
 

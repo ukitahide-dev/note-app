@@ -1,5 +1,5 @@
 // ---- react ----
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // ---- dnd ----
 import {
@@ -31,6 +31,7 @@ import styles from "./NoteList.module.css";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
+import { useNoteStore } from "../../store/useNoteStore";
 
 
 
@@ -54,7 +55,7 @@ type Props = {
 // 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx、SearchResultsPage.tsx
 
 export default function NoteList({
-    notes,
+    // notes,
     setNotes,
     enableSort,
 }: Props) {
@@ -67,8 +68,26 @@ export default function NoteList({
 
 
 
+
+    // useNoteStoreを使う
+    const {
+        notes,
+        fetchNotes,
+    } = useNoteStore();
+
+
+
+    useEffect(() => {
+        fetchNotes();
+    }, []);
+
+
+
     const pinnedNotes = notes.filter((note) => note.is_pinned);
     const normalNotes = notes.filter((note) => !note.is_pinned);
+
+
+
 
 
 
@@ -104,78 +123,81 @@ export default function NoteList({
 
 
 
-    const handleMoveToTrash = async (
-        id: number
-    ) => {
+    // useNoteStoreを使うことで、NoteCard、NoteDetailModalに直接書けるようになった。
+    // const handleMoveToTrash = async (
+    //     id: number
+    // ) => {
 
-        try {
+    //     try {
 
-            await moveToTrash(id);
+    //         await moveToTrash(id);
 
-            setNotes((prev) =>
-                prev.filter(
-                    (note) => note.id !== id
-                )
-            );
+    //         setNotes((prev) =>
+    //             prev.filter(
+    //                 (note) => note.id !== id
+    //             )
+    //         );
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
+    //         console.error(error);
 
-        }
-    };
-
-
-
-    const handleSave = async (
-        id: number,
-        title: string,
-        content: string,
-
-    ) => {
-
-        try {
-            const updatedNote = await updateNote(Number(id), title, content);
-
-            setNotes((prev) => prev.map(
-                (n) => n.id === updatedNote.id ? updatedNote : n
-            ))
-
-        } catch (error) {
-            console.error(error);
-            alert("保存失敗");
-        }
-
-        setOpenNoteDetailId(null);
-
-    }
+    //     }
+    // };
 
 
 
-    const handleUpdateColor = async (
-        id: number,
-        color: string,
-    ) => {
+    // useNoteStoreを使うことで、NoteFormに直接書けるようになった。
+    // const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
 
-        try {
+    // ) => {
 
-            const updatedNote = await updateNoteColor(Number(id), color);
+    //     try {
+    //         const updatedNote = await updateNote(Number(id), title, content);
 
-            setNotes((prev) => (
-                prev.map((n) =>
-                    n.id === updatedNote.id ? updatedNote : n
-                    )
-                ));
+    //         setNotes((prev) => prev.map(
+    //             (n) => n.id === updatedNote.id ? updatedNote : n
+    //         ))
 
-        } catch (error) {
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("保存失敗");
+    //     }
 
-            console.error(error);
+    //     setOpenNoteDetailId(null);
 
-        }
+    // }
 
-        setOpenColorId(null);
 
-    }
+
+    // useNoteStoreを使うことで、NoteCardに直接書けるようになった。
+    // const handleUpdateColor = async (
+    //     id: number,
+    //     color: string,
+    // ) => {
+
+    //     try {
+
+    //         const updatedNote = await updateNoteColor(Number(id), color);
+
+    //         // setNotes((prev) => (
+    //         //     prev.map((n) =>
+    //         //         n.id === updatedNote.id ? updatedNote : n
+    //         //         )
+    //         //     ));
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    //     setOpenColorId(null);
+
+    // }
 
 
 
@@ -231,40 +253,40 @@ export default function NoteList({
 
 
 
-    const handleDuplicateNote = async (
-        note: Note,
-    ) => {
+    // const handleDuplicateNote = async (
+    //     note: Note,
+    // ) => {
 
-        try {
+    //     try {
 
-            const copiedNote = await createNote (
-                note.title,
-                note.content,
-                note.labels.map((label) => label.id),
-                note.color,
-            );
+    //         const copiedNote = await createNote (
+    //             note.title,
+    //             note.content,
+    //             note.labels.map((label) => label.id),
+    //             note.color,
+    //         );
 
-            setNotes(prev => [
+    //         setNotes(prev => [
 
-                copiedNote,
-                ...prev,
+    //             copiedNote,
+    //             ...prev,
 
-            ]);
-
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
+    //         ]);
 
 
-    }
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+
+    // }
 
 
 
 
-    
+
 
 
 
@@ -302,12 +324,12 @@ export default function NoteList({
                             setOpenColorId={setOpenColorId}
                             openNoteDetailId={openNoteDetailId}
                             setOpenNoteDetailId={setOpenNoteDetailId}
-                            onSave={handleSave}
-                            onUpdateColor={handleUpdateColor}
-                            onMoveToTrash={handleMoveToTrash}
+                            // onSave={handleSave}
+                            // onUpdateColor={handleUpdateColor}
+                            // onMoveToTrash={handleMoveToTrash}
                             onToggleFavorite={handleToggleFavorite}
                             onTogglePin={handleTogglePin}
-                            onDuplicateNote={handleDuplicateNote}
+                            // onDuplicateNote={handleDuplicateNote}
                         />
 
                         <h3>その他</h3>
@@ -327,12 +349,12 @@ export default function NoteList({
                     setOpenColorId={setOpenColorId}
                     openNoteDetailId={openNoteDetailId}
                     setOpenNoteDetailId={setOpenNoteDetailId}
-                    onSave={handleSave}
-                    onUpdateColor={handleUpdateColor}
-                    onMoveToTrash={handleMoveToTrash}
+                    // onSave={handleSave}
+                    // onUpdateColor={handleUpdateColor}
+                    // onMoveToTrash={handleMoveToTrash}
                     onToggleFavorite={handleToggleFavorite}
                     onTogglePin={handleTogglePin}
-                    onDuplicateNote={handleDuplicateNote}
+                    // onDuplicateNote={handleDuplicateNote}
                 />
 
                 </>
@@ -361,12 +383,12 @@ export default function NoteList({
                         setOpenColorId={setOpenColorId}
                         openNoteDetailId={openNoteDetailId}
                         setOpenNoteDetailId={setOpenNoteDetailId}
-                        onSave={handleSave}
-                        onUpdateColor={handleUpdateColor}
-                        onMoveToTrash={handleMoveToTrash}
+                        // onSave={handleSave}
+                        // onUpdateColor={handleUpdateColor}
+                        // onMoveToTrash={handleMoveToTrash}
                         onToggleFavorite={handleToggleFavorite}
                         onTogglePin={handleTogglePin}
-                        onDuplicateNote={handleDuplicateNote}
+                        // onDuplicateNote={handleDuplicateNote}
                     />
 
                     <h3>その他</h3>
@@ -385,12 +407,12 @@ export default function NoteList({
                     setOpenColorId={setOpenColorId}
                     openNoteDetailId={openNoteDetailId}
                     setOpenNoteDetailId={setOpenNoteDetailId}
-                    onSave={handleSave}
-                    onUpdateColor={handleUpdateColor}
-                    onMoveToTrash={handleMoveToTrash}
+                    // onSave={handleSave}
+                    // onUpdateColor={handleUpdateColor}
+                    // onMoveToTrash={handleMoveToTrash}
                     onToggleFavorite={handleToggleFavorite}
                     onTogglePin={handleTogglePin}
-                    onDuplicateNote={handleDuplicateNote}
+                    // onDuplicateNote={handleDuplicateNote}
                 />
 
             </>

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { createNote } from "../../api/noteApi";
+import { createNote as createNoteApi } from "../../api/noteApi";
 
 
 //  ---- css ----
@@ -13,6 +13,7 @@ import { useLabelStore } from "../../../labels/store/labelStore";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
+import { useNoteStore } from "../../store/useNoteStore";
 
 
 
@@ -24,11 +25,11 @@ import type { Note } from "../../../../types/note";
 
 
 // Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
-type Props = {
-    onAddNote: (
-        newNote: Note   // newNoteという変数はNote型という意味
-    ) => void;
-};
+// type Props = {
+//     onAddNote: (
+//         newNote: Note   // newNoteという変数はNote型という意味
+//     ) => void;
+// };
 
 
 
@@ -36,9 +37,9 @@ type Props = {
 
 
 export default function NoteForm({
-    onAddNote
+    // onAddNote
 
-}: Props) {
+}) {
 
 
     const [title, setTitle] = useState("");
@@ -72,6 +73,13 @@ export default function NoteForm({
 
 
 
+    const {
+        addNote,
+        createNote,
+    } = useNoteStore();
+
+
+
     const handleSubmit = async (
         e: React.SyntheticEvent
     ) => {
@@ -80,9 +88,13 @@ export default function NoteForm({
 
         try {
 
-            const newNote = await createNote(title, content, selectedLabels, tempColor);
+            createNote(title, content, selectedLabels, tempColor);
 
-            onAddNote(newNote);
+            // const newNote = await createNote(title, content, selectedLabels, tempColor);
+
+            // addNote(newNote);
+
+            // onAddNote(newNote);
 
             alert("投稿成功");
 

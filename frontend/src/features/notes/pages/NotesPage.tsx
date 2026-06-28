@@ -44,35 +44,35 @@ import type { Note } from "../../../types/note";
 
 
 export default function NotesPage() {
-    const [notes, setNotes] = useState<Note[]>([]);
+    // const [notes, setNotes] = useState<Note[]>([]);
     // const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // どのノートのメニューが開いているか」を全ノートで共有したいから、SortableNoteCardではなくて、このコンポーネントで定義する。
 
 
-    const handleAddNote = (
-        newNote: Note
-    ) => {
+    // const handleAddNote = (
+    //     newNote: Note
+    // ) => {
 
-        setNotes((prev) => [
-            newNote,
-            ...prev
-        ]);
-    };
+    //     setNotes((prev) => [
+    //         newNote,
+    //         ...prev
+    //     ]);
+    // };
 
 
-    useEffect(() => {
-        const fetchNotes = async () => {
+    // useEffect(() => {
+    //     const fetchNotes = async () => {
 
-            try {
-                const data = await getNotes();
-                setNotes(data);
-            } catch (error) {
-                console.error("ノート取得に失敗");
-            }
-        }
+    //         try {
+    //             const data = await getNotes();
+    //             setNotes(data);
+    //         } catch (error) {
+    //             console.error("ノート取得に失敗");
+    //         }
+    //     }
 
-        fetchNotes();
+    //     fetchNotes();
 
-    }, [])
+    // }, [])
 
 
 
@@ -80,11 +80,13 @@ export default function NotesPage() {
     return (
         <>
             <div className={styles.container}>
-                <NoteForm onAddNote={handleAddNote}/>
+                <NoteForm
+                    // onAddNote={handleAddNote}
+                />
 
                 <NoteList
-                    notes={notes}
-                    setNotes={setNotes}
+                    // notes={notes}
+                    // setNotes={setNotes}
                     enableSort={true}
                     // onMoveToTrash={handleMoveToTrash}
                 />

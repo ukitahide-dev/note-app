@@ -22,6 +22,8 @@ type Props = {
 
     tempColor?: string;
 
+    paletteRef?: React.RefObject<HTMLDivElement | null>;
+
     // onUpdateColor?: (
     //     id: number,
     //     color: string,
@@ -29,7 +31,7 @@ type Props = {
 
     // note?: Note;
 
-    onClose: () => void;  // onCloseを実行して、親で色変更のapiを呼ぶ形にする。onUpdateColorやnoteを渡してもらう必要がなくなる。
+    onClose?: () => void;  // onCloseを実行して、親で色変更のapiを呼ぶ形にする。onUpdateColorやnoteを渡してもらう必要がなくなる。
 
 }
 
@@ -56,10 +58,11 @@ export default function ColorPalette({
     // onUpdateColor,
     // note,
     // tempColor,
-    onClose,
+    paletteRef,
+    // onClose,
 }: Props) {
 
-    const paletteRef = useRef<HTMLDivElement | null>(null);
+    // const paletteRef = useRef<HTMLDivElement | null>(null);
 
     console.log('ColorPalette再レンダリング');
 
@@ -72,42 +75,43 @@ export default function ColorPalette({
 
 
 
+    // 親のNoteCardに移した
+    // useEffect(() => {
 
-    useEffect(() => {
+    //     const handleOutsideClick = (
+    //         event: MouseEvent
+    //     ) => {
 
-        const handleOutsideClick = (
-            event: MouseEvent
-        ) => {
-
-            console.log("ColorPalette mounted");
-
-
-            if ( // ColorPaletteが存在していて、クリックされた場所がColorPaletteの外だった場合。
-                paletteRef.current &&  // paletteRef.currentは<div class="palette">のDOMを指している。
-                !paletteRef.current.contains(  // event.targetは実際にクリックされた要素。ex) <button>赤</button>
-                    event.target as Node
-                )
-            ) {
-                console.log("outside");
-                onClose();
-            }
-        };
+    //         console.log("ColorPalette mounted");
 
 
-        document.addEventListener(
-            "click",
-            handleOutsideClick
-        );
+    //         if ( // ColorPaletteが存在していて、クリックされた場所がColorPaletteの外だった場合。
+    //             paletteRef.current &&  // paletteRef.currentは<div class="palette">のDOMを指している。
+    //             !paletteRef.current.contains(  // event.targetは実際にクリックされた要素。ex) <button>赤</button>
+    //                 event.target as Node
+    //             )
+    //         ) {
+    //             console.log("outside");
+    //             onClose();
+    //         }
+    //     };
 
 
-        return () => {
-            document.removeEventListener(
-                "click",
-                handleOutsideClick,
-            );
-        };
+    //     document.addEventListener(
+    //         "click",
+    //         handleOutsideClick
+    //     );
 
-    }, [onClose]);  // []だと初回マウント時のみuseEffect内が実行される。[tempColor]にしないと、ColorPaletteが最初に開かれた時点でのtempColorが登録されたままになる。onSelectColor(color)で色変更して、NoteCard再レンダリング → ColorPalette再レンダリングされても、[]だと、useEffect内は再実行されないから、最初のtempColorをずっと保持したままになる。
+
+    //     return () => {
+    //         document.removeEventListener(
+    //             "click",
+    //             handleOutsideClick,
+    //         );
+    //     };
+
+    // }, [onClose]);  // []だと初回マウント時のみuseEffect内が実行される。[tempColor]にしないと、ColorPaletteが最初に開かれた時点でのtempColorが登録されたままになる。onSelectColor(color)で色変更して、NoteCard再レンダリング → ColorPalette再レンダリングされても、[]だと、useEffect内は再実行されないから、最初のtempColorをずっと保持したままになる。
+
 
     // [tempColor, previewColor]
     // [onClose]

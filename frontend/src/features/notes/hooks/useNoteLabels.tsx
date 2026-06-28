@@ -50,7 +50,7 @@ export function useNoteLabels({
 
 
 
-    const handleOpenLabel = () => {
+    const handleCloseLabel = () => {
         console.log("handleOpenLabelが実行された");
         // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
         setIsLabelOpen(false);
@@ -58,8 +58,13 @@ export function useNoteLabels({
     }
 
 
+    const handleOpenLabel = () => {
+        setIsLabelOpen(true);
+    }
 
-    
+
+
+
 
     const updateLabels = async (
             newIds: number[]
@@ -132,6 +137,7 @@ export function useNoteLabels({
     return {
         isLabelOpen,
         handleOpenLabel,
+        handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,

@@ -31,7 +31,7 @@ type Props = {
             >
         >;
 
-    onMoveToTrash: (id: number) => void;
+    // onMoveToTrash: (id: number) => void;
 
     setOpenMenuId:
         React.Dispatch<
@@ -47,16 +47,16 @@ type Props = {
             >
         >;
 
-    onSave: (
-        id: number,
-        title: string,
-        content: string,
-    ) => Promise<void>
+    // onSave: (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+    // ) => Promise<void>
 
-    onUpdateColor: (
-        id: number,
-        color: string,
-    ) => Promise<void>
+    // onUpdateColor: (
+    //     id: number,
+    //     color: string,
+    // ) => Promise<void>
 
     dragHandleProps?: any;
 
@@ -71,9 +71,9 @@ type Props = {
     ) => Promise<void>;
 
 
-    onDuplicateNote: (
-        note: Note,
-    ) => Promise<void>;
+    // onDuplicateNote: (
+    //     note: Note,
+    // ) => Promise<void>;
 };
 
 
@@ -88,12 +88,12 @@ export default function NoteGrid ({
     setOpenColorId,
     openNoteDetailId,
     setOpenNoteDetailId,
-    onSave,
-    onUpdateColor,
-    onMoveToTrash,
+    // onSave,
+    // onUpdateColor,
+    // onMoveToTrash,
     onToggleFavorite,
     onTogglePin,
-    onDuplicateNote,
+    // onDuplicateNote,
 
 }: Props) {
 
@@ -122,12 +122,12 @@ export default function NoteGrid ({
                             setOpenColorId={setOpenColorId}
                             openNoteDetailId={openNoteDetailId}
                             setOpenNoteDetailId={setOpenNoteDetailId}
-                            onSave={onSave}
-                            onUpdateColor={onUpdateColor}
-                            onMoveToTrash={onMoveToTrash}
+                            // onSave={onSave}
+                            // onUpdateColor={onUpdateColor}
+                            // onMoveToTrash={onMoveToTrash}
                             onToggleFavorite={onToggleFavorite}
                             onTogglePin={onTogglePin}
-                            onDuplicateNote={onDuplicateNote}
+                            // onDuplicateNote={onDuplicateNote}
                         />
             ))}
 

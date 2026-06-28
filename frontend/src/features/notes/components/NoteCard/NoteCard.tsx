@@ -22,6 +22,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 // ---- types ----
 import type { Note } from "../../../../types/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
+import { useNoteStore } from "../../store/useNoteStore";
 
 
 
@@ -42,7 +43,7 @@ type Props = {
             >
         >;
 
-    onMoveToTrash: (id: number) => void;
+    // onMoveToTrash: (id: number) => void;
 
     setOpenMenuId:
         React.Dispatch<
@@ -58,16 +59,16 @@ type Props = {
             >
         >;
 
-    onSave: (
-        id: number,
-        title: string,
-        content: string,
-    ) => Promise<void>
+    // onSave: (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+    // ) => Promise<void>
 
-    onUpdateColor: (
-        id: number,
-        color: string,
-    ) => Promise<void>
+    // onUpdateColor: (
+    //     id: number,
+    //     color: string,
+    // ) => Promise<void>
 
     dragHandleProps?: any;
 
@@ -82,9 +83,9 @@ type Props = {
     ) => Promise<void>;
 
 
-    onDuplicateNote: (
-        note: Note,
-    ) => Promise<void>;
+    // onDuplicateNote: (
+    //     note: Note,
+    // ) => Promise<void>;
 };
 
 
@@ -98,26 +99,27 @@ export default function NoteCard({
     setOpenMenuId,
     openColorId,
     setOpenColorId,
-    onMoveToTrash,
+    // onMoveToTrash,
     openNoteDetailId,
     setOpenNoteDetailId,
-    onSave,
-    onUpdateColor,
+    // onSave,
+    // onUpdateColor,
     dragHandleProps,
     onToggleFavorite,
     onTogglePin,
-    onDuplicateNote,
+    // onDuplicateNote,
 }: Props) {
 
 
 
 
-    const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用
+    const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
+    const paletteRef = useRef<HTMLDivElement | null>(null);
 
 
     const { searchText } = useSearchStore();
@@ -128,6 +130,7 @@ export default function NoteCard({
     const {
         isLabelOpen,
         handleOpenLabel,
+        handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,
@@ -137,7 +140,7 @@ export default function NoteCard({
     });
 
 
-    console.log("isLabelOpen", isLabelOpen);
+    // console.log("isLabelOpen", isLabelOpen);
 
 
     // useNoteSelectionStoreを使う
@@ -148,6 +151,19 @@ export default function NoteCard({
     } = useNoteSelectionStore();
 
 
+    // useNoteStoreを使う
+    const {
+        updateNote,
+        createNote,
+        moveToTrash,
+    } = useNoteStore();
+
+
+
+
+
+
+
 
     const displayColor =
         selectedNoteIds.includes(note.id)
@@ -156,7 +172,7 @@ export default function NoteCard({
             : tempColor;
 
 
-    console.log("NoteCardサイレンだリング");
+    // console.log("NoteCardサイレンだリング");
 
 
 
@@ -172,15 +188,20 @@ export default function NoteCard({
                 cardRef.current &&
                 !cardRef.current.contains(event.target as Node) &&  // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
                 (!menuRef.current || !menuRef.current.contains(event.target as Node)) &&
-                (!labelPanelRef.current || !labelPanelRef.current.contains(event.target as Node))
+                (!labelPanelRef.current || !labelPanelRef.current.contains(event.target as Node)) &&
+                (!paletteRef.current || !paletteRef.current.contains(event.target as Node))
             ) {
 
                 console.log("NoteCard outside");
                 console.log(openColorId);
 
-                // setOpenMenuId(null);
-                // setOpenColorId(null);
-                handleOpenLabel();
+                setOpenMenuId(null);
+                handleCloseLabel();
+
+                if (note.id === openColorId) {
+                    handleClosePalette();
+                }
+
 
             }
 
@@ -201,7 +222,7 @@ export default function NoteCard({
             );
         };
 
-    }, [openColorId,]);
+    }, [tempColor, openColorId]);  // tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
 
 
 
@@ -271,14 +292,30 @@ export default function NoteCard({
 
 
     // ノート単体の色を変える。ノートカードから色を変えたときの用途。
-    const handleClosePalette = () => {
+    const handleClosePalette = async () => {
 
         console.log("handleClosePalette実行");
+        console.log(`tempColor: ${tempColor}`);
+
+        try {
+
+            const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+            updateNote(updatedNote);  // useNoteStore
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
         setOpenColorId(null);
-        onUpdateColor(note.id, tempColor);
+
 
     }
+
+
+
 
 
 
@@ -423,8 +460,17 @@ export default function NoteCard({
                     <NoteMenu
                         menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                         onOpenLabel={handleOpenLabel}
-                        onMoveToTrash={() => onMoveToTrash(note.id)}
-                        onDuplicateNote={() => onDuplicateNote(note)}
+                        onMoveToTrash={() => moveToTrash(note.id)}
+                        onDuplicateNote={
+                                () =>
+                                    createNote(
+                                        note.title,
+                                        note.content,
+                                        note.labels.map((label) => label.id),
+                                        note.color
+                                    )
+                            }
+                        // onDuplicateNote={() => onDuplicateNote(note)}
                     />
 
                     )
@@ -436,6 +482,7 @@ export default function NoteCard({
                     <ColorPalette
                         onSelectColor={handleSelectColor}
                         tempColor={tempColor}
+                        paletteRef={paletteRef}
                         onClose={handleClosePalette}
 
                     />
@@ -448,10 +495,10 @@ export default function NoteCard({
                     <NoteDetailModal
                         note={note}
                         setNotes={setNotes}
-                        onSave={onSave}
-                        onUpdateColor={onUpdateColor}
-                        onMoveToTrash={onMoveToTrash}
-                        onDuplicateNote={onDuplicateNote}
+                        // onSave={onSave}
+                        // onUpdateColor={onUpdateColor}
+                        // onMoveToTrash={onMoveToTrash}
+                        // onDuplicateNote={onDuplicateNote}
 
                     />
 
