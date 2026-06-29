@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { updateNoteLabels } from "../api/noteApi";
+import { useNoteStore } from "../store/useNoteStore";
 
 
 
@@ -52,6 +53,11 @@ export function useNoteLabels({
     );
 
 
+    const {
+        updateNoteLabels,
+    } = useNoteStore();
+
+
 
     const handleCloseLabel = () => {
         // console.log("handleOpenLabelが実行された");
@@ -68,23 +74,37 @@ export function useNoteLabels({
 
 
 
-
     const updateLabels = async (
-            newIds: number[]
-        ) => {
+        newIds: number[]
+    ) => {
+        // console.log(`newIds: ${newIds}`);
+        // console.log(`setSelectedLabels(newIds)前のselectedLabels: ${selectedLabels}`)
 
-            setSelectedLabels(newIds);
+        setSelectedLabels(newIds);  // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
 
-            const updatedNote = await updateNoteLabels(note.id, newIds);
+        // console.log(`setSelectedLabels(newIds)直後のselectedLabels: ${selectedLabels}`)
 
-            // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-            setNotes((prev) =>
-                prev.map((n) =>
-                    n.id === note.id ? updatedNote : n
-                )
-            );
+        await updateNoteLabels(note.id, newIds);  // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
 
-        }
+    }
+
+    // useNoteStore使うことで、不要になった。
+    // const updateLabels = async (
+    //         newIds: number[]
+    //     ) => {
+
+    //         // setSelectedLabels(newIds);
+
+    //         const updatedNote = await updateNoteLabels(note.id, newIds);
+
+    //         // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+    //         setNotes((prev) =>
+    //             prev.map((n) =>
+    //                 n.id === note.id ? updatedNote : n
+    //             )
+    //         );
+
+    //     }
 
 
 
@@ -106,6 +126,12 @@ export function useNoteLabels({
 
             updateLabels(newIds);
 
+            // setSelectedLabels(newIds);
+            // updateNoteLabels(note.id, selectedLabels);
+            // updateNoteLabels(note.id, newIds);
+
+            // updateLabels(newIds);
+
         } catch (error) {
 
             console.error(error);
@@ -126,6 +152,11 @@ export function useNoteLabels({
             const newIds = selectedLabels.filter((id) => id !== labelId);
 
             updateLabels(newIds);
+
+            // setSelectedLabels(newIds);
+            // updateNoteLabels(note.id, selectedLabels);
+
+            // updateLabels(newIds);
 
         } catch (error) {
 

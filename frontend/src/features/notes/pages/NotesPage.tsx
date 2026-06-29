@@ -21,22 +21,8 @@ import styles from "./NotesPage.module.css";
 
 
 // ---- types ----
-import type { Note } from "../../../types/note";
+// import type { Note } from "../../../types/note";
 
-
-// type Label = {
-//     id: number;
-//     name: string;
-// };
-
-
-// type Note = {
-//         id: number,
-//         title: string,
-//         content: string,
-//         color: string,
-//         labels:  Label[]
-//     };
 
 
 

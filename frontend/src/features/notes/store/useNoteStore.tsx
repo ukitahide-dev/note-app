@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { Note } from "../../../types/note"
-import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite, updateNotePinned } from "../api/noteApi";
+import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite, updateNoteLabels, updateNotePinned } from "../api/noteApi";
 
 
 
@@ -33,6 +33,9 @@ type NoteStore = {
     updateSelectedNoteColor: (ids: number[], color: string) => Promise<void>;
 
     duplicateSelectedNotes: (ids: number[]) => Promise<void>;
+
+
+    updateNoteLabels: (noteId: number, labelIds: number[]) => Promise<void>;
 
 }
 
@@ -212,7 +215,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-
+    // ピンのつけ外し
     togglePin: async (
         id: number,
         is_pinned: boolean,
@@ -321,6 +324,35 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         }
 
+
+
+    },
+
+
+
+    // ノートについているラベルを更新する
+    updateNoteLabels: async (
+        noteId: number,
+        labelIds: number[],
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNoteLabels(noteId, labelIds);
+
+            set((state) => ({
+                notes: state.notes.map(
+                    (note) => note.id === noteId ? updatedNote : note
+                )
+
+            }));
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
 
     }
