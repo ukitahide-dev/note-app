@@ -23,6 +23,7 @@ import { useNoteStore } from "../../../features/notes/store/useNoteStore";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
 import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
 import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels";
+import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions";
 
 
 
@@ -87,12 +88,6 @@ export default function Header({
 
 
 
-    // useLabelStoreを使う
-    // const {
-    //     labels
-    // } = useLabelStore();
-
-
 
     const {
         // selectedNotes,
@@ -102,7 +97,14 @@ export default function Header({
 
 
 
+    const {
+        handleMoveToTrash,
+        handleDuplicateNotes,
+    } = useSelectedNoteActions();
 
+
+
+    // useSelectedNoteLabels hooks に移した。
     // 選択中のノートを抽出する
     // const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
     // console.log(`selectedNotes: ${selectedNotes}`);
@@ -236,28 +238,28 @@ export default function Header({
 
 
 
+    // hooksに移した
+    // const handleMoveToTrash = async (
 
-    const handleMoveToTrash = async (
+    // ) => {
 
-    ) => {
+    //     // console.log("handleMoveTrash実行");
 
-        // console.log("handleMoveTrash実行");
+    //     setPanelType(null);
 
-        setPanelType(null);
-
-        await moveSelectedToTrash(selectedNoteIds);
-
-
-    }
+    //     await moveSelectedToTrash(selectedNoteIds);
 
 
+    // }
 
 
-    const handleDuplicateNotes = async () => {
 
-        await duplicateSelectedNotes(selectedNoteIds);
+    // hooksに移した
+    // const handleDuplicateNotes = async () => {
 
-    }
+    //     await duplicateSelectedNotes(selectedNoteIds);
+
+    // }
 
 
 
@@ -334,9 +336,17 @@ export default function Header({
                 {panelType === "menu" && (
 
                     <NoteMenu
-                        onMoveToTrash={handleMoveToTrash}
+                        onMoveToTrash={async () => {
+                            await handleMoveToTrash();
+                            setPanelType(null);
+                        }}
+                        // onMoveToTrash={handleMoveToTrash}
                         onOpenLabel={() => setPanelType("label")}
-                        onDuplicateNote={handleDuplicateNotes}
+                        onDuplicateNote={async () => {
+                            await handleDuplicateNotes();
+                            setPanelType(null);
+                        }}
+                        // onDuplicateNote={handleDuplicateNotes}
 
                     />
 
