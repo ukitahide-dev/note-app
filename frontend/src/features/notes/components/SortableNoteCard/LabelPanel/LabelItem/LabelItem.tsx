@@ -42,7 +42,7 @@ export default function LabelItem({
 
 
 
-    // useEffectは、画面が描画されたあとに実行される
+    // useEffectは、画面が描画された後に実行される
     useEffect(() => {
         if (checkboxRef.current) {  // checkboxRef.currentはinput要素のこと
             checkboxRef.current.indeterminate =

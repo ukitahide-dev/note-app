@@ -22,6 +22,7 @@ import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
 import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
+import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels";
 
 
 
@@ -54,6 +55,8 @@ export default function Header({
 
     const paletteRef = useRef<HTMLDivElement | null>(null);
 
+
+
     const {
         searchText,
         setSearchText
@@ -74,86 +77,95 @@ export default function Header({
 
     // useNoteStoreを使う
     const {
-        notes,
+        // notes,
         moveSelectedToTrash,
         // createNote,
         updateSelectedNoteColor,
         duplicateSelectedNotes,
-        updateSelectedNoteLabels,
+        // updateSelectedNoteLabels,
     } = useNoteStore();
 
 
+
     // useLabelStoreを使う
+    // const {
+    //     labels
+    // } = useLabelStore();
+
+
+
     const {
-        labels
-    } = useLabelStore();
+        // selectedNotes,
+        labelStates,
+        handleSelectLabel,
+    } = useSelectedNoteLabels();
 
 
 
 
     // 選択中のノートを抽出する
-    const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
+    // const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
+    // console.log(`selectedNotes: ${selectedNotes}`);
 
 
-    const labelStates = labels.map((label) => {  // => {} と書いた場合は、アロー関数のこと。{}には関数内の処理を書く。 => ({})のように、()で囲むのは、省略記法。今回はifとか使いたいから、{}で、関数内の処理として書く必要がある。
+    // const labelStates = labels.map((label) => {  // => {} と書いた場合は、アロー関数のこと。{}には関数内の処理を書く。 => ({})のように、()で囲むのは、省略記法。今回はifとか使いたいから、{}で、関数内の処理として書く必要がある。
 
-        const count = selectedNotes.filter((note) =>
+    //     const count = selectedNotes.filter((note) =>
 
-            note.labels.some((l) => l.id === label.id)  // 選択中のノートが、今見ているラベルを所持しているかを調べる。
+    //         note.labels.some((l) => l.id === label.id)  // 選択中のノートが、今見ているラベルを所持しているかを調べる。
 
-        ).length
-
-
-        if (count === 0) {
-
-            return {
-                id: label.id,
-                state: "unchecked",
-            }
-
-        }
-
-        if (count === selectedNotes.length) {
-
-            return {
-                id: label.id,
-                state: "checked",
-            }
-        }
-
-        return {
-            id: label.id,
-            state: "indeterminate",
-        }
-
-    });
+    //     ).length
 
 
+    //     if (count === 0) {
 
+    //         return {
+    //             id: label.id,
+    //             state: "unchecked",
+    //         }
 
-    const handleSelectLabel = (
-        labelId: number,
+    //     }
 
-    ) => {
+    //     if (count === selectedNotes.length) {
 
-        const labelState = labelStates.find((l) => l.id === labelId);
+    //         return {
+    //             id: label.id,
+    //             state: "checked",
+    //         }
+    //     }
 
-        // if (!labelState) return;
+    //     return {
+    //         id: label.id,
+    //         state: "indeterminate",
+    //     }
 
-        if (labelState.state === "checked") {
-            // すべてのノートから、今見ているラベルのチェックを外す
-            updateSelectedNoteLabels(selectedNoteIds, labelId, "remove");
-
-        } else {
-            // 全てのノートに、今見ているラベルのチェックを付ける
-            updateSelectedNoteLabels(selectedNoteIds, labelId, "add");
-        }
-
-    
+    // });
 
 
 
-    }
+
+    // const handleSelectLabel = (
+    //     labelId: number,
+
+    // ) => {
+
+    //     const labelState = labelStates.find((l) => l.id === labelId)!;  // 選択したラベルの状態を抽出する・!はTypescriptに、この値は絶対にnullやundefinedではないことを教える。!消すとlabelStateに赤線出る。
+
+
+    //     if (labelState.state === "checked") {
+    //         // すべてのノートから、今見ているラベルのチェックを外す
+    //         updateSelectedNoteLabels(selectedNoteIds, labelId, "remove");
+
+    //     } else {
+    //         // 全てのノートに、今見ているラベルのチェックを付ける
+    //         updateSelectedNoteLabels(selectedNoteIds, labelId, "add");
+    //     }
+
+
+
+
+
+    // }
 
 
 

@@ -101,7 +101,7 @@ export default function LabelPanel({
                     {labels.map((label) => {
 
                         const labelState = labelStates.find(
-                            (l) => l.id === label.id
+                            (l) => l.id === label.id  // 今見ているラベルの状態だけを抽出する
                         );
 
 

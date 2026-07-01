@@ -377,7 +377,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            await Promise.all(
+            const updatedNotes = await Promise.all(  // Promise.all() は、Promise.all(配列)の形じゃないとだめ。選択中の全ノートに対してラベル更新を同時に実行する。
 
                 selectedNotes.map(async (note) => {
 
@@ -404,22 +404,23 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
                     }
 
-
-                    const updatedNote = await updateNoteLabels(
-                        note.id,
-                        newIds,
-                    );
-
-                    set((state) => ({
-                        notes: state.notes.map((n) =>
-                            n.id === note.id
-                                ? updatedNote
-                                : n
-                        ),
-                    }));
+                    return await updateNoteLabels(note.id, newIds);
 
                 })
-            )
+            );
+
+
+            set((state) => ({
+
+                notes: state.notes.map((note) => {
+
+                    const updatedNote = updatedNotes.find((n) => n.id === note.id)
+
+                    return updatedNote ?? note;
+
+                })
+
+            }));
 
 
         } catch (error) {
