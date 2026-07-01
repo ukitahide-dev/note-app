@@ -20,6 +20,8 @@ import ColorPalette from "../../ui/ColorPalette/ColorPalette";
 // ---- css ----
 import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
+import { useLabelStore } from "../../../features/labels/store/labelStore";
+import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
 
 
 
@@ -43,7 +45,7 @@ export default function Header({
 }: Props) {   // 分割代入でpropsからonMenuClickを取り出している。props全体の型はProps。
 
 
-    const [panelType, setPanelType] = useState<"color" | "menu" | null>(null);
+    const [panelType, setPanelType] = useState<"color" | "menu" | "label" | null>(null);
     // const [tempColor, setTempColor] = useState();
 
 
@@ -59,6 +61,7 @@ export default function Header({
 
 
 
+
     // useNoteSelectionStoreを使う
     const {
         selectedNoteIds,
@@ -68,17 +71,89 @@ export default function Header({
     } = useNoteSelectionStore();
 
 
+
     // useNoteStoreを使う
     const {
-        // notes,
+        notes,
         moveSelectedToTrash,
         // createNote,
         updateSelectedNoteColor,
         duplicateSelectedNotes,
+        updateSelectedNoteLabels,
     } = useNoteStore();
 
 
-    // console.log("Header", previewColor);
+    // useLabelStoreを使う
+    const {
+        labels
+    } = useLabelStore();
+
+
+
+
+    // 選択中のノートを抽出する
+    const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
+
+
+    const labelStates = labels.map((label) => {  // => {} と書いた場合は、アロー関数のこと。{}には関数内の処理を書く。 => ({})のように、()で囲むのは、省略記法。今回はifとか使いたいから、{}で、関数内の処理として書く必要がある。
+
+        const count = selectedNotes.filter((note) =>
+
+            note.labels.some((l) => l.id === label.id)  // 選択中のノートが、今見ているラベルを所持しているかを調べる。
+
+        ).length
+
+
+        if (count === 0) {
+
+            return {
+                id: label.id,
+                state: "unchecked",
+            }
+
+        }
+
+        if (count === selectedNotes.length) {
+
+            return {
+                id: label.id,
+                state: "checked",
+            }
+        }
+
+        return {
+            id: label.id,
+            state: "indeterminate",
+        }
+
+    });
+
+
+
+
+    const handleSelectLabel = (
+        labelId: number,
+
+    ) => {
+
+        const labelState = labelStates.find((l) => l.id === labelId);
+
+        // if (!labelState) return;
+
+        if (labelState.state === "checked") {
+            // すべてのノートから、今見ているラベルのチェックを外す
+            updateSelectedNoteLabels(selectedNoteIds, labelId, "remove");
+
+        } else {
+            // 全てのノートに、今見ているラベルのチェックを付ける
+            updateSelectedNoteLabels(selectedNoteIds, labelId, "add");
+        }
+
+    
+
+
+
+    }
 
 
 
@@ -86,16 +161,16 @@ export default function Header({
 
     ) => {
 
-        const state = useNoteSelectionStore.getState();
+        // const state = useNoteSelectionStore.getState();
 
-        console.log("store", state.previewColor);
+        // console.log("store", state.previewColor);
 
 
-        console.log("保存時", previewColor);
+        // console.log("保存時", previewColor);
 
 
         // console.log("color:", previewColor);
-        console.log("ids:", selectedNoteIds);
+        // console.log("ids:", selectedNoteIds);
 
 
         setPanelType(null);
@@ -154,7 +229,7 @@ export default function Header({
 
     ) => {
 
-        console.log("handleMoveTrash実行");
+        // console.log("handleMoveTrash実行");
 
         setPanelType(null);
 
@@ -171,6 +246,8 @@ export default function Header({
         await duplicateSelectedNotes(selectedNoteIds);
 
     }
+
+
 
 
 
@@ -246,7 +323,19 @@ export default function Header({
 
                     <NoteMenu
                         onMoveToTrash={handleMoveToTrash}
+                        onOpenLabel={() => setPanelType("label")}
                         onDuplicateNote={handleDuplicateNotes}
+
+                    />
+
+                )}
+
+
+                {panelType === "label" && (
+                    <LabelPanel
+
+                        labelStates={labelStates}
+                        onSelectLabel={handleSelectLabel}
 
                     />
 

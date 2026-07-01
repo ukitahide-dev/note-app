@@ -23,6 +23,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 import type { Note } from "../../../../types/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
+import { useLabelStore } from "../../../labels/store/labelStore";
 
 
 
@@ -140,7 +141,7 @@ export default function NoteCard({
     });
 
 
-    // console.log("isLabelOpen", isLabelOpen);
+
 
 
     // useNoteSelectionStoreを使う
@@ -159,6 +160,23 @@ export default function NoteCard({
         toggleFavorite,
         togglePin,
     } = useNoteStore();
+
+
+    // useLabelStoreを使う
+    const {
+        labels
+    } = useLabelStore();
+
+
+
+    const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
+
+        id: label.id,
+
+        state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
+
+
+    }));
 
 
 
@@ -455,6 +473,7 @@ export default function NoteCard({
                         <LabelPanel
                             labelPanelRef={labelPanelRef}
                             selectedLabels={selectedLabels}
+                            labelStates={labelStates}
                             // onCreateLabel={handleCreateLabel}
                             onSelectLabel={handleSelectLabel}
                         />

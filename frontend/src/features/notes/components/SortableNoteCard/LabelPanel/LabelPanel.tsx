@@ -1,5 +1,5 @@
 // ---- react ----
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 // ---- Zustand ----
@@ -8,6 +8,14 @@ import { useLabelStore } from "../../../../labels/store/labelStore";
 
 //  ---- css ----
 import styles from "./LabelPanel.module.css";
+import LabelItem from "./LabelItem/LabelItem";
+
+
+
+type LabelState = {
+    id: number,
+    state: "checked" | "unchecked" | "indeterminate",
+}
 
 
 
@@ -16,6 +24,8 @@ type Props = {
 
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
     selectedLabels: number[];
+
+    labelStates: LabelState[];
 
     onSelectLabel: (
         labelId: number
@@ -38,6 +48,7 @@ type Props = {
 export default function LabelPanel({
     labelPanelRef,
     selectedLabels,
+    labelStates,
     onSelectLabel,
     // onSelectLabelName,
 }: Props) {
@@ -51,6 +62,8 @@ export default function LabelPanel({
 
     // Zustandで定義した。labelsを直接取得。
     const { labels, handleCreateLabel } = useLabelStore();
+
+
 
 
 
@@ -85,7 +98,50 @@ export default function LabelPanel({
 
                 <div className={styles.labelList}>
 
-                    {labels.map((label) => (
+                    {labels.map((label) => {
+
+                        const labelState = labelStates.find(
+                            (l) => l.id === label.id
+                        );
+
+
+                        return (
+                            <LabelItem
+                                key={label.id}
+                                label={label}
+                                labelState={labelState}
+                                onSelectLabel={onSelectLabel}
+                            />
+                        );
+
+
+                        // return (
+
+                        //     <label
+                        //         key={label.id}
+                        //         className={styles.labelItem}
+                        //     >
+
+                        //         <input
+                        //             type="checkbox"
+
+                        //             checked={labelState?.state === "checked"}
+
+                        //             onChange={() => onSelectLabel(label.id)}
+                        //         />
+
+                        //         <span>{label.name}</span>
+
+                        //     </label>
+
+                        // );
+
+                    })}
+
+
+                    {/* {labels.map((label) => (
+
+
 
                         <label
                             key={label.id}
@@ -99,8 +155,7 @@ export default function LabelPanel({
 
                                 onChange={() => {
                                     onSelectLabel(label.id);
-                                    // onSelectLabel(label.id, label.name);
-                                    // onSelectLabelName(label.name);
+
                                 }}
                             />
 
@@ -110,7 +165,7 @@ export default function LabelPanel({
 
                         </label>
 
-                    ))}
+                    ))} */}
 
                 </div>
 

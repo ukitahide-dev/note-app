@@ -37,6 +37,9 @@ type NoteStore = {
 
     updateNoteLabels: (noteId: number, labelIds: number[]) => Promise<void>;
 
+
+    updateSelectedNoteLabels: (noteIds: number[], labelId: number, mode: "add" | "remove") => Promise<void>;
+
 }
 
 
@@ -355,25 +358,83 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
 
 
+    },
+
+
+
+    // 選択中のノートのラベルを更新する
+    updateSelectedNoteLabels: async (
+        noteIds: number[],
+        labelId: number,
+        mode: "add" | "remove",
+    ) => {
+
+        const notes = get().notes;
+
+        // noteIdsを使い、選択中のノートを抽出する。
+        const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
+
+
+        try {
+
+            await Promise.all(
+
+                selectedNotes.map(async (note) => {
+
+                    const currentIds = note.labels.map((label) => label.id);
+
+                    let newIds: number[];
+
+
+                    if (mode == "add") {
+
+                        if (currentIds.includes(labelId)) {
+                            newIds = currentIds;
+                        } else {
+                            newIds = [
+                                labelId,
+                                ...currentIds,
+                            ]
+                        }
+
+
+                    } else {
+
+                        newIds = currentIds.filter((id) => id !== labelId);
+
+                    }
+
+
+                    const updatedNote = await updateNoteLabels(
+                        note.id,
+                        newIds,
+                    );
+
+                    set((state) => ({
+                        notes: state.notes.map((n) =>
+                            n.id === note.id
+                                ? updatedNote
+                                : n
+                        ),
+                    }));
+
+                })
+            )
+
+
+        } catch (error) {
+
+            console.error(error);
+        }
+
+
+
+
+
+
     }
 
 
-    // duplicateNote:
-
-
-
-    // moveToTrash: (id) =>
-
-
-
-    //     set((state) => ({
-
-    //         notes: state.notes.filter((note) =>
-    //             note.id !== id
-    //         )
-
-
-    //     })),
 
 
 
