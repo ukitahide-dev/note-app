@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { updateNoteLabels } from "../api/noteApi";
 import { useNoteStore } from "../store/useNoteStore";
+import { useLabelStore } from "../../labels/store/labelStore";
 
 
 
@@ -25,9 +26,9 @@ type Note = {
 
 type Props = {
     note: Note;
-    setNotes: React.Dispatch<
-        React.SetStateAction<Note[]>
-    >;
+    // setNotes: React.Dispatch<
+    //     React.SetStateAction<Note[]>
+    // >;
 
 }
 
@@ -39,7 +40,7 @@ type Props = {
 
 export function useNoteLabels({
     note,
-    setNotes,
+    // setNotes,
 
 }: Props) {
 
@@ -53,9 +54,30 @@ export function useNoteLabels({
     );
 
 
+
     const {
         updateNoteLabels,
     } = useNoteStore();
+
+
+    // useLabelStoreを使う
+        const {
+            labels
+        } = useLabelStore();
+
+
+
+
+
+
+    const labelStates = labels.map(label => ({  // ({  はmapの短縮記法
+
+        id: label.id,
+
+        state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
+
+    }));
+
 
 
 
@@ -169,6 +191,7 @@ export function useNoteLabels({
 
 
     return {
+        labelStates,
         isLabelOpen,
         handleOpenLabel,
         handleCloseLabel,

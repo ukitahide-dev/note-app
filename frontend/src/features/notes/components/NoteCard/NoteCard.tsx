@@ -125,6 +125,7 @@ export default function NoteCard({
 
     // useNoteLabels hooksを使う
     const {
+        labelStates,
         isLabelOpen,
         handleOpenLabel,
         handleCloseLabel,
@@ -133,7 +134,7 @@ export default function NoteCard({
         handleRemoveLabel,
     } = useNoteLabels({
         note,
-        setNotes,
+        // setNotes,
     });
 
 
@@ -159,20 +160,20 @@ export default function NoteCard({
 
 
     // useLabelStoreを使う
-    const {
-        labels
-    } = useLabelStore();
+    // const {
+    //     labels
+    // } = useLabelStore();
 
 
+    // useNoteLabels hooksに移した
+    // const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
 
-    const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
+    //     id: label.id,
 
-        id: label.id,
-
-        state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
+    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
 
 
-    }));
+    // }));
 
 
 

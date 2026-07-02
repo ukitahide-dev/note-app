@@ -269,15 +269,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
                 selectedNotes.map(async (note) => {
 
-                    if (mode === "add") {
-
-                        return await updateNotePinned(note.id, true);
-
-                    } else {
-
-                        return await updateNotePinned(note.id, false);
-
-                    }
+                    return await updateNotePinned(
+                        note.id,
+                        mode === "add",
+                    );
 
                 })
 

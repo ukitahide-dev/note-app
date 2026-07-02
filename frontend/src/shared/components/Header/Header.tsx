@@ -26,6 +26,10 @@ import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelected
 import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions";
 
 
+// ---- react-icon ----
+import { BsPin } from "react-icons/bs";
+import { MdPushPin } from "react-icons/md";
+
 
 
 
@@ -299,12 +303,21 @@ export default function Header({
                             e.stopPropagation();
                             updateSelectedNotePin(selectedNoteIds, pinnedState);
                         }}
-                        // onClick={() => {
-                        //     updateSelectedNotePin(selectedNoteIds, pinnedState)
-                        // }
                     >
+                        {
+                            pinnedState === "remove" ? (
+                                <MdPushPin
+                                    size={22}
+                                    color="#04c5fb"
+                                />
+                            ) : (
+                                <BsPin
+                                    size={20}
+                                    color="#22b4dc"
+                                />
+                            )
+                        }
 
-                        📌
                     </button>
 
                     <button
