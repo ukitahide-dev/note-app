@@ -15,17 +15,17 @@ import {
 
 
 // ---- api ----
-import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite, updateNotePinned } from "../../api/noteApi";
+// import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite, updateNotePinned } from "../../api/noteApi";
 
 
 // ---- components ----
-import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
-import NoteCard from "../NoteCard/NoteCard";
+// import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
+// import NoteCard from "../NoteCard/NoteCard";
 import NoteGrid from "../NoteGrid/NoteGrid";
 
 
 // ---- css ----
-import styles from "./NoteList.module.css";
+// import styles from "./NoteList.module.css";
 
 
 
@@ -64,7 +64,7 @@ export default function NoteList({
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
 
-    const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
+    // const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
 
 
 
@@ -85,8 +85,6 @@ export default function NoteList({
 
     const pinnedNotes = notes.filter((note) => note.is_pinned);
     const normalNotes = notes.filter((note) => !note.is_pinned);
-
-
 
 
 
@@ -123,165 +121,6 @@ export default function NoteList({
 
 
 
-    // useNoteStoreを使うことで、NoteCard、NoteDetailModalに直接書けるようになった。
-    // const handleMoveToTrash = async (
-    //     id: number
-    // ) => {
-
-    //     try {
-
-    //         await moveToTrash(id);
-
-    //         setNotes((prev) =>
-    //             prev.filter(
-    //                 (note) => note.id !== id
-    //             )
-    //         );
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
-
-
-
-    // useNoteStoreを使うことで、NoteFormに直接書けるようになった。
-    // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-
-    // ) => {
-
-    //     try {
-    //         const updatedNote = await updateNote(Number(id), title, content);
-
-    //         setNotes((prev) => prev.map(
-    //             (n) => n.id === updatedNote.id ? updatedNote : n
-    //         ))
-
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("保存失敗");
-    //     }
-
-    //     setOpenNoteDetailId(null);
-
-    // }
-
-
-
-    // useNoteStoreを使うことで、NoteCardに直接書けるようになった。
-    // const handleUpdateColor = async (
-    //     id: number,
-    //     color: string,
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNoteColor(Number(id), color);
-
-    //         // setNotes((prev) => (
-    //         //     prev.map((n) =>
-    //         //         n.id === updatedNote.id ? updatedNote : n
-    //         //         )
-    //         //     ));
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    //     setOpenColorId(null);
-
-    // }
-
-
-
-    //  useNoteStoreを使うことで、不要になった。
-    // const handleToggleFavorite = async (
-    //     id: number,
-    //     is_favorite: boolean,
-
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNoteFavorite(id, !is_favorite);
-
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 id === n.id ? updatedNote : n
-    //             )
-    //         )
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-    //     }
-
-    // }
-
-
-    // useNoteStoreを使うことで、不要になった。
-    // const handleTogglePin = async (
-    //     id: number,
-    //     is_pinned: boolean,
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNotePinned(id, !is_pinned);
-
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 id === n.id ? updatedNote : n
-    //             )
-    //         );
-
-    //     } catch (error) {
-
-    //         console.error(error);
-    //     }
-
-    // }
-
-
-
-    // useNoteStoreを使うことで、不要になった。
-    // const handleDuplicateNote = async (
-    //     note: Note,
-    // ) => {
-
-    //     try {
-
-    //         const copiedNote = await createNote (
-    //             note.title,
-    //             note.content,
-    //             note.labels.map((label) => label.id),
-    //             note.color,
-    //         );
-
-    //         setNotes(prev => [
-
-    //             copiedNote,
-    //             ...prev,
-
-    //         ]);
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-
-    // }
 
 
 
@@ -477,3 +316,166 @@ export default function NoteList({
                     ))}
 
                 </div> */}
+
+
+
+
+// useNoteStoreを使うことで、NoteCard、NoteDetailModalに直接書けるようになった。
+    // const handleMoveToTrash = async (
+    //     id: number
+    // ) => {
+
+    //     try {
+
+    //         await moveToTrash(id);
+
+    //         setNotes((prev) =>
+    //             prev.filter(
+    //                 (note) => note.id !== id
+    //             )
+    //         );
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // };
+
+
+
+    // useNoteStoreを使うことで、NoteFormに直接書けるようになった。
+    // const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+
+    // ) => {
+
+    //     try {
+    //         const updatedNote = await updateNote(Number(id), title, content);
+
+    //         setNotes((prev) => prev.map(
+    //             (n) => n.id === updatedNote.id ? updatedNote : n
+    //         ))
+
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("保存失敗");
+    //     }
+
+    //     setOpenNoteDetailId(null);
+
+    // }
+
+
+
+    // useNoteStoreを使うことで、NoteCardに直接書けるようになった。
+    // const handleUpdateColor = async (
+    //     id: number,
+    //     color: string,
+    // ) => {
+
+    //     try {
+
+    //         const updatedNote = await updateNoteColor(Number(id), color);
+
+    //         // setNotes((prev) => (
+    //         //     prev.map((n) =>
+    //         //         n.id === updatedNote.id ? updatedNote : n
+    //         //         )
+    //         //     ));
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    //     setOpenColorId(null);
+
+    // }
+
+
+
+    //  useNoteStoreを使うことで、不要になった。
+    // const handleToggleFavorite = async (
+    //     id: number,
+    //     is_favorite: boolean,
+
+    // ) => {
+
+    //     try {
+
+    //         const updatedNote = await updateNoteFavorite(id, !is_favorite);
+
+    //         setNotes((prev) =>
+    //             prev.map((n) =>
+    //                 id === n.id ? updatedNote : n
+    //             )
+    //         )
+
+
+    //     } catch (error) {
+
+    //         console.error(error);
+    //     }
+
+    // }
+
+
+    // useNoteStoreを使うことで、不要になった。
+    // const handleTogglePin = async (
+    //     id: number,
+    //     is_pinned: boolean,
+    // ) => {
+
+    //     try {
+
+    //         const updatedNote = await updateNotePinned(id, !is_pinned);
+
+    //         setNotes((prev) =>
+    //             prev.map((n) =>
+    //                 id === n.id ? updatedNote : n
+    //             )
+    //         );
+
+    //     } catch (error) {
+
+    //         console.error(error);
+    //     }
+
+    // }
+
+
+
+    // useNoteStoreを使うことで、不要になった。
+    // const handleDuplicateNote = async (
+    //     note: Note,
+    // ) => {
+
+    //     try {
+
+    //         const copiedNote = await createNote (
+    //             note.title,
+    //             note.content,
+    //             note.labels.map((label) => label.id),
+    //             note.color,
+    //         );
+
+    //         setNotes(prev => [
+
+    //             copiedNote,
+    //             ...prev,
+
+    //         ]);
+
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+
+    // }

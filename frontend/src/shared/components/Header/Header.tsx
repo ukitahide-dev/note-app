@@ -20,7 +20,7 @@ import ColorPalette from "../../ui/ColorPalette/ColorPalette";
 // ---- css ----
 import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
-import { useLabelStore } from "../../../features/labels/store/labelStore";
+// import { useLabelStore } from "../../../features/labels/store/labelStore";
 import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
 import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels";
 import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions";
@@ -78,11 +78,12 @@ export default function Header({
 
     // useNoteStoreを使う
     const {
-        // notes,
-        moveSelectedToTrash,
+        notes,
+        // moveSelectedToTrash,
         // createNote,
         updateSelectedNoteColor,
-        duplicateSelectedNotes,
+        updateSelectedNotePin,
+        // duplicateSelectedNotes,
         // updateSelectedNoteLabels,
     } = useNoteStore();
 
@@ -101,6 +102,15 @@ export default function Header({
         handleMoveToTrash,
         handleDuplicateNotes,
     } = useSelectedNoteActions();
+
+
+
+    const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
+
+
+    const pinnedState = selectedNotes.some((note) => !note.is_pinned) ? "add" : "remove";
+    // console.log(pinnedState)
+
 
 
 
@@ -284,7 +294,16 @@ export default function Header({
 
                 <div className={styles.buttons}>
 
-                    <button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            updateSelectedNotePin(selectedNoteIds, pinnedState);
+                        }}
+                        // onClick={() => {
+                        //     updateSelectedNotePin(selectedNoteIds, pinnedState)
+                        // }
+                    >
+
                         📌
                     </button>
 

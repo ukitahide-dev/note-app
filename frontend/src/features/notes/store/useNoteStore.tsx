@@ -30,6 +30,8 @@ type NoteStore = {
 
     togglePin: (id: number, is_pinned: boolean) => Promise<void>;
 
+    updateSelectedNotePin: (noteIds: number[], mode: "add" | "remove") => Promise<void>;
+
     updateSelectedNoteColor: (ids: number[], color: string) => Promise<void>;
 
     duplicateSelectedNotes: (ids: number[]) => Promise<void>;
@@ -39,6 +41,8 @@ type NoteStore = {
 
 
     updateSelectedNoteLabels: (noteIds: number[], labelId: number, mode: "add" | "remove") => Promise<void>;
+
+
 
 }
 
@@ -248,6 +252,62 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
+    // 選択中のノートのピンを切り替える
+    updateSelectedNotePin: async (
+        noteIds: number[],
+        mode: "add" | "remove",
+
+    ) => {
+
+        const notes = get().notes;
+        const selectedNotes = notes.filter((note) => noteIds.includes((note.id)));
+
+
+        try {
+
+            const updatedNotes = await Promise.all(
+
+                selectedNotes.map(async (note) => {
+
+                    if (mode === "add") {
+
+                        return await updateNotePinned(note.id, true);
+
+                    } else {
+
+                        return await updateNotePinned(note.id, false);
+
+                    }
+
+                })
+
+            );
+
+
+            set((state) => ({
+
+                notes: state.notes.map((note) => {
+
+                    const updatedNote = updatedNotes.find((n) => n.id === note.id);
+
+                    return updatedNote ?? note;
+
+                })
+
+            }))
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    },
+
+
+
+
+
     // 選択した複数のノートの色を変える
     updateSelectedNoteColor: async (
         ids: number[],
@@ -427,13 +487,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             console.error(error);
         }
+    },
 
 
 
 
 
-
-    }
 
 
 

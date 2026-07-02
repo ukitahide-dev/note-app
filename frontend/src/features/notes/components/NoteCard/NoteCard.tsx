@@ -13,10 +13,6 @@ import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 
-// type Label = {
-//     id: number;
-//     name: string;
-// };
 
 
 // ---- types ----
