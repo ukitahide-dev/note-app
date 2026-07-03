@@ -179,10 +179,10 @@ export default function NoteForm({
                 // setIsMenuOpen(false);
                 // setIsLabelOpen(false);
 
-                console.log(`formRef.current: ${formRef.current}`);
-                console.log(e.target);
+                // console.log(`formRef.current: ${formRef.current}`);
+                // console.log(e.target);
             }
-            console.log(e.target);
+            // console.log(e.target);
         };
 
 

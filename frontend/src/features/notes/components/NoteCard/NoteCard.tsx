@@ -20,6 +20,7 @@ import type { Note } from "../../../../types/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useLabelStore } from "../../../labels/store/labelStore";
+import { useNoteColor } from "../../hooks/useNoteColor";
 
 
 
@@ -110,7 +111,7 @@ export default function NoteCard({
 
 
 
-    const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
+    // const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
 
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -139,6 +140,16 @@ export default function NoteCard({
 
 
 
+    // useNoteColor hooks
+    const {
+        tempColor,
+        handleSelectColor,
+        handleClosePalette,
+    } = useNoteColor(
+        note,
+    );
+
+
 
 
     // useNoteSelectionStoreを使う
@@ -157,26 +168,6 @@ export default function NoteCard({
         toggleFavorite,
         togglePin,
     } = useNoteStore();
-
-
-    // useLabelStoreを使う
-    // const {
-    //     labels
-    // } = useLabelStore();
-
-
-    // useNoteLabels hooksに移した
-    // const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
-
-    //     id: label.id,
-
-    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
-
-
-    // }));
-
-
-
 
 
 
@@ -210,14 +201,29 @@ export default function NoteCard({
             ) {
 
                 console.log("NoteCard outside");
-                console.log(openColorId);
+
 
                 setOpenMenuId(null);
+                setOpenColorId(null);
                 handleCloseLabel();
 
-                if (note.id === openColorId) {
+                // console.log(`note.id: ${note.id}`);
+                // console.log(`openColorId: ${openColorId}`);
+
+
+
+                console.log(
+                    "実行される",
+                    note.id,
+                    openColorId
+                );
+
+                if (note.id === openColorId) {  // この条件必要。これ書かないと、handleClosePaletteが全ノートカードに対して実行されるし、保存処理もバグる。
+                    console.log("保存するのはこのカード");
                     handleClosePalette();
                 }
+
+                // handleClosePalette();
 
 
             }
@@ -239,11 +245,11 @@ export default function NoteCard({
             );
         };
 
-    }, [tempColor, openColorId]);  // tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
+    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
 
-
-
-
+    // tempColor, openColorId
+    // tempColor, openColorId, handleClosePalette
+    // note.id, tempColor,  useNoteColorにロジック移すと、依存配列こう書かないとバグるようになった。
 
 
     const highlightText = (
@@ -293,43 +299,43 @@ export default function NoteCard({
 
 
     // 色の選択をUIに表示する
-    const handleSelectColor = (
-        color: string
-    ) => {
-        setTempColor(color);
-    }
+    // const handleSelectColor = (
+    //     color: string
+    // ) => {
+    //     setTempColor(color);
+    // }
 
 
-    // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
-    useEffect(() => {
-        setTempColor(note.color);
-    }, [note.color]);
+    // // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
+    // useEffect(() => {
+    //     setTempColor(note.color);
+    // }, [note.color]);
 
 
 
 
     // ノート単体の色を変える。ノートカードから色を変えたときの用途。
-    const handleClosePalette = async () => {
+    // const handleClosePalette = async () => {
 
-        console.log("handleClosePalette実行");
-        console.log(`tempColor: ${tempColor}`);
+    //     console.log("handleClosePalette実行");
+    //     console.log(`tempColor: ${tempColor}`);
 
-        try {
+    //     try {
 
-            const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-            updateNote(updatedNote);  // useNoteStore
-
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-        setOpenColorId(null);
+    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+    //         updateNote(updatedNote);  // useNoteStore
 
 
-    }
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    //     // setOpenColorId(null);
+
+
+    // }
 
 
 
@@ -501,9 +507,9 @@ export default function NoteCard({
                 {openColorId === note.id && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        tempColor={tempColor}
+                        // tempColor={tempColor}
                         paletteRef={paletteRef}
-                        onClose={handleClosePalette}
+                        // onClose={handleClosePalette}
 
                     />
 
@@ -648,3 +654,23 @@ export default function NoteCard({
 
 
         // }
+
+
+
+
+
+// useLabelStoreを使う
+    // const {
+    //     labels
+    // } = useLabelStore();
+
+
+    // useNoteLabels hooksに移した
+    // const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
+
+    //     id: label.id,
+
+    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
+
+
+    // }));

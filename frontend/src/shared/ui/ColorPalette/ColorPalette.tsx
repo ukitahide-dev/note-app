@@ -2,9 +2,9 @@
 
 
 // ---- css ----
-import { useEffect, useRef } from "react";
+// import { useEffect, useRef } from "react";
 import styles from "./ColorPalette.module.css";
-import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
+// import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
 
 
 // type Note = {
@@ -64,7 +64,7 @@ export default function ColorPalette({
 
     // const paletteRef = useRef<HTMLDivElement | null>(null);
 
-    console.log('ColorPalette再レンダリング');
+    // console.log('ColorPalette再レンダリング');
 
 
 

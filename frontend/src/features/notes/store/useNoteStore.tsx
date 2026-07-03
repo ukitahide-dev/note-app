@@ -121,6 +121,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
+
+    
     updateNote: (updatedNote) =>
 
         set((state) => ({
