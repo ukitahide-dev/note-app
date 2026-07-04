@@ -29,12 +29,18 @@ import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
 
 
+type Props = {
+    labelName: string,
+}
+
+
 // 親：NotesPage.jsx
 
 
 export default function NoteForm({
+    labelName,
 
-}) {
+}: Props) {
 
 
     const [title, setTitle] = useState("");
@@ -51,7 +57,7 @@ export default function NoteForm({
         selectedLabelNames,
         labelStates,
         handleSelectLabel,
-    } = useNoteFormLabels();
+    } = useNoteFormLabels(labelName);
 
 
 

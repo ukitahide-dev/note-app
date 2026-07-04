@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { getNotes } from "../../api/noteApi";
-import { useEffect, useState } from "react";
+// import { getNotes } from "../../api/noteApi";
+import { useEffect,} from "react";
 
 
 import styles from "./LabelNotesPage.module.css"
@@ -10,7 +10,7 @@ import NoteForm from "../../components/NoteForm/NoteForm";
 
 
 // ---- types ----
-import type { Note } from "../../../../types/note";
+// import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
 
 
@@ -50,6 +50,7 @@ export default function LabelNotesPage() {
 
 
             <NoteForm
+                labelName={labelName}
                 // onAddNote={handleAddNote}
             />
             <NoteList
