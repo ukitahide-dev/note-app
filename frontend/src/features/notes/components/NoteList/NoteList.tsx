@@ -55,7 +55,7 @@ type Props = {
 // 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx、SearchResultsPage.tsx
 
 export default function NoteList({
-    // notes,
+    notes,
     setNotes,
     enableSort,
 }: Props) {
@@ -70,16 +70,16 @@ export default function NoteList({
 
 
     // useNoteStoreを使う
-    const {
-        notes,
-        fetchNotes,
-    } = useNoteStore();
+    // const {
+    //     notes,
+    //     fetchNotes,
+    // } = useNoteStore();
 
 
 
-    useEffect(() => {
-        fetchNotes();
-    }, []);
+    // useEffect(() => {
+    //     fetchNotes();
+    // }, []);
 
 
 

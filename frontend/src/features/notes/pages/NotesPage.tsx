@@ -9,8 +9,10 @@
 // moveToTrash
 
 // ----components----
+import { useEffect } from "react";
 import NoteForm from "../components/NoteForm/NoteForm";
 import NoteList from "../components/NoteList/NoteList";
+import { useNoteStore } from "../store/useNoteStore";
 
 
 
@@ -33,6 +35,17 @@ export default function NotesPage() {
     // const [notes, setNotes] = useState<Note[]>([]);
     // const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // どのノートのメニューが開いているか」を全ノートで共有したいから、SortableNoteCardではなくて、このコンポーネントで定義する。
 
+
+    const {
+        notes,
+        fetchNotes,
+    } = useNoteStore();
+
+
+
+    useEffect(() => {
+        fetchNotes();
+    }, []);
 
     // const handleAddNote = (
     //     newNote: Note
@@ -71,7 +84,7 @@ export default function NotesPage() {
                 />
 
                 <NoteList
-                    // notes={notes}
+                    notes={notes}
                     // setNotes={setNotes}
                     enableSort={true}
                     // onMoveToTrash={handleMoveToTrash}

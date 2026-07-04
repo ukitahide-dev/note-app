@@ -11,19 +11,8 @@ import NoteForm from "../../components/NoteForm/NoteForm";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
+import { useNoteStore } from "../../store/useNoteStore";
 
-
-// type Label = {
-//     id: number;
-//     name: string;
-// }
-
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     labels: Label[];
-// }
 
 
 
@@ -31,56 +20,28 @@ import type { Note } from "../../../../types/note";
 
 export default function LabelNotesPage() {
     const { labelName } = useParams();   // 分割代入で取得。useParams() は、{ labelName: "筋トレ" }みたいなオブジェクトを返す。
-    const [notes, setNotes] = useState<Note[]>([]);
+    // const [notes, setNotes] = useState<Note[]>([]);
 
+
+
+    // useNoteStore
+    const {
+        notes,
+        // setNotes,
+        fetchNotes,
+    } = useNoteStore();
 
 
     useEffect(() => {
-
-        const fetchNotes = async () => {
-
-            try {
-
-                const data = await getNotes();
-                const filteredNotes = data.filter((note: Note) =>  // filterは配列を返す。someはtrue/falseを返す。
-                    note.labels.some((label) =>
-                        label.name === labelName
-                    )
-                );
-
-                setNotes(filteredNotes);
-
-            } catch (error) {
-
-                console.error(error);
-            }
-
-        }
-
         fetchNotes();
-
-    }, [labelName])
-
+    }, []);
 
 
-    const handleAddNote = (
-        newNote: Note
-    ) => {
 
-        const hasCurrentLabel = newNote.labels.some(
-            (label) => label.name === labelName
-        );
-
-        if(!hasCurrentLabel) return;
-
-        setNotes((prev) => [
-            ...prev,
-            newNote
-        ]);
-
-
-    }
-
+    const filteredNotes = notes
+        .filter((note) => note.labels
+        .some((label) => label.name === labelName)
+    );
 
 
 
@@ -88,10 +49,12 @@ export default function LabelNotesPage() {
         <div className={styles.container}>
 
 
-            <NoteForm onAddNote={handleAddNote}/>
+            <NoteForm
+                // onAddNote={handleAddNote}
+            />
             <NoteList
-                notes={notes}
-                setNotes={setNotes}
+                notes={filteredNotes}
+                // setNotes={setNotes}
                 // onMoveToTrash={handleMoveToTrash}
             />
         </div>
@@ -99,6 +62,57 @@ export default function LabelNotesPage() {
 
     )
 
-
-
 }
+
+
+
+
+
+ // useEffect(() => {
+
+    //     const fetchNotes = async () => {
+
+    //         try {
+
+    //             const data = await getNotes();
+    //             const filteredNotes = data.filter((note: Note) =>  // filterは配列を返す。someはtrue/falseを返す。
+    //                 note.labels.some((label) =>
+    //                     label.name === labelName
+    //                 )
+    //             );
+
+    //             setNotes(filteredNotes);
+
+    //         } catch (error) {
+
+    //             console.error(error);
+    //         }
+
+    //     }
+
+    //     fetchNotes();
+
+    // }, [labelName])
+
+
+
+
+
+    // const handleAddNote = (
+    //     newNote: Note
+    // ) => {
+
+    //     const hasCurrentLabel = newNote.labels.some(
+    //         (label) => label.name === labelName
+    //     );
+
+    //     if(!hasCurrentLabel) return;
+
+    //     setNotes((prev) => [
+    //         ...prev,
+    //         newNote
+    //     ]);
+
+
+    // }
+

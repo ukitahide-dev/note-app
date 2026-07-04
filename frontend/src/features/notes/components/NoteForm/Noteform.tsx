@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { createNote as createNoteApi } from "../../api/noteApi";
+// import { createNote as createNoteApi } from "../../api/noteApi";
 
 
 //  ---- css ----
@@ -7,12 +7,12 @@ import styles from "./NoteForm.module.css";
 import NoteFormMenu from "./NoteFormMenu/NoteFormMenu";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-import { useLabelStore } from "../../../labels/store/labelStore";
+// import { useLabelStore } from "../../../labels/store/labelStore";
 
 
 
 // ---- types ----
-import type { Note } from "../../../../types/note";
+// import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
@@ -33,7 +33,6 @@ import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
 
 export default function NoteForm({
-    // onAddNote
 
 }) {
 
@@ -56,33 +55,7 @@ export default function NoteForm({
 
 
 
-    // ----- useNoteFormLabels hooksに移して不要になった -----
-    // const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
-
-    // const { labels } = useLabelStore();
-
-
-    // const selectedLabelNames = labels
-    //     .filter(label => selectedLabels.includes(label.id))
-    //     .map(label => label.name);
-
-
-
-    // const labelStates = labels.map((label) => ({
-    //     id: label.id,
-    //     // state: "unchecked",
-    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked"
-
-    // }));
-
-    // ----- -----
-
-
-
-
     const [tempColor, setTempColor] = useState("#ffffff");
-
-
 
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);  // useRefは値を保存する箱を作る。ここでは、textarea要素を保存する箱を作っている。
@@ -91,7 +64,6 @@ export default function NoteForm({
 
     // useNoteStore
     const {
-        // addNote,
         createNote,
     } = useNoteStore();
 
@@ -107,22 +79,15 @@ export default function NoteForm({
 
             await createNote(title, content, selectedLabels, tempColor);
 
-            // const newNote = await createNote(title, content, selectedLabels, tempColor);
-
-            // addNote(newNote);
-
-            // onAddNote(newNote);
-
             alert("投稿成功");
 
             setTitle("");
             setContent("");
             setIsExpanded(false);
-            // setLabels([]);
+
             // setSelectedLabels([]);
             setActivePanel(null);
             setTempColor("#ffffff");
-
 
     } catch (error) {
 
@@ -147,24 +112,7 @@ export default function NoteForm({
 
 
 
-    // const handleSelectLabel = (
-    //     labelId: number,
 
-    // ) => {
-    //     if (selectedLabels.includes(labelId)) {
-
-    //         setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
-    //         // setLabels(labels.filter((name) => name !== labelName));
-
-    //     } else {
-
-    //         setSelectedLabels([
-    //             ...selectedLabels,
-    //             labelId
-    //         ]);
-
-    //     }
-    // }
 
 
 
@@ -192,8 +140,7 @@ export default function NoteForm({
             ) {
                 setIsExpanded(false);
                 setActivePanel(null);
-                // setIsMenuOpen(false);
-                // setIsLabelOpen(false);
+
 
                 // console.log(`formRef.current: ${formRef.current}`);
                 // console.log(e.target);
@@ -213,15 +160,6 @@ export default function NoteForm({
 
     }, []);  // []は初回レンダリング時の時だけ、useEffect内を実行するという意味。
 
-
-
-
-
-    const handleOpenLabel = () => {
-
-        setActivePanel("label");
-
-    }
 
 
 
@@ -260,7 +198,6 @@ export default function NoteForm({
 
             {isExpanded && (
 
-
                 <>
                 <div className={styles.labels}>
 
@@ -283,9 +220,6 @@ export default function NoteForm({
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setActivePanel("color")
-                                // setIsColorOpen(true);
-                                // setOpenMenuId(null);
-                                // setOpenColorId((prev) => prev === note.id ? null : note.id);
                             }}
                         >
                             🎨
@@ -294,7 +228,6 @@ export default function NoteForm({
                         <button
                             type="button"
                             onClick={() => setActivePanel("menu")}
-                            // onClick={() => setIsMenuOpen(true)}
                         >
                                 ⋮
                         </button>
@@ -315,7 +248,7 @@ export default function NoteForm({
 
                     {activePanel === "menu" && (
                         <NoteFormMenu
-                            onOpenLabel={handleOpenLabel}
+                            onOpenLabel={() => setActivePanel("label")}
 
                         />
                     )}
@@ -353,3 +286,47 @@ export default function NoteForm({
 
 
 }
+
+
+
+
+// ----- useNoteFormLabels hooksに移して不要になった -----
+    // const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
+
+    // const { labels } = useLabelStore();
+
+
+    // const selectedLabelNames = labels
+    //     .filter(label => selectedLabels.includes(label.id))
+    //     .map(label => label.name);
+
+
+
+    // const labelStates = labels.map((label) => ({
+    //     id: label.id,
+    //     // state: "unchecked",
+    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked"
+
+    // }));
+
+    //
+
+// const handleSelectLabel = (
+    //     labelId: number,
+
+    // ) => {
+    //     if (selectedLabels.includes(labelId)) {
+
+    //         setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
+    //         // setLabels(labels.filter((name) => name !== labelName));
+
+    //     } else {
+
+    //         setSelectedLabels([
+    //             ...selectedLabels,
+    //             labelId
+    //         ]);
+
+    //     }
+    // }
+// ----- -----
