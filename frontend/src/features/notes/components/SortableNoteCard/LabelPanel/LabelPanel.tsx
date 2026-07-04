@@ -23,9 +23,10 @@ type LabelState = {
 type Props = {
 
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
+    
     selectedLabels: number[];
 
-    labelStates: LabelState[];
+    labelStates?: LabelState[];
 
     onSelectLabel: (
         labelId: number
@@ -100,10 +101,13 @@ export default function LabelPanel({
 
                     {labels.map((label) => {
 
-                        const labelState = labelStates.find(
-                            (l) => l.id === label.id  // 今見ているラベルの状態だけを抽出する
-                        );
+                        let labelState;
 
+                        if (labelStates) {
+                            labelState = labelStates.find(
+                                (l) => l.id === label.id  // 今見ているラベルの状態だけを抽出する
+                            );
+                        }
 
                         return (
                             <LabelItem

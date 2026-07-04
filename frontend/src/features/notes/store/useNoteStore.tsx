@@ -98,6 +98,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         } catch (error) {
 
             console.error(error);
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
         }
 
@@ -122,7 +123,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-    
+
     updateNote: (updatedNote) =>
 
         set((state) => ({

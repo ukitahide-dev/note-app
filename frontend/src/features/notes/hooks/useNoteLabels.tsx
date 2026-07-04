@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { updateNoteLabels } from "../api/noteApi";
+
 import { useNoteStore } from "../store/useNoteStore";
 import { useLabelStore } from "../../labels/store/labelStore";
 

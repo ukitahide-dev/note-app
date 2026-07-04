@@ -245,7 +245,7 @@ export default function NoteCard({
             );
         };
 
-    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
+    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
 
     // tempColor, openColorId
     // tempColor, openColorId, handleClosePalette
@@ -297,6 +297,7 @@ export default function NoteCard({
 
 
 
+    // ---- useNoteColor hook に移した ----
 
     // 色の選択をUIに表示する
     // const handleSelectColor = (
@@ -336,7 +337,7 @@ export default function NoteCard({
 
 
     // }
-
+    // ---- -----
 
 
 

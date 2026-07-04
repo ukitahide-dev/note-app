@@ -14,14 +14,10 @@ import { useLabelStore } from "../../../labels/store/labelStore";
 // ---- types ----
 import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
+import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
 
 
-// type Note = {
-//         id: number;
-//         title: string;
-//         content: string;
-//     };
 
 
 // Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
@@ -51,19 +47,40 @@ export default function NoteForm({
     >(null);
 
 
-    // const [isMenuOpen, setIsMenuOpen] = useState(false);
-    // const [isLabelOpen, setIsLabelOpen] = useState(false);
-    // const [isColorOpen, setIsColorOpen] = useState(false);
-
-    const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
-
-    const { labels : allLabels } = useLabelStore();
-    const selectedLabelNames = allLabels
-        .filter(label => selectedLabels.includes(label.id))
-        .map(label => label.name);
+    const {
+        selectedLabels,
+        selectedLabelNames,
+        labelStates,
+        handleSelectLabel,
+    } = useNoteFormLabels();
 
 
-    const [tempColor, setTempColor] = useState("");
+
+    // ----- useNoteFormLabels hooksに移して不要になった -----
+    // const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
+
+    // const { labels } = useLabelStore();
+
+
+    // const selectedLabelNames = labels
+    //     .filter(label => selectedLabels.includes(label.id))
+    //     .map(label => label.name);
+
+
+
+    // const labelStates = labels.map((label) => ({
+    //     id: label.id,
+    //     // state: "unchecked",
+    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked"
+
+    // }));
+
+    // ----- -----
+
+
+
+
+    const [tempColor, setTempColor] = useState("#ffffff");
 
 
 
@@ -72,9 +89,9 @@ export default function NoteForm({
     const formRef = useRef<HTMLFormElement | null>(null);
 
 
-
+    // useNoteStore
     const {
-        addNote,
+        // addNote,
         createNote,
     } = useNoteStore();
 
@@ -88,7 +105,7 @@ export default function NoteForm({
 
         try {
 
-            createNote(title, content, selectedLabels, tempColor);
+            await createNote(title, content, selectedLabels, tempColor);
 
             // const newNote = await createNote(title, content, selectedLabels, tempColor);
 
@@ -102,14 +119,14 @@ export default function NoteForm({
             setContent("");
             setIsExpanded(false);
             // setLabels([]);
-            setSelectedLabels([]);
+            // setSelectedLabels([]);
             setActivePanel(null);
-            setTempColor("");
+            setTempColor("#ffffff");
 
 
     } catch (error) {
 
-            console.error(error.response.data)
+            console.error(error.response?.data);
 
             alert("投稿失敗");
         }
@@ -130,25 +147,24 @@ export default function NoteForm({
 
 
 
-    const handleSelectLabel = (
-        labelId: number,
+    // const handleSelectLabel = (
+    //     labelId: number,
 
-    ) => {
-        if (selectedLabels.includes(labelId)) {
+    // ) => {
+    //     if (selectedLabels.includes(labelId)) {
 
-            setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
-            // setLabels(labels.filter((name) => name !== labelName));
+    //         setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
+    //         // setLabels(labels.filter((name) => name !== labelName));
 
-        } else {
+    //     } else {
 
-            setSelectedLabels([
-                ...selectedLabels,
-                labelId
-            ]);
+    //         setSelectedLabels([
+    //             ...selectedLabels,
+    //             labelId
+    //         ]);
 
-
-        }
-    }
+    //     }
+    // }
 
 
 
@@ -204,9 +220,6 @@ export default function NoteForm({
     const handleOpenLabel = () => {
 
         setActivePanel("label");
-
-        // setIsLabelOpen(prev => !prev);
-        // setIsMenuOpen(false);
 
     }
 
@@ -311,6 +324,7 @@ export default function NoteForm({
                     {activePanel === "label" && (
                         <LabelPanel
                             selectedLabels={selectedLabels}
+                            labelStates={labelStates}
                             onSelectLabel={handleSelectLabel}
 
 
