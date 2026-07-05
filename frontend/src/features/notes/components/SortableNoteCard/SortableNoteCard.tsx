@@ -111,6 +111,14 @@ type Props = {
         is_pinned: boolean,
     ) => Promise<void>;
 
+    panelType: "label" | null;
+
+    setPanelType: React.Dispatch<
+            React.SetStateAction<
+                "label" | null
+            >
+        >;
+
 
     // onDuplicateNote: (
     //     note: Note,
@@ -139,6 +147,8 @@ export default function SortableNoteCard({
     // onMoveToTrash,
     onToggleFavorite,
     onTogglePin,
+    panelType,
+    setPanelType,
     // onDuplicateNote
 }: Props)
 {
@@ -208,6 +218,8 @@ export default function SortableNoteCard({
 
                 onToggleFavorite={onToggleFavorite}
                 onTogglePin={onTogglePin}
+                panelType={panelType}
+                setPanelType={setPanelType}
 
                 // onDuplicateNote={onDuplicateNote}
             />

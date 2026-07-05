@@ -70,6 +70,14 @@ type Props = {
 
     dragHandleProps?: any;
 
+    panelType: "label" | null;
+
+    setPanelType: React.Dispatch<
+            React.SetStateAction<
+                "label" | null
+            >
+        >;
+
     // onToggleFavorite: (
     //     id: number,
     //     is_favorite: boolean,
@@ -103,6 +111,8 @@ export default function NoteCard({
     // onSave,
     // onUpdateColor,
     dragHandleProps,
+    panelType,
+    setPanelType,
     // onToggleFavorite,
     // onTogglePin,
     // onDuplicateNote,
@@ -123,13 +133,14 @@ export default function NoteCard({
     const { searchText } = useSearchStore();
 
 
+    // const [panelType, setPanelType] = useState<"label" | null>(null);
 
     // useNoteLabels hooksを使う
     const {
         labelStates,
-        isLabelOpen,
-        handleOpenLabel,
-        handleCloseLabel,
+        // isLabelOpen,
+        // handleOpenLabel,
+        // handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,
@@ -162,7 +173,7 @@ export default function NoteCard({
 
     // useNoteStoreを使う
     const {
-        updateNote,
+        // updateNote,
         createNote,
         moveToTrash,
         toggleFavorite,
@@ -205,7 +216,8 @@ export default function NoteCard({
 
                 setOpenMenuId(null);
                 setOpenColorId(null);
-                handleCloseLabel();
+                // handleCloseLabel();
+                setPanelType(null);
 
                 // console.log(`note.id: ${note.id}`);
                 // console.log(`openColorId: ${openColorId}`);
@@ -463,6 +475,7 @@ export default function NoteCard({
                         onClick={(e) => {
                             e.stopPropagation();
                             setOpenColorId(null);
+                            setPanelType(null);
                             setOpenMenuId((prev) => prev === note.id ? null : note.id);
                         }}
                     >
@@ -472,7 +485,57 @@ export default function NoteCard({
                 </div>
 
 
+
                 {openMenuId === note.id && (
+
+                    panelType === "label" ? (
+
+                        <LabelPanel
+                            labelPanelRef={labelPanelRef}
+                            selectedLabels={selectedLabels}
+                            labelStates={labelStates}
+                            // onCreateLabel={handleCreateLabel}
+                            onSelectLabel={handleSelectLabel}
+                        />
+                    ): (
+
+                        <NoteMenu
+                            menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
+                            // onOpenLabel={handleOpenLabel}
+                            onOpenLabel={() => setPanelType("label")}
+                            onMoveToTrash={() => moveToTrash(note.id)}
+                            onDuplicateNote={
+                                () =>
+                                    createNote(
+                                        note.title,
+                                        note.content,
+                                        note.labels.map((label) => label.id),
+                                        note.color
+                                    )
+                                }
+                        // onDuplicateNote={() => onDuplicateNote(note)}
+                        />
+
+                    )
+
+                )}
+
+
+                {/* // {panelType === "label" && (
+                //     <LabelPanel
+                //         labelPanelRef={labelPanelRef}
+                //         selectedLabels={selectedLabels}
+                //         labelStates={labelStates}
+                //         // onCreateLabel={handleCreateLabel}
+                //         onSelectLabel={handleSelectLabel}
+                //     />
+                // )} */}
+
+
+
+
+
+                {/* {openMenuId === note.id && (
                     isLabelOpen ? (
                         <LabelPanel
                             labelPanelRef={labelPanelRef}
@@ -501,7 +564,7 @@ export default function NoteCard({
                     />
 
                     )
-                )}
+                )} */}
 
 
                 {/* 背景色 */}

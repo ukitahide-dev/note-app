@@ -47,6 +47,14 @@ type Props = {
             >
         >;
 
+    panelType: "label" | null;
+
+    setPanelType: React.Dispatch<
+            React.SetStateAction<
+                "label" | null
+            >
+        >;
+
     // onSave: (
     //     id: number,
     //     title: string,
@@ -88,6 +96,8 @@ export default function NoteGrid ({
     setOpenColorId,
     openNoteDetailId,
     setOpenNoteDetailId,
+    panelType,
+    setPanelType,
     // onSave,           // useNoteStoreを使うことで、不要になった。
     // onUpdateColor,    // useNoteStoreを使うことで、不要になった。
     // onMoveToTrash,   // useNoteStoreを使うことで、不要になった。
@@ -122,6 +132,8 @@ export default function NoteGrid ({
                             setOpenColorId={setOpenColorId}
                             openNoteDetailId={openNoteDetailId}
                             setOpenNoteDetailId={setOpenNoteDetailId}
+                            panelType={panelType}
+                            setPanelType={setPanelType}
                             // onSave={onSave}
                             // onUpdateColor={onUpdateColor}
                             // onMoveToTrash={onMoveToTrash}

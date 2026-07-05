@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useLabels from "../../labels/hooks/useLabels";
+// import useLabels from "../../labels/hooks/useLabels";
 import { useLabelStore } from "../../labels/store/labelStore";
 
 
@@ -36,20 +36,12 @@ export function useNoteFormLabels (
     }, [labelName, labels]);
 
 
-
+    // state状態(selectedLabels)から必要なものを計算する。これがreactで良い書き方。
     const selectedLabelNames = labels
         .filter((label) => selectedLabels.includes(label.id))
         .map((label) => label.name);
 
 
-    
-    // const labelStates = labels.map((label) => ({
-
-    //     id: label.id,
-
-    //     state: label.name === labelName || selectedLabels.includes(label.id) ? "checked" : "unchecked"
-
-    // }))
 
     const labelStates = labels.map((label) => ({
 

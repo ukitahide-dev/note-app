@@ -63,7 +63,7 @@ export default function NoteList({
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
-
+    const [panelType, setPanelType] = useState<"label" | null>(null);
     // const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
 
 
@@ -163,6 +163,8 @@ export default function NoteList({
                             setOpenColorId={setOpenColorId}
                             openNoteDetailId={openNoteDetailId}
                             setOpenNoteDetailId={setOpenNoteDetailId}
+                            panelType={panelType}
+                            setPanelType={setPanelType}
                             // onSave={handleSave}
                             // onUpdateColor={handleUpdateColor}
                             // onMoveToTrash={handleMoveToTrash}
@@ -188,6 +190,8 @@ export default function NoteList({
                     setOpenColorId={setOpenColorId}
                     openNoteDetailId={openNoteDetailId}
                     setOpenNoteDetailId={setOpenNoteDetailId}
+                    panelType={panelType}
+                    setPanelType={setPanelType}
                     // onSave={handleSave}
                     // onUpdateColor={handleUpdateColor}
                     // onMoveToTrash={handleMoveToTrash}
@@ -222,6 +226,8 @@ export default function NoteList({
                         setOpenColorId={setOpenColorId}
                         openNoteDetailId={openNoteDetailId}
                         setOpenNoteDetailId={setOpenNoteDetailId}
+                        panelType={panelType}
+                        setPanelType={setPanelType}
                         // onSave={handleSave}
                         // onUpdateColor={handleUpdateColor}
                         // onMoveToTrash={handleMoveToTrash}
@@ -246,6 +252,8 @@ export default function NoteList({
                     setOpenColorId={setOpenColorId}
                     openNoteDetailId={openNoteDetailId}
                     setOpenNoteDetailId={setOpenNoteDetailId}
+                    panelType={panelType}
+                    setPanelType={setPanelType}
                     // onSave={handleSave}
                     // onUpdateColor={handleUpdateColor}
                     // onMoveToTrash={handleMoveToTrash}

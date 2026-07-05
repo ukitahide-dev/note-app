@@ -66,11 +66,12 @@ export default function NoteDetailModal({
 
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
-    const [isColorOpen, setIsColorOpen] = useState(false);
+    // const [isColorOpen, setIsColorOpen] = useState(false);
     const [tempColor, setTempColor] = useState(note.color);
 
+    const [panelType, setPanelType] = useState<"menu" | "color" | "label" | null>(null);
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 
 
@@ -87,7 +88,7 @@ export default function NoteDetailModal({
 
     // useNoteLabels hooksを使う
     const {
-        isLabelOpen,
+        // isLabelOpen,
         handleOpenLabel,
         selectedLabels,
         handleSelectLabel,
@@ -111,7 +112,7 @@ export default function NoteDetailModal({
 
     const handleClosePalette = async () => {
 
-        setIsColorOpen(false);
+        // setIsColorOpen(false);
 
         try {
 
@@ -240,8 +241,9 @@ export default function NoteDetailModal({
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            setIsColorOpen((prev) => !prev);
-                            setIsMenuOpen(false)
+                            setPanelType("color");
+                            // setIsColorOpen((prev) => !prev);
+                            // setIsMenuOpen(false)
                             // setOpenMenuId(null);
                             // setOpenColorId((prev) => prev === note.id ? null : note.id);
                         }}
@@ -253,8 +255,9 @@ export default function NoteDetailModal({
                         className={styles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
-                            setIsMenuOpen((prev) => !prev);
-                            setIsColorOpen(false)
+                            setPanelType("menu");
+                            // setIsMenuOpen((prev) => !prev);
+                            // setIsColorOpen(false)
 
                         }}
                     >
@@ -279,8 +282,7 @@ export default function NoteDetailModal({
                 </div>
 
 
-
-                {isColorOpen && (
+                {panelType === "color" && (
 
                     <ColorPalette
                         onSelectColor={handleSelectColor}
@@ -293,38 +295,32 @@ export default function NoteDetailModal({
                 )}
 
 
-                {isMenuOpen && (
+                {panelType === "menu" && (
 
-                    isLabelOpen ? (
+                    <NoteMenu
+                        onOpenLabel={() => setPanelType("label")}
+                        onMoveToTrash={() => moveToTrash(note.id)}
+                        onDuplicateNote={
+                            () =>
+                                createNote(
+                                    note.title,
+                                    note.content,
+                                    note.labels.map((label) => label.id),
+                                    note.color
+                                )
+                        }
+                        // onDuplicateNote={() => onDuplicateNote(note)}
 
-                        <LabelPanel
-                            selectedLabels={selectedLabels}
-                            onSelectLabel={handleSelectLabel}
+                    />
+                )}
 
-                        />
+                {panelType === "label" && (
 
-                    ) : (
+                    <LabelPanel
+                        selectedLabels={selectedLabels}
+                        onSelectLabel={handleSelectLabel}
 
-                        <NoteMenu
-                            onOpenLabel={handleOpenLabel}
-                            onMoveToTrash={() => moveToTrash(note.id)}
-                            onDuplicateNote={
-                                () =>
-                                    createNote(
-                                        note.title,
-                                        note.content,
-                                        note.labels.map((label) => label.id),
-                                        note.color
-                                    )
-                            }
-                            // onDuplicateNote={() => onDuplicateNote(note)}
-
-                        />
-
-
-                    )
-
-
+                    />
                 )}
 
             </div>
@@ -333,11 +329,28 @@ export default function NoteDetailModal({
     );
 
 
-
-
-
-
-
-
-
 }
+
+
+
+
+// ) : (
+
+//                         <NoteMenu
+//                             onOpenLabel={handleOpenLabel}
+//                             onMoveToTrash={() => moveToTrash(note.id)}
+//                             onDuplicateNote={
+//                                 () =>
+//                                     createNote(
+//                                         note.title,
+//                                         note.content,
+//                                         note.labels.map((label) => label.id),
+//                                         note.color
+//                                     )
+//                             }
+//                             // onDuplicateNote={() => onDuplicateNote(note)}
+
+//                         />
+
+
+//                     )

@@ -20,14 +20,12 @@ import { useNoteStore } from "../../store/useNoteStore";
 
 export default function LabelNotesPage() {
     const { labelName } = useParams();   // 分割代入で取得。useParams() は、{ labelName: "筋トレ" }みたいなオブジェクトを返す。
-    // const [notes, setNotes] = useState<Note[]>([]);
 
 
 
     // useNoteStore
     const {
         notes,
-        // setNotes,
         fetchNotes,
     } = useNoteStore();
 
