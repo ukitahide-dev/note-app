@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { Note } from "../../../types/note"
-import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite, updateNoteLabels, updateNotePinned } from "../api/noteApi";
+import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite, updateNoteLabels, updateNotePinned } from "../api/noteApi";
 
 
 
@@ -20,7 +20,7 @@ type NoteStore = {
 
     addNote: (note: Note) => void;
 
-    updateNote: (note: Note) => void;
+    updateNote: (id: number, title: string, content: string) => void;
 
     moveToTrash: (id: number) => Promise<void>;
 
@@ -122,17 +122,45 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
+    
+    updateNote: async (
+        id: number,
+        title: string,
+        content: string,
+    ) => {
+
+        try {
+
+            const updatedNote = await updateNoteApi(Number(id), title, content);
+
+            set((state) => ({
+
+                notes: state.notes.map((note) =>
+                    note.id === updatedNote.id ? updatedNote : note
+                )
+
+            }));
 
 
-    updateNote: (updatedNote) =>
+        } catch (error) {
 
-        set((state) => ({
+            console.error(error);
 
-            notes: state.notes.map((note) =>
-                note.id === updatedNote.id ? updatedNote : note
-            )
+        }
 
-        })),
+
+    },
+
+
+    // updateNote: (updatedNote) =>
+
+    //     set((state) => ({
+
+    //         notes: state.notes.map((note) =>
+    //             note.id === updatedNote.id ? updatedNote : note
+    //         )
+
+    //     })),
 
 
 

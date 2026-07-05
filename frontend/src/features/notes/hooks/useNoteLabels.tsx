@@ -46,7 +46,7 @@ export function useNoteLabels({
 }: Props) {
 
 
-    const [isLabelOpen, setIsLabelOpen] = useState(false);
+    // const [isLabelOpen, setIsLabelOpen] = useState(false);
 
     const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map(
@@ -82,17 +82,17 @@ export function useNoteLabels({
 
 
 
-    const handleCloseLabel = () => {
-        // console.log("handleOpenLabelが実行された");
-        // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
-        setIsLabelOpen(false);
-        // setIsLabelOpen(true);
-    }
+    // const handleCloseLabel = () => {
+    //     // console.log("handleOpenLabelが実行された");
+    //     // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
+    //     setIsLabelOpen(false);
+    //     // setIsLabelOpen(true);
+    // }
 
 
-    const handleOpenLabel = () => {
-        setIsLabelOpen(true);
-    }
+    // const handleOpenLabel = () => {
+    //     setIsLabelOpen(true);
+    // }
 
 
 
@@ -193,9 +193,9 @@ export function useNoteLabels({
 
     return {
         labelStates,
-        isLabelOpen,
-        handleOpenLabel,
-        handleCloseLabel,
+        // isLabelOpen,
+        // handleOpenLabel,
+        // handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,

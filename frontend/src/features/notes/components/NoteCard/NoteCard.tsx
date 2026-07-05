@@ -585,6 +585,7 @@ export default function NoteCard({
                     <NoteDetailModal
                         note={note}
                         setNotes={setNotes}
+                        setOpenNoteDetailId={setOpenNoteDetailId}
                         // onSave={onSave}
                         // onUpdateColor={onUpdateColor}
                         // onMoveToTrash={onMoveToTrash}

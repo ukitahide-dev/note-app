@@ -39,6 +39,13 @@ type Props = {
         React.SetStateAction<Note[]>
     >;
 
+    setOpenNoteDetailId:
+        React.Dispatch<
+            React.SetStateAction<
+                number | null
+            >
+        >;
+
     // onDuplicateNote: (
     //     note: Note,
     // ) => Promise<void>;
@@ -55,6 +62,7 @@ type Props = {
 export default function NoteDetailModal({
     note,
     setNotes,
+    setOpenNoteDetailId,
     // onSave,
     // onUpdateColor,
     // onMoveToTrash,
@@ -66,12 +74,11 @@ export default function NoteDetailModal({
 
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
-    // const [isColorOpen, setIsColorOpen] = useState(false);
+
     const [tempColor, setTempColor] = useState(note.color);
 
     const [panelType, setPanelType] = useState<"menu" | "color" | "label" | null>(null);
 
-    // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 
 
@@ -89,7 +96,7 @@ export default function NoteDetailModal({
     // useNoteLabels hooksを使う
     const {
         // isLabelOpen,
-        handleOpenLabel,
+        // handleOpenLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,
@@ -112,7 +119,7 @@ export default function NoteDetailModal({
 
     const handleClosePalette = async () => {
 
-        // setIsColorOpen(false);
+
 
         try {
 
@@ -131,31 +138,39 @@ export default function NoteDetailModal({
 
 
 
-
-    const handleSave = async (
+    const handleSave = (
         id: number,
         title: string,
         content: string,
-
     ) => {
 
-        try {
-            const updatedNote = await updateNoteApi(Number(id), title, content);
-            updateNote(updatedNote);  // useNoteStore
-
-        } catch (error) {
-            console.error(error);
-            alert("保存失敗");
-        }
-
-        // setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+        updateNote(id, title, content);
+        setOpenNoteDetailId(null);
 
     }
 
 
 
 
+    // const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
 
+    // ) => {
+
+    //     try {
+    //         const updatedNote = await updateNoteApi(Number(id), title, content);
+    //         updateNote(updatedNote);  // useNoteStore
+
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("保存失敗");
+    //     }
+
+    //     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+
+    // }
 
 
 
@@ -177,7 +192,7 @@ export default function NoteDetailModal({
 
             }}
             // onClick={() => onSave(note.id, title, content)}
-            >
+        >
 
             <div
                 className={styles.modal}
