@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Note } from "../../../types/note";
-import { updateNoteColor } from "../api/noteApi";
+// import { updateNoteColor } from "../api/noteApi";
 import { useNoteStore } from "../store/useNoteStore";
 
 
@@ -16,7 +16,7 @@ export function useNoteColor(
 
 
     const {
-        updateNote,
+        updateNoteColor,
     } = useNoteStore();
 
 
@@ -41,25 +41,24 @@ export function useNoteColor(
 
 
 
-    const handleClosePalette = async () => {
+    const saveColor = async () => {
         console.log("保存", note.id, tempColor);
-        // console.log("保存", tempColor);
+
+        // console.log(`saveColor内のtempColor: ${tempColor}`);
+
+        await updateNoteColor(note.id, tempColor);
+
+        // try {
+
+        //     await updateNoteColor(note.id, tempColor);
+        //     // const updatedNote = await updateNoteColor(note.id, tempColor);
+        //     // updateNote(updatedNote);
 
 
-        // console.log(`handleClosePalette内のtempColor: ${tempColor}`);
+        // } catch (error) {
 
-        try {
-
-            const updatedNote = await updateNoteColor(note.id, tempColor);
-            updateNote(updatedNote);
-
-
-        } catch (error) {
-
-            console.error(error);
-        }
-
-
+        //     console.error(error);
+        // }
 
 
     }
@@ -70,7 +69,7 @@ export function useNoteColor(
     return {
         tempColor,
         handleSelectColor,
-        handleClosePalette,
+        saveColor,
     }
 
 

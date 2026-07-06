@@ -23,7 +23,7 @@ type LabelState = {
 type Props = {
 
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
-    
+
     selectedLabels: number[];
 
     labelStates?: LabelState[];
@@ -48,7 +48,7 @@ type Props = {
 
 export default function LabelPanel({
     labelPanelRef,
-    selectedLabels,
+    // selectedLabels,
     labelStates,
     onSelectLabel,
     // onSelectLabelName,

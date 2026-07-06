@@ -20,7 +20,9 @@ type NoteStore = {
 
     addNote: (note: Note) => void;
 
-    updateNote: (id: number, title: string, content: string) => void;
+    updateNote: (id: number, title: string, content: string) => Promise<void>;
+
+    updateNoteColor: (id: number, color: string,) => Promise<void>;
 
     moveToTrash: (id: number) => Promise<void>;
 
@@ -122,7 +124,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-    
+
     updateNote: async (
         id: number,
         title: string,
@@ -141,6 +143,33 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             }));
 
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    },
+
+
+
+    updateNoteColor: async (
+        id: number,
+        color: string,
+    ) => {
+        try {
+
+            const updatedNote = await updateNoteColorApi(id, color);
+
+            set((state) => ({
+
+                notes: state.notes.map((note) =>
+                    note.id === updatedNote.id ? updatedNote : note
+                )
+
+            }));
 
         } catch (error) {
 

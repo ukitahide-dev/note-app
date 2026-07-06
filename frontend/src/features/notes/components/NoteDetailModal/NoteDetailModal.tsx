@@ -6,7 +6,7 @@
 import { useState } from "react";
 import styles from "./NoteDetailModal.module.css";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-import { updateNote as updateNoteApi, updateNoteColor } from "../../api/noteApi";
+// import { updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi } from "../../api/noteApi";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
@@ -15,6 +15,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 // ---- types ----
 import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
+import { useNoteColor } from "../../hooks/useNoteColor";
 
 
 
@@ -75,20 +76,26 @@ export default function NoteDetailModal({
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
 
-    const [tempColor, setTempColor] = useState(note.color);
+    // const [tempColor, setTempColor] = useState(note.color);
 
     const [panelType, setPanelType] = useState<"menu" | "color" | "label" | null>(null);
 
 
+    // useNoteColor hooks
+    const {
+        tempColor,
+        handleSelectColor,
+        saveColor,
+    } = useNoteColor(note);
 
 
 
     // 色の選択をUIに表示する
-    const handleSelectColor = (
-        color: string
-    ) => {
-        setTempColor(color);
-    }
+    // const handleSelectColor = (
+    //     color: string
+    // ) => {
+    //     setTempColor(color);
+    // }
 
 
 
@@ -97,7 +104,8 @@ export default function NoteDetailModal({
     const {
         // isLabelOpen,
         // handleOpenLabel,
-        selectedLabels,
+        // selectedLabels,
+        labelStates,
         handleSelectLabel,
         handleRemoveLabel,
     } = useNoteLabels({
@@ -110,74 +118,35 @@ export default function NoteDetailModal({
 
     const {
         updateNote,
+        // updateNoteColor,
         createNote,
+        moveToTrash,
     } = useNoteStore();
 
 
 
-
-
-    const handleClosePalette = async () => {
-
-
-
-        try {
-
-            const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-            updateNote(updatedNote);  // useNoteStore
-
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-
-
-    }
-
-
-
-    const handleSave = (
-        id: number,
-        title: string,
-        content: string,
-    ) => {
-
-        updateNote(id, title, content);
-        setOpenNoteDetailId(null);
-
-    }
-
-
-
-
-    // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
+    // const saveColor = async (
 
     // ) => {
-
-    //     try {
-    //         const updatedNote = await updateNoteApi(Number(id), title, content);
-    //         updateNote(updatedNote);  // useNoteStore
-
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("保存失敗");
-    //     }
-
-    //     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+    //     await updateNoteColor(note.id, tempColor);
+    //     setPanelType(null);
 
     // }
 
 
 
 
-    const {
-        moveToTrash,
-    } = useNoteStore();
+    const handleSave = async (
+        id: number,
+        title: string,
+        content: string,
+    ) => {
+
+        await updateNote(id, title, content);
+        setOpenNoteDetailId(null);
+
+    }
+
 
 
 
@@ -186,9 +155,9 @@ export default function NoteDetailModal({
 
         <div
             className={styles.overlay}
-            onClick={() => {
-                handleSave(note.id, title, content);
-                handleClosePalette();
+            onClick={async () => {
+                await handleSave(note.id, title, content);
+                await saveColor();
 
             }}
             // onClick={() => onSave(note.id, title, content)}
@@ -282,9 +251,9 @@ export default function NoteDetailModal({
                     <button
                         className={styles.button}
                         onClick={
-                                    () => {
-                                        handleSave(note.id, title, content);
-                                        handleClosePalette();
+                                async () => {
+                                        await handleSave(note.id, title, content);
+                                        await saveColor();
                                         // onSave(note.id, title, content);
                                         // onUpdateColor(note.id, tempColor);
 
@@ -304,7 +273,7 @@ export default function NoteDetailModal({
                         // onUpdateColor={onUpdateColor}
                         // note={note}
                         tempColor={tempColor}
-                        onClose={handleClosePalette}
+                        onClose={saveColor}
 
                     />
                 )}
@@ -332,7 +301,8 @@ export default function NoteDetailModal({
                 {panelType === "label" && (
 
                     <LabelPanel
-                        selectedLabels={selectedLabels}
+                        // selectedLabels={selectedLabels}
+                        labelStates={labelStates}
                         onSelectLabel={handleSelectLabel}
 
                     />
@@ -369,3 +339,47 @@ export default function NoteDetailModal({
 
 
 //                     )
+
+
+
+
+ // const saveColor = async () => {
+
+
+
+    //     try {
+
+    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+    //         updateNote(updatedNote);  // useNoteStore
+
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+
+    // }
+
+
+
+// const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+
+    // ) => {
+
+    //     try {
+    //         const updatedNote = await updateNoteApi(Number(id), title, content);
+    //         updateNote(updatedNote);  // useNoteStore
+
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("保存失敗");
+    //     }
+
+    //     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+
+    // }

@@ -155,7 +155,7 @@ export default function NoteCard({
     const {
         tempColor,
         handleSelectColor,
-        handleClosePalette,
+        saveColorAndClose,
     } = useNoteColor(
         note,
     );
@@ -230,12 +230,12 @@ export default function NoteCard({
                     openColorId
                 );
 
-                if (note.id === openColorId) {  // この条件必要。これ書かないと、handleClosePaletteが全ノートカードに対して実行されるし、保存処理もバグる。
+                if (note.id === openColorId) {  // この条件必要。これ書かないと、saveColorAndCloseが全ノートカードに対して実行されるし、保存処理もバグる。
                     console.log("保存するのはこのカード");
-                    handleClosePalette();
+                    saveColorAndClose();
                 }
 
-                // handleClosePalette();
+                // saveColorAndClose();
 
 
             }
@@ -257,10 +257,10 @@ export default function NoteCard({
             );
         };
 
-    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にhandleClosePalette();が実行されてしまう。
+    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColorAndClose();が実行されてしまう。
 
     // tempColor, openColorId
-    // tempColor, openColorId, handleClosePalette
+    // tempColor, openColorId, saveColorAndClose
     // note.id, tempColor,  useNoteColorにロジック移すと、依存配列こう書かないとバグるようになった。
 
 
@@ -328,9 +328,9 @@ export default function NoteCard({
 
 
     // ノート単体の色を変える。ノートカードから色を変えたときの用途。
-    // const handleClosePalette = async () => {
+    // const saveColorAndClose = async () => {
 
-    //     console.log("handleClosePalette実行");
+    //     console.log("saveColorAndClose実行");
     //     console.log(`tempColor: ${tempColor}`);
 
     //     try {
@@ -573,7 +573,7 @@ export default function NoteCard({
                         onSelectColor={handleSelectColor}
                         // tempColor={tempColor}
                         paletteRef={paletteRef}
-                        // onClose={handleClosePalette}
+                        // onClose={saveColorAndClose}
 
                     />
 
