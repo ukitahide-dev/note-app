@@ -19,8 +19,9 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 import type { Note } from "../../../../types/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
-import { useLabelStore } from "../../../labels/store/labelStore";
+// import { useLabelStore } from "../../../labels/store/labelStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
+import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 
 
 
@@ -28,9 +29,9 @@ import { useNoteColor } from "../../hooks/useNoteColor";
 
 type Props = {
     note: Note;
-    setNotes: React.Dispatch<
-        React.SetStateAction<Note[]>
-    >;
+    // setNotes: React.Dispatch<
+    //     React.SetStateAction<Note[]>
+    // >;
 
     openMenuId: number | null;
 
@@ -100,7 +101,7 @@ type Props = {
 
 export default function NoteCard({
     note,
-    setNotes,
+    // setNotes,
     openMenuId,
     setOpenMenuId,
     openColorId,
@@ -155,7 +156,7 @@ export default function NoteCard({
     const {
         tempColor,
         handleSelectColor,
-        saveColorAndClose,
+        saveColor,
     } = useNoteColor(
         note,
     );
@@ -195,6 +196,52 @@ export default function NoteCard({
 
 
 
+    let panel;
+
+    if (panelType === "label") {
+
+        panel = (
+            <LabelPanel
+                labelPanelRef={labelPanelRef}
+                selectedLabels={selectedLabels}
+                labelStates={labelStates}
+                onSelectLabel={handleSelectLabel}
+            />
+        )
+
+    } else if (panelType === "history") {
+
+        panel = (
+            <HistoryPanel
+                note={note}
+
+            />
+        )
+
+    } else {
+
+        panel = (
+            <NoteMenu
+                menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
+                // onOpenLabel={handleOpenLabel}
+                onOpenLabel={() => setPanelType("label")}
+                onMoveToTrash={() => moveToTrash(note.id)}
+                onDuplicateNote={
+                    () =>
+                        createNote(
+                        note.title,
+                        note.content,
+                        note.labels.map((label) => label.id),
+                        note.color
+                    )
+                }
+            />
+        )
+
+    }
+
+
+
 
     useEffect(() => {
 
@@ -230,12 +277,12 @@ export default function NoteCard({
                     openColorId
                 );
 
-                if (note.id === openColorId) {  // この条件必要。これ書かないと、saveColorAndCloseが全ノートカードに対して実行されるし、保存処理もバグる。
+                if (note.id === openColorId) {  // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
                     console.log("保存するのはこのカード");
-                    saveColorAndClose();
+                    saveColor();
                 }
 
-                // saveColorAndClose();
+                // saveColor();
 
 
             }
@@ -257,10 +304,10 @@ export default function NoteCard({
             );
         };
 
-    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColorAndClose();が実行されてしまう。
+    }, [note.id, tempColor]);  // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
 
     // tempColor, openColorId
-    // tempColor, openColorId, saveColorAndClose
+    // tempColor, openColorId, saveColor
     // note.id, tempColor,  useNoteColorにロジック移すと、依存配列こう書かないとバグるようになった。
 
 
@@ -305,55 +352,6 @@ export default function NoteCard({
             )
         );
     };
-
-
-
-
-    // ---- useNoteColor hook に移した ----
-
-    // 色の選択をUIに表示する
-    // const handleSelectColor = (
-    //     color: string
-    // ) => {
-    //     setTempColor(color);
-    // }
-
-
-    // // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
-    // useEffect(() => {
-    //     setTempColor(note.color);
-    // }, [note.color]);
-
-
-
-
-    // ノート単体の色を変える。ノートカードから色を変えたときの用途。
-    // const saveColorAndClose = async () => {
-
-    //     console.log("saveColorAndClose実行");
-    //     console.log(`tempColor: ${tempColor}`);
-
-    //     try {
-
-    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-    //         updateNote(updatedNote);  // useNoteStore
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    //     // setOpenColorId(null);
-
-
-    // }
-    // ---- -----
-
-
-
-
 
 
 
@@ -462,7 +460,6 @@ export default function NoteCard({
                         onClick={(e) => {
                             e.stopPropagation();
                             toggleFavorite(note.id, note.is_favorite);
-                            // onToggleFavorite(note.id, note.is_favorite)
                         }}
 
                     >
@@ -485,8 +482,9 @@ export default function NoteCard({
                 </div>
 
 
+                {openMenuId === note.id && panel}
 
-                {openMenuId === note.id && (
+                {/* {openMenuId === note.id && (
 
                     panelType === "label" ? (
 
@@ -518,53 +516,9 @@ export default function NoteCard({
 
                     )
 
-                )}
-
-
-                {/* // {panelType === "label" && (
-                //     <LabelPanel
-                //         labelPanelRef={labelPanelRef}
-                //         selectedLabels={selectedLabels}
-                //         labelStates={labelStates}
-                //         // onCreateLabel={handleCreateLabel}
-                //         onSelectLabel={handleSelectLabel}
-                //     />
-                // )} */}
-
-
-
-
-
-                {/* {openMenuId === note.id && (
-                    isLabelOpen ? (
-                        <LabelPanel
-                            labelPanelRef={labelPanelRef}
-                            selectedLabels={selectedLabels}
-                            labelStates={labelStates}
-                            // onCreateLabel={handleCreateLabel}
-                            onSelectLabel={handleSelectLabel}
-                        />
-                    ) : (
-
-                    // ---- menu ----
-                    <NoteMenu
-                        menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
-                        onOpenLabel={handleOpenLabel}
-                        onMoveToTrash={() => moveToTrash(note.id)}
-                        onDuplicateNote={
-                                () =>
-                                    createNote(
-                                        note.title,
-                                        note.content,
-                                        note.labels.map((label) => label.id),
-                                        note.color
-                                    )
-                            }
-                        // onDuplicateNote={() => onDuplicateNote(note)}
-                    />
-
-                    )
                 )} */}
+
+
 
 
                 {/* 背景色 */}
@@ -573,7 +527,7 @@ export default function NoteCard({
                         onSelectColor={handleSelectColor}
                         // tempColor={tempColor}
                         paletteRef={paletteRef}
-                        // onClose={saveColorAndClose}
+                        // onClose={saveColor}
 
                     />
 
@@ -584,7 +538,7 @@ export default function NoteCard({
                 {openNoteDetailId === note.id && (
                     <NoteDetailModal
                         note={note}
-                        setNotes={setNotes}
+                        // setNotes={setNotes}
                         setOpenNoteDetailId={setOpenNoteDetailId}
                         // onSave={onSave}
                         // onUpdateColor={onUpdateColor}
@@ -597,15 +551,7 @@ export default function NoteCard({
 
 
             </Card>
-
-
-
     )
-
-
-
-
-
 }
 
 
@@ -739,3 +685,49 @@ export default function NoteCard({
 
 
     // }));
+
+
+
+
+
+// ---- useNoteColor hook に移した ----
+
+    // 色の選択をUIに表示する
+    // const handleSelectColor = (
+    //     color: string
+    // ) => {
+    //     setTempColor(color);
+    // }
+
+
+    // // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
+    // useEffect(() => {
+    //     setTempColor(note.color);
+    // }, [note.color]);
+
+
+
+
+    // ノート単体の色を変える。ノートカードから色を変えたときの用途。
+    // const saveColor = async () => {
+
+    //     console.log("saveColor実行");
+    //     console.log(`tempColor: ${tempColor}`);
+
+    //     try {
+
+    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+    //         updateNote(updatedNote);  // useNoteStore
+
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+    //     // setOpenColorId(null);
+
+
+    // }
+    // ---- -----

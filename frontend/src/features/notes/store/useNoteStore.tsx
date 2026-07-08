@@ -1,6 +1,20 @@
 import { create } from "zustand";
 import type { Note } from "../../../types/note"
-import { createNote as createNoteApi, getNote, getNotes, moveToTrash as moveToTrashApi, updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi, updateNoteFavorite, updateNoteLabels, updateNotePinned } from "../api/noteApi";
+import {
+    createNote as createNoteApi,
+    deleteNoteForever as deleteNoteForeverApi,
+    emptyTrash as emptyTrashApi,
+    // getNote,
+    getNotes,
+    getTrashNotes as getTrashNotesApi,
+    moveToTrash as moveToTrashApi,
+    restoreNote as restoreNoteApi,
+    updateNote as updateNoteApi,
+    updateNoteColor as updateNoteColorApi,
+    updateNoteFavorite,
+    updateNoteLabels,
+    updateNotePinned }
+from "../api/noteApi";
 
 
 
@@ -10,6 +24,9 @@ type NoteStore = {
     notes: Note[];
 
     fetchNotes: () => Promise<void>;
+
+
+    fetchTrashNotes: () => Promise<void>;
 
     createNote: (
         title: string,
@@ -25,6 +42,12 @@ type NoteStore = {
     updateNoteColor: (id: number, color: string,) => Promise<void>;
 
     moveToTrash: (id: number) => Promise<void>;
+
+    deleteNoteForever: (id: number) => Promise<void>;
+
+    restoreNote: (id: number) => Promise<void>;
+
+    emptyTrash: () => Promise<void>;
 
     moveSelectedToTrash: (ids: number[]) => Promise<void>;
 
@@ -70,6 +93,29 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             console.error(error);
 
         }
+
+    },
+
+
+    fetchTrashNotes: async () => {
+
+        try {
+
+            const data = await getTrashNotesApi();
+
+            set({
+                notes: data
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+
 
     },
 
@@ -193,7 +239,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-
+    // ノート単体をゴミ箱に移動する
     moveToTrash: async (
         id: number,
     ) => {
@@ -214,7 +260,74 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             console.error(error);
 
         }
+    },
 
+
+
+    // ノート単体を削除する
+    deleteNoteForever: async (
+        id: number,
+    ) => {
+
+        try {
+
+            await deleteNoteForeverApi(id);
+
+            set((state) => ({
+                notes: state.notes.filter((note) => note.id !== id)
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    },
+
+
+    // ゴミ箱にあるノートを復活させる
+    restoreNote: async (
+        id: number,
+    ) => {
+
+        try {
+
+            await restoreNoteApi(id);
+
+            set((state) => ({
+                notes: state.notes.filter((note) => note.id !== id)
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    },
+
+
+
+    // ゴミ箱内のノートをすべて削除する
+    emptyTrash: async (
+
+    ) => {
+
+        try {
+
+            await emptyTrashApi();
+
+            set({
+                notes: []
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     },
 

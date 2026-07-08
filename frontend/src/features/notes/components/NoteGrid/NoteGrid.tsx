@@ -18,9 +18,9 @@ type Props = {
 
     notes: Note[];
 
-    setNotes: React.Dispatch<
-        React.SetStateAction<Note[]>
-    >;
+    // setNotes: React.Dispatch<
+    //     React.SetStateAction<Note[]>
+    // >;
 
     openMenuId: number | null;
 
@@ -89,7 +89,7 @@ type Props = {
 export default function NoteGrid ({
     enableSort,
     notes,
-    setNotes,
+    // setNotes,
     openMenuId,
     setOpenMenuId,
     openColorId,
@@ -125,7 +125,7 @@ export default function NoteGrid ({
                 <CardComponent
                     key={note.id}
                     note={note}
-                    setNotes={setNotes}
+                    // setNotes={setNotes}
                     openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
                             openColorId={openColorId}

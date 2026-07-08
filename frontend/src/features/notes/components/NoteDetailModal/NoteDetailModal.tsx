@@ -36,9 +36,9 @@ type Props = {
     // onMoveToTrash: (id: number) => void;
 
 
-    setNotes: React.Dispatch<
-        React.SetStateAction<Note[]>
-    >;
+    // setNotes: React.Dispatch<
+    //     React.SetStateAction<Note[]>
+    // >;
 
     setOpenNoteDetailId:
         React.Dispatch<
@@ -62,7 +62,7 @@ type Props = {
 
 export default function NoteDetailModal({
     note,
-    setNotes,
+    // setNotes,
     setOpenNoteDetailId,
     // onSave,
     // onUpdateColor,
@@ -76,7 +76,6 @@ export default function NoteDetailModal({
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
 
-    // const [tempColor, setTempColor] = useState(note.color);
 
     const [panelType, setPanelType] = useState<"menu" | "color" | "label" | null>(null);
 
@@ -90,32 +89,19 @@ export default function NoteDetailModal({
 
 
 
-    // 色の選択をUIに表示する
-    // const handleSelectColor = (
-    //     color: string
-    // ) => {
-    //     setTempColor(color);
-    // }
-
-
-
-
-    // useNoteLabels hooksを使う
+    // useNoteLabels hooks
     const {
-        // isLabelOpen,
-        // handleOpenLabel,
-        // selectedLabels,
         labelStates,
         handleSelectLabel,
         handleRemoveLabel,
     } = useNoteLabels({
         note,
-        setNotes,
+        // setNotes,
     });
 
 
 
-
+    // useNoteStore Zustand
     const {
         updateNote,
         // updateNoteColor,
@@ -125,17 +111,11 @@ export default function NoteDetailModal({
 
 
 
-    // const saveColor = async (
-
-    // ) => {
-    //     await updateNoteColor(note.id, tempColor);
-    //     setPanelType(null);
-
-    // }
 
 
 
 
+    // タイトルや内容を変更したとき。色変更とは違う。
     const handleSave = async (
         id: number,
         title: string,
@@ -381,5 +361,25 @@ export default function NoteDetailModal({
     //     }
 
     //     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+
+    // }
+
+
+
+// 色の選択をUIに表示する
+    // const handleSelectColor = (
+    //     color: string
+    // ) => {
+    //     setTempColor(color);
+    // }
+
+
+
+
+// const saveColor = async (
+
+    // ) => {
+    //     await updateNoteColor(note.id, tempColor);
+    //     setPanelType(null);
 
     // }

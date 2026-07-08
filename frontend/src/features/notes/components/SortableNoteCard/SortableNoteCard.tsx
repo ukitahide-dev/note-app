@@ -59,9 +59,9 @@ import type { Note } from "../../../../types/note";
 
 type Props = {
     note: Note;
-    setNotes: React.Dispatch<
-        React.SetStateAction<Note[]>
-    >;
+    // setNotes: React.Dispatch<
+    //     React.SetStateAction<Note[]>
+    // >;
 
     openMenuId: number | null;
 
@@ -135,7 +135,7 @@ type Props = {
 
 export default function SortableNoteCard({
     note,
-    setNotes,
+    // setNotes,
     openMenuId,
     setOpenMenuId,
     openColorId,
@@ -200,7 +200,7 @@ export default function SortableNoteCard({
         >
             <NoteCard
                 note={note}
-                setNotes={setNotes}
+                // setNotes={setNotes}
                 openMenuId={openMenuId}
                 setOpenMenuId={setOpenMenuId}
                 openColorId={openColorId}

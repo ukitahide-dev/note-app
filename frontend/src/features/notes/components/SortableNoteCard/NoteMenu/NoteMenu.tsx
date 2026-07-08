@@ -1,5 +1,5 @@
 import Menu from "../../../../../shared/ui/Menu/Menu";
-import { useNoteLabels } from "../../../hooks/useNoteLabels";
+// import { useNoteLabels } from "../../../hooks/useNoteLabels";
 
 
 
@@ -55,6 +55,13 @@ export default function NoteMenu({
                 onClick={onMoveToTrash}  // 削除したことを親に通知するだけ。
             >
                 削除
+
+            </button>
+
+            <button
+                onClick={onMoveToTrash}  // 削除したことを親に通知するだけ。
+            >
+                変更履歴
 
             </button>
 

@@ -139,6 +139,7 @@ export const getTrashNotes = async () => {
 // ゴミ箱に入れたノートを復元する
 export const restoreNote = async (id: number) => {
     const token = localStorage.getItem("access");
+    
     const res = await api.patch(
         `/notes/${id}/`,
         {

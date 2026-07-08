@@ -31,7 +31,7 @@ import NoteGrid from "../NoteGrid/NoteGrid";
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
-import { useNoteStore } from "../../store/useNoteStore";
+// import { useNoteStore } from "../../store/useNoteStore";
 
 
 
@@ -156,7 +156,7 @@ export default function NoteList({
                         <NoteGrid
                             enableSort={enableSort}
                             notes={pinnedNotes}
-                            setNotes={setNotes}
+                            // setNotes={setNotes}
                             openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
                             openColorId={openColorId}
@@ -183,7 +183,7 @@ export default function NoteList({
                 <NoteGrid
                     enableSort={enableSort}
                     notes={normalNotes}
-                    setNotes={setNotes}
+                    // setNotes={setNotes}
                     openMenuId={openMenuId}
                     setOpenMenuId={setOpenMenuId}
                     openColorId={openColorId}
@@ -219,7 +219,7 @@ export default function NoteList({
                     <NoteGrid
                         enableSort={enableSort}
                         notes={pinnedNotes}
-                        setNotes={setNotes}
+                        // setNotes={setNotes}
                         openMenuId={openMenuId}
                         setOpenMenuId={setOpenMenuId}
                         openColorId={openColorId}
@@ -245,7 +245,7 @@ export default function NoteList({
                 <NoteGrid
                     enableSort={enableSort}
                     notes={normalNotes}
-                    setNotes={setNotes}
+                    // setNotes={setNotes}
                     openMenuId={openMenuId}
                     setOpenMenuId={setOpenMenuId}
                     openColorId={openColorId}
