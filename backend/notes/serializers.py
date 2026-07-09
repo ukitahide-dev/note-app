@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Note, Label
+from .models import Note, Label, NoteHistory
 
 
 
@@ -42,3 +42,12 @@ class NoteSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("他人のラベルは使えません")
 
         return value  # validationを通過した値をDRFへ返す。
+
+
+
+
+
+class NoteHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NoteHistory
+        fields = "__all__"
