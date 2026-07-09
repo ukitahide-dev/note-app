@@ -64,7 +64,7 @@ export default function ConfirmModal({
 
                     <button
                         className={styles.confirmButton}
-                        onClick={onConfirm}
+                        onClick={onConfirm}  // 削除押したことを親に伝えるだけ
                     >
                         削除
                     </button>

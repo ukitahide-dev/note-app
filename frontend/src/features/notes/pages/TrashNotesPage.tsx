@@ -37,12 +37,72 @@ export default function TrashNotesPage() {
     } = useNoteStore();
 
 
+    
     useEffect(() => {
         fetchTrashNotes();
     }, []);
 
 
-    // ------- useNoteStoreで不要になった ------
+
+
+
+
+
+    return (
+        <>
+            <div className={styles.container}>
+                <h1>ゴミ箱</h1>
+
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    ゴミ箱を空にする
+
+                </button>
+
+                <div className={styles.notesContainer}>
+
+                    {notes.map((note) => (
+                        <TrashNoteCard
+                            key={note.id}
+                            note={note}
+                            // onRestore={handleRestore}
+                            // onDelete={handleDelete}
+                        />
+                    ))}
+
+
+                </div>
+
+            </div>
+
+
+            <ConfirmModal
+                isOpen={isModalOpen}
+                title="ゴミ箱を空にしますか？"
+                message="ゴミ箱内の全てのノートが完全に削除されます。"
+                onConfirm={
+                        async () => {
+                            await emptyTrash();
+                            setIsModalOpen(false);
+                        }
+                        // async() => await emptyTrash();
+                    }
+                onClose={() => setIsModalOpen(false)}
+            />
+
+        </>
+
+
+    );
+
+
+
+}
+
+
+
+// ------- useNoteStoreで不要になった ------
     // useEffect(() => {
     //     const fetchTrashNotes = async () => {
     //         try {
@@ -102,63 +162,6 @@ export default function TrashNotesPage() {
 
     // }
     //  ------ -------
-
-
-
-
-
-    return (
-        <>
-            <div className={styles.container}>
-                <h1>ゴミ箱</h1>
-
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    ゴミ箱を空にする
-
-                </button>
-
-                <div className={styles.notesContainer}>
-
-                    {notes.map((note) => (
-                        <TrashNoteCard
-                            key={note.id}
-                            note={note}
-                            // onRestore={handleRestore}
-                            // onDelete={handleDelete}
-                        />
-                    ))}
-
-
-                </div>
-
-            </div>
-
-
-            <ConfirmModal
-                isOpen={isModalOpen}
-                title="ゴミ箱を空にしますか？"
-                message="ゴミ箱内の全てのノートが完全に削除されます。"
-                onConfirm={
-                        async () => {
-                            await emptyTrash();
-                            setIsModalOpen(false);
-                        }
-                        // async() => await emptyTrash();
-                    }
-                onClose={() => setIsModalOpen(false)}
-            />
-
-        </>
-
-
-    );
-
-
-
-}
-
 
 
 
