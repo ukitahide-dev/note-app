@@ -74,7 +74,12 @@ export const createNote = async (
 
 
 // ノートのタイトル内容を変更する
-export const updateNote = async(id: number, title: string, content: string) => {
+export const updateNote = async (
+    id: number,
+    title: string,
+    content: string
+) => {
+
     const token = localStorage.getItem("access");
     const res = await api.patch(
         `/notes/${id}/`,
@@ -139,7 +144,7 @@ export const getTrashNotes = async () => {
 // ゴミ箱に入れたノートを復元する
 export const restoreNote = async (id: number) => {
     const token = localStorage.getItem("access");
-    
+
     const res = await api.patch(
         `/notes/${id}/`,
         {
@@ -224,7 +229,7 @@ export const updateNoteLabels = async (
 
 
 
-// ノートの背景を変更する
+// ノートの背景色を変更する
 export const updateNoteColor = async (
     id: number,
     color: string

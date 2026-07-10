@@ -101,9 +101,10 @@ export default function NoteDetailModal({
 
 
 
-    // useNoteStore Zustand
+    // useNoteStore
     const {
         updateNote,
+        updateNoteColor,
         // updateNoteColor,
         createNote,
         moveToTrash,
@@ -112,20 +113,38 @@ export default function NoteDetailModal({
 
 
 
+    const handleClose = async (
+
+    ) => {
+
+
+        if (title !== note.title || content !== note.content) {
+            await updateNote(note.id, title, content);
+        }
+
+
+        if (tempColor !== note.color) {
+            await updateNoteColor(note.id, tempColor);
+            // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
+        }
+
+        setOpenNoteDetailId(null);
+
+    }
 
 
 
     // タイトルや内容を変更したとき。色変更とは違う。
-    const handleSave = async (
-        id: number,
-        title: string,
-        content: string,
-    ) => {
+    // const handleSave = async (
+    //     id: number,
+    //     title: string,
+    //     content: string,
+    // ) => {
 
-        await updateNote(id, title, content);
-        setOpenNoteDetailId(null);
+    //     await updateNote(id, title, content);
+    //     setOpenNoteDetailId(null);
 
-    }
+    // }
 
 
 
@@ -135,11 +154,12 @@ export default function NoteDetailModal({
 
         <div
             className={styles.overlay}
-            onClick={async () => {
-                await handleSave(note.id, title, content);
-                await saveColor();
+            onClick={handleClose}
+            // onClick={async () => {
+            //     await handleSave(note.id, title, content);
+            //     await saveColor();
 
-            }}
+            // }}
             // onClick={() => onSave(note.id, title, content)}
         >
 
@@ -230,15 +250,16 @@ export default function NoteDetailModal({
 
                     <button
                         className={styles.button}
-                        onClick={
-                                async () => {
-                                        await handleSave(note.id, title, content);
-                                        await saveColor();
-                                        // onSave(note.id, title, content);
-                                        // onUpdateColor(note.id, tempColor);
+                        onClick={handleClose}
+                        // onClick={
+                        //         async () => {
+                        //                 await handleSave(note.id, title, content);
+                        //                 await saveColor();
+                        //                 // onSave(note.id, title, content);
+                        //                 // onUpdateColor(note.id, tempColor);
 
-                                    }
-                            }
+                        //             }
+                        //     }
                     >
                         閉じる
                     </button>

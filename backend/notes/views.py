@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Note, Label
-from .serializers import NoteSerializer, LabelSerializer
+from .models import Note, Label, NoteHistory
+from .serializers import NoteSerializer, LabelSerializer, NoteHistorySerializer
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -32,6 +32,56 @@ class NoteViewSet(ModelViewSet):
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所
         serializer.save(user=self.request.user)  # ノート作成時にサーバー側で自動で user を付ける。フロントからのなりすましを防ぐ。
+
+
+
+
+    def partial_update(self, request, *args, **kwargs):
+        note = self.get_object()  # 更新前のノートを取得
+
+        print(request.data)
+
+
+        # 更新前の値を保存
+        old_title = note.title
+        old_content = note.content
+        old_color = note.color
+
+
+        # 通常の更新処理。DBを更新。
+        response = super().partial_update(request, *args, **kwargs)  # DBを更新。親クラス(ModelViewSet)のpartial_updateを実行して
+
+        # 更新後の値を取得
+        note.refresh_from_db()
+
+
+        # DB更新前と、更新後を比較
+        if old_title != note.title:
+            NoteHistory.objects.create(
+                note=note,
+                action="タイトル変更"
+            )
+
+
+        if old_content != note.content:
+            NoteHistory.objects.create(
+                note=note,
+                action="内容を変更"
+            )
+
+
+        if old_color != note.color:
+            NoteHistory.objects.create(
+                note=note,
+                action="背景色を変更"
+            )
+
+
+        return response
+
+
+
+
 
 
 
@@ -64,6 +114,22 @@ class NoteViewSet(ModelViewSet):
                 "deleted_count": count
             }
         )
+
+
+
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        note = self.get_object()
+
+        histories = note.histories.all()
+
+        serializer = NoteHistorySerializer(
+            histories,
+            many=True
+        )
+
+        return Response(serializer.data)
 
 
 
