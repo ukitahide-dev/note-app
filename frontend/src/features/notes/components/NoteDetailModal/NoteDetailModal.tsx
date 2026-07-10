@@ -16,6 +16,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
+import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 
 
 
@@ -77,7 +78,7 @@ export default function NoteDetailModal({
     const [content, setContent] = useState(note.content);
 
 
-    const [panelType, setPanelType] = useState<"menu" | "color" | "label" | null>(null);
+    const [panelType, setPanelType] = useState<"menu" | "color" | "label" | "history" | null>(null);
 
 
     // useNoteColor hooks
@@ -284,6 +285,7 @@ export default function NoteDetailModal({
 
                     <NoteMenu
                         onOpenLabel={() => setPanelType("label")}
+                        onOpenHistory={() => setPanelType("history")}
                         onMoveToTrash={() => moveToTrash(note.id)}
                         onDuplicateNote={
                             () =>
@@ -305,6 +307,14 @@ export default function NoteDetailModal({
                         // selectedLabels={selectedLabels}
                         labelStates={labelStates}
                         onSelectLabel={handleSelectLabel}
+
+                    />
+                )}
+
+
+                {panelType === "history" && (
+                    <HistoryPanel
+                        note={note}
 
                     />
                 )}

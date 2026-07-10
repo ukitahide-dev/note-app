@@ -310,3 +310,27 @@ export const updateNotePinned = async (
 
 
 }
+
+
+
+
+// ノート単体の変更履歴を取得する
+export const getNoteHistory = async (
+    id: number,
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.get(
+        `/notes/${id}/history/`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        },
+    );
+
+    return res.data;
+
+
+}

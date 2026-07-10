@@ -57,8 +57,8 @@ class NoteViewSet(ModelViewSet):
 
         # DB更新前と、更新後を比較
         if old_title != note.title:
-            NoteHistory.objects.create(
-                note=note,
+            NoteHistory.objects.create(  # 左辺のnote、actionはNoteHistoryモデルのカラム名。
+                note=note,  # 右辺のnoteは更新後のnote。
                 action="タイトル変更"
             )
 

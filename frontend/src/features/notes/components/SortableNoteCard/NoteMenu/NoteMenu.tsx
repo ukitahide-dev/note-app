@@ -9,6 +9,8 @@ type Props = {
 
     onOpenLabel?: () => void;
 
+    onOpenHistory?: () => void;
+
     onMoveToTrash?: () => void;
 
     onDuplicateNote?: (
@@ -24,6 +26,7 @@ type Props = {
 export default function NoteMenu({
     menuRef,
     onOpenLabel,
+    onOpenHistory,
     onMoveToTrash,
     onDuplicateNote,
 
@@ -59,7 +62,7 @@ export default function NoteMenu({
             </button>
 
             <button
-                onClick={onMoveToTrash}  // 削除したことを親に通知するだけ。
+                onClick={onOpenHistory}
             >
                 変更履歴
 
