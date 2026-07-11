@@ -14,9 +14,51 @@
 
 .modal {
     background: white;
-    width: 500px;
-    padding: 24px;
-    border-radius: 16px;
+    width: 350px;
+    /* max-height: 60vh; */
+    /* padding: 24px; */
+    border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     /* z-index: 100; */
 }
+
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    padding: 16px;
+}
+
+.top > h1 {
+    font-size: 18px;
+    font-weight: 450;
+}
+
+
+.histories {
+    overflow-y: auto;  /* 縦方向（Y方向）の内容がはみ出したときだけ、自動でスクロールバーを表示する*/
+    max-height: 300px;
+}
+
+
+.history {
+    border-top: 1px solid rgb(210, 210, 210);
+    padding: 14px;
+
+}
+
+
+
+
+.modal .bottom {
+    border-top: 1px solid rgb(222, 212, 212);
+    display: flex;
+    justify-content: flex-end;  /* 子を右端に寄せる */
+    padding: 14px ;
+}
+
+
+/* .modal .bottom > button {
+    flex-direction: flex-end;
+} */

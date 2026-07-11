@@ -318,13 +318,13 @@ export const updateNotePinned = async (
 // ノート単体の変更履歴を取得する
 export const getNoteHistory = async (
     id: number,
-    
+
 ): Promise<History[]> => {
 
     const token = localStorage.getItem("access");
 
     const res = await api.get(
-        `/notes/${id}/history/`,
+        `/notes/${id}/history/`,  // views.py、NoteViewSetの@historyメソッドが実行される
         {
             headers: {
                 Authorization: `Bearer ${token}`

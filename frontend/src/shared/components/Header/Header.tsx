@@ -61,7 +61,8 @@ export default function Header({
     const paletteRef = useRef<HTMLDivElement | null>(null);
 
 
-
+    
+    // useSearchStore
     const {
         searchText,
         setSearchText
@@ -421,9 +422,9 @@ export default function Header({
                     className={styles.search}
                     type="text"
                     placeholder="検索..."
-                    onFocus={() => navigate("/search")}
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
+                    onFocus={() => navigate("/search")}
                 />
 
             </header>

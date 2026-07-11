@@ -13,6 +13,8 @@ import { getNoteHistory } from "../../api/noteApi";
 type Props = {
     note: Note;
 
+    onClose: () => void;
+
 }
 
 
@@ -21,6 +23,7 @@ type Props = {
 
 export function HistoryPanel ({
     note,
+    onClose,
 
 }: Props) {
 
@@ -67,6 +70,7 @@ export function HistoryPanel ({
 
         <div
             className={styles.overlay}
+            onClick={(e) => e.stopPropagation()} // これがないと、親にクリックイベントが伝播して、NoteDetailModalが開く。
 
             // onClick={() => onSave(note.id, title, content)}
         >
@@ -76,8 +80,12 @@ export function HistoryPanel ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.top}>
-                    <h2>変更履歴</h2>
-                    <button>×</button>
+                    <h1>変更履歴</h1>
+                    <button
+                        onClick={onClose}
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <div className={styles.histories}>
@@ -85,6 +93,7 @@ export function HistoryPanel ({
 
                         <div
                             key={history.id}
+                            className={styles.history}
                         >
                             <p>{formatDate(history.created_at)}</p>
                             <p>{history.action}</p>
@@ -95,15 +104,19 @@ export function HistoryPanel ({
 
                 </div>
 
+                <div className={styles.bottom}>
+                    <button
+                        onClick={onClose}
+                    >
+                        閉じる
+                    </button>
+
+                </div>
+
             </div>
 
 
         </div>
     );
-
-
-
-
-
 
 }

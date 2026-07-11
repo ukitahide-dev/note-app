@@ -75,7 +75,7 @@ type Props = {
 
     setPanelType: React.Dispatch<
             React.SetStateAction<
-                "label" | null
+                "label" | "history" | null
             >
         >;
 
@@ -214,6 +214,7 @@ export default function NoteCard({
         panel = (
             <HistoryPanel
                 note={note}
+                onClose={() => setPanelType(null)}
 
             />
         )
@@ -225,6 +226,7 @@ export default function NoteCard({
                 menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                 // onOpenLabel={handleOpenLabel}
                 onOpenLabel={() => setPanelType("label")}
+                onOpenHistory={() => setPanelType("history")}
                 onMoveToTrash={() => moveToTrash(note.id)}
                 onDuplicateNote={
                     () =>
@@ -484,39 +486,7 @@ export default function NoteCard({
 
                 {openMenuId === note.id && panel}
 
-                {/* {openMenuId === note.id && (
 
-                    panelType === "label" ? (
-
-                        <LabelPanel
-                            labelPanelRef={labelPanelRef}
-                            selectedLabels={selectedLabels}
-                            labelStates={labelStates}
-                            // onCreateLabel={handleCreateLabel}
-                            onSelectLabel={handleSelectLabel}
-                        />
-                    ): (
-
-                        <NoteMenu
-                            menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
-                            // onOpenLabel={handleOpenLabel}
-                            onOpenLabel={() => setPanelType("label")}
-                            onMoveToTrash={() => moveToTrash(note.id)}
-                            onDuplicateNote={
-                                () =>
-                                    createNote(
-                                        note.title,
-                                        note.content,
-                                        note.labels.map((label) => label.id),
-                                        note.color
-                                    )
-                                }
-                        // onDuplicateNote={() => onDuplicateNote(note)}
-                        />
-
-                    )
-
-                )} */}
 
 
 
@@ -556,6 +526,43 @@ export default function NoteCard({
 
 
 
+
+
+
+
+{/* {openMenuId === note.id && (
+
+                    panelType === "label" ? (
+
+                        <LabelPanel
+                            labelPanelRef={labelPanelRef}
+                            selectedLabels={selectedLabels}
+                            labelStates={labelStates}
+                            // onCreateLabel={handleCreateLabel}
+                            onSelectLabel={handleSelectLabel}
+                        />
+                    ): (
+
+                        <NoteMenu
+                            menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
+                            // onOpenLabel={handleOpenLabel}
+                            onOpenLabel={() => setPanelType("label")}
+                            onMoveToTrash={() => moveToTrash(note.id)}
+                            onDuplicateNote={
+                                () =>
+                                    createNote(
+                                        note.title,
+                                        note.content,
+                                        note.labels.map((label) => label.id),
+                                        note.color
+                                    )
+                                }
+                        // onDuplicateNote={() => onDuplicateNote(note)}
+                        />
+
+                    )
+
+                )} */}
 
 
 

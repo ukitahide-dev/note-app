@@ -315,6 +315,7 @@ export default function NoteDetailModal({
                 {panelType === "history" && (
                     <HistoryPanel
                         note={note}
+                        onClose={() => setPanelType(null)}
 
                     />
                 )}

@@ -11,89 +11,98 @@ import NoteList from "../../../notes/components/NoteList/NoteList";
 import { useSearchStore } from "../../store/SearchStore";
 
 // ---- notes/api ----
-import { getNotes } from "../../../notes/api/noteApi";
+// import { getNotes } from "../../../notes/api/noteApi";
 
 
+// import type { Note } from "../../../../types/note";
+import { useNoteStore } from "../../../notes/store/useNoteStore";
+import { useNoteFilter } from "../../hooks/useNoteFilter";
 
 
-type Label = {
-    name: string,
+// type Label = {
+//     name: string,
 
-}
+// }
 
 
-type Note = {
-    title: string,
-    content: string,
-    color: string,
-    labels: Label[],
-}
+// type Note = {
+//     title: string,
+//     content: string,
+//     color: string,
+//     labels: Label[],
+// }
 
 
 
 export default function SearchResultsPage () {
 
-    const [notes, setNotes] = useState<Note[]>([]);
+    // const [notes, setNotes] = useState<Note[]>([]);
     const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
 
 
+    // useNoteStore
+    const {
+        notes,
+        fetchNotes,
+    } = useNoteStore();
+
+    
+    useEffect(() => {
+        fetchNotes();
+    }, [])
+
+
+    // useSearchStore
     const { searchText } = useSearchStore();
 
     const showLabels = searchText.trim() === "" && selectedLabel === null;
 
 
 
-    useEffect(() => {
 
-        const fetchNotes = async () => {
+    // useNoteFilter hook
+    const {
+        uniqueLabels,
+        filteredNotes,
+    } = useNoteFilter(
+        notes,
+        searchText,
+        selectedLabel,
+    );
 
-            try {
 
-                const data = await getNotes();
-                setNotes(data);
-
-            } catch (error) {
-
-                console.error(error);
-
-            }
-        }
-
-        fetchNotes();
-
-    }, [])
 
 
     // すでに使われているラベルだけを取得する
-    const usedLabels = notes.flatMap((note) => note.labels);
+    // const usedLabels = notes.flatMap((note) => note.labels);
 
-    const uniqueLabels = [
-        ...new Set(usedLabels.map((label) => label.name))  // ...はスプレッド構文。Setの中身を1つずつ展開している。
-    ];
+    // const uniqueLabels = [
+    //     ...new Set(usedLabels.map((label) => label.name))  // ...はスプレッド構文。Setの中身を1つずつ展開している。
+    // ];
 
 
 
 
 
     // ノートをラベルで絞る
-    const targetNotes =
-        selectedLabel
-            ? notes.filter((note) =>
-                note.labels.some(
-                    (label) => label.name === selectedLabel
-                )
-            )
-            : notes;
+    // const targetNotes =
+    //     selectedLabel
+    //         ? notes.filter((note) =>
+    //             note.labels.some(
+    //                 (label) => label.name === selectedLabel
+    //             )
+    //         )
+    //         : notes;
 
 
 
-    // ノートをラベルで絞った後に、検索で絞る
-    const filteredNotes =
-        targetNotes.filter(
-            (note) =>
-                note.title.includes(searchText) ||
-                note.content.includes(searchText)
-        );
+    //  ノートをラベルで絞った後に、検索で絞る
+    // const filteredNotes =
+    //     targetNotes.filter(
+    //         (note) =>
+    //             note.title.includes(searchText) ||
+    //             note.content.includes(searchText)
+    //     );
 
 
 
@@ -130,7 +139,7 @@ export default function SearchResultsPage () {
 
             <NoteList
                 notes={filteredNotes}
-                setNotes={setNotes}
+                // setNotes={setNotes}
                 enableSort={false}
 
             />
@@ -144,3 +153,28 @@ export default function SearchResultsPage () {
 
 
 }
+
+
+
+
+
+// useNoteStoreで不要に
+    // useEffect(() => {
+
+    //     const fetchNotes = async () => {
+
+    //         try {
+
+    //             const data = await getNotes();
+    //             setNotes(data);
+
+    //         } catch (error) {
+
+    //             console.error(error);
+
+    //         }
+    //     }
+
+    //     fetchNotes();
+
+    // }, [])
