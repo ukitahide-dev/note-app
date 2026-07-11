@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 
 class NoteViewSet(ModelViewSet):
-    serializer_class = NoteSerializer
+    serializer_class = NoteSerializer  # このViewSetでは基本的に NoteSerializer を使うという意味。
     permission_classes = [IsAuthenticated]  # ログイン済みのユーザーだけ許可する
 
 
@@ -85,11 +85,15 @@ class NoteViewSet(ModelViewSet):
 
 
 
-
+    # ゴミ箱内のノートを全て取得する
     @action(detail=False, methods=["get"])
     def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
         notes = Note.objects.filter(user=request.user, is_deleted=True)
-        serializer = self.get_serializer(notes, many=True)
+
+        serializer = self.get_serializer(
+            notes,
+            many=True
+        )
 
         return Response(serializer.data)
 
@@ -98,15 +102,18 @@ class NoteViewSet(ModelViewSet):
     # ゴミ箱内のノートを一括削除する
     @action(detail=False,methods=["delete"], url_path="trash/all")
     def empty_trash(self, request):
+
         count = Note.objects.filter(  # フロント側で何件削除したかを表示するためにカウントする。
             user=request.user,
             is_deleted=True
         ).count()
 
+
         Note.objects.filter(
             user=request.user,
             is_deleted=True
         ).delete()
+
 
 
         return Response(
@@ -117,14 +124,14 @@ class NoteViewSet(ModelViewSet):
 
 
 
-
+    # ノート単体の更新履歴を取得する
     @action(detail=True, methods=["get"])
-    def history(self, request, pk=None):
-        note = self.get_object()
+    def history(self, request, pk=None):   # ex) GET /notes/24/history/
+        note = self.get_object()  # ex) Note.objects.get(id=24)
 
-        histories = note.histories.all()
+        histories = note.histories.all()  # related_name="histories"。NoteモデルからHistoryモデルを逆参照。
 
-        serializer = NoteHistorySerializer(
+        serializer = NoteHistorySerializer(  # このメソッドの中では、NoteHistorySerializerを使うと明示的に指定。
             histories,
             many=True
         )

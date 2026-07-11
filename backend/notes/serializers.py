@@ -27,6 +27,7 @@ class NoteSerializer(serializers.ModelSerializer):
         required=False
     )
 
+
     class Meta:
         model = Note
         fields = '__all__'

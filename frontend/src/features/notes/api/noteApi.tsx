@@ -1,4 +1,5 @@
 import api from "../../../shared/api/axios";
+import type { History } from "../../../types/note";
 
 
 
@@ -317,7 +318,8 @@ export const updateNotePinned = async (
 // ノート単体の変更履歴を取得する
 export const getNoteHistory = async (
     id: number,
-) => {
+    
+): Promise<History[]> => {
 
     const token = localStorage.getItem("access");
 
