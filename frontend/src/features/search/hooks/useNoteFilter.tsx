@@ -1,9 +1,13 @@
-import { useEffect } from "react";
-import { useNoteStore } from "../../notes/store/useNoteStore";
+// import { useEffect } from "react";
+// import { useNoteStore } from "../../notes/store/useNoteStore";
 
 import type { Note } from "../../../types/note";
-import { useSearchStore } from "../store/SearchStore";
+// import { useSearchStore } from "../store/SearchStore";
 
+
+
+
+// ノートをラベルと検索ワードでフィルタリングするhook
 
 
 
@@ -16,14 +20,15 @@ export function useNoteFilter (
 )  {
 
 
-    // useSearchStore
-    // const { searchText } = useSearchStore();
+
 
 
 
     // すでに使われているラベルだけを取得する
-    const usedLabels = notes.flatMap((note) => note.labels);
+    const usedLabels = notes.flatMap((note) => note.labels);  //flatMap: map同様、値を1つずつ取り出し、新しく配列を作成する。そこから、配列を1段平らにする(配列をなくす)。
 
+
+    // usedLabelsには重複して存在しているラベルがあるので、重複をなくす。
     const uniqueLabels = [
         ...new Set(usedLabels.map((label) => label.name))  // ...はスプレッド構文。Setの中身を1つずつ展開している。
     ];
@@ -35,7 +40,7 @@ export function useNoteFilter (
     const targetNotes =
         selectedLabel
             ? notes.filter((note) =>
-                note.labels.some(
+                note.labels.some(  // some: 配列の中に1つでも条件を満たすものがあるかを調べる。
                     (label) => label.name === selectedLabel
                 )
             )
@@ -55,7 +60,7 @@ export function useNoteFilter (
 
 
     return {
-        // usedLabels,
+
         uniqueLabels,
         filteredNotes,
 

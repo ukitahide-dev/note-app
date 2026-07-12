@@ -1,0 +1,41 @@
+.container {
+    width: 500px;
+    margin: 100px auto;
+    background-color: rgb(164, 233, 210);
+
+    /* border-radius: 16px; */
+    border: 1px solid rgb(228, 228, 228);
+
+    box-shadow:
+        0 1px 2px rgba(60, 64, 67, 0.15),
+        0 2px 6px rgba(60, 64, 67, 0.15);
+}
+
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    align-self: center;
+}
+
+
+.labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+
+}
+
+
+.label {
+    width: calc((100% - 12px) / 4);
+    aspect-ratio: 1;  /* 要素の縦横比を固定する。1にすると、自動でwidthと同じ数値になる。*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: rgb(250, 249, 250);
+    cursor: pointer;
+}

@@ -19,6 +19,12 @@ import { useNoteStore } from "../../../notes/store/useNoteStore";
 import { useNoteFilter } from "../../hooks/useNoteFilter";
 
 
+// ----react-icons ----
+import { MdLabel } from "react-icons/md";
+import { MdOutlineLabel } from "react-icons/md";
+import { FaS } from "react-icons/fa6";
+
+
 // type Label = {
 //     name: string,
 
@@ -36,7 +42,7 @@ import { useNoteFilter } from "../../hooks/useNoteFilter";
 
 export default function SearchResultsPage () {
 
-    // const [notes, setNotes] = useState<Note[]>([]);
+
     const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
 
 
@@ -46,7 +52,7 @@ export default function SearchResultsPage () {
         fetchNotes,
     } = useNoteStore();
 
-    
+
     useEffect(() => {
         fetchNotes();
     }, [])
@@ -55,7 +61,10 @@ export default function SearchResultsPage () {
     // useSearchStore
     const { searchText } = useSearchStore();
 
+
     const showLabels = searchText.trim() === "" && selectedLabel === null;
+
+
 
 
 
@@ -72,7 +81,15 @@ export default function SearchResultsPage () {
 
 
 
+    const [showAllLabels, setShowAllLabels] = useState(false);
 
+    const displayLabels = showAllLabels
+        ? uniqueLabels
+        : uniqueLabels.slice(0, 4);
+
+
+
+    // useNoteFilter hookに移した
     // すでに使われているラベルだけを取得する
     // const usedLabels = notes.flatMap((note) => note.labels);
 
@@ -114,25 +131,46 @@ export default function SearchResultsPage () {
 
         showLabels ? (
 
-            <div>
+            <div className={styles.container}>
                 <div className={styles.top}>
+                    <p>ラベル</p>
 
-                    <div className={styles.labels}>
-                        {uniqueLabels.map((label) => (
+                    {uniqueLabels.length > 4 && (
 
-                            <div
-                                key={label}
-                                className={styles.item}
-                                onClick={() => setSelectedLabel(label)}
-                            >
-                                {label}
+                        <button
+                            onClick={() =>
+                                setShowAllLabels(prev => !prev)
+                            }
+                        >
+                            {showAllLabels
+                                ? "閉じる"
+                                : "その他を表示"
+                            }
 
-                            </div>
+                        </button>
+                    )}
 
-                        ))}
-                    </div>
 
                 </div>
+
+                <div className={styles.labels}>
+                    {displayLabels.map((label) => (
+
+                        <div
+                            key={label}
+                            className={styles.label}
+                            onClick={() => setSelectedLabel(label)}
+                        >
+                            <MdOutlineLabel size={18} />
+                            {/* <MdLabel /> */}
+                            <p>{label}</p>
+
+                        </div>
+
+                    ))}
+                </div>
+
+
             </div>
 
         ) : (
