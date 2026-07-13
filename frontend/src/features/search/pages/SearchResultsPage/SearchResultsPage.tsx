@@ -20,23 +20,11 @@ import { useNoteFilter } from "../../hooks/useNoteFilter";
 
 
 // ----react-icons ----
-import { MdLabel } from "react-icons/md";
+// import { MdLabel } from "react-icons/md";
 import { MdOutlineLabel } from "react-icons/md";
-import { FaS } from "react-icons/fa6";
 
 
-// type Label = {
-//     name: string,
 
-// }
-
-
-// type Note = {
-//     title: string,
-//     content: string,
-//     color: string,
-//     labels: Label[],
-// }
 
 
 
@@ -44,6 +32,8 @@ export default function SearchResultsPage () {
 
 
     const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
+
+    const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
 
     // useNoteStore
@@ -67,16 +57,16 @@ export default function SearchResultsPage () {
 
 
 
-
-
     // useNoteFilter hook
     const {
         uniqueLabels,
         filteredNotes,
+        uniqueColors,
     } = useNoteFilter(
         notes,
         searchText,
         selectedLabel,
+        selectedColor,
     );
 
 
@@ -89,38 +79,11 @@ export default function SearchResultsPage () {
 
 
 
-    // useNoteFilter hookに移した
-    // すでに使われているラベルだけを取得する
-    // const usedLabels = notes.flatMap((note) => note.labels);
+    const [showAllColors, setShowAllColors] = useState(false);
 
-    // const uniqueLabels = [
-    //     ...new Set(usedLabels.map((label) => label.name))  // ...はスプレッド構文。Setの中身を1つずつ展開している。
-    // ];
-
-
-
-
-
-    // ノートをラベルで絞る
-    // const targetNotes =
-    //     selectedLabel
-    //         ? notes.filter((note) =>
-    //             note.labels.some(
-    //                 (label) => label.name === selectedLabel
-    //             )
-    //         )
-    //         : notes;
-
-
-
-    //  ノートをラベルで絞った後に、検索で絞る
-    // const filteredNotes =
-    //     targetNotes.filter(
-    //         (note) =>
-    //             note.title.includes(searchText) ||
-    //             note.content.includes(searchText)
-    //     );
-
+    const displayColors = showAllColors
+        ? uniqueColors
+        : uniqueColors.slice(0, 4);
 
 
 
@@ -129,49 +92,96 @@ export default function SearchResultsPage () {
     return (
 
 
-        showLabels ? (
+        !selectedLabel && !selectedColor && !searchText ? (
 
-            <div className={styles.container}>
-                <div className={styles.top}>
-                    <p>ラベル</p>
+            <>
+                <div className={styles.container}>
+                    <div className={styles.top}>
+                        <p>ラベル</p>
 
-                    {uniqueLabels.length > 4 && (
+                        {uniqueLabels.length > 4 && (
 
-                        <button
-                            onClick={() =>
-                                setShowAllLabels(prev => !prev)
-                            }
-                        >
-                            {showAllLabels
-                                ? "閉じる"
-                                : "その他を表示"
-                            }
+                            <button
+                                onClick={() =>
+                                    setShowAllLabels(prev => !prev)
+                                }
+                            >
+                                {showAllLabels
+                                    ? "閉じる"
+                                    : "その他を表示"
+                                }
 
-                        </button>
-                    )}
+                            </button>
+                        )}
+
+
+                    </div>
+
+                    <div className={styles.labels}>
+                        {displayLabels.map((label) => (
+
+                            <div
+                                key={label}
+                                className={styles.label}
+                                onClick={() => setSelectedLabel(label)}
+                            >
+                                <MdOutlineLabel size={18} />
+                                {/* <MdLabel /> */}
+                                <p>{label}</p>
+
+                            </div>
+
+                        ))}
+                    </div>
 
 
                 </div>
 
-                <div className={styles.labels}>
-                    {displayLabels.map((label) => (
+                <div className={styles.container}>
 
-                        <div
-                            key={label}
-                            className={styles.label}
-                            onClick={() => setSelectedLabel(label)}
-                        >
-                            <MdOutlineLabel size={18} />
-                            {/* <MdLabel /> */}
-                            <p>{label}</p>
+                    <div className={styles.top}>
+                        <p>色</p>
 
-                        </div>
+                        {uniqueColors.length > 8 && (
 
-                    ))}
+                            <button
+                                onClick={() =>
+                                    setShowAllColors(prev => !prev)
+                                }
+                            >
+                                {showAllColors
+                                    ? "閉じる"
+                                    : "その他を表示"
+                                }
+
+                            </button>
+                        )}
+
+
+                    </div>
+
+                    <div className={styles.labels}>
+                        {displayColors.map((color) => (
+
+                            <div
+                                key={color}
+                                className={styles.label}
+                                onClick={() => setSelectedColor(color)}
+                            >
+
+
+                                <p>{color}</p>
+
+                            </div>
+
+                        ))}
+                    </div>
+
                 </div>
 
+            </>
 
-            </div>
+
 
         ) : (
 
@@ -216,3 +226,39 @@ export default function SearchResultsPage () {
     //     fetchNotes();
 
     // }, [])
+
+
+
+
+
+// useNoteFilter hookに移した
+    // すでに使われているラベルだけを取得する
+    // const usedLabels = notes.flatMap((note) => note.labels);
+
+    // const uniqueLabels = [
+    //     ...new Set(usedLabels.map((label) => label.name))  // ...はスプレッド構文。Setの中身を1つずつ展開している。
+    // ];
+
+
+
+
+
+    // ノートをラベルで絞る
+    // const targetNotes =
+    //     selectedLabel
+    //         ? notes.filter((note) =>
+    //             note.labels.some(
+    //                 (label) => label.name === selectedLabel
+    //             )
+    //         )
+    //         : notes;
+
+
+
+    //  ノートをラベルで絞った後に、検索で絞る
+    // const filteredNotes =
+    //     targetNotes.filter(
+    //         (note) =>
+    //             note.title.includes(searchText) ||
+    //             note.content.includes(searchText)
+    //     );

@@ -15,6 +15,7 @@ export function useNoteFilter (
     notes: Note[],
     searchText: string,
     selectedLabel: string | null,
+    selectedColor: string | null,
 
 
 )  {
@@ -34,27 +35,73 @@ export function useNoteFilter (
     ];
 
 
+    // 既に使われている色だけを取得する
+    const usedColors = notes.map((note) => note.color);
+
+
+    // usedColorsには重複して存在している色があるので、重複をなくす
+    const uniqueColors = [...new Set(usedColors)];
+
+
+    let targetNotes: Note[];
+
+    if (selectedLabel) {
+        // ノートをラベルで絞る
+        targetNotes = notes.filter((note) =>
+            note.labels.some((label) => label.name === selectedLabel)
+        );
+
+    } else if (selectedColor) {
+        // ノートを色で絞る
+        targetNotes = notes.filter((note) => note.color === selectedColor);
+
+    } else {
+
+        targetNotes = notes;
+
+    }
+
+
+
+    // ノートを色で絞る
+    // const targetNotesWithColor =
+    //     selectedColor
+    //         ? notes.filter((note) => note.color === selectedColor)
+    //         : notes;
+
+
 
 
     // ノートをラベルで絞る
-    const targetNotes =
-        selectedLabel
-            ? notes.filter((note) =>
-                note.labels.some(  // some: 配列の中に1つでも条件を満たすものがあるかを調べる。
-                    (label) => label.name === selectedLabel
-                )
-            )
-            : notes;
+    // const targetNotesWithLabel =
+    //     selectedLabel
+    //         ? notes.filter((note) =>
+    //             note.labels.some(  // some: 配列の中に1つでも条件を満たすものがあるかを調べる。
+    //                 (label) => label.name === selectedLabel
+    //             )
+    //         )
+    //         : notes;
 
 
 
     // ノートをラベルで絞った後に、検索で絞る
-    const filteredNotes =
-        targetNotes.filter(
-            (note) =>
-                note.title.includes(searchText) ||
-                note.content.includes(searchText)
-        );
+    // const filteredNotes =
+
+    //     targetNotesWithLabel.filter(
+    //         (note) =>
+    //             note.title.includes(searchText) ||
+    //             note.content.includes(searchText)
+    //     );
+
+
+
+    const filteredNotes = targetNotes.filter(
+        (note) =>
+            note.title.includes(searchText) ||
+            note.content.includes(searchText)
+    );
+
+
 
 
 
@@ -63,6 +110,7 @@ export function useNoteFilter (
 
         uniqueLabels,
         filteredNotes,
+        uniqueColors,
 
     }
 

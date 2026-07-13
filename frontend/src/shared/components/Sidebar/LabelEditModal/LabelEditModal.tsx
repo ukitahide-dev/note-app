@@ -31,8 +31,8 @@ export default function LabelEditModal({
     const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
 
 
-    
-    // useLabelStoreを使う
+
+    // useLabelStore
     const {
         labels,
         handleUpdateLabel,
