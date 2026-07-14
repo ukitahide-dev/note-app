@@ -20,7 +20,7 @@
 }
 
 
-.labels {
+.content{
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -38,4 +38,27 @@
     gap: 10px;
     background-color: rgb(250, 249, 250);
     cursor: pointer;
+}
+
+
+
+.colorContainer {
+    background-color: #fff;
+}
+
+
+.colors {
+    display: flex;
+    gap: 16px;
+    padding: 10px;
+}
+
+
+.color {
+    width: calc((100% - 112px) / 8);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgb(129, 127, 127);
+    cursor: pointer;
+
 }

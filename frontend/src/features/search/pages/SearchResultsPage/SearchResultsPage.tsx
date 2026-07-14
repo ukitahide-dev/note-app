@@ -52,7 +52,7 @@ export default function SearchResultsPage () {
     const { searchText } = useSearchStore();
 
 
-    const showLabels = searchText.trim() === "" && selectedLabel === null;
+    // const showLabels = searchText.trim() === "" && selectedLabel === null;
 
 
 
@@ -83,7 +83,7 @@ export default function SearchResultsPage () {
 
     const displayColors = showAllColors
         ? uniqueColors
-        : uniqueColors.slice(0, 4);
+        : uniqueColors.slice(0, 8);
 
 
 
@@ -117,7 +117,7 @@ export default function SearchResultsPage () {
 
                     </div>
 
-                    <div className={styles.labels}>
+                    <div className={`${styles.content} ${styles.labels}`}>
                         {displayLabels.map((label) => (
 
                             <div
@@ -137,7 +137,8 @@ export default function SearchResultsPage () {
 
                 </div>
 
-                <div className={styles.container}>
+
+                <div className={`${styles.container} ${styles.colorContainer}`}>
 
                     <div className={styles.top}>
                         <p>色</p>
@@ -160,17 +161,15 @@ export default function SearchResultsPage () {
 
                     </div>
 
-                    <div className={styles.labels}>
+                    <div className={`${styles.content} ${styles.colors}`}>
                         {displayColors.map((color) => (
 
                             <div
                                 key={color}
-                                className={styles.label}
+                                className={styles.color}
+                                style={{backgroundColor: color}}
                                 onClick={() => setSelectedColor(color)}
                             >
-
-
-                                <p>{color}</p>
 
                             </div>
 

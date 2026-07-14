@@ -63,38 +63,8 @@ export function useNoteFilter (
 
 
 
-    // ノートを色で絞る
-    // const targetNotesWithColor =
-    //     selectedColor
-    //         ? notes.filter((note) => note.color === selectedColor)
-    //         : notes;
 
-
-
-
-    // ノートをラベルで絞る
-    // const targetNotesWithLabel =
-    //     selectedLabel
-    //         ? notes.filter((note) =>
-    //             note.labels.some(  // some: 配列の中に1つでも条件を満たすものがあるかを調べる。
-    //                 (label) => label.name === selectedLabel
-    //             )
-    //         )
-    //         : notes;
-
-
-
-    // ノートをラベルで絞った後に、検索で絞る
-    // const filteredNotes =
-
-    //     targetNotesWithLabel.filter(
-    //         (note) =>
-    //             note.title.includes(searchText) ||
-    //             note.content.includes(searchText)
-    //     );
-
-
-
+    // ノートをラベルや色で絞った後に、検索で絞る
     const filteredNotes = targetNotes.filter(
         (note) =>
             note.title.includes(searchText) ||
