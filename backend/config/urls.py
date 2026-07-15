@@ -18,12 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('notes.urls')),
+    path('api/', include('notes.urls')),  # api/から始まるURLは、notes.urls に任せる。
     path('api/', include('users.urls')),
 
 ]
+
+
+# /media/ から始まるURLにアクセスが来たら、MEDIA_ROOTフォルダの中を探して返してね、という意味。
+urlpatterns += static(  # staticは開発環境用。
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT,
+)

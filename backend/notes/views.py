@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Note, Label, NoteHistory
-from .serializers import NoteSerializer, LabelSerializer, NoteHistorySerializer
+from .models import Note, Label, NoteHistory, NoteImage
+from .serializers import NoteSerializer, LabelSerializer, NoteHistorySerializer, NoteImageSerializer
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -18,6 +18,7 @@ class NoteViewSet(ModelViewSet):
 
 
     def get_queryset(self):  # get_querysetは、どのデータを返すか決める。ViewSetが対象データを探す時の基準として使われる。
+
         if self.action in [
             "partial_update",
             "update",
@@ -147,8 +148,34 @@ class LabelViewSet(ModelViewSet):
     serializer_class = LabelSerializer
     permission_classes = [IsAuthenticated]
 
+
     def get_queryset(self):
         return Label.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+
+
+class NoteImageViewSet(ModelViewSet):
+    serializer_class = NoteImageSerializer
+    permission_classes = [IsAuthenticated]
+
+
+    def get_queryset(self):
+        return NoteImage.objects.filter(note__user=self.request.user)  # note__user: NoteImageからNoteを辿り、Userを辿る。
+
+
+
+    # ex) POST /api/notes/24/images/ にアクセスすると実行される。
+    def perform_create(self, serializer):   #  perform_create: 保存する直前に何かしたいならここに書いて、というメソッド。
+
+        # ex) ログイン中のユーザーの24番のノートを取ってきて、という意味。
+        note = Note.objects.get(
+            pk=self.kwargs["note_pk"],  # URLからノートIDを取得する。
+            user=self.request.user
+        )
+
+        #  NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。
+        serializer.save(note=note)  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。

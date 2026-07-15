@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Note, Label, NoteHistory
+from .models import Note, Label, NoteHistory, NoteImage
 
 
 
@@ -9,6 +9,16 @@ class LabelSerializer(serializers.ModelSerializer):
         model = Label
         fields = '__all__'
         read_only_fields = ["user"]
+
+
+
+
+
+class NoteImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NoteImage
+        fields =  "__all__"
+
 
 
 
@@ -26,6 +36,14 @@ class NoteSerializer(serializers.ModelSerializer):
         write_only=True,  # リクエスト専用（POST / PUT用）。
         required=False
     )
+
+
+
+    images = NoteImageSerializer(
+        many=True,
+        read_only=True
+    )
+
 
 
     class Meta:
@@ -52,3 +70,13 @@ class NoteHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NoteHistory
         fields = "__all__"
+
+        read_only_fields=["note"]  # NoteImageViewSetのperform_create内で対象のnoteを取得しているから、フロントからnoteを送らせないようにする。
+
+
+
+
+
+
+
+

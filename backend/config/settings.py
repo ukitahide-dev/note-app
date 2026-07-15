@@ -159,3 +159,8 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# ---- 追記 ----
+MEDIA_URL = "/media/"   # ブラウザから画像を見るときの入口。 ex ) http://127.0.0.1:8000/media/note_images/cat.png
+MEDIA_ROOT = BASE_DIR / "media"   # 画像を保存するフォルダを決めている。
