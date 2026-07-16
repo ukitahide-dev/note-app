@@ -336,3 +336,38 @@ export const getNoteHistory = async (
 
 
 }
+
+
+
+
+
+
+// ノートに画像を追加する
+export const uploadNoteImage = async (
+    noteId: number,
+    image: File,
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const formData = new FormData();
+
+    formData.append("image", image);  // 左のimageは、NoteImageSerializerのimageフィールドのこと。でも、そのSerializerはNoteImageモデルのimageカラムと対応しているので、実質的には「NoteImageモデルのimageカラム」と考えてOK。
+
+
+    const res = await api.post(  // resにはサーバーから返ってきたレスポンス全体が渡ってくる。
+        `notes/${noteId}/images/`,
+        formData,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    return res.data;
+
+
+
+
+}

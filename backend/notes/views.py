@@ -178,4 +178,4 @@ class NoteImageViewSet(ModelViewSet):
         )
 
         #  NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。
-        serializer.save(note=note)  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。
+        serializer.save(note=note)  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。つまり、フロント側からnoteは送らない設計。

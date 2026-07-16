@@ -19,6 +19,8 @@ class NoteImageSerializer(serializers.ModelSerializer):
         model = NoteImage
         fields =  "__all__"
 
+        read_only_fields=["note"]  # NoteImageViewSetのperform_create内で対象のnoteを取得しているから、フロントからnoteを送らせないようにする。
+
 
 
 
@@ -71,7 +73,7 @@ class NoteHistorySerializer(serializers.ModelSerializer):
         model = NoteHistory
         fields = "__all__"
 
-        read_only_fields=["note"]  # NoteImageViewSetのperform_create内で対象のnoteを取得しているから、フロントからnoteを送らせないようにする。
+
 
 
 
