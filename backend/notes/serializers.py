@@ -28,7 +28,11 @@ class NoteImageSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
 
     # 表示用
-    labels = LabelSerializer(many=True, read_only=True)  # レスポンス専用（GET用）。Labelをネストして返す。1つのNoteにLabelは複数あるから。
+    labels = LabelSerializer(
+        many=True,
+        read_only=True  # レスポンス専用（GET用）。Labelをネストして返す。1つのNoteにLabelは複数あるから。
+    )
+
 
     # 保存用
     label_ids = serializers.PrimaryKeyRelatedField(  # PrimaryKey(id)を使って関連Modelを取得するField。フロントから渡ってきたlabelId(数字)の配列を、Labelオブジェクトに変換する。[<Label id=1>, <Label id=2>]
@@ -41,13 +45,14 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 
-    images = NoteImageSerializer(
+    # Noteモデルにはimagesカラムは無いけど、レスポンスにはimagesという項目を追加して返してね、という意味。
+    images = NoteImageSerializer(  # imagesという名前は、NoteImageModelのnoteカラムに書いた、related_name="images"と同じにする必要がある。
         many=True,
         read_only=True
     )
 
 
-
+    # Noteモデルのフィールド(カラム)をSerializerで扱います、という意味。
     class Meta:
         model = Note
         fields = '__all__'

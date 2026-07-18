@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 // import { useNavigate } from "react-router-dom";
-import { updateNote, updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
+import { updateNote, updateNoteColor, updateNoteFavorite, updateNoteLabels, uploadNoteImage } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
@@ -129,7 +129,7 @@ export default function NoteCard({
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
     const paletteRef = useRef<HTMLDivElement | null>(null);
-
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { searchText } = useSearchStore();
 
@@ -179,6 +179,7 @@ export default function NoteCard({
         moveToTrash,
         toggleFavorite,
         togglePin,
+        fetchNotes,
     } = useNoteStore();
 
 
@@ -358,6 +359,35 @@ export default function NoteCard({
 
 
 
+    const handleImageChange = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+
+        const file = e.target.files?.[0];  // e.target.files は、選択されたファイル一覧。
+
+        if (!file) return;
+
+
+        try {
+
+            const image = await uploadNoteImage(note.id, file);
+            console.log(image);
+            fetchNotes();
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+        // console.log(file);
+
+
+    }
+
+    console.log(note);
+
+
 
     return (
 
@@ -400,6 +430,22 @@ export default function NoteCard({
 
                 </div>
 
+                <div
+                    className={cardStyles.images}
+                >
+
+                    {note.images.map((image) => (
+                        <img
+                            key={image.id}
+                            className={cardStyles.image}
+                            src={image.image}
+                            // src={`http://127.0.0.1:8000${image.image}`}
+                            alt=""
+                        />
+
+                    ))}
+                </div>
+
                 {/* <div
                     {...attributes}
                     {...listeners}  // drag開始用イベントまとめ。☰を掴んだ時だけdrag開始
@@ -408,13 +454,24 @@ export default function NoteCard({
                     ☰
                 </div> */}
 
-                <h3>
-                    {highlightText(note.title)}
-                </h3>
+                <div
+                    className={cardStyles.chars}
+                >
 
-                <p>
-                    {highlightText(note.content)}
-                </p>
+                    <h3
+                        className={cardStyles.title}
+                    >
+                        {highlightText(note.title)}
+                    </h3>
+
+                    <p
+                        className={cardStyles.content}
+                    >
+                        {highlightText(note.content)}
+                    </p>
+
+                </div>
+
 
 
                 <div className={cardStyles.labels}>
@@ -468,6 +525,29 @@ export default function NoteCard({
                         {note.is_favorite ? "❤️" : "🤍"}
 
                     </button>
+
+                    <>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                fileInputRef.current?.click();
+                            }}
+                        >
+                            📷
+
+                        </button>
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            hidden
+                            onChange={handleImageChange}
+                        />
+
+                    </>
+
+
 
                     <button
                         className={cardStyles.menuButton}

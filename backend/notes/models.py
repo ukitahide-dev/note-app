@@ -44,11 +44,12 @@ class NoteHistory(models.Model):
 
 
 
+
 class NoteImage(models.Model):
     note = models.ForeignKey(
         Note,
         on_delete=models.CASCADE,
-        related_name="images"
+        related_name="images" # Noteモデルから、NoteImageモデルへの逆参照。note.images。
     )
 
     image = models.ImageField(upload_to="note_images/")

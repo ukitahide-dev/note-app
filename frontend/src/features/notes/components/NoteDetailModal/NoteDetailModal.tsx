@@ -114,6 +114,25 @@ export default function NoteDetailModal({
 
 
 
+
+    const imageCount = note.images.length;
+
+    const remainder = imageCount % 3;
+
+    let largeCount = 0;
+
+    if (remainder === 1) {
+        largeCount = 1;
+    }
+
+    if (remainder === 2) {
+        largeCount = 2;
+    }
+
+
+
+
+
     const handleClose = async (
 
     ) => {
@@ -169,6 +188,86 @@ export default function NoteDetailModal({
                 style={{ backgroundColor: tempColor }}
                 onClick={(e) => e.stopPropagation()}
             >
+
+                <div
+                    className={styles.largeImages}
+                >
+
+                    {
+                        note.images
+                            .filter((_, index) => index < largeCount)
+                            .map((image) => (
+
+                                <img
+                                    key={image.id}
+                                    src={image.image}
+                                    className={styles.largeImage}
+                                />
+
+                            ))
+                    }
+
+                </div>
+
+                <div
+                    className={styles.images}
+                >
+
+                    {
+                        note.images
+                            .filter((_, index) => index >= largeCount)
+                            .map((image) => (
+
+                                <img
+                                    key={image.id}
+                                    src={image.image}
+                                    className={styles.image}
+                                />
+
+                            ))
+
+                    }
+
+                </div>
+
+                {/* <div
+                    className={styles.images}
+                >
+
+                    {note.images.map((image, index) => {
+
+                        const isLarge = index < largeCount;
+
+                        return (
+
+                            <img
+                                key={image.id}
+                                src={image.image}
+                                className={
+                                    isLarge
+                                        ? styles.largeImage
+                                        : styles.image
+                                }
+
+                            />
+
+
+                        )
+
+
+                    })}
+
+
+                </div> */}
+                    {/* {note.images.map((image) => (
+
+                        <img
+                            src={image.image}
+                            alt=""
+
+                        />
+
+                    ))} */}
 
                 <input
                     className={styles.titleInput}

@@ -19,28 +19,53 @@
 } */
 
 
-.menuButton {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 22px;
-    padding: 4px 8px;
-    border-radius: 50%;
+.images {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    flex-wrap: wrap;
+
+
+
 }
 
 
-.menuButton:hover {
-    background: #f1f3f4;
+.images > .image {
+    width: calc((100% - 4px) / 3);
+    aspect-ratio: 1;
+    /* width: calc(100% / 3); */
+    /* border-radius: 4%; */
+
+
 }
+
+
+
+.chars {
+    padding: 12px 10px;
+}
+
+
+.chars > .title {
+    font-size: 18px;
+    font-weight: 450;
+
+}
+
+
+.chars > .content {
+    font-size: 14px;
+    margin-top: 10px;
+    line-height: 1.8;
+}
+
 
 
 .labels {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    padding: 6px 10px;
     margin-top: 8px;
 }
 
@@ -52,7 +77,9 @@
     padding: 4px 8px;
     border-radius: 12px;
     background: #eee;
+    font-size: 12px;
     cursor: pointer;
+
 }
 
 
@@ -60,10 +87,46 @@
     display: none;
     border: none;
     background: transparent;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 
 .label:hover .removeLabel {
     display: block;
+}
+
+
+
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    /* justify-content: space-between; */
+
+}
+
+
+.menuButton {
+    margin-left: auto;
+}
+
+
+/* .menuButton {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 22px;
+    padding: 4px 8px;
+    border-radius: 50%;
+} */
+
+
+.menuButton:hover {
+    background: #f1f3f4;
+    border-radius: 100%;
 }
