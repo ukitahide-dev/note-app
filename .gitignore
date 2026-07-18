@@ -9,4 +9,4 @@ db.sqlite3
 
 # 追記
 memos/
-media/
+backend/media/
