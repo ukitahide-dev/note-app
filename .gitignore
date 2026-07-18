@@ -4,4 +4,9 @@ node_modules/
 __pycache__/
 db.sqlite3
 .env
+
+
+
+# 追記
 memos/
+media/
