@@ -230,44 +230,7 @@ export default function NoteDetailModal({
 
                 </div>
 
-                {/* <div
-                    className={styles.images}
-                >
-
-                    {note.images.map((image, index) => {
-
-                        const isLarge = index < largeCount;
-
-                        return (
-
-                            <img
-                                key={image.id}
-                                src={image.image}
-                                className={
-                                    isLarge
-                                        ? styles.largeImage
-                                        : styles.image
-                                }
-
-                            />
-
-
-                        )
-
-
-                    })}
-
-
-                </div> */}
-                    {/* {note.images.map((image) => (
-
-                        <img
-                            src={image.image}
-                            alt=""
-
-                        />
-
-                    ))} */}
+                
 
                 <input
                     className={styles.titleInput}

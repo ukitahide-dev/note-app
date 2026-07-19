@@ -1,17 +1,34 @@
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
-from .views import NoteViewSet, LabelViewSet, NoteImageViewSet
+from .views import NoteViewSet, LabelViewSet, NoteImagesViewSet, ImageViewSet
 
 router = DefaultRouter()
-router.register('notes', NoteViewSet, basename='note')
-router.register("labels", LabelViewSet, basename='label')
+
+router.register(
+    'notes',
+    NoteViewSet,
+    basename='note'
+)
+
+router.register(
+    "labels",
+    LabelViewSet,
+    basename='label'
+)
+
+
+router.register(
+    "note-images",
+    ImageViewSet,
+    basename="image"
+)
 
 
 
 note_router = routers.NestedDefaultRouter(  # NestedDefaultRouter: 親子関係を持ったRouterを作るという意味
     router,   # 親となるDefaultRouter。router = DefaultRouter()のこと。
     "notes",  # notesの下に子Routerを作る
-    lookup="note"  # Viewでは self.kwargs["note_pk"] として取得できる。
+    lookup="note"  # Viewでは self.kwargs["note_pk"] として取得できる。内部で/notes/<note_pk>/というURLを作る。
 
 )
 
@@ -19,7 +36,7 @@ note_router = routers.NestedDefaultRouter(  # NestedDefaultRouter: 親子関係�
 #  /notes/<note_pk>/images/ にアクセスされたら NoteImageViewSet を使って処理してという意味。
 note_router.register(
     "images",  # URLの最後の部分を決めている。 ex)  /api/notes/24/images/
-    NoteImageViewSet,  # このURLにアクセスされたら、このViewSetを実行。
+    NoteImagesViewSet,  # このURLにアクセスされたら、このViewSetを実行。
     basename="note-images"
 )
 

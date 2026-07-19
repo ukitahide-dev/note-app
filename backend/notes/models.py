@@ -9,6 +9,14 @@ class Label(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=["name", "user"],
+    #             name="unique_label_per_user"
+    #         )
+        # ]
+
 
 
 

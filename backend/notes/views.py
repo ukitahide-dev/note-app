@@ -89,7 +89,7 @@ class NoteViewSet(ModelViewSet):
     # ゴミ箱内のノートを全て取得する
     @action(detail=False, methods=["get"])
     def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
-        notes = Note.objects.filter(user=request.user, is_deleted=True)
+        notes = Note.objects.filter(user=request.user, is_deleted=True).order_by("-updated_at")
 
         serializer = self.get_serializer(
             notes,
@@ -158,13 +158,32 @@ class LabelViewSet(ModelViewSet):
 
 
 
-class NoteImageViewSet(ModelViewSet):
+class NoteImagesViewSet(ModelViewSet):
     serializer_class = NoteImageSerializer
     permission_classes = [IsAuthenticated]
 
 
-    def get_queryset(self):
-        return NoteImage.objects.filter(note__user=self.request.user)  # note__user: NoteImageからNoteを辿り、Userを辿る。
+    def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
+
+        queryset = NoteImage.objects.filter(
+            note__user=self.request.user   # note__user: NoteImageからNoteを辿り、Userを辿る。
+        )
+
+        note_pk = self.kwargs.get("note_pk")
+
+        if note_pk:
+            queryset = queryset.filter(
+                note__id=note_pk
+            )
+
+        return queryset
+
+
+    # def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
+    #     return NoteImage.objects.filter(
+    #         note__id=self.kwargs["note_pk"],
+    #         note__user=self.request.user   # note__user: NoteImageからNoteを辿り、Userを辿る。
+    #     )
 
 
 
@@ -179,3 +198,20 @@ class NoteImageViewSet(ModelViewSet):
 
         #  NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。
         serializer.save(note=note)  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。つまり、フロント側からnoteは送らない設計。
+
+
+
+
+
+
+class ImageViewSet(ModelViewSet):
+    serializer_class = NoteImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return NoteImage.objects.filter(
+            note__user=self.request.user
+        )
+
+
+
