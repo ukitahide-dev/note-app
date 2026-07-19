@@ -157,7 +157,18 @@ class LabelViewSet(ModelViewSet):
 
 
 
-
+# --------------------------------------------
+# NoteImagesViewSet
+#
+# ノートに紐づく画像「一覧」を扱うViewSet
+# → ノートに属する画像「集合」を操作する
+#
+# 対象:
+# - GET  /notes/{note_id}/images/   （画像一覧取得）
+# - POST /notes/{note_id}/images/   （画像追加）
+#
+# 「画像の集合(Collection)」を操作する。
+# --------------------------------------------
 class NoteImagesViewSet(ModelViewSet):
     serializer_class = NoteImageSerializer
     permission_classes = [IsAuthenticated]
@@ -203,7 +214,19 @@ class NoteImagesViewSet(ModelViewSet):
 
 
 
-
+# --------------------------------------------
+# ImageViewSet
+#
+# 画像「1枚」を扱うViewSet
+# → 画像「1枚」を操作する
+#
+# 対象:
+# - GET    /note-images/{image_id}/
+# - PATCH  /note-images/{image_id}/
+# - DELETE /note-images/{image_id}/
+#
+# 「画像単体(Resource)」を操作する。
+# --------------------------------------------
 class ImageViewSet(ModelViewSet):
     serializer_class = NoteImageSerializer
     permission_classes = [IsAuthenticated]

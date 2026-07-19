@@ -378,12 +378,21 @@ export const uploadNoteImage = async (
 
 // ノートが所持している画像を削除する
 export const deleteNoteImage = async(
-
+    imageId: number,
 
 ) => {
 
-    
+     const token = localStorage.getItem("access");
 
+    const res = await api.delete(
+        `/note-images/${imageId}/`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        },
+    );
 
+    return res.data;
 
 }
