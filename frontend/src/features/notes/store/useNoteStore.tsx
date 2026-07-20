@@ -3,6 +3,7 @@ import type { Note } from "../../../types/note"
 import {
     createNote as createNoteApi,
     deleteNoteForever as deleteNoteForeverApi,
+    deleteNoteImage as deleteNoteImageApi,
     emptyTrash as emptyTrashApi,
     // getNote,
     getNotes,
@@ -67,6 +68,9 @@ type NoteStore = {
 
     updateSelectedNoteLabels: (noteIds: number[], labelId: number, mode: "add" | "remove") => Promise<void>;
 
+
+
+    deleteNoteImage: (noteId: number, imageId: number) => Promise<void>;
 
 
 }
@@ -658,6 +662,44 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
+
+    // 各ノートが所持している画像を削除する
+    deleteNoteImage: async (
+        noteId: number,
+        imageId: number,
+    ) => {
+
+
+        try {
+
+            await deleteNoteImageApi(imageId);
+
+
+            set((state) => ({
+
+                notes: state.notes.map((note) =>
+
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: note.images.filter((image) => image.id !== imageId)
+                        }
+
+                        : note
+
+                )
+
+            }));
+
+
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    },
 
 
 

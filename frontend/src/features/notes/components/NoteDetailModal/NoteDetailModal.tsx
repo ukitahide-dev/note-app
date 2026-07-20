@@ -17,6 +17,7 @@ import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
+// import { deleteNoteImage } from "../../api/noteApi";
 
 
 
@@ -76,6 +77,7 @@ export default function NoteDetailModal({
 
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
+    // const [images, setImages] = useState(note.images);
 
 
     const [panelType, setPanelType] = useState<"menu" | "color" | "label" | "history" | null>(null);
@@ -109,6 +111,7 @@ export default function NoteDetailModal({
         // updateNoteColor,
         createNote,
         moveToTrash,
+        deleteNoteImage,
     } = useNoteStore();
 
 
@@ -168,6 +171,26 @@ export default function NoteDetailModal({
 
 
 
+    // const handleDeleteImage = async (
+    //     imageId: number,
+    // ) => {
+
+    //     try {
+
+    //         await deleteNoteImage(imageId);
+
+    //         setImages((prev) => prev.filter((image) => image.id !== imageId));
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+
+
+    // }
+
+
 
 
     return (
@@ -193,6 +216,96 @@ export default function NoteDetailModal({
                     className={styles.largeImages}
                 >
 
+                    {note.images
+                        .filter((_, index) => index < largeCount)
+                        .map((image) => (
+
+                            <div
+                                key={image.id}
+                                className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
+                                // className={styles.imageWrapper}
+                                // className={`${largeImageWrapper}`}
+                            >
+
+                                <img
+                                    src={image.image}
+                                    className={styles.largeImage}
+                                />
+
+                                <button
+                                    className={styles.deleteButton}
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        await deleteNoteImage(note.id, image.id);
+                                    }}
+                                    // onClick={ async (e) => {
+                                    //     e.stopPropagation();
+                                    //     await deleteNoteImage
+                                    // }}
+                                    // onClick={(e) => async {
+                                    //     e.stopPropagation();
+                                    //     // handleDeleteImage(image.id);
+                                    // }}
+                                >
+                                    🗑️
+                                </button>
+
+                            </div>
+
+
+                        ))
+
+                    }
+
+                </div>
+
+                <div
+                    className={styles.images}
+                >
+
+                    {note.images
+                        .filter((_, index) => index >= largeCount)
+                        .map((image) => (
+
+                            <div
+                                key={image.id}
+                                className={`${styles.imageWrapper} ${styles.normalImageWrapper}`}
+                                // className={styles.imageWrapper}
+                            >
+
+                                <img
+                                    src={image.image}
+                                    className={styles.image}
+                                />
+
+                                <button
+                                    className={styles.deleteButton}
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        await deleteNoteImage(note.id, image.id);
+                                    }}
+                                    // onClick={(e) => {
+                                    //     e.stopPropagation();
+                                    //     handleDeleteImage(image.id);
+                                    // }}
+                                >
+                                    🗑️
+                                </button>
+
+
+                            </div>
+
+
+                        ))
+
+                    }
+
+                </div>
+
+                {/* <div
+                    className={styles.largeImages}
+                >
+
                     {
                         note.images
                             .filter((_, index) => index < largeCount)
@@ -202,14 +315,16 @@ export default function NoteDetailModal({
                                     key={image.id}
                                     src={image.image}
                                     className={styles.largeImage}
+
+
                                 />
 
                             ))
                     }
 
-                </div>
+                </div> */}
 
-                <div
+                {/* <div
                     className={styles.images}
                 >
 
@@ -228,9 +343,9 @@ export default function NoteDetailModal({
 
                     }
 
-                </div>
+                </div> */}
 
-                
+
 
                 <input
                     className={styles.titleInput}
@@ -477,3 +592,5 @@ export default function NoteDetailModal({
     //     setPanelType(null);
 
     // }
+
+

@@ -539,6 +539,7 @@ export default function NoteCard({
                         </button>
 
                         <input
+                            onClick={(e) => e.stopPropagation()}
                             ref={fileInputRef}
                             type="file"
                             hidden

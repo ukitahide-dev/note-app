@@ -32,17 +32,19 @@
 }
 
 
+.largeImages > .largeImageWrapper {
+    flex: 1;
 
+}
 
 .largeImage {
-    flex: 1;
-    aspect-ratio: 16 / 9;
-    /* aspect-ratio: 1; */
-    /* object-fit: fill; */
-    /* object-fit: contain; */
+    width: 100%;
+    aspect-ratio: 1;
     object-fit: cover;
-    min-width: 0;
+    /* object-fit: contain; */
 }
+
+
 
 
 .images {
@@ -52,12 +54,45 @@
 }
 
 
+.images > .normalImageWrapper {
+    width: calc((100% - 4px) / 3);
+}
 
-.image {
+
+.normalImageWrapper > .image {
+    aspect-ratio: 1;
+    object-fit: cover;
+    /* object-fit: contain; */
+
+}
+
+.imageWrapper{
+    /* flex: 1;
+    width: calc((100% - 4px) / 3); */
+    position: relative;
+}
+
+
+.deleteButton{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    display:none;
+}
+
+
+.imageWrapper:hover .deleteButton{
+    display:block;
+}
+
+
+
+
+/* .image {
     width: calc((100% - 4px) / 3);
     aspect-ratio: 1;
     object-fit: cover;
-}
+} */
 
 
 .titleInput {
