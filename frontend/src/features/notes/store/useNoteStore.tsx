@@ -3,7 +3,7 @@ import type { Note } from "../../../types/note"
 import {
     createNote as createNoteApi,
     deleteNoteForever as deleteNoteForeverApi,
-    deleteNoteImage as deleteNoteImageApi,
+    deleteNoteImageApi,
     emptyTrash as emptyTrashApi,
     // getNote,
     getNotes,

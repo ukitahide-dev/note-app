@@ -377,7 +377,7 @@ export const uploadNoteImage = async (
 
 
 // ノートが所持している画像を削除する
-export const deleteNoteImage = async(
+export const deleteNoteImageApi = async(
     imageId: number,
 
 ) => {

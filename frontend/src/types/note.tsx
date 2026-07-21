@@ -9,8 +9,8 @@ export type Label = {
 
 export type NoteImage = {
     id: number;
-    image: string;
     note: number;
+    image: string;
 }
 
 

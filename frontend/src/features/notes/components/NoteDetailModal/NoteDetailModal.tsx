@@ -17,6 +17,7 @@ import type { Note } from "../../../../types/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
+import { ImageList } from "../ImageList/ImageList";
 // import { deleteNoteImage } from "../../api/noteApi";
 
 
@@ -133,6 +134,12 @@ export default function NoteDetailModal({
     }
 
 
+    // ノートが所持している画像を計算する
+    const normalImages = note.images.filter((_, index) => index >= largeCount);
+    const largeImages = note.images.filter((_, index) => index < largeCount);
+
+
+
 
 
 
@@ -215,16 +222,23 @@ export default function NoteDetailModal({
                 <div
                     className={styles.largeImages}
                 >
+                    <ImageList
+                        images={largeImages}
+                        isLarge={true}
+                        // note={note}
+                        onDeleteImage={async (imageId) => {
+                            await deleteNoteImage(note.id, imageId);
+                        }}
+                        
+                    />
 
-                    {note.images
+                    {/* {note.images
                         .filter((_, index) => index < largeCount)
                         .map((image) => (
 
                             <div
                                 key={image.id}
                                 className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
-                                // className={styles.imageWrapper}
-                                // className={`${largeImageWrapper}`}
                             >
 
                                 <img
@@ -238,14 +252,7 @@ export default function NoteDetailModal({
                                         e.stopPropagation();
                                         await deleteNoteImage(note.id, image.id);
                                     }}
-                                    // onClick={ async (e) => {
-                                    //     e.stopPropagation();
-                                    //     await deleteNoteImage
-                                    // }}
-                                    // onClick={(e) => async {
-                                    //     e.stopPropagation();
-                                    //     // handleDeleteImage(image.id);
-                                    // }}
+
                                 >
                                     🗑️
                                 </button>
@@ -255,22 +262,30 @@ export default function NoteDetailModal({
 
                         ))
 
-                    }
+                    } */}
 
                 </div>
 
                 <div
                     className={styles.images}
                 >
+                    <ImageList
+                        images={normalImages}
+                        isLarge={false}
+                        // note={note}
+                        onDeleteImage={async (imageId: number) => {
+                            await deleteNoteImage(note.id, imageId);
+                        }}
+                    />
 
-                    {note.images
+                    {/* {note.images
                         .filter((_, index) => index >= largeCount)
                         .map((image) => (
 
                             <div
                                 key={image.id}
                                 className={`${styles.imageWrapper} ${styles.normalImageWrapper}`}
-                                // className={styles.imageWrapper}
+
                             >
 
                                 <img
@@ -284,10 +299,7 @@ export default function NoteDetailModal({
                                         e.stopPropagation();
                                         await deleteNoteImage(note.id, image.id);
                                     }}
-                                    // onClick={(e) => {
-                                    //     e.stopPropagation();
-                                    //     handleDeleteImage(image.id);
-                                    // }}
+
                                 >
                                     🗑️
                                 </button>
@@ -298,52 +310,9 @@ export default function NoteDetailModal({
 
                         ))
 
-                    }
+                    } */}
 
                 </div>
-
-                {/* <div
-                    className={styles.largeImages}
-                >
-
-                    {
-                        note.images
-                            .filter((_, index) => index < largeCount)
-                            .map((image) => (
-
-                                <img
-                                    key={image.id}
-                                    src={image.image}
-                                    className={styles.largeImage}
-
-
-                                />
-
-                            ))
-                    }
-
-                </div> */}
-
-                {/* <div
-                    className={styles.images}
-                >
-
-                    {
-                        note.images
-                            .filter((_, index) => index >= largeCount)
-                            .map((image) => (
-
-                                <img
-                                    key={image.id}
-                                    src={image.image}
-                                    className={styles.image}
-                                />
-
-                            ))
-
-                    }
-
-                </div> */}
 
 
 
