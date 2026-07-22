@@ -22,6 +22,10 @@ import { useNoteStore } from '../../store/useNoteStore'
 import { useNoteColor } from '../../hooks/useNoteColor'
 
 
+// ---- utils ----
+import { splitImages } from '../../utils/splitImages'
+
+
 
 
 // import { deleteNoteImage } from "../../api/noteApi";
@@ -65,11 +69,11 @@ export default function NoteDetailModal({
 }: Props) {
     const [title, setTitle] = useState(note.title)
     const [content, setContent] = useState(note.content)
-    // const [images, setImages] = useState(note.images);
 
     const [panelType, setPanelType] = useState<
         'menu' | 'color' | 'label' | 'history' | null
     >(null)
+
 
     // useNoteColor hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note)
@@ -90,77 +94,57 @@ export default function NoteDetailModal({
         deleteNoteImage,
     } = useNoteStore()
 
-    const imageCount = note.images.length
 
-    const remainder = imageCount % 3
+    // utils
+    const {
+        largeImages,
+        normalImages,
+    } = splitImages(note.images);
 
-    let largeCount = 0
 
-    if (remainder === 1) {
-        largeCount = 1
-    }
+    // const imageCount = note.images.length;
 
-    if (remainder === 2) {
-        largeCount = 2
-    }
+    // const remainder = imageCount % 3;
+
+    // let largeCount = 0;
+
+    // if (remainder === 1) {
+    //     largeCount = 1;
+    // }
+
+    // if (remainder === 2) {
+    //     largeCount = 2;
+    // }
 
     // ノートが所持している画像を計算する
-    const normalImages = note.images.filter((_, index) => index >= largeCount)
-    const largeImages = note.images.filter((_, index) => index < largeCount)
+    // const normalImages = note.images.filter((_, index) => index >= largeCount);
+    // const largeImages = note.images.filter((_, index) => index < largeCount);
+
+
+
 
     const handleClose = async () => {
         if (title !== note.title || content !== note.content) {
-        await updateNote(note.id, title, content)
+            await updateNote(note.id, title, content);
         }
 
         if (tempColor !== note.color) {
-        await updateNoteColor(note.id, tempColor)
-        // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
+            await updateNoteColor(note.id, tempColor);
+            // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
         }
 
-        setOpenNoteDetailId(null)
+        setOpenNoteDetailId(null);
     }
 
-    // タイトルや内容を変更したとき。色変更とは違う。
-    // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-    // ) => {
 
-    //     await updateNote(id, title, content);
-    //     setOpenNoteDetailId(null);
 
-    // }
 
-    // const handleDeleteImage = async (
-    //     imageId: number,
-    // ) => {
-
-    //     try {
-
-    //         await deleteNoteImage(imageId);
-
-    //         setImages((prev) => prev.filter((image) => image.id !== imageId));
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    // }
 
     return (
             <div
                 className={styles.overlay}
                 onClick={handleClose}
-                // onClick={async () => {
-                //     await handleSave(note.id, title, content);
-                //     await saveColor();
 
-                // }}
-                // onClick={() => onSave(note.id, title, content)}
             >
                 <div
                     className={styles.modal}
@@ -213,33 +197,7 @@ export default function NoteDetailModal({
                                     label={label}
                                     onRemoveLabel={(labelId: number) => handleRemoveLabel(labelId)}
                                 />
-                            ),
-
-                            
-                            // LabelItemコンポに切り出した
-                            // <div
-                            //     key={label.id}
-                            //     className={styles.label}
-                            // >
-                            //     <span
-
-                            //     >
-                            //         {label.name}
-                            //     </span>
-
-                            //     <button
-                            //         className={styles.removeLabel}
-                            //         onClick={(e) => {
-                            //             e.stopPropagation();
-                            //             handleRemoveLabel(
-                            //                 label.id
-                            //             );
-                            //         }}
-                            //     >
-                            //         ×
-                            //     </button>
-
-                            // </div>
+                            )
                         )}
                     </div>
 
@@ -329,6 +287,33 @@ export default function NoteDetailModal({
             </div>
         )
     }
+
+
+
+// LabelItemコンポに切り出した
+                            // <div
+                            //     key={label.id}
+                            //     className={styles.label}
+                            // >
+                            //     <span
+
+                            //     >
+                            //         {label.name}
+                            //     </span>
+
+                            //     <button
+                            //         className={styles.removeLabel}
+                            //         onClick={(e) => {
+                            //             e.stopPropagation();
+                            //             handleRemoveLabel(
+                            //                 label.id
+                            //             );
+                            //         }}
+                            //     >
+                            //         ×
+                            //     </button>
+
+                            // </div>
 
 // ) : (
 

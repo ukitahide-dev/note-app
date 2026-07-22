@@ -45,9 +45,6 @@ export default function LabelItem ({
                 onClick={(e) => {
                     e.stopPropagation();
                     onRemoveLabel(label.id);
-                    // handleRemoveLabel(
-                    //     label.id
-                    // );
                 }}
             >
                 ×

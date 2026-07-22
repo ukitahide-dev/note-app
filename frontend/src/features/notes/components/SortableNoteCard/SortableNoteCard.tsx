@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useEffect, useState, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
 
 import {
     useSortable,
@@ -11,24 +11,24 @@ import {
 
 
 // ---- components ----
-import LabelPanel from "./LabelPanel/LabelPanel";
+// import LabelPanel from "./LabelPanel/LabelPanel";
 
 
 // ---- shared ----
-import Card from "../../../../shared/ui/Card/Card";
+// import Card from "../../../../shared/ui/Card/Card";
 
 
 // ---- api ----
-import { updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
+// import { updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
 
 
 // ---- shared ----
-import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
+// import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 
 //  ---- css ----
-import cardStyles from "./SortableNoteCard.module.css";
-import NoteMenu from "./NoteMenu/NoteMenu";
+// import cardStyles from "./SortableNoteCard.module.css";
+// import NoteMenu from "./NoteMenu/NoteMenu";
 import NoteCard from "../NoteCard/NoteCard";
 
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateNoteLabels } from "../api/noteApi";
+// import { updateNoteLabelsApi } from "../api/noteApi";
 
 import { useNoteStore } from "../store/useNoteStore";
 import { useLabelStore } from "../../labels/store/labelStore";
@@ -83,17 +83,7 @@ export function useNoteLabels({
 
 
 
-    // const handleCloseLabel = () => {
-    //     // console.log("handleOpenLabelが実行された");
-    //     // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
-    //     setIsLabelOpen(false);
-    //     // setIsLabelOpen(true);
-    // }
 
-
-    // const handleOpenLabel = () => {
-    //     setIsLabelOpen(true);
-    // }
 
 
 
@@ -112,23 +102,6 @@ export function useNoteLabels({
 
     }
 
-    // useNoteStore使うことで、不要になった。
-    // const updateLabels = async (
-    //         newIds: number[]
-    //     ) => {
-
-    //         // setSelectedLabels(newIds);
-
-    //         const updatedNote = await updateNoteLabels(note.id, newIds);
-
-    //         // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 n.id === note.id ? updatedNote : n
-    //             )
-    //         );
-
-    //     }
 
 
 
@@ -206,3 +179,33 @@ export function useNoteLabels({
 }
 
 
+ // useNoteStore使うことで、不要になった。
+    // const updateLabels = async (
+    //         newIds: number[]
+    //     ) => {
+
+    //         // setSelectedLabels(newIds);
+
+    //         const updatedNote = await updateNoteLabels(note.id, newIds);
+
+    //         // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
+    //         setNotes((prev) =>
+    //             prev.map((n) =>
+    //                 n.id === note.id ? updatedNote : n
+    //             )
+    //         );
+
+    //     }
+
+
+// const handleCloseLabel = () => {
+    //     // console.log("handleOpenLabelが実行された");
+    //     // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
+    //     setIsLabelOpen(false);
+    //     // setIsLabelOpen(true);
+    // }
+
+
+    // const handleOpenLabel = () => {
+    //     setIsLabelOpen(true);
+    // }

@@ -13,7 +13,7 @@ import {
     updateNote as updateNoteApi,
     updateNoteColor as updateNoteColorApi,
     updateNoteFavorite,
-    updateNoteLabels,
+    updateNoteLabelsApi,
     updateNotePinned }
 from "../api/noteApi";
 
@@ -573,7 +573,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const updatedNote = await updateNoteLabels(noteId, labelIds);
+            const updatedNote = await updateNoteLabelsApi(noteId, labelIds);
 
             set((state) => ({
                 notes: state.notes.map(

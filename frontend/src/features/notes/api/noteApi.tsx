@@ -203,7 +203,7 @@ export const emptyTrash = async () => {
 
 
 // 各ノートのラベルを更新する
-export const updateNoteLabels = async (
+export const updateNoteLabelsApi = async (
     noteId: number,
     labelIds: number[]
 ) => {

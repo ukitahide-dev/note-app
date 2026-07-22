@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 // import { useNavigate } from "react-router-dom";
-import { updateNote, updateNoteColor, updateNoteFavorite, updateNoteLabels, uploadNoteImage } from "../../api/noteApi";
+import { uploadNoteImage } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
@@ -484,30 +484,6 @@ export default function NoteCard({
 
                         />
 
-                        // LabelItemコンポに切り出した
-                        // <div
-                        //     key={label.id}
-                        //     className={cardStyles.label}
-                        // >
-                        //     <span
-
-                        //     >
-                        //         {label.name}
-                        //     </span>
-
-                        //     <button
-                        //         className={cardStyles.removeLabel}
-                        //         onClick={(e) => {
-                        //             e.stopPropagation();
-                        //             handleRemoveLabel(
-                        //                 label.id
-                        //             );
-                        //         }}
-                        //     >
-                        //         ×
-                        //     </button>
-
-                        // </div>
                     ))}
 
                 </div>
@@ -616,7 +592,30 @@ export default function NoteCard({
 
 
 
+// LabelItemコンポに切り出した
+                        // <div
+                        //     key={label.id}
+                        //     className={cardStyles.label}
+                        // >
+                        //     <span
 
+                        //     >
+                        //         {label.name}
+                        //     </span>
+
+                        //     <button
+                        //         className={cardStyles.removeLabel}
+                        //         onClick={(e) => {
+                        //             e.stopPropagation();
+                        //             handleRemoveLabel(
+                        //                 label.id
+                        //             );
+                        //         }}
+                        //     >
+                        //         ×
+                        //     </button>
+
+                        // </div>
 
 
 
