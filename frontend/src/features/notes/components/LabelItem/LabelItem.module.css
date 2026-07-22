@@ -1,0 +1,32 @@
+.label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #eee;
+    font-size: 12px;
+    cursor: pointer;
+
+}
+
+
+.removeLabel {
+    display: none;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+}
+
+
+.label:hover .removeLabel {
+    display: block;
+}
+
+
+
+
+
+
+
+

@@ -30,9 +30,7 @@ export function ImageList({
     if (!images) return;
 
 
-    // const {
-    //     deleteNoteImage,
-    // } = useNoteStore();
+
 
 
     return (
@@ -52,78 +50,5 @@ export function ImageList({
     );
 
 
-    // return (
-
-    //     {images.map((image: NoteImage) => (
-
-    //         <ImageItem
-
-    //             image={image}
-    //             isLarge={isLarge}
-    //             onDeleteImage={ async () => {
-    //                 await deleteNoteImage(note.id, image.id);
-    //             }}
-    //         />
-
-    //         // <>
-    //         // // {/* <div
-    //         // //     key={image.id}
-    //         // //     className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
-    //         // // >
-
-    //         // //     <img
-    //         // //         src={image.image}
-    //         // //         className={styles.largeImage}
-    //         // //     />
-
-    //         // //     <button
-    //         // //         className={styles.deleteButton}
-    //         // //         onClick={async (e) => {
-    //         // //             e.stopPropagation();
-    //         // //             await deleteNoteImage(note.id, image.id);
-    //         // //         }}
-
-    //         // //     >
-    //         // //         🗑️
-    //         // //     </button>
-
-    //         // // </div>
-
-
-    //         // // <div
-    //         // //     key={image.id}
-    //         // //     className={`${styles.imageWrapper} ${styles.normalImageWrapper}`}
-
-    //         // // >
-
-    //         // //     <img
-    //         // //         src={image.image}
-    //         // //         className={styles.image}
-    //         // //     />
-
-    //         // //     <button
-    //         // //         className={styles.deleteButton}
-    //         // //         onClick={async (e) => {
-    //         // //             e.stopPropagation();
-    //         // //             await deleteNoteImage(note.id, image.id);
-    //         // //         }}
-
-    //         // //     >
-    //         // //         🗑️
-    //         // //     </button>
-
-
-    //         // // </div> */}
-    //         // </>
-
-
-    //     ))}
-
-
-
-
-
-
-    // )
-
+    
 }

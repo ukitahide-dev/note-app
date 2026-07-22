@@ -70,7 +70,7 @@
 }
 
 
-.label {
+/* .label {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -93,7 +93,7 @@
 
 .label:hover .removeLabel {
     display: block;
-}
+} */
 
 
 

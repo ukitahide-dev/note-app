@@ -1,67 +1,58 @@
+import { useState } from 'react'
 
-
+// ---- component ----
+import NoteMenu from '../SortableNoteCard/NoteMenu/NoteMenu'
+import LabelPanel from '../SortableNoteCard/LabelPanel/LabelPanel'
+import { HistoryPanel } from '../HistoryPanel/HistoryPanel'
+import { ImageList } from '../ImageList/ImageList'
+import LabelItem from '../LabelItem/LabelItem'
 
 
 // ---- css ----
-import { useState } from "react";
-import styles from "./NoteDetailModal.module.css";
-import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-// import { updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi } from "../../api/noteApi";
-import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
-import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
-import { useNoteLabels } from "../../hooks/useNoteLabels";
+import styles from './NoteDetailModal.module.css'
 
+
+import ColorPalette from '../../../../shared/ui/ColorPalette/ColorPalette'
+// import { updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi } from "../../api/noteApi";
+import { useNoteLabels } from '../../hooks/useNoteLabels'
 
 // ---- types ----
-import type { Note } from "../../../../types/note";
-import { useNoteStore } from "../../store/useNoteStore";
-import { useNoteColor } from "../../hooks/useNoteColor";
-import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
-import { ImageList } from "../ImageList/ImageList";
+import type { Note } from '../../../../types/note'
+import { useNoteStore } from '../../store/useNoteStore'
+import { useNoteColor } from '../../hooks/useNoteColor'
+
+
+
+
 // import { deleteNoteImage } from "../../api/noteApi";
 
-
-
-
 type Props = {
-    note: Note;
-    // onSave: (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-    // ) => Promise<void>;
+  note: Note
+  // onSave: (
+  //     id: number,
+  //     title: string,
+  //     content: string,
+  // ) => Promise<void>;
 
-    // onUpdateColor: (
-    //     id: number,
-    //     color: string,
-    // ) => Promise<void>;
+  // onUpdateColor: (
+  //     id: number,
+  //     color: string,
+  // ) => Promise<void>;
 
-    // onMoveToTrash: (id: number) => void;
+  // onMoveToTrash: (id: number) => void;
 
+  // setNotes: React.Dispatch<
+  //     React.SetStateAction<Note[]>
+  // >;
 
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
+  setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>
 
-    setOpenNoteDetailId:
-        React.Dispatch<
-            React.SetStateAction<
-                number | null
-            >
-        >;
-
-    // onDuplicateNote: (
-    //     note: Note,
-    // ) => Promise<void>;
-
+  // onDuplicateNote: (
+  //     note: Note,
+  // ) => Promise<void>;
 }
 
-
-
-
 // 親: NoteCard.tsx
-
-
 
 export default function NoteDetailModal({
     note,
@@ -71,39 +62,23 @@ export default function NoteDetailModal({
     // onUpdateColor,
     // onMoveToTrash,
     // onDuplicateNote,
-
 }: Props) {
-
-
-
-    const [title, setTitle] = useState(note.title);
-    const [content, setContent] = useState(note.content);
+    const [title, setTitle] = useState(note.title)
+    const [content, setContent] = useState(note.content)
     // const [images, setImages] = useState(note.images);
 
-
-    const [panelType, setPanelType] = useState<"menu" | "color" | "label" | "history" | null>(null);
-
+    const [panelType, setPanelType] = useState<
+        'menu' | 'color' | 'label' | 'history' | null
+    >(null)
 
     // useNoteColor hooks
-    const {
-        tempColor,
-        handleSelectColor,
-        saveColor,
-    } = useNoteColor(note);
-
-
+    const { tempColor, handleSelectColor, saveColor } = useNoteColor(note)
 
     // useNoteLabels hooks
-    const {
-        labelStates,
-        handleSelectLabel,
-        handleRemoveLabel,
-    } = useNoteLabels({
+    const { labelStates, handleSelectLabel, handleRemoveLabel } = useNoteLabels({
         note,
         // setNotes,
-    });
-
-
+    })
 
     // useNoteStore
     const {
@@ -113,56 +88,38 @@ export default function NoteDetailModal({
         createNote,
         moveToTrash,
         deleteNoteImage,
-    } = useNoteStore();
+    } = useNoteStore()
 
+    const imageCount = note.images.length
 
+    const remainder = imageCount % 3
 
-
-
-    const imageCount = note.images.length;
-
-    const remainder = imageCount % 3;
-
-    let largeCount = 0;
+    let largeCount = 0
 
     if (remainder === 1) {
-        largeCount = 1;
+        largeCount = 1
     }
 
     if (remainder === 2) {
-        largeCount = 2;
+        largeCount = 2
     }
-
 
     // ノートが所持している画像を計算する
-    const normalImages = note.images.filter((_, index) => index >= largeCount);
-    const largeImages = note.images.filter((_, index) => index < largeCount);
+    const normalImages = note.images.filter((_, index) => index >= largeCount)
+    const largeImages = note.images.filter((_, index) => index < largeCount)
 
-
-
-
-
-
-    const handleClose = async (
-
-    ) => {
-
-
+    const handleClose = async () => {
         if (title !== note.title || content !== note.content) {
-            await updateNote(note.id, title, content);
+        await updateNote(note.id, title, content)
         }
-
 
         if (tempColor !== note.color) {
-            await updateNoteColor(note.id, tempColor);
-            // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
+        await updateNoteColor(note.id, tempColor)
+        // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
         }
 
-        setOpenNoteDetailId(null);
-
+        setOpenNoteDetailId(null)
     }
-
-
 
     // タイトルや内容を変更したとき。色変更とは違う。
     // const handleSave = async (
@@ -175,8 +132,6 @@ export default function NoteDetailModal({
     //     setOpenNoteDetailId(null);
 
     // }
-
-
 
     // const handleDeleteImage = async (
     //     imageId: number,
@@ -194,288 +149,186 @@ export default function NoteDetailModal({
 
     //     }
 
-
     // }
 
-
-
-
     return (
-
-        <div
-            className={styles.overlay}
-            onClick={handleClose}
-            // onClick={async () => {
-            //     await handleSave(note.id, title, content);
-            //     await saveColor();
-
-            // }}
-            // onClick={() => onSave(note.id, title, content)}
-        >
-
             <div
-                className={styles.modal}
-                style={{ backgroundColor: tempColor }}
-                onClick={(e) => e.stopPropagation()}
+                className={styles.overlay}
+                onClick={handleClose}
+                // onClick={async () => {
+                //     await handleSave(note.id, title, content);
+                //     await saveColor();
+
+                // }}
+                // onClick={() => onSave(note.id, title, content)}
             >
-
                 <div
-                    className={styles.largeImages}
+                    className={styles.modal}
+                    style={{ backgroundColor: tempColor }}
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <ImageList
-                        images={largeImages}
-                        isLarge={true}
-                        // note={note}
-                        onDeleteImage={async (imageId) => {
-                            await deleteNoteImage(note.id, imageId);
-                        }}
-                        
+
+                    <div className={styles.largeImages}>
+                        <ImageList
+                            images={largeImages}
+                            isLarge={true}
+                            onDeleteImage={async (imageId) => {
+                                await deleteNoteImage(note.id, imageId)
+                            }}
+                        />
+
+                    </div>
+
+                    <div className={styles.images}>
+                        <ImageList
+                            images={normalImages}
+                            isLarge={false}
+                            onDeleteImage={async (imageId: number) => {
+                                await deleteNoteImage(note.id, imageId)
+                            }}
+                        />
+
+                    </div>
+
+                    <input
+                        className={styles.titleInput}
+                        style={{ backgroundColor: tempColor }}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
 
-                    {/* {note.images
-                        .filter((_, index) => index < largeCount)
-                        .map((image) => (
+                    <textarea
+                        className={styles.contentInput}
+                        style={{ backgroundColor: tempColor }}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        />
 
-                            <div
-                                key={image.id}
-                                className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
-                            >
+                    {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
+                    <div className={styles.labels}>
 
-                                <img
-                                    src={image.image}
-                                    className={styles.largeImage}
+                        {note.labels.map(
+                            (label) => (
+                                <LabelItem
+                                    label={label}
+                                    onRemoveLabel={(labelId: number) => handleRemoveLabel(labelId)}
                                 />
+                            ),
 
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-                                        await deleteNoteImage(note.id, image.id);
-                                    }}
+                            
+                            // LabelItemコンポに切り出した
+                            // <div
+                            //     key={label.id}
+                            //     className={styles.label}
+                            // >
+                            //     <span
 
-                                >
-                                    🗑️
-                                </button>
+                            //     >
+                            //         {label.name}
+                            //     </span>
 
-                            </div>
+                            //     <button
+                            //         className={styles.removeLabel}
+                            //         onClick={(e) => {
+                            //             e.stopPropagation();
+                            //             handleRemoveLabel(
+                            //                 label.id
+                            //             );
+                            //         }}
+                            //     >
+                            //         ×
+                            //     </button>
 
+                            // </div>
+                        )}
+                    </div>
 
-                        ))
-
-                    } */}
-
-                </div>
-
-                <div
-                    className={styles.images}
-                >
-                    <ImageList
-                        images={normalImages}
-                        isLarge={false}
-                        // note={note}
-                        onDeleteImage={async (imageId: number) => {
-                            await deleteNoteImage(note.id, imageId);
-                        }}
-                    />
-
-                    {/* {note.images
-                        .filter((_, index) => index >= largeCount)
-                        .map((image) => (
-
-                            <div
-                                key={image.id}
-                                className={`${styles.imageWrapper} ${styles.normalImageWrapper}`}
-
-                            >
-
-                                <img
-                                    src={image.image}
-                                    className={styles.image}
-                                />
-
-                                <button
-                                    className={styles.deleteButton}
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-                                        await deleteNoteImage(note.id, image.id);
-                                    }}
-
-                                >
-                                    🗑️
-                                </button>
-
-
-                            </div>
-
-
-                        ))
-
-                    } */}
-
-                </div>
-
-
-
-                <input
-                    className={styles.titleInput}
-                    style={{ backgroundColor: tempColor }}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-
-                <textarea
-                    className={styles.contentInput}
-                    style={{ backgroundColor: tempColor }}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-
-                {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
-                <div className={styles.labels}>
-
-                    {note.labels.map((label) =>
-
-                        <div
-                            key={label.id}
-                            className={styles.label}
-                        >
-                            <span
-
-                            >
-                                {label.name}
-                            </span>
-
-                            <button
-                                className={styles.removeLabel}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemoveLabel(
-                                        label.id
-                                    );
-                                }}
-                            >
-                                ×
-                            </button>
-
-                        </div>
-
-
-                    )}
-
-
-
-                </div>
-
-                {/* ボタン表示もNoteCardと被っている */}
-                <div className={styles.bottom}>
-
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setPanelType("color");
+                    {/* ボタン表示もNoteCardと被っている */}
+                    <div className={styles.bottom}>
+                        <button
+                            onClick={(e) => {
+                            e.stopPropagation()
+                            setPanelType('color')
                             // setIsColorOpen((prev) => !prev);
                             // setIsMenuOpen(false)
                             // setOpenMenuId(null);
                             // setOpenColorId((prev) => prev === note.id ? null : note.id);
-                        }}
-                    >
-                        🎨
-                    </button>
+                            }}
+                        >
+                            🎨
+                        </button>
 
-                    <button
-                        className={styles.menuButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setPanelType("menu");
+                        <button
+                            className={styles.menuButton}
+                            onClick={(e) => {
+                            e.stopPropagation()
+                            setPanelType('menu')
                             // setIsMenuOpen((prev) => !prev);
                             // setIsColorOpen(false)
+                            }}
+                        >
+                            ⋮
+                        </button>
 
-                        }}
-                    >
-                        ⋮
-                    </button>
+                        <button
+                            className={styles.button}
+                            onClick={handleClose}
+                            // onClick={
+                            //         async () => {
+                            //                 await handleSave(note.id, title, content);
+                            //                 await saveColor();
+                            //                 // onSave(note.id, title, content);
+                            //                 // onUpdateColor(note.id, tempColor);
 
-                    <button
-                        className={styles.button}
-                        onClick={handleClose}
-                        // onClick={
-                        //         async () => {
-                        //                 await handleSave(note.id, title, content);
-                        //                 await saveColor();
-                        //                 // onSave(note.id, title, content);
-                        //                 // onUpdateColor(note.id, tempColor);
+                            //             }
+                            //     }
+                        >
+                            閉じる
+                        </button>
+                    </div>
 
-                        //             }
-                        //     }
-                    >
-                        閉じる
-                    </button>
+                    {panelType === 'color' && (
+                        <ColorPalette
+                            onSelectColor={handleSelectColor}
+                            // onUpdateColor={onUpdateColor}
+                            // note={note}
+                            tempColor={tempColor}
+                            onClose={saveColor}
+                        />
+                    )}
 
-                </div>
-
-
-                {panelType === "color" && (
-
-                    <ColorPalette
-                        onSelectColor={handleSelectColor}
-                        // onUpdateColor={onUpdateColor}
-                        // note={note}
-                        tempColor={tempColor}
-                        onClose={saveColor}
-
-                    />
-                )}
-
-
-                {panelType === "menu" && (
-
+                    {panelType === 'menu' && (
                     <NoteMenu
-                        onOpenLabel={() => setPanelType("label")}
-                        onOpenHistory={() => setPanelType("history")}
+                        onOpenLabel={() => setPanelType('label')}
+                        onOpenHistory={() => setPanelType('history')}
                         onMoveToTrash={() => moveToTrash(note.id)}
-                        onDuplicateNote={
-                            () =>
-                                createNote(
-                                    note.title,
-                                    note.content,
-                                    note.labels.map((label) => label.id),
-                                    note.color
-                                )
+                        onDuplicateNote={() =>
+                            createNote(
+                                note.title,
+                                note.content,
+                                note.labels.map((label) => label.id),
+                                note.color,
+                            )
                         }
                         // onDuplicateNote={() => onDuplicateNote(note)}
-
                     />
-                )}
+                    )}
 
-                {panelType === "label" && (
+                    {panelType === 'label' && (
+                        <LabelPanel
+                            // selectedLabels={selectedLabels}
+                            labelStates={labelStates}
+                            onSelectLabel={handleSelectLabel}
+                        />
+                    )}
 
-                    <LabelPanel
-                        // selectedLabels={selectedLabels}
-                        labelStates={labelStates}
-                        onSelectLabel={handleSelectLabel}
-
-                    />
-                )}
-
-
-                {panelType === "history" && (
-                    <HistoryPanel
-                        note={note}
-                        onClose={() => setPanelType(null)}
-
-                    />
-                )}
-
+                    {panelType === 'history' && (
+                        <HistoryPanel note={note} onClose={() => setPanelType(null)} />
+                    )}
+                </div>
             </div>
-
-        </div>
-    );
-
-
-}
-
-
-
+        )
+    }
 
 // ) : (
 
@@ -495,71 +348,54 @@ export default function NoteDetailModal({
 
 //                         />
 
-
 //                     )
 
+// const saveColor = async () => {
 
+//     try {
 
+//         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
+//         updateNote(updatedNote);  // useNoteStore
 
- // const saveColor = async () => {
+//     } catch (error) {
 
+//         console.error(error);
 
+//     }
 
-    //     try {
-
-    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-    //         updateNote(updatedNote);  // useNoteStore
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-
-    // }
-
-
+// }
 
 // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
+//     id: number,
+//     title: string,
+//     content: string,
 
-    // ) => {
+// ) => {
 
-    //     try {
-    //         const updatedNote = await updateNoteApi(Number(id), title, content);
-    //         updateNote(updatedNote);  // useNoteStore
+//     try {
+//         const updatedNote = await updateNoteApi(Number(id), title, content);
+//         updateNote(updatedNote);  // useNoteStore
 
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("保存失敗");
-    //     }
+//     } catch (error) {
+//         console.error(error);
+//         alert("保存失敗");
+//     }
 
-    //     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
+//     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
 
-    // }
-
-
+// }
 
 // 色の選択をUIに表示する
-    // const handleSelectColor = (
-    //     color: string
-    // ) => {
-    //     setTempColor(color);
-    // }
-
-
-
+// const handleSelectColor = (
+//     color: string
+// ) => {
+//     setTempColor(color);
+// }
 
 // const saveColor = async (
 
-    // ) => {
-    //     await updateNoteColor(note.id, tempColor);
-    //     setPanelType(null);
+// ) => {
+//     await updateNoteColor(note.id, tempColor);
+//     setPanelType(null);
 
-    // }
-
-
+// }

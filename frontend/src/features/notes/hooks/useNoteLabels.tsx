@@ -56,12 +56,13 @@ export function useNoteLabels({
 
 
 
+    // useNoteStore
     const {
         updateNoteLabels,
     } = useNoteStore();
 
 
-    // useLabelStoreを使う
+    // useLabelStore
         const {
             labels
         } = useLabelStore();

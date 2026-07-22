@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 
 // ---- css ----
-import styles from "./LabelItem.module.css";
+import styles from "./LabelPanelItem.module.css";
 
 
 // ---- type ----
@@ -30,7 +30,7 @@ type Props = {
 
 
 
-export default function LabelItem({
+export default function LabelPanelItem({
     label,
     labelState,
     onSelectLabel,
@@ -55,7 +55,7 @@ export default function LabelItem({
 
 
     return (
-        <label className={styles.labelItem}>
+        <label className={styles.labelPanellItem}>
             <input
                 ref={checkboxRef}
                 type="checkbox"

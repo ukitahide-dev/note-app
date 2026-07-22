@@ -22,6 +22,7 @@ import { useNoteStore } from "../../store/useNoteStore";
 // import { useLabelStore } from "../../../labels/store/labelStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
+import LabelItem from "../LabelItem/LabelItem";
 
 
 
@@ -476,29 +477,37 @@ export default function NoteCard({
 
                 <div className={cardStyles.labels}>
                     {note.labels.map((label) => (
-                        <div
-                            key={label.id}
-                            className={cardStyles.label}
-                        >
-                            <span
 
-                            >
-                                {label.name}
-                            </span>
+                        <LabelItem
+                            label={label}
+                            onRemoveLabel={(labelId) => handleRemoveLabel(labelId)}
 
-                            <button
-                                className={cardStyles.removeLabel}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemoveLabel(
-                                        label.id
-                                    );
-                                }}
-                            >
-                                ×
-                            </button>
+                        />
 
-                        </div>
+                        // LabelItemコンポに切り出した
+                        // <div
+                        //     key={label.id}
+                        //     className={cardStyles.label}
+                        // >
+                        //     <span
+
+                        //     >
+                        //         {label.name}
+                        //     </span>
+
+                        //     <button
+                        //         className={cardStyles.removeLabel}
+                        //         onClick={(e) => {
+                        //             e.stopPropagation();
+                        //             handleRemoveLabel(
+                        //                 label.id
+                        //             );
+                        //         }}
+                        //     >
+                        //         ×
+                        //     </button>
+
+                        // </div>
                     ))}
 
                 </div>
