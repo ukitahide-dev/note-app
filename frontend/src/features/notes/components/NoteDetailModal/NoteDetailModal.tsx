@@ -75,20 +75,21 @@ export default function NoteDetailModal({
     >(null)
 
 
+
     // useNoteColor hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note)
+
 
     // useNoteLabels hooks
     const { labelStates, handleSelectLabel, handleRemoveLabel } = useNoteLabels({
         note,
-        // setNotes,
     })
+
 
     // useNoteStore
     const {
         updateNote,
         updateNoteColor,
-        // updateNoteColor,
         createNote,
         moveToTrash,
         deleteNoteImage,
@@ -100,25 +101,6 @@ export default function NoteDetailModal({
         largeImages,
         normalImages,
     } = splitImages(note.images);
-
-
-    // const imageCount = note.images.length;
-
-    // const remainder = imageCount % 3;
-
-    // let largeCount = 0;
-
-    // if (remainder === 1) {
-    //     largeCount = 1;
-    // }
-
-    // if (remainder === 2) {
-    //     largeCount = 2;
-    // }
-
-    // ノートが所持している画像を計算する
-    // const normalImages = note.images.filter((_, index) => index >= largeCount);
-    // const largeImages = note.images.filter((_, index) => index < largeCount);
 
 
 
@@ -287,6 +269,31 @@ export default function NoteDetailModal({
             </div>
         )
     }
+
+
+
+
+
+
+// utilsに移して不要になった
+    // const imageCount = note.images.length;
+
+    // const remainder = imageCount % 3;
+
+    // let largeCount = 0;
+
+    // if (remainder === 1) {
+    //     largeCount = 1;
+    // }
+
+    // if (remainder === 2) {
+    //     largeCount = 2;
+    // }
+
+    // ノートが所持している画像を計算する
+    // const normalImages = note.images.filter((_, index) => index >= largeCount);
+    // const largeImages = note.images.filter((_, index) => index < largeCount);
+
 
 
 

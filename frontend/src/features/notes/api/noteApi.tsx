@@ -382,7 +382,7 @@ export const deleteNoteImageApi = async(
 
 ) => {
 
-     const token = localStorage.getItem("access");
+    const token = localStorage.getItem("access");
 
     const res = await api.delete(
         `/note-images/${imageId}/`,
@@ -394,5 +394,40 @@ export const deleteNoteImageApi = async(
     );
 
     return res.data;
+
+}
+
+
+
+
+
+
+
+
+export const reorderImage = async (
+    noteId:number,
+    images: {
+        id: number;
+        order: number;
+    }[]
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.patch(
+        `notes/${noteId}/images/`,
+        images,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+    );
+
+
+    return res.data;
+
+
 
 }

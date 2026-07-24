@@ -61,3 +61,5 @@ class NoteImage(models.Model):
     )
 
     image = models.ImageField(upload_to="note_images/")
+    order = models.PositiveIntegerField(default=0)
+

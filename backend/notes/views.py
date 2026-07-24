@@ -174,6 +174,7 @@ class NoteImagesViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+    # get_queryset()は、このViewで扱っていいデータの範囲を決めるためのメソッド。
     def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
 
         queryset = NoteImage.objects.filter(
@@ -190,13 +191,6 @@ class NoteImagesViewSet(ModelViewSet):
         return queryset
 
 
-    # def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
-    #     return NoteImage.objects.filter(
-    #         note__id=self.kwargs["note_pk"],
-    #         note__user=self.request.user   # note__user: NoteImageからNoteを辿り、Userを辿る。
-    #     )
-
-
 
     # ex) POST /api/notes/24/images/ にアクセスすると実行される。
     def perform_create(self, serializer):   #  perform_create: 保存する直前に何かしたいならここに書いて、というメソッド。
@@ -207,8 +201,45 @@ class NoteImagesViewSet(ModelViewSet):
             user=self.request.user
         )
 
+
+        last_image = note.images.order_by("-order").first()
+
+
+        if last_image:
+            order = last_image.order + 1
+        else:
+            order = 0
+
+
+
+
         #  NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。
-        serializer.save(note=note)  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。つまり、フロント側からnoteは送らない設計。
+        serializer.save(
+            note=note,  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。つまり、フロント側からnoteは送らない設計。
+            order=order,  # orderもサーバー側で決める。
+        )
+
+
+
+    @action(detail=False, methods=["patch"], url_path="reorder")
+    def reorder(self, request):
+        print(request.data)
+
+
+        for image_data in request.data:
+
+            image_id = image_data["id"]
+            order = image_data["order"]
+
+            image = self.get_queryset().get(   # get_querysetが呼ばれる(note__user、note__idとかでデータをフィルターする)。そのうえで、id=image_idでデータを取得する。
+                id=image_id
+            )
+
+            image.order = order
+            image.save()
+
+
+        return Response()
 
 
 
