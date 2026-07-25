@@ -63,3 +63,8 @@ class NoteImage(models.Model):
     image = models.ImageField(upload_to="note_images/")
     order = models.PositiveIntegerField(default=0)
 
+
+
+    # note.images.all()を実行すると、DRFが自動で、order昇順でデータを取得する。デフォルトの並び順を決めておくため。このモデルは基本的にこの順番で扱う」という意図。
+    class Meta:
+        ordering = ["order"]

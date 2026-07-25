@@ -1,4 +1,7 @@
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 
 
 // ---- css ----
@@ -24,6 +27,22 @@ export default function ImageItem ({
 }: Props) {
 
 
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({
+        id: image.id,
+    });
+
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
 
     const wrapperClass = isLarge
         ? styles.largeImageWrapper
@@ -40,6 +59,10 @@ export default function ImageItem ({
 
         <div
             key={image.id}
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
             // className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
             className={`${styles.imageWrapper} ${wrapperClass}`}
         >

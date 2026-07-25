@@ -4,9 +4,32 @@ import { useNoteStore } from "../../store/useNoteStore";
 import ImageItem from "../ImageItem/ImageItem";
 
 
+// ---- Drag用 ----
+import {
+  DndContext,
+} from "@dnd-kit/core";
+
+import {
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+
+
+import { arrayMove } from "@dnd-kit/sortable";
+
+import type { DragEndEvent } from "@dnd-kit/core";
+// import { DragEndEvent } from "@dnd-kit/core";
+import { useState } from "react";
+import { reorderNoteImageApi } from "../../api/noteApi";
+
+
+
+
 type Props = {
     images: NoteImage[];
     isLarge: boolean;
+
+    noteId: number;
 
     onDeleteImage: (imageId: number) => Promise<void>;
 
@@ -20,35 +43,96 @@ type Props = {
 export function ImageList({
     images,
     isLarge,
+    noteId,
     onDeleteImage,
     // note,
 
 }: Props) {
 
 
+    const [sortedImages, setSortedImages] = useState(images);
+
 
     if (!images) return;
+
+
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { active, over } = event;   // active = 掴んだ画像   over = 最後に重なっていた画像
+
+        if (!over) return;
+
+        if (active.id === over.id) return;
+
+        // ここは次に書く
+
+        const oldIndex = sortedImages.findIndex((image) => image.id === active.id);
+
+        const newIndex = sortedImages.findIndex((image) => image.id === over.id);
+
+
+        // oldIndex の要素を newIndex の位置へ移動して、間の要素は1つずつずれる。
+        const newImages = arrayMove(
+            sortedImages,
+            oldIndex,
+            newIndex
+        );
+
+
+        const reorderedImages = newImages.map((image, index) => ({
+            id: image.id,
+            order: index,
+        }));
+
+
+        await reorderNoteImageApi(noteId, reorderedImages);
+
+
+
+        setSortedImages(newImages);
+
+        // setSortedImages(
+        //     arrayMove(
+        //         sortedImages,
+        //         oldIndex,
+        //         newIndex
+        //     )
+        // );
+
+    };
 
 
 
 
 
     return (
-        <>
-            {images.map((image) => (
-                <ImageItem
-                    key={image.id}
-                    image={image}
-                    isLarge={isLarge}
-                    onDeleteImage={() => onDeleteImage(image.id)}
-                    // onDeleteImage={ () => {
-                    //     onDeleteImage(image.id);
-                    // }}
-                />
-            ))}
-        </>
+
+        <DndContext
+            onDragEnd={handleDragEnd}
+        >
+
+            <SortableContext
+                items={sortedImages.map((image) => image.id)}
+                strategy={rectSortingStrategy}
+            >
+
+                {sortedImages.map((image) => (
+                    <ImageItem
+                        key={image.id}
+                        image={image}
+                        isLarge={isLarge}
+                        onDeleteImage={() => onDeleteImage(image.id)}
+                        // onDeleteImage={ () => {
+                        //     onDeleteImage(image.id);
+                        // }}
+                    />
+                ))}
+
+            </SortableContext>
+
+        </DndContext>
+
     );
 
 
-    
+
 }

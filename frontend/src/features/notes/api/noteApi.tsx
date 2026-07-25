@@ -404,18 +404,19 @@ export const deleteNoteImageApi = async(
 
 
 
-export const reorderImage = async (
-    noteId:number,
+export const reorderNoteImageApi = async (
+    noteId: number,
     images: {
         id: number;
         order: number;
-    }[]
+    }[],
+
 ) => {
 
     const token = localStorage.getItem("access");
 
     const res = await api.patch(
-        `notes/${noteId}/images/`,
+        `notes/${noteId}/images/reorder/`,
         images,
         {
             headers: {

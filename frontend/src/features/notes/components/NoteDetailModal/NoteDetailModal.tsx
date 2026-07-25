@@ -138,6 +138,7 @@ export default function NoteDetailModal({
                         <ImageList
                             images={largeImages}
                             isLarge={true}
+                            noteId={note.id}
                             onDeleteImage={async (imageId) => {
                                 await deleteNoteImage(note.id, imageId)
                             }}
@@ -149,6 +150,7 @@ export default function NoteDetailModal({
                         <ImageList
                             images={normalImages}
                             isLarge={false}
+                            noteId={note.id}
                             onDeleteImage={async (imageId: number) => {
                                 await deleteNoteImage(note.id, imageId)
                             }}

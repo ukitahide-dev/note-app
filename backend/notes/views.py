@@ -222,10 +222,11 @@ class NoteImagesViewSet(ModelViewSet):
 
 
     @action(detail=False, methods=["patch"], url_path="reorder")
-    def reorder(self, request):
+    def reorder(self, request, note_pk=None):
         print(request.data)
 
 
+        # 画像の並び順を更新する
         for image_data in request.data:
 
             image_id = image_data["id"]
@@ -239,7 +240,19 @@ class NoteImagesViewSet(ModelViewSet):
             image.save()
 
 
-        return Response()
+
+        images = self.get_queryset()  # QuerySetを取得し、imagesという変数に保存。
+
+
+        # NoteImageオブジェクトをJSONに変換する準備をして、という意味
+        serializer = NoteImageSerializer(
+            images,  # 上で取得した、images QuerySetを、JSONに変換する。
+            many=True
+        )
+
+
+        return Response(serializer.data)
+
 
 
 
