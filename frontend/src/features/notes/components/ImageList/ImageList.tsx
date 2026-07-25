@@ -21,6 +21,7 @@ import type { DragEndEvent } from "@dnd-kit/core";
 // import { DragEndEvent } from "@dnd-kit/core";
 import { useState } from "react";
 import { reorderNoteImageApi } from "../../api/noteApi";
+import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 
 
 
@@ -45,60 +46,60 @@ export function ImageList({
     isLarge,
     noteId,
     onDeleteImage,
-    // note,
+
 
 }: Props) {
 
 
-    const [sortedImages, setSortedImages] = useState(images);
+    // hook
+    const {
+        sortedImages,
+        handleDragEnd,
+    } = useSortableNoteImages(images, noteId);
+
+    // const [sortedImages, setSortedImages] = useState(images);
 
 
-    if (!images) return;
+    // if (!images) return;
 
 
-    const handleDragEnd = async (event: DragEndEvent) => {
-        const { active, over } = event;   // active = 掴んだ画像   over = 最後に重なっていた画像
+    // const handleDragEnd = async (event: DragEndEvent) => {
+    //     const { active, over } = event;   // active = 掴んだ画像   over = 最後に重なっていた画像
 
-        if (!over) return;
+    //     if (!over) return;
 
-        if (active.id === over.id) return;
-
-        // ここは次に書く
-
-        const oldIndex = sortedImages.findIndex((image) => image.id === active.id);
-
-        const newIndex = sortedImages.findIndex((image) => image.id === over.id);
-
-
-        // oldIndex の要素を newIndex の位置へ移動して、間の要素は1つずつずれる。
-        const newImages = arrayMove(
-            sortedImages,
-            oldIndex,
-            newIndex
-        );
-
-
-        const reorderedImages = newImages.map((image, index) => ({
-            id: image.id,
-            order: index,
-        }));
-
-
-        await reorderNoteImageApi(noteId, reorderedImages);
+    //     if (active.id === over.id) return;
 
 
 
-        setSortedImages(newImages);
+    //     const oldIndex = sortedImages.findIndex((image) => image.id === active.id);
 
-        // setSortedImages(
-        //     arrayMove(
-        //         sortedImages,
-        //         oldIndex,
-        //         newIndex
-        //     )
-        // );
+    //     const newIndex = sortedImages.findIndex((image) => image.id === over.id);
 
-    };
+
+    //     // oldIndex の要素を newIndex の位置へ移動して、間の要素は1つずつずれる。
+    //     const newImages = arrayMove(
+    //         sortedImages,
+    //         oldIndex,
+    //         newIndex
+    //     );
+
+
+    //     const reorderedImages = newImages.map((image, index) => ({
+    //         id: image.id,
+    //         order: index,
+    //     }));
+
+
+    //     await reorderNoteImageApi(noteId, reorderedImages);
+
+
+
+    //     setSortedImages(newImages);
+
+
+
+    // };
 
 
 

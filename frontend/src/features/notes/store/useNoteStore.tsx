@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Note } from "../../../types/note"
+import type { Note, NoteImage } from "../../../types/note"
 import {
     createNote as createNoteApi,
     deleteNoteForever as deleteNoteForeverApi,
@@ -9,6 +9,7 @@ import {
     getNotes,
     getTrashNotes as getTrashNotesApi,
     moveToTrash as moveToTrashApi,
+    reorderNoteImageApi,
     restoreNote as restoreNoteApi,
     updateNote as updateNoteApi,
     updateNoteColor as updateNoteColorApi,
@@ -24,10 +25,13 @@ type NoteStore = {
 
     notes: Note[];
 
+    // newImages: NoteImage[];
+
     fetchNotes: () => Promise<void>;
 
 
     fetchTrashNotes: () => Promise<void>;
+
 
     createNote: (
         title: string,
@@ -35,6 +39,7 @@ type NoteStore = {
         labels: number[],
         color: string,
     ) => Promise<void>;
+
 
     addNote: (note: Note) => void;
 
@@ -71,6 +76,14 @@ type NoteStore = {
 
 
     deleteNoteImage: (noteId: number, imageId: number) => Promise<void>;
+
+
+    updateNoteImageOrder: (
+        noteId: number,
+        newImages: NoteImage[],
+        // reorderedImages:
+        )
+    => Promise<void>;
 
 
 }
@@ -636,7 +649,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
                     }
 
-                    return await updateNoteLabels(note.id, newIds);
+                    return await updateNoteLabelsApi(note.id, newIds);
 
                 })
             );
@@ -703,7 +716,50 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
+    updateNoteImageOrder: async(
+        noteId: number,
+        newImages: NoteImage[],
+        // reorderedImages:
+    ) => {
 
+
+        const reorderedImages = newImages.map((image, index) => ({
+            id: image.id,
+            order: index,
+        }));
+
+
+        try {
+
+            await reorderNoteImageApi(noteId, reorderedImages);
+
+
+            set((state) => ({
+                notes: state.notes.map((note) =>
+
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: newImages,
+                        }
+
+                        : note
+
+
+                )
+            }))
+
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+
+    },
 
 
 

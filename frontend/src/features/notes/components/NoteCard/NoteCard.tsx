@@ -447,13 +447,7 @@ export default function NoteCard({
                     ))}
                 </div>
 
-                {/* <div
-                    {...attributes}
-                    {...listeners}  // drag開始用イベントまとめ。☰を掴んだ時だけdrag開始
-                    className={cardStyles.dragHandle}
-                >
-                    ☰
-                </div> */}
+                
 
                 <div
                     className={cardStyles.chars}
