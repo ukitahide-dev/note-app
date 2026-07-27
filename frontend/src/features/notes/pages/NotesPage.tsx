@@ -19,6 +19,7 @@ import { useNoteStore } from "../store/useNoteStore";
 
 // ----css----
 import styles from "./NotesPage.module.css";
+import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
 
 
 
@@ -89,6 +90,15 @@ export default function NotesPage() {
                     enableSort={true}
                     // onMoveToTrash={handleMoveToTrash}
                 />
+
+
+                <UndoSnackbar
+
+
+                />
+
+
+
             </div>
         </>
     )

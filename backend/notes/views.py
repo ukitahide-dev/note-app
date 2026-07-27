@@ -1,5 +1,6 @@
 from django.shortcuts import render
 
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
@@ -152,6 +153,7 @@ class LabelViewSet(ModelViewSet):
     def get_queryset(self):
         return Label.objects.filter(user=self.request.user)
 
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -251,7 +253,10 @@ class NoteImagesViewSet(ModelViewSet):
         )
 
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
+
+        # 204は「処理は成功したけど返すデータはありません」というHTTPの正式なステータス。画像並び替え後、react側が正しい順序を知っている状態だから、DB更新後の最新データをDjangoから送らなくても良いから、こう書ける。
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

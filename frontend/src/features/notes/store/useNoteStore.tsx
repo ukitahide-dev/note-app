@@ -10,7 +10,7 @@ import {
     getTrashNotes as getTrashNotesApi,
     moveToTrash as moveToTrashApi,
     reorderNoteImageApi,
-    restoreNote as restoreNoteApi,
+    restoreNoteApi,
     updateNote as updateNoteApi,
     updateNoteColor as updateNoteColorApi,
     updateNoteFavorite,
@@ -24,6 +24,15 @@ from "../api/noteApi";
 type NoteStore = {
 
     notes: Note[];
+
+    deletedNote: Note | null;
+
+    showUndo: boolean;
+
+    undoTimer: ReturnType<typeof setTimeout> | null;
+
+
+    hideUndo: () => void;
 
     // newImages: NoteImage[];
 
@@ -86,6 +95,8 @@ type NoteStore = {
     => Promise<void>;
 
 
+    undoDelete: () => Promise<void>;
+
 }
 
 
@@ -93,6 +104,16 @@ type NoteStore = {
 export const useNoteStore = create<NoteStore>((set, get) => ({
 
     notes: [],
+
+    deletedNote: null,
+
+    showUndo: false,
+
+
+    undoTimer: null as ReturnType<typeof setTimeout> | null,
+
+
+
 
 
     fetchNotes: async () => {
@@ -254,6 +275,23 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     //     })),
 
+    hideUndo: () => {
+
+        const timer = get().undoTimer;
+        console.log(`timerの中身: ${timer}`);
+
+
+        if(timer){
+            clearTimeout(timer);
+        }
+
+        set({
+            showUndo: false,
+            deletedNote: null,
+            undoTimer: null,
+        });
+
+    },
 
 
     // ノート単体をゴミ箱に移動する
@@ -263,13 +301,70 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            await moveToTrashApi(id);  // api呼ぶ
+            // 削除対象のノートを、削除前に取得する。
+            const deletedNote = get().notes.find(
+                note => note.id === id
+            );
+
+
+            // 以前のタイマーがあれば削除
+            const oldTimer = get().undoTimer;
+            console.log(`oldTimerの中身: ${oldTimer}`);
+
+            if (oldTimer) {
+                clearTimeout(oldTimer);
+            }
+
+
+            await moveToTrashApi(id);
+
+
 
             set((state) => ({
+
+                deletedNote: deletedNote,   // 左辺のdeletedNote: Storeで定義したもの。  右辺のdeletedNOte: 上で定義した変数
+                showUndo: true,
+
                 notes: state.notes.filter((note) =>
                     note.id !== id
                 )
-            }))
+            }));
+
+
+            // 新しいタイマーを作る。5秒後にUndo終了
+            const timer = setTimeout(() => {
+                get().hideUndo();
+            }, 5000);
+
+
+            // console.log("moveToTrash!");
+
+            // const timer = setTimeout(() => {
+            //     get().hideUndo();
+            // }, 5000);
+
+
+            // 新しいタイマーを作る。5秒後にUndo終了
+            // const timer = setTimeout(() => {
+
+            //     set({
+
+            //         showUndo: false,
+            //         deletedNote: null,
+            //         undoTimer: null,
+
+            //     });
+
+            // }, 5000);
+
+
+            // 今動いているタイマーはこれだと、Storeに保存する。これを書かないと、ノートA削除中に、ノートB削除みたいに連続で削除すると、バグる。
+            set({
+                undoTimer: timer,
+            });
+
+
+
 
 
         } catch (error) {
@@ -278,6 +373,53 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         }
     },
+
+
+
+    // 削除処理をキャンセルする。元に戻すを押したとき。
+    undoDelete: async (
+
+    ) => {
+
+        const deletedNote = get().deletedNote;  // Storeに保存してある削除したノートを取り出す。
+
+        if (!deletedNote) return;
+
+
+        // 現在のundoTimerを取得する。
+        const timer = get().undoTimer;
+
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+
+        try {
+
+            await restoreNoteApi(deletedNote.id);
+
+            set((state) => ({
+
+                notes: [
+                    deletedNote,
+                    ...state.notes,
+                ],
+
+                showUndo: false,
+                deletedNote: null,
+                undoTimer:null,
+
+
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    },
+
 
 
 
@@ -716,6 +858,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
+
+    // ノートの画像並び順を更新する
     updateNoteImageOrder: async(
         noteId: number,
         newImages: NoteImage[],
@@ -723,6 +867,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     ) => {
 
 
+        // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。
         const reorderedImages = newImages.map((image, index) => ({
             id: image.id,
             order: index,
@@ -744,8 +889,6 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                         }
 
                         : note
-
-
                 )
             }))
 
@@ -760,6 +903,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     },
+
+
+
 
 
 

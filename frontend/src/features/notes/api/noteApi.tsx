@@ -104,6 +104,7 @@ export const updateNote = async (
 
 // ノートをゴミ箱に移動させる
 export const moveToTrash = async(id: number) => {
+
     const token = localStorage.getItem("access");
 
     const res = await api.patch(  // patchは一部だけ更新という意味。
@@ -143,7 +144,7 @@ export const getTrashNotes = async () => {
 
 
 // ゴミ箱に入れたノートを復元する
-export const restoreNote = async (id: number) => {
+export const restoreNoteApi = async (id: number) => {
     const token = localStorage.getItem("access");
 
     const res = await api.patch(

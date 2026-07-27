@@ -53,11 +53,51 @@ export function ImageList({
 
     // hook
     const {
-        sortedImages,
+        // sortedImages,
         handleDragEnd,
     } = useSortableNoteImages(images, noteId);
 
-    // const [sortedImages, setSortedImages] = useState(images);
+
+
+
+
+    return (
+
+        <DndContext
+            onDragEnd={handleDragEnd}
+        >
+
+            <SortableContext
+                items={images.map((image) => image.id)}
+                strategy={rectSortingStrategy}
+            >
+
+                {images.map((image) => (
+                    <ImageItem
+                        key={image.id}
+                        image={image}
+                        isLarge={isLarge}
+                        onDeleteImage={() => onDeleteImage(image.id)}
+                        
+                    />
+                ))}
+
+            </SortableContext>
+
+        </DndContext>
+
+    );
+
+
+
+}
+
+
+
+
+
+// hookに移した
+// const [sortedImages, setSortedImages] = useState(images);
 
 
     // if (!images) return;
@@ -100,40 +140,3 @@ export function ImageList({
 
 
     // };
-
-
-
-
-
-    return (
-
-        <DndContext
-            onDragEnd={handleDragEnd}
-        >
-
-            <SortableContext
-                items={sortedImages.map((image) => image.id)}
-                strategy={rectSortingStrategy}
-            >
-
-                {sortedImages.map((image) => (
-                    <ImageItem
-                        key={image.id}
-                        image={image}
-                        isLarge={isLarge}
-                        onDeleteImage={() => onDeleteImage(image.id)}
-                        // onDeleteImage={ () => {
-                        //     onDeleteImage(image.id);
-                        // }}
-                    />
-                ))}
-
-            </SortableContext>
-
-        </DndContext>
-
-    );
-
-
-
-}

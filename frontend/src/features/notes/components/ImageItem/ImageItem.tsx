@@ -61,8 +61,6 @@ export default function ImageItem ({
             key={image.id}
             ref={setNodeRef}
             style={style}
-            {...attributes}
-            {...listeners}
             // className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
             className={`${styles.imageWrapper} ${wrapperClass}`}
         >
@@ -70,7 +68,9 @@ export default function ImageItem ({
             <img
                 src={image.image}
                 className={imageClass}
-                // className={styles.largeImage}
+                {...attributes}
+                {...listeners}
+
             />
 
             <button

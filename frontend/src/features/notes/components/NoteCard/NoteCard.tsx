@@ -173,9 +173,9 @@ export default function NoteCard({
     } = useNoteSelectionStore();
 
 
-    // useNoteStoreを使う
+    // useNoteStore
     const {
-        // updateNote,
+
         createNote,
         moveToTrash,
         toggleFavorite,
@@ -275,11 +275,11 @@ export default function NoteCard({
 
 
 
-                console.log(
-                    "実行される",
-                    note.id,
-                    openColorId
-                );
+                // console.log(
+                //     "実行される",
+                //     note.id,
+                //     openColorId
+                // );
 
                 if (note.id === openColorId) {  // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
                     console.log("保存するのはこのカード");
@@ -386,7 +386,7 @@ export default function NoteCard({
 
     }
 
-    console.log(note);
+    // console.log(note);
 
 
 
@@ -447,7 +447,7 @@ export default function NoteCard({
                     ))}
                 </div>
 
-                
+
 
                 <div
                     className={cardStyles.chars}
@@ -473,6 +473,7 @@ export default function NoteCard({
                     {note.labels.map((label) => (
 
                         <LabelItem
+                            key={label.id}
                             label={label}
                             onRemoveLabel={(labelId) => handleRemoveLabel(labelId)}
 
