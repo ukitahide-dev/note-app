@@ -1,0 +1,40 @@
+.undoSnackbar {
+    width: 360px;
+    max-width: calc(100vw - 48px);
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 1000;
+    background: #323232;
+    color: white;
+    border-radius: 8px;
+    padding: 14px 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+
+
+.content{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+
+.actions {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+}
+
+
+.content button{
+    background:none;
+    border:none;
+    color:#8ab4f8;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.content button:hover{
+    opacity:.8;
+}

@@ -39,17 +39,17 @@ export default function UndoSnackbar() {
                     ノートをゴミ箱に移動しました
                 </span>
 
-                <button
-                    onClick={undoDelete}
-                >
-                    元に戻す
-                </button>
+                <div className={styles.actions}>
 
-                <button
-                    onClick={hideUndo}
-                >
-                    ×
-                </button>
+                    <button onClick={undoDelete}>
+                        元に戻す
+                    </button>
+
+                    <button onClick={hideUndo}>
+                        ×
+                    </button>
+
+                </div>
 
             </div>
 

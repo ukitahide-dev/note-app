@@ -25,11 +25,16 @@ type NoteStore = {
 
     notes: Note[];
 
-    deletedNote: Note | null;
+    // deletedNote: Note | null;
+
+    deletedNote: {
+        note: Note;
+        index: number;
+    } | null;
 
     showUndo: boolean;
 
-    undoTimer: ReturnType<typeof setTimeout> | null;
+    undoTimer: ReturnType<typeof setTimeout> | null;  // 前のタイマーを止めるために必要。
 
 
     hideUndo: () => void;
@@ -306,6 +311,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 note => note.id === id
             );
 
+            // 削除対象のノートのインデックスを、削除前に取得する。
+            const deletedIndex = get().notes.findIndex(
+                note => note.id === id
+            );
+
+
+            if (!deletedNote) return;
+
 
             // 以前のタイマーがあれば削除
             const oldTimer = get().undoTimer;
@@ -322,7 +335,13 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             set((state) => ({
 
-                deletedNote: deletedNote,   // 左辺のdeletedNote: Storeで定義したもの。  右辺のdeletedNOte: 上で定義した変数
+                deletedNote: {  // このdeletedNote: Storeで定義したもの。
+                    note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
+                    index: deletedIndex,
+
+                },
+
+                // deletedNote: deletedNote,   // 左辺のdeletedNote: Storeで定義したもの。  右辺のdeletedNOte: 上で定義した変数。削除対象のノートをStoreで保存しておく。
                 showUndo: true,
 
                 notes: state.notes.filter((note) =>
@@ -339,32 +358,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             // console.log("moveToTrash!");
 
-            // const timer = setTimeout(() => {
-            //     get().hideUndo();
-            // }, 5000);
-
-
-            // 新しいタイマーを作る。5秒後にUndo終了
-            // const timer = setTimeout(() => {
-
-            //     set({
-
-            //         showUndo: false,
-            //         deletedNote: null,
-            //         undoTimer: null,
-
-            //     });
-
-            // }, 5000);
-
 
             // 今動いているタイマーはこれだと、Storeに保存する。これを書かないと、ノートA削除中に、ノートB削除みたいに連続で削除すると、バグる。
             set({
                 undoTimer: timer,
             });
-
-
-
 
 
         } catch (error) {
@@ -381,12 +379,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     ) => {
 
-        const deletedNote = get().deletedNote;  // Storeに保存してある削除したノートを取り出す。
+        const deletedNote = get().deletedNote;  // Storeに保存しておいた削除したノートを取り出す。
 
         if (!deletedNote) return;
 
 
-        // 現在のundoTimerを取得する。
+        // 現在のundoTimerを取得し、止める。
         const timer = get().undoTimer;
 
         if (timer) {
@@ -396,21 +394,42 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            await restoreNoteApi(deletedNote.id);
+            // await restoreNoteApi(deletedNote.id);
+            await restoreNoteApi(deletedNote.note.id);
 
-            set((state) => ({
+            set((state) => {
 
-                notes: [
-                    deletedNote,
-                    ...state.notes,
-                ],
+                const newNotes = [...state.notes];
 
-                showUndo: false,
-                deletedNote: null,
-                undoTimer:null,
+                newNotes.splice(
+                    deletedNote.index,
+                    0,
+                    deletedNote.note,
+                );
+
+                return {
+                    notes: newNotes,
+                    showUndo: false,
+                    deletedNote: null,
+                    undoTimer: null,
+                }
+
+            });
+
+            // set((state) => ({
+
+            //     notes: [
+            //         deletedNote.note,
+            //         // deletedNote,
+            //         ...state.notes,
+            //     ],
+
+            //     showUndo: false,
+            //     deletedNote: null,
+            //     undoTimer:null,
 
 
-            }));
+            // }));
 
         } catch (error) {
 
