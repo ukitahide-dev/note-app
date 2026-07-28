@@ -33,7 +33,7 @@ export default function NoteMenu({
 }: Props) {
 
 
-    console.log("NoteMenuマウント")
+    // console.log("NoteMenuマウント")
 
 
 

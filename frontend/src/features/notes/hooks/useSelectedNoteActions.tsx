@@ -13,15 +13,19 @@ export function useSelectedNoteActions (
 ) {
 
 
+    // store
     const {
         moveSelectedToTrash,
         duplicateSelectedNotes,
     } = useNoteStore();
 
 
+    // store
     const {
-        selectedNoteIds
+        selectedNoteIds,
     } = useNoteSelectionStore();
+
+
 
 
     const handleMoveToTrash = async () => {

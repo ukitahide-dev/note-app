@@ -61,7 +61,7 @@ export default function Header({
     const paletteRef = useRef<HTMLDivElement | null>(null);
 
 
-    
+
     // useSearchStore
     const {
         searchText,
@@ -71,7 +71,7 @@ export default function Header({
 
 
 
-    // useNoteSelectionStoreを使う
+    // useNoteSelectionStore
     const {
         selectedNoteIds,
         previewColor,
@@ -102,7 +102,7 @@ export default function Header({
     } = useSelectedNoteLabels();
 
 
-
+    // hooks 
     const {
         handleMoveToTrash,
         handleDuplicateNotes,

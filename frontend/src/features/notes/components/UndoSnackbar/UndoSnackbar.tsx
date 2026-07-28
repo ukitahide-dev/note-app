@@ -14,14 +14,15 @@ export default function UndoSnackbar() {
     // Store
     const {
         showUndo,
-        deletedNote,
+        // deletedNote,
+        deletedNotes,
         undoDelete,
         hideUndo,
     } = useNoteStore();
 
 
 
-    if(!showUndo || !deletedNote){
+    if(!showUndo || !deletedNotes.length){
         return null;
     }
 

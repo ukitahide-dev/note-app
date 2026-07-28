@@ -20,6 +20,11 @@ from "../api/noteApi";
 
 
 
+type DeletedNote = {
+    note: Note,
+    index: number,
+};
+
 
 type NoteStore = {
 
@@ -31,6 +36,8 @@ type NoteStore = {
         note: Note;
         index: number;
     } | null;
+
+    deletedNotes: DeletedNote[];
 
     showUndo: boolean;
 
@@ -112,8 +119,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     deletedNote: null,
 
-    showUndo: false,
+    deletedNotes: [],
 
+    showUndo: false,
 
     undoTimer: null as ReturnType<typeof setTimeout> | null,
 
@@ -280,6 +288,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     //     })),
 
+
+    // Undoを閉じる
     hideUndo: () => {
 
         const timer = get().undoTimer;
@@ -292,7 +302,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         set({
             showUndo: false,
-            deletedNote: null,
+            // deletedNote: null,
+            deletedNotes: [],
             undoTimer: null,
         });
 
@@ -335,13 +346,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             set((state) => ({
 
-                deletedNote: {  // このdeletedNote: Storeで定義したもの。
-                    note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
-                    index: deletedIndex,
+                // deletedNote: {  // このdeletedNote: Storeで定義したもの。
+                //     note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
+                //     index: deletedIndex,
 
-                },
+                // },
 
-                // deletedNote: deletedNote,   // 左辺のdeletedNote: Storeで定義したもの。  右辺のdeletedNOte: 上で定義した変数。削除対象のノートをStoreで保存しておく。
+                deletedNotes: [
+                    {
+                        note: deletedNote,
+                        index: deletedIndex,
+                    }
+                ],
+
                 showUndo: true,
 
                 notes: state.notes.filter((note) =>
@@ -379,9 +396,13 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     ) => {
 
-        const deletedNote = get().deletedNote;  // Storeに保存しておいた削除したノートを取り出す。
+        // const deletedNote = get().deletedNote;  // Storeに保存しておいた削除したノートを取り出す。
 
-        if (!deletedNote) return;
+        const deletedNotes = get().deletedNotes;
+
+        if (!deletedNotes.length) return;
+
+        // if (!deletedNote) return;
 
 
         // 現在のundoTimerを取得し、止める。
@@ -394,48 +415,109 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            // await restoreNoteApi(deletedNote.id);
-            await restoreNoteApi(deletedNote.note.id);
+            await Promise.all(
+                deletedNotes.map(item =>
+                    restoreNoteApi(item.note.id)
+                )
+            );
+
 
             set((state) => {
 
                 const newNotes = [...state.notes];
 
-                newNotes.splice(
-                    deletedNote.index,
-                    0,
-                    deletedNote.note,
+                deletedNotes.forEach(item =>
+
+                    newNotes.splice(
+                        item.index,
+                        0,
+                        item.note,
+                    )
                 );
+
 
                 return {
                     notes: newNotes,
                     showUndo: false,
-                    deletedNote: null,
+                    deletedNotes: [],
                     undoTimer: null,
                 }
 
             });
 
-            // set((state) => ({
 
-            //     notes: [
-            //         deletedNote.note,
-            //         // deletedNote,
-            //         ...state.notes,
-            //     ],
-
-            //     showUndo: false,
-            //     deletedNote: null,
-            //     undoTimer:null,
-
-
-            // }));
 
         } catch (error) {
 
             console.error(error);
 
         }
+
+    },
+
+
+
+
+    // 選択した複数のノートをゴミ箱に移動する
+    moveSelectedToTrash: async (
+        ids: number[]
+    ) => {
+
+        try {
+
+            // 削除対象のノートを、削除前に取得する。
+            const deletedNotes = get().notes
+                .map((note, index) => ({
+                    note: note,
+                    index: index,
+                }))
+                .filter(item =>
+                    ids.includes(item.note.id)
+                );
+
+
+            // 以前のタイマーがあれば削除
+            const oldTimer = get().undoTimer;
+            console.log(`oldTimerの中身: ${oldTimer}`);
+
+            if (oldTimer) {
+                clearTimeout(oldTimer);
+            }
+
+
+
+            await Promise.all(
+                ids.map(
+                    (id) => moveToTrashApi(id)
+                )
+            );
+
+
+            // 新しいタイマーを作る。5秒後にUndo終了
+            const timer = setTimeout(() => {
+                get().hideUndo();
+            }, 5000);
+
+
+
+            set((state) => ({
+
+                deletedNotes: deletedNotes,
+                showUndo: true,
+                undoTimer: timer,
+
+                notes: state.notes.filter(
+                    (note) => !ids.includes(note.id)
+                )
+
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+        }
+
+
 
     },
 
@@ -511,35 +593,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-    // 選択した複数のノートをゴミ箱に移動する
-    moveSelectedToTrash: async (
-        ids: number[]
-    ) => {
 
-        try {
-
-            await Promise.all(
-                ids.map(
-                    (id) => moveToTrashApi(id)
-                )
-            )
-
-            set((state) => ({
-
-                notes: state.notes.filter(
-                    (note) => !ids.includes(note.id)
-                )
-
-            }))
-
-        } catch (error) {
-
-            console.error(error);
-        }
-
-
-
-    },
 
 
 
