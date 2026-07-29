@@ -1,8 +1,59 @@
-.pageButton {
+/* .pageButton {
     background: white;
 }
 
 .active {
     background: #4caf50;
     color: white;
+} */
+
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 32px 0;
+}
+
+.pageButton,
+.active,
+.arrowButton {
+    min-width: 40px;
+    height: 40px;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    background: white;
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.pageButton:hover,
+.arrowButton:hover:not(:disabled) {
+    background: #f5f5f5;
+}
+
+.active {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+    font-weight: bold;
+}
+
+.arrowButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ellipsis {
+    min-width: 40px;
+    text-align: center;
+    color: #666;
+    user-select: none;
 }

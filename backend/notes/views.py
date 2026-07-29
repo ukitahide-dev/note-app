@@ -9,13 +9,21 @@ from .serializers import NoteSerializer, LabelSerializer, NoteHistorySerializer,
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
+
+
+
+class NotePagination(PageNumberPagination):
+    page_size = 20
 
 
 
 class NoteViewSet(ModelViewSet):
     serializer_class = NoteSerializer  # このViewSetでは基本的に NoteSerializer を使うという意味。
     permission_classes = [IsAuthenticated]  # ログイン済みのユーザーだけ許可する
+    pagination_class = NotePagination
+
 
 
     def get_queryset(self):  # get_querysetは、どのデータを返すか決める。ViewSetが対象データを探す時の基準として使われる。
