@@ -4,11 +4,14 @@ import type { History } from "../../../types/note";
 
 
 // ノート一覧を取得する
-export const getNotes = async () =>  {
+export const getNotes = async (
+    page: number = 1,
+
+) =>  {
     const token = localStorage.getItem("access");
 
     const res = await api.get(
-        "/notes/",
+        `/notes/?page=${page}`,
         {
             headers: {
                 Authorization: `Bearer ${token}`

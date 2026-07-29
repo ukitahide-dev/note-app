@@ -30,12 +30,17 @@ type NoteStore = {
 
     notes: Note[];
 
+    currentPage: number;
+    count: number;
+    next: string | null;
+    previous: string | null;
+
     // deletedNote: Note | null;
 
-    deletedNote: {
-        note: Note;
-        index: number;
-    } | null;
+    // deletedNote: {
+    //     note: Note;
+    //     index: number;
+    // } | null;
 
     deletedNotes: DeletedNote[];
 
@@ -48,7 +53,7 @@ type NoteStore = {
 
     // newImages: NoteImage[];
 
-    fetchNotes: () => Promise<void>;
+    fetchNotes: (page?: number) => Promise<void>;
 
 
     fetchTrashNotes: () => Promise<void>;
@@ -117,7 +122,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     notes: [],
 
-    deletedNote: null,
+    currentPage: 1,
+    count: 0,
+    next: null,
+    previous: null,
+
+    // deletedNote: null,
 
     deletedNotes: [],
 
@@ -129,15 +139,25 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-    fetchNotes: async () => {
+    fetchNotes: async (page = 1) => {
 
         try {
 
-            const data = await getNotes();
+            const data = await getNotes(page);
+
+            console.log(data);
 
             set({
-                notes: data,
+                notes: data.results,
+                currentPage: page,
+                count: data.count,
+                next: data.next,
+                previous: data.previous,
             });
+
+            // set({
+            //     notes: data.results,
+            // });
 
         } catch (error) {
 
@@ -396,13 +416,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     ) => {
 
-        // const deletedNote = get().deletedNote;  // Storeに保存しておいた削除したノートを取り出す。
 
-        const deletedNotes = get().deletedNotes;
+
+        const deletedNotes = get().deletedNotes;  // Storeに保存しておいた削除したノートを取り出す。
 
         if (!deletedNotes.length) return;
 
-        // if (!deletedNote) return;
 
 
         // 現在のundoTimerを取得し、止める。
@@ -465,7 +484,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            // 削除対象のノートを、削除前に取得する。
+            // 削除対象のノートとそのインデックスを、削除前に取得する。
             const deletedNotes = get().notes
                 .map((note, index) => ({
                     note: note,

@@ -49,6 +49,7 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
         try {
 
             const data = await getLabels();
+            console.log(data);
 
             set({
                 labels: data  // グローバルstate更新。useLabelStore()使ってる全コンポーネントを再レンダリングする。

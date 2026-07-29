@@ -20,6 +20,7 @@ import { useNoteStore } from "../store/useNoteStore";
 // ----css----
 import styles from "./NotesPage.module.css";
 import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
+import Pagination from "../components/Pagination/Pagination";
 
 
 
@@ -89,6 +90,10 @@ export default function NotesPage() {
                     // setNotes={setNotes}
                     enableSort={true}
                     // onMoveToTrash={handleMoveToTrash}
+                />
+
+                <Pagination
+
                 />
 
 
