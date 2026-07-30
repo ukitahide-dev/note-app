@@ -35,6 +35,9 @@ type NoteStore = {
     next: string | null;
     previous: string | null;
 
+    pageSize: number;
+    changePageSize: (size: number) => Promise <void>;
+
     // deletedNote: Note | null;
 
     // deletedNote: {
@@ -127,6 +130,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     next: null,
     previous: null,
 
+    pageSize: 20,
+
     // deletedNote: null,
 
     deletedNotes: [],
@@ -139,11 +144,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-    fetchNotes: async (page = 1) => {
+    fetchNotes: async (
+        page = 1,
+        pageSize = get().pageSize,
+
+    ) => {
 
         try {
 
-            const data = await getNotes(page);
+            const data = await getNotes(page, pageSize);
 
             console.log(data);
 
@@ -155,15 +164,25 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 previous: data.previous,
             });
 
-            // set({
-            //     notes: data.results,
-            // });
 
         } catch (error) {
 
             console.error(error);
 
         }
+
+    },
+
+
+
+    changePageSize: async (size: number) => {
+
+        set({
+            pageSize: size,
+            currentPage: 1,
+        });
+
+        await get().fetchNotes(get().currentPage);
 
     },
 

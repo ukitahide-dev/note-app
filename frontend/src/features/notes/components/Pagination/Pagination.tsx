@@ -7,8 +7,7 @@ import styles from "./Pagination.module.css";
 
 
 
-
-
+// 親: NotePage.tsx
 
 
 export default function Pagination() {
@@ -21,14 +20,14 @@ export default function Pagination() {
         previous,
         next,
         fetchNotes,
+        pageSize,
+        changePageSize,
     } = useNoteStore();
 
 
 
 
-
-
-    const totalPages = Math.ceil(count / 20);
+    const totalPages = Math.ceil(count / pageSize);
 
 
     // utils
@@ -39,47 +38,12 @@ export default function Pagination() {
         );
 
 
-    // utilsに移した
-    // const displayPages: (number | string)[] = [];
 
-    // const start = Math.max(1, currentPage - 2);
-    // const end = Math.min(totalPages, currentPage + 2);
-
-
-    // for (let i = start; i <= end; i++) {
-    //     displayPages.push(i);
-    // }
-
-
-    // if (start > 2) {
-    //     displayPages.unshift("...");
-    //     displayPages.unshift(1);
-    // }
-
-
-    // if (end < totalPages - 1) {
-    //     displayPages.push("...");
-    //     displayPages.push(totalPages);
-    // }
-
-
-    // if (start === 2) {
-    //     displayPages.unshift(1);
-    // }
-
-    // if (end === totalPages - 1) {
-    //     displayPages.push(totalPages);
-    // }
-
-
-    // console.log(displayPages);
-    // displayPages.forEach((page, index) => {
-    //     console.log(index, page);
-    // });
 
 
     return (
 
+        <>
         <div
             className={styles.pagination}
         >
@@ -139,8 +103,75 @@ export default function Pagination() {
 
         </div>
 
+        <div className={styles.pageSizeButtons}>
+
+            <span className={styles.pageSizeLabel}>
+                1ページの表示数
+            </span>
+
+            {[20, 30, 60, 120].map((size) => (
+
+                <button
+                    key={size}
+                    className={
+                        pageSize === size
+                            ? styles.activeSize
+                            : styles.sizeButton
+                    }
+                    onClick={() => changePageSize(size)}
+                >
+                    {size}
+                </button>
+
+            ))}
+
+        </div>
+
+        </>
+
     );
 
 
 
 }
+
+
+
+
+// utilsに移した
+    // const displayPages: (number | string)[] = [];
+
+    // const start = Math.max(1, currentPage - 2);
+    // const end = Math.min(totalPages, currentPage + 2);
+
+
+    // for (let i = start; i <= end; i++) {
+    //     displayPages.push(i);
+    // }
+
+
+    // if (start > 2) {
+    //     displayPages.unshift("...");
+    //     displayPages.unshift(1);
+    // }
+
+
+    // if (end < totalPages - 1) {
+    //     displayPages.push("...");
+    //     displayPages.push(totalPages);
+    // }
+
+
+    // if (start === 2) {
+    //     displayPages.unshift(1);
+    // }
+
+    // if (end === totalPages - 1) {
+    //     displayPages.push(totalPages);
+    // }
+
+
+    // console.log(displayPages);
+    // displayPages.forEach((page, index) => {
+    //     console.log(index, page);
+    // });

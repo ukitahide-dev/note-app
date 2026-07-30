@@ -15,7 +15,9 @@ from rest_framework.pagination import PageNumberPagination
 
 
 class NotePagination(PageNumberPagination):
-    page_size = 20
+    page_size = 20  # デフォルトは20件。
+    page_size_query_param = "page_size"  # /notes/?page=1&page_size=60を受け付けるようになる。
+    max_page_size = 120
 
 
 
