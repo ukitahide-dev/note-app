@@ -24,6 +24,7 @@ export type Note = {
     is_pinned: boolean;
     labels: Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
     images: NoteImage[];
+    view_count: number;
 };
 
 

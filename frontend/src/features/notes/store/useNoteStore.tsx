@@ -8,6 +8,7 @@ import {
     // getNote,
     getNotes,
     getTrashNotes as getTrashNotesApi,
+    incrementNoteViewApi,
     moveToTrash as moveToTrashApi,
     reorderNoteImageApi,
     restoreNoteApi,
@@ -38,6 +39,10 @@ type NoteStore = {
     pageSize: number;
     changePageSize: (size: number) => Promise <void>;
 
+    ordering: string;
+    changeOrdering: (ordering: string) => Promise<void>;
+
+
     // deletedNote: Note | null;
 
     // deletedNote: {
@@ -56,7 +61,11 @@ type NoteStore = {
 
     // newImages: NoteImage[];
 
-    fetchNotes: (page?: number) => Promise<void>;
+    fetchNotes: (
+        page: number,
+        size: number,
+        ordering: string,
+    ) => Promise<void>;
 
 
     fetchTrashNotes: () => Promise<void>;
@@ -117,6 +126,10 @@ type NoteStore = {
 
     undoDelete: () => Promise<void>;
 
+
+
+    incrementNoteView: (noteId: number, ) => Promise<void>;
+
 }
 
 
@@ -132,6 +145,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     pageSize: 20,
 
+    ordering: "-created_at",
+
     // deletedNote: null,
 
     deletedNotes: [],
@@ -145,14 +160,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     fetchNotes: async (
-        page = 1,
-        pageSize = get().pageSize,
+        page = 1,  // pageが渡されなかったら1を使う。
+        pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
+        ordering = "-created_at",
 
     ) => {
 
         try {
 
-            const data = await getNotes(page, pageSize);
+            const data = await getNotes(page, pageSize, ordering);
 
             console.log(data);
 
@@ -182,7 +198,28 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             currentPage: 1,
         });
 
-        await get().fetchNotes(get().currentPage);
+        await get().fetchNotes(1, size, get().ordering);
+        // await get().fetchNotes(get().currentPage);
+        // await get().fetchNotes();
+
+    },
+
+
+
+    changeOrdering: async (
+        ordering: string,
+
+    ) => {
+
+        set({
+            currentPage: 1,
+            ordering: ordering,
+
+        });
+
+        await get().fetchNotes(1, get().pageSize, ordering);
+
+
 
     },
 
@@ -317,15 +354,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
-    // updateNote: (updatedNote) =>
 
-    //     set((state) => ({
-
-    //         notes: state.notes.map((note) =>
-    //             note.id === updatedNote.id ? updatedNote : note
-    //         )
-
-    //     })),
 
 
     // Undoを閉じる
@@ -1016,6 +1045,37 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
+
+    incrementNoteView: async (
+        noteId: number,
+    ) => {
+
+        try {
+
+            const data = await incrementNoteViewApi(noteId);
+
+            set((state) => ({
+
+                notes: state.notes.map((note) =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            view_count: data.view_count,
+                            // view_count: note.view_count + 1,
+                        }
+                        : note
+                )
+
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    }
 
 
 

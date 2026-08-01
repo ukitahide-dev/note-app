@@ -51,7 +51,7 @@ export default function Pagination() {
             <button
                 disabled={!previous}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage - 1)}
+                onClick={() => fetchNotes(currentPage - 1, pageSize)}
             >
                 ←
             </button>
@@ -77,7 +77,7 @@ export default function Pagination() {
                                 ? styles.active
                                 : styles.pageButton
                         }
-                        onClick={() => fetchNotes(Number(page))}
+                        onClick={() => fetchNotes(Number(page), pageSize)}
                     >
                         {page}
 
@@ -96,7 +96,7 @@ export default function Pagination() {
             <button
                 disabled={!next}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage + 1)}
+                onClick={() => fetchNotes(currentPage + 1, pageSize)}
             >
                 →
             </button>

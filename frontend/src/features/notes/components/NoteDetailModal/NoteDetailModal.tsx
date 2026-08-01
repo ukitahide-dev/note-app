@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // ---- component ----
 import NoteMenu from '../SortableNoteCard/NoteMenu/NoteMenu'
@@ -24,6 +24,7 @@ import { useNoteColor } from '../../hooks/useNoteColor'
 
 // ---- utils ----
 import { splitImages } from '../../utils/splitImages'
+import { incrementNoteViewApi } from '../../api/noteApi'
 
 
 
@@ -31,7 +32,7 @@ import { splitImages } from '../../utils/splitImages'
 // import { deleteNoteImage } from "../../api/noteApi";
 
 type Props = {
-  note: Note
+  note: Note;
   // onSave: (
   //     id: number,
   //     title: string,
@@ -49,7 +50,11 @@ type Props = {
   //     React.SetStateAction<Note[]>
   // >;
 
-  setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>
+  setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
+
+//   setViewCount: React.Dispatch<
+//         React.SetStateAction<number>
+//     >;
 
   // onDuplicateNote: (
   //     note: Note,
@@ -62,6 +67,7 @@ export default function NoteDetailModal({
     note,
     // setNotes,
     setOpenNoteDetailId,
+    // setViewCount,
     // onSave,
     // onUpdateColor,
     // onMoveToTrash,
@@ -93,6 +99,7 @@ export default function NoteDetailModal({
         createNote,
         moveToTrash,
         deleteNoteImage,
+        incrementNoteView,
     } = useNoteStore()
 
 
@@ -119,6 +126,44 @@ export default function NoteDetailModal({
     }
 
 
+
+    const viewed = useRef(false);  // このモーダルはもう閲覧数加算処理を実行したか？を記録するメモ帳
+
+
+    useEffect(() => {
+
+        if (viewed.current) {
+            return;
+        }
+
+        viewed.current = true;
+
+        incrementNoteView(note.id);
+
+
+    }, [note.id]);
+
+
+
+
+    // useEffect(() => {
+
+    //     if (viewed.current) {
+    //         return;
+    //     }
+
+    //     viewed.current = true;
+
+    //     const addView = async () => {
+    //         const data = await incrementNoteViewApi(note.id);
+    //         console.log(data);  // {view_count: 8}
+
+    //         setViewCount(data.view_count);
+    //     };
+
+    //     addView();
+
+    // }, [note.id]);
 
 
 

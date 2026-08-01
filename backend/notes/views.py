@@ -11,7 +11,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
+from rest_framework.filters import OrderingFilter
 
+from django.db.models import F
 
 
 class NotePagination(PageNumberPagination):
@@ -27,6 +29,24 @@ class NoteViewSet(ModelViewSet):
     pagination_class = NotePagination
 
 
+    # このViewSetでは、このフィルター機能を使う。ソート機能。
+    filter_backends = [
+        OrderingFilter
+    ]
+
+    # ユーザーが並び替えに使っていいカラムを指定する。
+    ordering_fields = [
+        "created_at",
+        "updated_at",
+        "title",
+    ]
+
+    # ordering指定がなかった場合のデフォルト。
+    ordering = [
+        "-created_at"
+    ]
+
+
 
     def get_queryset(self):  # get_querysetは、どのデータを返すか決める。ViewSetが対象データを探す時の基準として使われる。
 
@@ -35,9 +55,14 @@ class NoteViewSet(ModelViewSet):
             "update",
             "destroy",
         ]:  # self.actionはDRFのViewSetが今どの操作を実行してるかを表す値
-            return Note.objects.filter(user=self.request.user)
+            return Note.objects.filter(
+                user=self.request.user
+            )
 
-        return Note.objects.filter(user=self.request.user, is_deleted=False)
+        return Note.objects.filter(
+            user=self.request.user,
+            is_deleted=False,
+        )
 
 
 
@@ -152,6 +177,21 @@ class NoteViewSet(ModelViewSet):
 
 
 
+    # ノートの閲覧数を増やす
+    @action(detail=True, methods=["post"])  # detail=True は/notes/24/view/ のように1件のノートに対するAPIという意味。
+    def view(self, request, pk=None):
+        note = self.get_object()
+
+        note.view_count = F("view_count") + 1  # Pythonで計算する」のではなく、「データベースで計算してください」とお願いするための書き方。競合アクセスでカウントが正しく増えなくなることを防ぐ。１
+        note.save(update_fields=["view_count"])  # view_count だけ保存する。閲覧数を1増やしたいだけだから、余計なカラムは更新しないようにする。
+
+        note.refresh_from_db()
+
+        return Response(
+            {
+                "view_count": note.view_count
+            }
+        )
 
 
 

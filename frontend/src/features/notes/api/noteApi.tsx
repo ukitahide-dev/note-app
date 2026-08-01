@@ -7,17 +7,26 @@ import type { History } from "../../../types/note";
 export const getNotes = async (
     page: number = 1,
     pageSize: number = 20,
+    ordering: string = "-created_at",
 
 ) =>  {
     const token = localStorage.getItem("access");
 
     const res = await api.get(
-        `/notes/?page=${page}&page_size=${pageSize}`,
+        "/notes/",
         {
+            params: {  //  axiosが自動的に/notes/?page=1&page_size=20&ordering=-created_atに変換する。
+                page,
+                pageSize,
+                ordering,
+            },
+
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
         }
+        // `/notes/?page=${page}&page_size=${pageSize}`,
+
     )
 
     return res.data;
@@ -435,5 +444,31 @@ export const reorderNoteImageApi = async (
     return res.data;
 
 
+
+}
+
+
+
+
+
+export const incrementNoteViewApi = async (
+    noteId: number,
+
+) => {
+
+    const token = localStorage.getItem("access");
+
+    const res = await api.post(
+        `/notes/${noteId}/view/`,
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        },
+
+    );
+
+    return res.data;
 
 }

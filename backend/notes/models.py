@@ -26,6 +26,7 @@ class Note(models.Model):
     content = models.TextField()
     labels = models.ManyToManyField(Label, blank=True)
     color = models.CharField(max_length=20, default="#ffffff")
+    view_count = models.PositiveIntegerField(default=0) 
     is_favorite = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     is_pinned = models.BooleanField(default=False)
@@ -33,7 +34,7 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
 
 
 

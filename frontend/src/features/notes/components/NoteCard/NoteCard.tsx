@@ -1,4 +1,4 @@
-import { useEffect, useRef, } from "react";
+import { useEffect, useRef, useState, } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 // import { useNavigate } from "react-router-dom";
 import { uploadNoteImage } from "../../api/noteApi";
@@ -132,6 +132,10 @@ export default function NoteCard({
     const paletteRef = useRef<HTMLDivElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // const [viewCount, setViewCount] = useState(note.view_count);
+
+
+    // store
     const { searchText } = useSearchStore();
 
 
@@ -518,6 +522,11 @@ export default function NoteCard({
 
                         </button>
 
+                        <span>
+                            {/* 👀 {viewCount} */}
+                            👀 {note.view_count}
+                        </span>
+
                         <input
                             onClick={(e) => e.stopPropagation()}
                             ref={fileInputRef}
@@ -571,6 +580,7 @@ export default function NoteCard({
                         note={note}
                         // setNotes={setNotes}
                         setOpenNoteDetailId={setOpenNoteDetailId}
+                        // setViewCount={setViewCount}
                         // onSave={onSave}
                         // onUpdateColor={onUpdateColor}
                         // onMoveToTrash={onMoveToTrash}

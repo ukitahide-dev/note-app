@@ -21,6 +21,7 @@ import { useNoteStore } from "../store/useNoteStore";
 import styles from "./NotesPage.module.css";
 import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
 import Pagination from "../components/Pagination/Pagination";
+import SortSelect from "../components/SortSelect/SortSelect";
 
 
 
@@ -80,6 +81,14 @@ export default function NotesPage() {
 
     return (
         <>
+            <Pagination
+
+            />
+
+            <SortSelect
+
+            />
+
             <div className={styles.container}>
                 <NoteForm
                     // onAddNote={handleAddNote}
@@ -101,6 +110,8 @@ export default function NotesPage() {
 
 
                 />
+
+                
 
 
 
