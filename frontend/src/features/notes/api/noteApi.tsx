@@ -25,7 +25,7 @@ export const getNotes = async (
                 Authorization: `Bearer ${token}`
             },
         }
-        // `/notes/?page=${page}&page_size=${pageSize}`,
+        
 
     )
 

@@ -32,9 +32,7 @@ export default function SortSelect() {
             <select
                 className={styles.select}
                 value={ordering}
-                onChange={(e)=>
-                    changeOrdering(e.target.value)
-                }
+                onChange={(e) => changeOrdering(e.target.value)}
             >
 
                 <option value="-created_at">
@@ -51,6 +49,10 @@ export default function SortSelect() {
 
                 <option value="title">
                     タイトル順
+                </option>
+
+                <option value="-view_count">
+                    閲覧数順
                 </option>
 
             </select>

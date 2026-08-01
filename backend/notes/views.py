@@ -39,6 +39,7 @@ class NoteViewSet(ModelViewSet):
         "created_at",
         "updated_at",
         "title",
+        "view_count",
     ]
 
     # ordering指定がなかった場合のデフォルト。
