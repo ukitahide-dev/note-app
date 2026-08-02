@@ -21,6 +21,7 @@ export default function Pagination() {
         next,
         fetchNotes,
         pageSize,
+        ordering,
         changePageSize,
     } = useNoteStore();
 
@@ -51,7 +52,7 @@ export default function Pagination() {
             <button
                 disabled={!previous}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage - 1, pageSize)}
+                onClick={() => fetchNotes(currentPage - 1, pageSize, ordering)}
             >
                 ←
             </button>
@@ -77,7 +78,7 @@ export default function Pagination() {
                                 ? styles.active
                                 : styles.pageButton
                         }
-                        onClick={() => fetchNotes(Number(page), pageSize)}
+                        onClick={() => fetchNotes(Number(page), pageSize, ordering)}
                     >
                         {page}
 
@@ -96,7 +97,7 @@ export default function Pagination() {
             <button
                 disabled={!next}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage + 1, pageSize)}
+                onClick={() => fetchNotes(currentPage + 1, pageSize, ordering)}
             >
                 →
             </button>

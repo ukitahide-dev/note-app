@@ -55,6 +55,10 @@ export default function SortSelect() {
                     閲覧数順
                 </option>
 
+                <option value="-total_view_seconds">
+                    合計滞在時間順
+                </option>
+
             </select>
 
         </div>

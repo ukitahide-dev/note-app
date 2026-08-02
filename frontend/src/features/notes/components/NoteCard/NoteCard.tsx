@@ -102,22 +102,19 @@ type Props = {
 
 export default function NoteCard({
     note,
-    // setNotes,
+
     openMenuId,
     setOpenMenuId,
     openColorId,
     setOpenColorId,
-    // onMoveToTrash,
+
     openNoteDetailId,
     setOpenNoteDetailId,
-    // onSave,
-    // onUpdateColor,
+
     dragHandleProps,
     panelType,
     setPanelType,
-    // onToggleFavorite,
-    // onTogglePin,
-    // onDuplicateNote,
+
 }: Props) {
 
 
@@ -132,14 +129,13 @@ export default function NoteCard({
     const paletteRef = useRef<HTMLDivElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // const [viewCount, setViewCount] = useState(note.view_count);
 
 
     // store
     const { searchText } = useSearchStore();
 
 
-    // const [panelType, setPanelType] = useState<"label" | null>(null);
+
 
     // useNoteLabels hooksを使う
     const {
@@ -169,7 +165,7 @@ export default function NoteCard({
 
 
 
-    // useNoteSelectionStoreを使う
+    // Store
     const {
         selectedNoteIds,
         toggleSelect,
@@ -177,7 +173,7 @@ export default function NoteCard({
     } = useNoteSelectionStore();
 
 
-    // useNoteStore
+    // Store
     const {
 
         createNote,
@@ -525,6 +521,11 @@ export default function NoteCard({
                         <span>
                             {/* 👀 {viewCount} */}
                             👀 {note.view_count}
+                        </span>
+
+                        <span>
+                            {/* 👀 {viewCount} */}
+                            合計滞在時間: {note.total_view_seconds}秒
                         </span>
 
                         <input

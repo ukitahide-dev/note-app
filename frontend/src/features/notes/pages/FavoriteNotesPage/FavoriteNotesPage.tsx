@@ -1,7 +1,7 @@
 // FavoritesPage.tsx
 
 import { useEffect, useState } from "react";
-import { getNotes } from "../../api/noteApi";
+import { getNotesApi } from "../../api/noteApi";
 
 import NoteList from "../../components/NoteList/NoteList";
 
@@ -11,13 +11,7 @@ import type { Note } from "../../../../types/note";
 
 
 
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     color: string;
-//     is_favorite: boolean;
-// };
+
 
 
 
@@ -30,7 +24,7 @@ export default function FavoriteNotesPage() {
 
         const fetchNotes = async () => {
 
-            const data = await getNotes();
+            const data = await getNotesApi();
 
             setNotes(
                 data.filter(

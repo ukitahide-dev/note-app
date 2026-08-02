@@ -5,8 +5,8 @@ import {
     deleteNoteForever as deleteNoteForeverApi,
     deleteNoteImageApi,
     emptyTrash as emptyTrashApi,
-    // getNote,
-    getNotes,
+
+    getNotesApi,
     getTrashNotes as getTrashNotesApi,
     incrementNoteViewApi,
     moveToTrash as moveToTrashApi,
@@ -16,7 +16,9 @@ import {
     updateNoteColor as updateNoteColorApi,
     updateNoteFavorite,
     updateNoteLabelsApi,
-    updateNotePinned }
+    updateNotePinned,
+    updateNoteViewTimeApi
+}
 from "../api/noteApi";
 
 
@@ -130,6 +132,8 @@ type NoteStore = {
 
     incrementNoteView: (noteId: number, ) => Promise<void>;
 
+    updateNoteViewTime: (noteId: number, seconds: number) => Promise<void>;
+
 }
 
 
@@ -168,7 +172,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const data = await getNotes(page, pageSize, ordering);
+            const data = await getNotesApi(page, pageSize, ordering);
 
             console.log(data);
 
@@ -219,9 +223,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         await get().fetchNotes(1, get().pageSize, ordering);
 
-
-
     },
+
 
 
     fetchTrashNotes: async () => {
@@ -1066,6 +1069,36 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                         : note
                 )
 
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    },
+
+
+    updateNoteViewTime: async (
+        noteId: number,
+        seconds: number,
+    ) => {
+
+        try {
+
+            const data = await updateNoteViewTimeApi(noteId, seconds);
+
+            set((state) => ({
+                notes: state.notes.map((note) =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            total_view_seconds: data.total_view_seconds,
+                        }
+                        : note
+                )
             }));
 
         } catch (error) {

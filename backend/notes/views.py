@@ -40,6 +40,7 @@ class NoteViewSet(ModelViewSet):
         "updated_at",
         "title",
         "view_count",
+        "total_view_seconds"
     ]
 
     # ordering指定がなかった場合のデフォルト。
@@ -191,6 +192,23 @@ class NoteViewSet(ModelViewSet):
         return Response(
             {
                 "view_count": note.view_count
+            }
+        )
+
+
+
+    @action(detail=True, methods=["patch"])
+    def view_time(self, request, pk=None):
+        note = self.get_object()
+
+        seconds = request.data.get("seconds", 0)
+
+        note.total_view_seconds += seconds
+        note.save()
+
+        return Response(
+            {
+                "total_view_seconds": note.total_view_seconds
             }
         )
 

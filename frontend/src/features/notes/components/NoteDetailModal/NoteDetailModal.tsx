@@ -100,6 +100,7 @@ export default function NoteDetailModal({
         moveToTrash,
         deleteNoteImage,
         incrementNoteView,
+        updateNoteViewTime,
     } = useNoteStore()
 
 
@@ -113,6 +114,15 @@ export default function NoteDetailModal({
 
 
     const handleClose = async () => {
+
+        const seconds = Math.floor((Date.now() - startTime.current) / 1000) ;
+
+        console.log(seconds);
+
+        await updateNoteViewTime(note.id, seconds);
+
+
+
         if (title !== note.title || content !== note.content) {
             await updateNote(note.id, title, content);
         }
@@ -127,43 +137,28 @@ export default function NoteDetailModal({
 
 
 
-    const viewed = useRef(false);  // このモーダルはもう閲覧数加算処理を実行したか？を記録するメモ帳
+    // const viewed = useRef(false);  // このモーダルはもう閲覧数加算処理を実行したか？を記録するメモ帳
+    const startTime = useRef(0);
 
 
     useEffect(() => {
 
-        if (viewed.current) {
-            return;
-        }
+        startTime.current = Date.now();
 
-        viewed.current = true;
+        // if (viewed.current) {
+        //     return;
+        // }
+
+        // viewed.current = true;
 
         incrementNoteView(note.id);
 
 
-    }, [note.id]);
+    }, []);
 
 
 
 
-    // useEffect(() => {
-
-    //     if (viewed.current) {
-    //         return;
-    //     }
-
-    //     viewed.current = true;
-
-    //     const addView = async () => {
-    //         const data = await incrementNoteViewApi(note.id);
-    //         console.log(data);  // {view_count: 8}
-
-    //         setViewCount(data.view_count);
-    //     };
-
-    //     addView();
-
-    // }, [note.id]);
 
 
 
@@ -171,6 +166,7 @@ export default function NoteDetailModal({
             <div
                 className={styles.overlay}
                 onClick={handleClose}
+                // onClick={() => handleClose()}
 
             >
                 <div
