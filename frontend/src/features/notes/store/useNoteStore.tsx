@@ -6,6 +6,8 @@ import {
     deleteNoteImageApi,
     emptyTrash as emptyTrashApi,
 
+    getAllNotesApi,
+
     getNotesApi,
     getTrashNotes as getTrashNotesApi,
     incrementNoteViewApi,
@@ -68,6 +70,9 @@ type NoteStore = {
         size: number,
         ordering: string,
     ) => Promise<void>;
+
+
+    fetchAllNotes: () => Promise<void>;
 
 
     fetchTrashNotes: () => Promise<void>;
@@ -192,6 +197,26 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
 
     },
+
+
+
+    fetchAllNotes: async () => {
+         try {
+
+            const data = await getAllNotesApi();
+
+            set({
+                notes: data.results,
+            });
+
+
+        } catch(error) {
+
+            console.error(error);
+
+        }
+    },
+
 
 
 
@@ -1101,6 +1126,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 )
             }));
 
+            await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);
+
+
         } catch (error) {
 
             console.error(error);
@@ -1114,4 +1142,4 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
 
-}))
+}));

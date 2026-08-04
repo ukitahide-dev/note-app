@@ -13,7 +13,6 @@ import styles from './NoteDetailModal.module.css'
 
 
 import ColorPalette from '../../../../shared/ui/ColorPalette/ColorPalette'
-// import { updateNote as updateNoteApi, updateNoteColor as updateNoteColorApi } from "../../api/noteApi";
 import { useNoteLabels } from '../../hooks/useNoteLabels'
 
 // ---- types ----
@@ -24,55 +23,36 @@ import { useNoteColor } from '../../hooks/useNoteColor'
 
 // ---- utils ----
 import { splitImages } from '../../utils/splitImages'
-import { incrementNoteViewApi } from '../../api/noteApi'
 
 
 
 
-// import { deleteNoteImage } from "../../api/noteApi";
+
 
 type Props = {
   note: Note;
-  // onSave: (
-  //     id: number,
-  //     title: string,
-  //     content: string,
-  // ) => Promise<void>;
 
-  // onUpdateColor: (
-  //     id: number,
-  //     color: string,
-  // ) => Promise<void>;
+  onClose: () => void;
 
-  // onMoveToTrash: (id: number) => void;
+//   setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
 
-  // setNotes: React.Dispatch<
-  //     React.SetStateAction<Note[]>
-  // >;
+// setOpenNoteDetailId: () => void;
 
-  setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
 
-//   setViewCount: React.Dispatch<
-//         React.SetStateAction<number>
-//     >;
-
-  // onDuplicateNote: (
-  //     note: Note,
-  // ) => Promise<void>;
 }
+
+
 
 // 親: NoteCard.tsx
 
 export default function NoteDetailModal({
     note,
-    // setNotes,
+    onClose,
+
     setOpenNoteDetailId,
-    // setViewCount,
-    // onSave,
-    // onUpdateColor,
-    // onMoveToTrash,
-    // onDuplicateNote,
+
 }: Props) {
+
     const [title, setTitle] = useState(note.title)
     const [content, setContent] = useState(note.content)
 
@@ -111,12 +91,22 @@ export default function NoteDetailModal({
     } = splitImages(note.images);
 
 
+    const closed = useRef(false);
+
 
 
     const handleClose = async () => {
 
-        const seconds = Math.floor((Date.now() - startTime.current) / 1000) ;
+        console.log("handleClose実行")
 
+        if (closed.current) {
+            return;
+        }
+
+        closed.current = true;
+
+
+        const seconds = Math.floor((Date.now() - startTime.current) / 1000) ;
         console.log(seconds);
 
         await updateNoteViewTime(note.id, seconds);
@@ -132,29 +122,32 @@ export default function NoteDetailModal({
             // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
         }
 
-        setOpenNoteDetailId(null);
+        // setOpenNoteDetailId(null);  この書き方はコンポーネントの再利用性が下がる。親がopenNoteDetailIdという状態を持っていることが前提になっているから。
+        onClose();
+        // setOpenNoteDetailId();
     }
 
 
 
-    // const viewed = useRef(false);  // このモーダルはもう閲覧数加算処理を実行したか？を記録するメモ帳
-    const startTime = useRef(0);
+    const viewed = useRef(false);  // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
+    const startTime = useRef(0);  // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
 
 
     useEffect(() => {
 
+        if (viewed.current) {
+            return;
+        }
+
         startTime.current = Date.now();
 
-        // if (viewed.current) {
-        //     return;
-        // }
 
-        // viewed.current = true;
+        viewed.current = true;
 
         incrementNoteView(note.id);
 
 
-    }, []);
+    }, [note.id]);
 
 
 
@@ -166,7 +159,7 @@ export default function NoteDetailModal({
             <div
                 className={styles.overlay}
                 onClick={handleClose}
-                // onClick={() => handleClose()}
+
 
             >
                 <div

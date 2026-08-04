@@ -566,34 +566,25 @@ export default function NoteCard({
                 {openColorId === note.id && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
-                        // tempColor={tempColor}
                         paletteRef={paletteRef}
-                        // onClose={saveColor}
-
                     />
-
-
                 )}
 
 
                 {openNoteDetailId === note.id && (
                     <NoteDetailModal
                         note={note}
-                        // setNotes={setNotes}
-                        setOpenNoteDetailId={setOpenNoteDetailId}
-                        // setViewCount={setViewCount}
-                        // onSave={onSave}
-                        // onUpdateColor={onUpdateColor}
-                        // onMoveToTrash={onMoveToTrash}
-                        // onDuplicateNote={onDuplicateNote}
+                        // setOpenNoteDetailId={setOpenNoteDetailId}
+                        // setOpenNoteDetailId={() => setOpenNoteDetailId(null)}
+                        onClose={() => setOpenNoteDetailId(null)}
 
                     />
 
                 )}
 
-
             </Card>
     )
+
 }
 
 

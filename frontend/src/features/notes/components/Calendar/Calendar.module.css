@@ -1,0 +1,112 @@
+.calendar {
+    width: 700px;
+    margin: 40px auto;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.header button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #f3f4f6;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.header button:hover {
+    background: #e5e7eb;
+}
+
+.weekdays,
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.weekdays div {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.day {
+    position: relative;
+    min-height: 90px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: .2s;
+}
+
+.day:hover {
+    /* transform: translateY(-2px); */
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+
+.tooltip {
+    position: absolute;
+    left: calc(100% + 12px);
+    /* left: 100%; */
+    top: 0;
+
+    width: 220px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+
+    z-index: 100;
+}
+
+
+.blank {
+    min-height: 90px;
+}
+
+
+.today {
+    border: 3px solid #2563eb;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+}
+
+
+
+.level1 {
+    background: #ffffff;
+}
+
+.level2 {
+    background: #d9f99d;
+}
+
+.level3 {
+    background: #86efac;
+}
+
+.level4 {
+    background: #22c55e;
+}

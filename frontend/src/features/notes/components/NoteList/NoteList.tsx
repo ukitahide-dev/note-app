@@ -64,22 +64,12 @@ export default function NoteList({
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
     const [panelType, setPanelType] = useState<"label" | "history" | null>(null);
-    // const [selectedNoteIds, setSelectedNoteIds] = useState<number[]>([]);
 
 
 
 
-    // useNoteStoreを使う
-    // const {
-    //     notes,
-    //     fetchNotes,
-    // } = useNoteStore();
 
-
-
-    // useEffect(() => {
-    //     fetchNotes();
-    // }, []);
+   
 
 
 

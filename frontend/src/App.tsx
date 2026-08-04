@@ -17,6 +17,7 @@ import Layout from './shared/layout/Layout'
 import LabelNotesPage from './features/notes/pages/LabelNotesPage/LabelNotesPage'
 import FavoriteNotesPage from './features/notes/pages/FavoriteNotesPage/FavoriteNotesPage'
 import SearchResultsPage from './features/search/pages/SearchResultsPage/SearchResultsPage'
+import CalendarPage from './features/notes/pages/CalendarPage/CalendarPage'
 
 
 
@@ -66,6 +67,11 @@ function App() {
                             <SearchResultsPage />
                         </Layout>
                     }
+                />
+
+                <Route
+                    path="/calendar"
+                    element={<CalendarPage />}
                 />
 
                 {/* <Route path="/notes" element={<NotesPage />} /> */}

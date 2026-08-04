@@ -36,6 +36,32 @@ export const getNotesApi = async (
 
 
 
+export const getAllNotesApi = async () => {
+
+    const token = localStorage.getItem("access");
+
+
+    const res = await api.get(
+        "/notes/",
+        {
+            params: {
+                page_size: 9999,
+            },
+
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }
+    );
+
+
+    return res.data;
+
+};
+
+
+
+
 // ノート詳細を取得する
 export const getNote = async(id: number) => {
     const token = localStorage.getItem("access");
