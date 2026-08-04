@@ -65,14 +65,18 @@
 
 
 .tooltip {
-    position: absolute;
-    left: calc(100% + 12px);
+    position: fixed;
+    z-index: 1000;
+
+    /* position: absolute; */
+    /* left: calc(100% + 12px); */
     /* left: 100%; */
     top: 0;
 
     width: 220px;
 
     background: white;
+    /* background: red; */
     border: 1px solid #ddd;
     border-radius: 12px;
     padding: 12px;

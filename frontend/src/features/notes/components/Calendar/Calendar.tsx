@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./Calendar.module.css";
 
@@ -32,9 +32,17 @@ export default function Calendar() {
     const [currentDate, setCurrentDate] = useState(new Date());  // new Date(): 今この瞬間の日時オブジェクトが作られる。現在表示しているカレンダーの日付を状態として管理する。
 
     // const [selectedDay, setSelectedDay] = useState<number | null>(null);
-    const [hoverDay, setHoverDay] = useState<number | null>(null);
+    // const [hoverDay, setHoverDay] = useState<number | null>(null);
 
-    const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
+    const [tooltip, setTooltip] = useState<{
+        notes: Note[];
+        x: number;
+        y: number;
+    } | null>(null);
+
+    const tooltipTimer = useRef<number | null>(null)
+
+    // const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(null);
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
     const year = currentDate.getFullYear();
@@ -110,19 +118,19 @@ export default function Calendar() {
 
 
 
-    const hoverNotes = notes.filter((note) => {
+    // const hoverNotes = notes.filter((note) => {
 
-        if (!hoverDay) return false;
+    //     if (!hoverDay) return false;
 
-        const date = new Date(note.created_at);
+    //     const date = new Date(note.created_at);
 
-        return (
-            date.getFullYear() === year &&
-            date.getMonth() + 1 === month &&
-            date.getDate() === hoverDay
-        )
+    //     return (
+    //         date.getFullYear() === year &&
+    //         date.getMonth() + 1 === month &&
+    //         date.getDate() === hoverDay
+    //     )
 
-    });
+    // });
 
 
 
@@ -234,8 +242,47 @@ export default function Calendar() {
                                 ${getDayClass(count)}
                                 ${isToday(day) ? styles.today : ""}
                             `}
-                            onMouseEnter={() => setHoverDay(day)}
-                            onMouseLeave={() => setHoverDay(null)}
+                            onMouseEnter={(e) => {
+
+                                if (tooltipTimer.current) {
+                                    clearTimeout(tooltipTimer.current);
+                                }
+
+                                const rect = e.currentTarget.getBoundingClientRect();
+
+                                const notesOfDay = notes.filter((note) => {
+
+                                    const date = new Date(note.created_at);
+
+                                    return (
+                                        date.getFullYear() === year &&
+                                        date.getMonth() + 1 === month &&
+                                        date.getDate() === day
+                                    );
+
+                                });
+
+
+                                setTooltip({
+                                    notes: notesOfDay,
+                                    x: rect.right + 8,
+                                    y: rect.top,
+                                });
+
+                            }}
+
+                            onMouseLeave={() => {
+                                tooltipTimer.current = setTimeout(() => {
+                                    setTooltip(null);
+                                }, 200)
+                            }}
+
+                            // onMouseLeave={() => {
+                            //     setTooltip(null);
+                            // }}
+
+                            // onMouseEnter={() => setHoverDay(day)}
+                            // onMouseLeave={() => setHoverDay(null)}
                             // onClick={() => setSelectedDay(day)}
                         >
                             <p>{day}</p>
@@ -246,7 +293,7 @@ export default function Calendar() {
                                 )
                             }
 
-                            {hoverDay === day && (
+                            {/* {hoverDay === day && (
                                 <div
                                     className={styles.tooltip}
                                 >
@@ -271,7 +318,7 @@ export default function Calendar() {
                                     ))}
 
                                 </div>
-                            )}
+                            )} */}
 
                         </div>
                     )
@@ -284,21 +331,57 @@ export default function Calendar() {
             </div>
 
 
-            {selectedNote && (
-                <NoteDetailModal
-                    note={selectedNote}
-                    // setOpenNoteDetailId={() => setSelectedNote(null)}
-                    onClose={() => setSelectedNote(null)}
-                />
+            {tooltip && (
+                <div
+                    className={styles.tooltip}
+                    style={{
+                        left: tooltip.x,
+                        top: tooltip.y,
+                    }}
+                    onMouseEnter={() => {
+                        if (tooltipTimer.current) {
+                            clearTimeout(tooltipTimer.current);
+                        }
+                        // clearTimeout(tooltipTimer.current)
+                    }}
+                    onMouseLeave={() => {
+
+                        tooltipTimer.current = setTimeout(() => {
+                            setTooltip(null);
+                        }, 200);
+
+                    }}
+                    // onMouseLeave={() => setTooltip(null)}
+                >
+
+                    <h3>{year}年{month}月のノート</h3>
+
+                    {tooltip.notes.map((note) => (
+                        <div
+                            key={note.id}
+                            onClick={() => {
+                                setSelectedNote(note);
+                                setTooltip(null);
+                            }}
+                        >
+                            {note.title}
+                        </div>
+                    ))}
+
+                </div>
+
+
 
             )}
 
 
+            {selectedNote && (
+                <NoteDetailModal
+                    note={selectedNote}
+                    onClose={() => setSelectedNote(null)}
+                />
 
-
-
-
-
+            )}
 
         </div>
 
