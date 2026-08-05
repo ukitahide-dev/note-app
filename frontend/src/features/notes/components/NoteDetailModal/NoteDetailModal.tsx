@@ -123,7 +123,7 @@ export default function NoteDetailModal({
         }
 
         // setOpenNoteDetailId(null);  この書き方はコンポーネントの再利用性が下がる。親がopenNoteDetailIdという状態を持っていることが前提になっているから。
-        onClose();
+        onClose();  // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
         // setOpenNoteDetailId();
     }
 

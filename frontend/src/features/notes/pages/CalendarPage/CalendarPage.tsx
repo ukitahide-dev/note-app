@@ -1,21 +1,9 @@
-
-
-import Calendar from "../../components/Calendar/Calendar";
-
-
-
+import Calendar from '../../../calendar/components/Calendar/Calendar'
 
 export default function CalendarPage() {
-
-
-    return (
-
-        <div>
-
-            <Calendar />
-
-        </div>
-
-    );
-
+  return (
+    <div>
+      <Calendar />
+    </div>
+  )
 }
