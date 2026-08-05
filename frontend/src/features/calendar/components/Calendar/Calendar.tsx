@@ -8,7 +8,18 @@ import NoteDetailModal from "../../../notes/components/NoteDetailModal/NoteDetai
 import type { Note } from "../../../../types/note";
 import { useCalendarTooltip } from "../../hooks/useCalendarTooltip";
 
+
+import {
+	getDaysInMonth,
+	createDays,
+	getFirstDayOfMonth,
+	createBlanks,
+} from "../../utils/calendarUtils"
+
+
+
 export default function Calendar() {
+
     // store
     const { notes, fetchAllNotes } = useNoteStore();
 
@@ -27,26 +38,21 @@ export default function Calendar() {
 
 
 
+
+
+
+
     const noteCountByDay: Record<number, number> = {};
 
     // new Date(year, month, day) の month は 0始まり。
     const [currentDate, setCurrentDate] = useState(new Date()); // new Date(): 今この瞬間の日時オブジェクトが作られる。現在表示しているカレンダーの日付を状態として管理する。
 
-	// hookに移した
-    // const [tooltip, setTooltip] = useState<{
-    //     notes: Note[];
-    //     x: number;
-    //     y: number;
-    // } | null>(null);
-
-
-	// hookに移した
-    // const tooltipTimer = useRef<number | null>(null);
+	const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
 
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
+
 
     // 「現実世界の今日」
     const today = new Date();
@@ -55,27 +61,43 @@ export default function Calendar() {
     const todayMonth = today.getMonth() + 1;
     const todayDate = today.getDate();
 
+
+	// 計算ロジックはutilsに移した
+	const daysInMonth = getDaysInMonth(year, month);
+	const days = createDays(daysInMonth);
+
+	const firstDayInMonth = getFirstDayOfMonth(year, month);
+	const blanks = createBlanks(firstDayInMonth);
+
+
+	// ---- utilsに移した----
     // 今月の日数
-    const daysInMonth = new Date(
-        year,
-        month, // ex) month = 8なら、9月のこと。9月0日をjavascriptが自動で、8月31日に変換する。
-        0, // 0日を表す
-    ).getDate(); // getDate(): 日にち部分だけ取り出すメソッド。
+    // const daysInMonth = new Date(
+    //     year,
+    //     month, // ex) month = 8なら、9月のこと。9月0日をjavascriptが自動で、8月31日に変換する。
+    //     0, // 0日を表す
+    // ).getDate(); // getDate(): 日にち部分だけ取り出すメソッド。
 
     // その月の1日が何曜日か
     // 0 = 日曜日
     // 1 = 月曜日
     // ...
     // 6 = 土曜日
-    const firstDay = new Date(year, month - 1, 1).getDay(); // getDay(): 曜日を数字で返すメソッド。
+    // const firstDay = new Date(year, month - 1, 1).getDay();  // getDay(): 曜日を数字で返すメソッド。
 
-    // 空白セル
-    const blanks = Array.from({ length: firstDay }, (_, index) => index);
+    // // 空白セル
+    // const blanks = Array.from(
+	// 	{ length: firstDay },
+	// 	(_, index) => index
+	// );
 
     // 日付配列
-    const days = Array.from({ length: daysInMonth }, (_, index) => index + 1);
+    // const days = Array.from(
+	// 	{ length: daysInMonth },
+	// 	(_, index) => index + 1
+	// );
 
-    // console.log(notes);
+
 
     notes.forEach((note) => {
         const date = new Date(note.created_at);
@@ -86,6 +108,7 @@ export default function Calendar() {
             noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1; // ?? は左側が null または undefined なら右側を使うという意味。
         }
     });
+
 
     function getDayClass(count: number) {
         if (count >= 4) {
@@ -103,6 +126,7 @@ export default function Calendar() {
         return styles.level1;
     }
 
+
     function isToday(day: number) {
         return year === todayYear && month === todayMonth && day === todayDate;
     }
@@ -114,10 +138,6 @@ export default function Calendar() {
         day: number,
     ) => {
 
-		// hookに移した
-        // if (tooltipTimer.current) {
-        //     clearTimeout(tooltipTimer.current);
-        // }
 
         const rect = e.currentTarget.getBoundingClientRect();
 
@@ -133,45 +153,22 @@ export default function Calendar() {
 
 		showTooltip(notesOfDay, rect.right + 8, rect.top);
 
-		// hookに移した
-        // setTooltip({
-        //     notes: notesOfDay,
-        //     x: rect.right + 8,
-        //     y: rect.top,
-        // });
+
     };
 
 
-	// -------hookに移した-------
-    // const handleDayMouseLeave = () => {
-    //     tooltipTimer.current = setTimeout(() => {
-    //         setTooltip(null);
-    //     }, 200);
-    // };
 
-
-
-    // const handleTooltipMouseEnter = () => {
-    //     if (tooltipTimer.current) {
-    //         clearTimeout(tooltipTimer.current);
-    //     }
-    // };
-
-
-
-    // const handleTooltipMouseLeave = () => {
-    //     tooltipTimer.current = setTimeout(() => {
-    //         setTooltip(null);
-    //     }, 200);
-    // };
 
 
 
 
 
 	return (
+
         <div className={styles.calendar}>
+
             <div className={styles.header}>
+
                 <button
                     onClick={() => setCurrentDate(new Date(year, month - 2, 1))}
                 >
@@ -187,9 +184,11 @@ export default function Calendar() {
                 >
                     →
                 </button>
+
             </div>
 
             <div className={styles.weekdays}>
+
                 <div>日</div>
                 <div>月</div>
                 <div>火</div>
@@ -197,6 +196,7 @@ export default function Calendar() {
                 <div>木</div>
                 <div>金</div>
                 <div>土</div>
+
             </div>
 
             <div className={styles.days}>
@@ -208,9 +208,10 @@ export default function Calendar() {
                 {/* 日付 */}
                 {days.map((day) => {
                     const count = noteCountByDay[day] ?? 0;
-                    // console.log(count);
+
 
                     return (
+
                         <div
                             key={day}
                             className={`
@@ -219,86 +220,18 @@ export default function Calendar() {
 									${isToday(day) ? styles.today : ""}
 								`}
                             onMouseEnter={(e) => handleDayMouseEnter(e, day)}
-                            // onMouseLeave={() => handleDayMouseLeave()}
 							onMouseLeave={() => hideTooltip()}
-                            // onMouseLeave={handleDayMouseLeave}
-
-                            // onMouseEnter={(e) => {
-
-                            //     if (tooltipTimer.current) {
-                            //         clearTimeout(tooltipTimer.current);
-                            //     }
-
-                            //     const rect = e.currentTarget.getBoundingClientRect();
-
-                            //     const notesOfDay = notes.filter((note) => {
-
-                            //         const date = new Date(note.created_at);
-
-                            //         return (
-                            //             date.getFullYear() === year &&
-                            //             date.getMonth() + 1 === month &&
-                            //             date.getDate() === day
-                            //         );
-
-                            //     });
-
-                            //     setTooltip({
-                            //         notes: notesOfDay,
-                            //         x: rect.right + 8,
-                            //         y: rect.top,
-                            //     });
-
-                            // }}
-
-                            // onMouseLeave={() => {
-                            //     tooltipTimer.current = setTimeout(() => {
-                            //         setTooltip(null);
-                            //     }, 200)
-                            // }}
-
-                            // onMouseLeave={() => {
-                            //     setTooltip(null);
-                            // }}
-
-                            // onMouseEnter={() => setHoverDay(day)}
-                            // onMouseLeave={() => setHoverDay(null)}
-                            // onClick={() => setSelectedDay(day)}
                         >
                             <p>{day}</p>
 
                             {count > 0 && <p>{count}件</p>}
 
-                            {/* {hoverDay === day && (
-									<div
-										className={styles.tooltip}
-									>
-
-										<h3>{month}月{hoverDay}日のノート</h3>
-
-										{hoverNotes.map((note) => (
-											<div
-												key={note.id}
-												onClick={() => {
-													setOpenNoteDetailId(note.id);
-													setSelectedNote(note)
-
-
-												}}
-
-											>
-
-												{note.title}
-
-											</div>
-										))}
-
-									</div>
-								)} */}
                         </div>
                     );
                 })}
+
             </div>
+
 
             {tooltip && (
                 <div
@@ -307,26 +240,11 @@ export default function Calendar() {
                         left: tooltip.x,
                         top: tooltip.y,
                     }}
-                    // onMouseEnter={handleTooltipMouseEnter}
+
 					onMouseEnter={() => stopTooltiptimer()}
-                    // onMouseLeave={handleTooltipMouseLeave}
+
 					onMouseLeave={() => hideTooltip()}
 
-                    // onMouseEnter={() => {
-                    //     if (tooltipTimer.current) {
-                    //         clearTimeout(tooltipTimer.current);
-                    //     }
-                    //     // clearTimeout(tooltipTimer.current)
-                    // }}
-
-                    // onMouseLeave={() => {
-
-                    //     tooltipTimer.current = setTimeout(() => {
-                    //         setTooltip(null);
-                    //     }, 200);
-
-                    // }}
-                    // onMouseLeave={() => setTooltip(null)}
                 >
                     <h3>
                         {year}年{month}月のノート
@@ -338,7 +256,7 @@ export default function Calendar() {
                             onClick={() => {
                                 setSelectedNote(note);
 								hideTooltip();
-                                // setTooltip(null);
+
                             }}
                         >
                             {note.title}
@@ -347,12 +265,16 @@ export default function Calendar() {
                 </div>
             )}
 
+
             {selectedNote && (
                 <NoteDetailModal
                     note={selectedNote}
                     onClose={() => setSelectedNote(null)}
                 />
             )}
+
         </div>
+
     );
+
 }
