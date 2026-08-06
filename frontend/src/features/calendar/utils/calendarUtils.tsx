@@ -26,7 +26,7 @@ export function createDays (
     return (
         Array.from(
             {length: daysInMonth},
-            (_, index) => index
+            (_, index) => index + 1
         )
     );
 

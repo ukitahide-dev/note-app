@@ -15,6 +15,7 @@ import {
 	getFirstDayOfMonth,
 	createBlanks,
 } from "../../utils/calendarUtils"
+import { CalendarDay } from "../CalendarDay/CalendarDay";
 
 
 
@@ -65,37 +66,12 @@ export default function Calendar() {
 	// 計算ロジックはutilsに移した
 	const daysInMonth = getDaysInMonth(year, month);
 	const days = createDays(daysInMonth);
+    console.log(days)
 
 	const firstDayInMonth = getFirstDayOfMonth(year, month);
 	const blanks = createBlanks(firstDayInMonth);
 
 
-	// ---- utilsに移した----
-    // 今月の日数
-    // const daysInMonth = new Date(
-    //     year,
-    //     month, // ex) month = 8なら、9月のこと。9月0日をjavascriptが自動で、8月31日に変換する。
-    //     0, // 0日を表す
-    // ).getDate(); // getDate(): 日にち部分だけ取り出すメソッド。
-
-    // その月の1日が何曜日か
-    // 0 = 日曜日
-    // 1 = 月曜日
-    // ...
-    // 6 = 土曜日
-    // const firstDay = new Date(year, month - 1, 1).getDay();  // getDay(): 曜日を数字で返すメソッド。
-
-    // // 空白セル
-    // const blanks = Array.from(
-	// 	{ length: firstDay },
-	// 	(_, index) => index
-	// );
-
-    // 日付配列
-    // const days = Array.from(
-	// 	{ length: daysInMonth },
-	// 	(_, index) => index + 1
-	// );
 
 
 
@@ -110,25 +86,30 @@ export default function Calendar() {
     });
 
 
-    function getDayClass(count: number) {
-        if (count >= 4) {
-            return styles.level4;
-        }
+    
+    // CalendarDay.tsxに移した
+    // function getDayClass(count: number) {
+    //     if (count >= 4) {
+    //         return styles.level4;
+    //     }
 
-        if (count >= 2) {
-            return styles.level3;
-        }
+    //     if (count >= 2) {
+    //         return styles.level3;
+    //     }
 
-        if (count >= 1) {
-            return styles.level2;
-        }
+    //     if (count >= 1) {
+    //         return styles.level2;
+    //     }
 
-        return styles.level1;
-    }
+    //     return styles.level1;
+    // }
+
 
 
     function isToday(day: number) {
-        return year === todayYear && month === todayMonth && day === todayDate;
+        return year === todayYear &&
+            month === todayMonth &&
+            day === todayDate;
     }
 
 
@@ -137,7 +118,6 @@ export default function Calendar() {
         e: React.MouseEvent<HTMLDivElement>,
         day: number,
     ) => {
-
 
         const rect = e.currentTarget.getBoundingClientRect();
 
@@ -200,35 +180,54 @@ export default function Calendar() {
             </div>
 
             <div className={styles.days}>
+
                 {/* 空白 */}
                 {blanks.map((_, index) => (
-                    <div key={`blank-${index}`} className={styles.blank} />
+                    <div key={`blank-${index}`}
+                        className={styles.blank}
+                    />
                 ))}
 
+
                 {/* 日付 */}
-                {days.map((day) => {
-                    const count = noteCountByDay[day] ?? 0;
+                {days.map((day) => (
+
+                    <CalendarDay
+                        key={day}
+                        day={day}
+                        isToday={isToday(day)}
+                        count={noteCountByDay[day] ?? 0}
+                        onMouseEnter={(e) => handleDayMouseEnter(e, day)}
+                        onMouseLeave={hideTooltip}
+                        // onMouseLeave={() => hideTooltip()}
+                        // onMouseLeave={hideTooltip()}
+                    />
+
+                ))}
 
 
-                    return (
+                    {/* // const count = noteCountByDay[day] ?? 0; */}
+{/*
 
-                        <div
-                            key={day}
-                            className={`
-									${styles.day}
-									${getDayClass(count)}
-									${isToday(day) ? styles.today : ""}
-								`}
-                            onMouseEnter={(e) => handleDayMouseEnter(e, day)}
-							onMouseLeave={() => hideTooltip()}
-                        >
-                            <p>{day}</p>
+                    // return (
 
-                            {count > 0 && <p>{count}件</p>}
+                    //     <div
+                    //         key={day}
+                    //         className={`
+					// 				${styles.day}
+					// 				${getDayClass(count)}
+					// 				${isToday(day) ? styles.today : ""}
+					// 			`}
+                    //         onMouseEnter={(e) => handleDayMouseEnter(e, day)}
+					// 		onMouseLeave={() => hideTooltip()}
+                    //     >
+                    //         <p>{day}</p>
 
-                        </div>
-                    );
-                })}
+                    //         {count > 0 && <p>{count}件</p>}
+
+                    //     </div>
+                    // );
+                })} */}
 
             </div>
 
@@ -241,9 +240,11 @@ export default function Calendar() {
                         top: tooltip.y,
                     }}
 
-					onMouseEnter={() => stopTooltiptimer()}
+					// onMouseEnter={() => stopTooltiptimer()}
+					onMouseEnter={stopTooltiptimer}
 
-					onMouseLeave={() => hideTooltip()}
+                    // onMouseLeave={() => hideTooltip()}
+                    onMouseLeave={hideTooltip}
 
                 >
                     <h3>
