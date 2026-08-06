@@ -1,6 +1,11 @@
 
 
 
+// カレンダーそのものを作るための計算をまとめたファイル
+
+
+
+
 // その月の日数を取得する
 export function getDaysInMonth (
     year: number,

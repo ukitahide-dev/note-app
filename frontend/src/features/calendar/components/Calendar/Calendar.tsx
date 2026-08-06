@@ -16,6 +16,7 @@ import {
 	createBlanks,
 } from "../../utils/calendarUtils"
 import { CalendarDay } from "../CalendarDay/CalendarDay";
+import { countNotesByDay } from "../../utils/calendarNoteUtils";
 
 
 
@@ -43,7 +44,7 @@ export default function Calendar() {
 
 
 
-    const noteCountByDay: Record<number, number> = {};
+    // const noteCountByDay: Record<number, number> = {};
 
     // new Date(year, month, day) の month は 0始まり。
     const [currentDate, setCurrentDate] = useState(new Date()); // new Date(): 今この瞬間の日時オブジェクトが作られる。現在表示しているカレンダーの日付を状態として管理する。
@@ -66,43 +67,31 @@ export default function Calendar() {
 	// 計算ロジックはutilsに移した
 	const daysInMonth = getDaysInMonth(year, month);
 	const days = createDays(daysInMonth);
-    console.log(days)
+
 
 	const firstDayInMonth = getFirstDayOfMonth(year, month);
 	const blanks = createBlanks(firstDayInMonth);
 
 
+    // calendarNoteUtils
+    const noteCountByDay =
+        countNotesByDay(
+            notes,
+            year,
+            month,
+        );
 
+    // notes.forEach((note) => {
+    //     const date = new Date(note.created_at);
 
+    //     if (date.getFullYear() === year && date.getMonth() + 1 === month) {
+    //         const day = date.getDate();
 
-    notes.forEach((note) => {
-        const date = new Date(note.created_at);
-
-        if (date.getFullYear() === year && date.getMonth() + 1 === month) {
-            const day = date.getDate();
-
-            noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1; // ?? は左側が null または undefined なら右側を使うという意味。
-        }
-    });
-
-
-    
-    // CalendarDay.tsxに移した
-    // function getDayClass(count: number) {
-    //     if (count >= 4) {
-    //         return styles.level4;
+    //         noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1; // ?? は左側が null または undefined なら右側を使うという意味。
     //     }
+    // });
 
-    //     if (count >= 2) {
-    //         return styles.level3;
-    //     }
 
-    //     if (count >= 1) {
-    //         return styles.level2;
-    //     }
-
-    //     return styles.level1;
-    // }
 
 
 
@@ -205,34 +194,11 @@ export default function Calendar() {
 
                 ))}
 
-
-                    {/* // const count = noteCountByDay[day] ?? 0; */}
-{/*
-
-                    // return (
-
-                    //     <div
-                    //         key={day}
-                    //         className={`
-					// 				${styles.day}
-					// 				${getDayClass(count)}
-					// 				${isToday(day) ? styles.today : ""}
-					// 			`}
-                    //         onMouseEnter={(e) => handleDayMouseEnter(e, day)}
-					// 		onMouseLeave={() => hideTooltip()}
-                    //     >
-                    //         <p>{day}</p>
-
-                    //         {count > 0 && <p>{count}件</p>}
-
-                    //     </div>
-                    // );
-                })} */}
-
             </div>
 
 
             {tooltip && (
+
                 <div
                     className={styles.tooltip}
                     style={{
@@ -264,6 +230,7 @@ export default function Calendar() {
                         </div>
                     ))}
                 </div>
+
             )}
 
 

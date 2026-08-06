@@ -6,10 +6,12 @@ type Props = {
     day: number;
     count: number;
     isToday: boolean;
+
     onMouseEnter: (
-        e: React.MouseEvent<HTMLDivElement>
+        e: React.MouseEvent<HTMLDivElement>  // HTMLのdivに対するマウスイベントを受け取って、何も返さない関数。
     ) => void;
-    onMouseLeave: () => void;
+
+    onMouseLeave: () => void;  // 引数なしで呼べて、戻り値はない関数という意味。
 };
 
 
@@ -52,10 +54,9 @@ export function CalendarDay({
 				${isToday ? styles.today : ""}
 			`}
 
-            // onMouseEnter={(e) => onMouseEnter(e)}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            // onMouseLeave={() => onMouseLeave()}
+
         >
             <p>{day}</p>
 
