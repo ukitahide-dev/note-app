@@ -10,9 +10,13 @@ import styles from "./LoginPage.module.css";
 
 
 export default function LoginPage() {
-    const [username, setUsername] = useState("");
+    // const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+
+
     const navigate = useNavigate();
+
 
     const handleLogin = async (
         e: React.SyntheticEvent
@@ -20,7 +24,7 @@ export default function LoginPage() {
         e.preventDefault();
 
         try {
-            const data = await login(username, password);
+            const data = await login(email, password);
             console.log(data);
 
             localStorage.setItem("access", data.access);
@@ -58,11 +62,9 @@ export default function LoginPage() {
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder="ユーザー名"
-                            value={username}
-                            onChange={(e) =>
-                                setUsername(e.target.value)
-                            }
+                            placeholder="メールアドレス"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 

@@ -11,7 +11,7 @@ export function countNotesByDay(
 
 ) {
 
-    const noteCountByDay: Record<number, number> = {};
+    const noteCountByDay: Record<number, number> = {};   // noteCountByDayはnumberをキーにしてnumberを値に持つオブジェクトという意味。
 
 
     notes.forEach((note) => {
@@ -24,7 +24,7 @@ export function countNotesByDay(
 
             const day = date.getDate();
 
-            noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1
+            noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1   // ?? は左側が null または undefined なら右側を使うという意味。
 
         }
 

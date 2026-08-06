@@ -44,7 +44,7 @@ export default function Calendar() {
 
 
 
-    // const noteCountByDay: Record<number, number> = {};
+   
 
     // new Date(year, month, day) の month は 0始まり。
     const [currentDate, setCurrentDate] = useState(new Date()); // new Date(): 今この瞬間の日時オブジェクトが作られる。現在表示しているカレンダーの日付を状態として管理する。
@@ -80,17 +80,6 @@ export default function Calendar() {
             year,
             month,
         );
-
-    // notes.forEach((note) => {
-    //     const date = new Date(note.created_at);
-
-    //     if (date.getFullYear() === year && date.getMonth() + 1 === month) {
-    //         const day = date.getDate();
-
-    //         noteCountByDay[day] = (noteCountByDay[day] ?? 0) + 1; // ?? は左側が null または undefined なら右側を使うという意味。
-    //     }
-    // });
-
 
 
 
@@ -188,8 +177,7 @@ export default function Calendar() {
                         count={noteCountByDay[day] ?? 0}
                         onMouseEnter={(e) => handleDayMouseEnter(e, day)}
                         onMouseLeave={hideTooltip}
-                        // onMouseLeave={() => hideTooltip()}
-                        // onMouseLeave={hideTooltip()}
+
                     />
 
                 ))}
@@ -206,10 +194,8 @@ export default function Calendar() {
                         top: tooltip.y,
                     }}
 
-					// onMouseEnter={() => stopTooltiptimer()}
 					onMouseEnter={stopTooltiptimer}
 
-                    // onMouseLeave={() => hideTooltip()}
                     onMouseLeave={hideTooltip}
 
                 >
