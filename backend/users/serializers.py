@@ -38,6 +38,27 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
+    def validate_username(self, value):
+
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError(
+                "このユーザー名は既に使われています"
+            )
+
+        return value
+
+
+
+    def validate_email(self, value):
+
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "このメールアドレスはすでに登録されています"
+            )
+
+        return value
+
+
     # 登録OKになったデータを使って、実際にUserをデータベースに作成する処理
     def create(self, validated_data):  # validated_dataは、チェック完了後の安全な入力データ。
 
@@ -49,4 +70,4 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
-    
+
