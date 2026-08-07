@@ -1,74 +1,105 @@
 import { useState } from "react";
-
-import { useNavigate } from 'react-router-dom'
-
-import { loginApi } from "../api/authApi";
-
-
-import styles from "./LoginPage.module.css";
+import { useNavigate } from "react-router-dom";
 
 
 
-export default function LoginPage() {
-    // const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+import styles from "./RegisterPage.module.css";
+import { registerApi } from "../../api/authApi";
+
+
+
+
+export default function RegisterPage() {
+
+
+
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
-
+    const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
 
 
-    const handleLogin = async (
-        e: React.SyntheticEvent
+    const handleRegister = async (
+        e: React.FormEvent
     ) => {
+
         e.preventDefault();
 
+
         try {
-            const data = await loginApi(email, password);
-            console.log(data);
 
-            localStorage.setItem("access", data.access);
-            localStorage.setItem("refresh", data.refresh);
+            await registerApi(
+                username,
+                email,
+                password,
+            );
 
-            alert("ログイン成功");
-            navigate("/notes");  // NotesPage.tsxへ
 
+            alert("登録成功");
+
+            navigate("/login");
 
 
         } catch (error) {
+
             console.error(error);
-            alert("ログイン失敗");
+
+            alert("登録失敗");
+
         }
 
-
-    }
+    };
 
 
     return (
+
         <div className={styles.container}>
 
             <div className={styles.card}>
 
                 <h1 className={styles.title}>
-                    ログイン
+                    新規登録
                 </h1>
+
 
                 <form
                     className={styles.form}
-                    onSubmit={handleLogin}
+                    onSubmit={handleRegister}
                 >
 
                     <div className={styles.inputGroup}>
+
                         <input
                             className={styles.input}
                             type="text"
-                            placeholder="メールアドレス"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="ユーザー名"
+                            value={username}
+                            onChange={(e) =>
+                                setUsername(e.target.value)
+                            }
                         />
+
                     </div>
 
+
                     <div className={styles.inputGroup}>
+
+                        <input
+                            className={styles.input}
+                            type="email"
+                            placeholder="メールアドレス"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
+                        />
+
+                    </div>
+
+
+                    <div className={styles.inputGroup}>
+
                         <input
                             className={styles.input}
                             type="password"
@@ -78,27 +109,24 @@ export default function LoginPage() {
                                 setPassword(e.target.value)
                             }
                         />
+
                     </div>
+
 
                     <button
                         className={styles.button}
                         type="submit"
                     >
-                        ログイン
+                        登録
                     </button>
 
-                    <button
-                        type="button"
-                        onClick={() => navigate("/register")}
-                    >
-                        新規登録はこちら
-                    </button>
 
                 </form>
+
 
             </div>
 
         </div>
-    )
 
+    );
 }

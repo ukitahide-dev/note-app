@@ -18,6 +18,7 @@ import LabelNotesPage from './features/notes/pages/LabelNotesPage/LabelNotesPage
 import FavoriteNotesPage from './features/notes/pages/FavoriteNotesPage/FavoriteNotesPage'
 import SearchResultsPage from './features/search/pages/SearchResultsPage/SearchResultsPage'
 import CalendarPage from './features/notes/pages/CalendarPage/CalendarPage'
+import RegisterPage from './features/auth/pages/RegisterPage/RegisterPage'
 
 
 
@@ -28,6 +29,12 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />}/>
                 <Route path="/login" element={<LoginPage />} />
+                
+                <Route
+                    path="/register"
+                    element={<RegisterPage />}
+                />
+
                 <Route
                     path="/notes"
                     element={

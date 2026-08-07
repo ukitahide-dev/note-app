@@ -2,7 +2,7 @@ import api from "../../../shared/api/axios";
 
 
 // ログイン
-export const login = async (
+export const loginApi = async (
     email: string,
     password: string
 ) => {
@@ -19,7 +19,7 @@ export const login = async (
 
 
 // 新規登録
-export const register = async (
+export const registerApi = async (
     username: string,
     email: string,
     password: string,
