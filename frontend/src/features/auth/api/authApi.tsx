@@ -24,6 +24,7 @@ export const registerApi = async (
     email: string,
     password: string,
 ) => {
+    
     const res = await api.post("/register/", {
         username,
         email,

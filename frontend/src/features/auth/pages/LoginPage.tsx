@@ -8,11 +8,15 @@ import { loginApi } from "../api/authApi";
 import styles from "./LoginPage.module.css";
 
 
+import axios from "axios";
+
 
 export default function LoginPage() {
     // const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+
+    const [error, setError] = useState("");
 
 
     const navigate = useNavigate();
@@ -24,6 +28,9 @@ export default function LoginPage() {
         e.preventDefault();
 
         try {
+
+            setError("");
+
             const data = await loginApi(email, password);
             console.log(data);
 
@@ -35,11 +42,18 @@ export default function LoginPage() {
 
 
 
-        } catch (error) {
-            console.error(error);
-            alert("ログイン失敗");
-        }
+        } catch (error: any) {
+            console.error(error.response?.data);
 
+            if (axios.isAxiosError(error)) {
+                setError("メールアドレスまたはパスワードが間違っています");
+            } else {
+
+                setError("予期しないエラーが発生しました");
+
+            }
+
+        }
 
     }
 
@@ -79,6 +93,12 @@ export default function LoginPage() {
                             }
                         />
                     </div>
+
+                    {error && (
+                        <p>
+                            {error}
+                        </p>
+                    )}
 
                     <button
                         className={styles.button}

@@ -109,18 +109,28 @@ DATABASES = {
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+
+    # パスワードがユーザーの情報（ユーザー名・メールアドレスなど）と似すぎていないかをチェックする。
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
+
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        # 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'users.validators.JapaneseMinimumLengthValidator',  # これに変更する。自分で作ったやつ。users/validators.pyファイル。
     },
+
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        # 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'users.validators.JapaneseCommonPasswordValidator',
     },
+    
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    #   'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'users.validators.JapaneseNumericPasswordValidator',
     },
+
+
 ]
 
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
+import axios from "axios";
+
 
 import styles from "./RegisterPage.module.css";
 import { registerApi } from "../../api/authApi";
@@ -16,6 +18,15 @@ export default function RegisterPage() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+
+    const [errors, setErrors] = useState<{
+        username?: string[],
+        email?: string[],
+        password?: string[],
+    }>({});
+
+
 
     const navigate = useNavigate();
 
@@ -38,15 +49,22 @@ export default function RegisterPage() {
 
             alert("登録成功");
 
+            setErrors({});
+
             navigate("/login");
 
 
-        } catch (error) {
+        } catch (error: any) {
+            console.error(error.response?.data);
 
-            console.error(error);
-
+            alert(JSON.stringify(error.response?.data));
             alert("登録失敗");
 
+            if (axios.isAxiosError(error)) {
+
+                setErrors(error.response?.data ?? {});
+
+            }
         }
 
     };
@@ -75,10 +93,18 @@ export default function RegisterPage() {
                             type="text"
                             placeholder="ユーザー名"
                             value={username}
-                            onChange={(e) =>
-                                setUsername(e.target.value)
-                            }
+                            onChange={(e) => setUsername(e.target.value)}
                         />
+
+                        {errors.username?.map((error) => (
+
+                            <p
+                                key={error}
+                            >
+                                {error}
+                            </p>
+
+                        ))}
 
                     </div>
 
@@ -95,6 +121,18 @@ export default function RegisterPage() {
                             }
                         />
 
+                        {errors.email?.map((error) => (
+
+                            <p
+                                key={error}
+                            >
+
+                                {error}
+
+                            </p>
+
+                        ))}
+
                     </div>
 
 
@@ -109,6 +147,18 @@ export default function RegisterPage() {
                                 setPassword(e.target.value)
                             }
                         />
+
+                        {errors.password?.map((error) => (
+
+                            <p
+                                key={error}
+                            >
+
+                                {error}
+
+                            </p>
+
+                        ))}
 
                     </div>
 
