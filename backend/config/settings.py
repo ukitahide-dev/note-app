@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # ---- 追記----
+    # ---- 追記 ----
     'rest_framework',
     'notes',  # 自分で作成したnotesアプリ(フォルダ)  python manage.py startapp notes
     'users',
@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
 # ---- 追記 ----
 REST_FRAMEWORK = {
+
+    # APIにアクセスしてきた人が、本当にログイン済みのユーザーなのかを、JWTを使って確認する。ログイン後、API時へアクセスするときに「この人は誰なの？」をJWTで確認するための設定。
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -112,7 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
     # パスワードがユーザーの情報（ユーザー名・メールアドレスなど）と似すぎていないかをチェックする。
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        # 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'users.validators.JapaneseUserAttributeSimilarityValidator',
     },
 
     {
@@ -124,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
         # 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
         'NAME': 'users.validators.JapaneseCommonPasswordValidator',
     },
-    
+
     {
     #   'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
         'NAME': 'users.validators.JapaneseNumericPasswordValidator',

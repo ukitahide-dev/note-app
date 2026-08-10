@@ -46,9 +46,29 @@ class JapaneseNumericPasswordValidator(NumericPasswordValidator):
         return "数字だけのパスワードは使用できません。"
 
     def validate(self, password, user=None):
-        
+
         if password.isdigit():
 
             raise ValidationError(
                 "数字だけのパスワードは使用できません。"
+            )
+
+
+
+
+class JapaneseUserAttributeSimilarityValidator(
+    UserAttributeSimilarityValidator
+):
+
+    def get_help_text(self):
+        return "ユーザー名やメールアドレスなどの情報に似すぎているパスワードは使用できません。"
+
+    def validate(self, password, user=None):
+
+        try:
+            super().validate(password, user)   # Django本来の類似度判定をそのまま使う。
+
+        except ValidationError:
+            raise ValidationError(
+                "ユーザー名やメールアドレスなどの情報に似すぎているパスワードは使用できません。"
             )

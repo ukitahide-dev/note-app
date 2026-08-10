@@ -3,7 +3,7 @@ from .models import User
 
 from django.contrib.auth.password_validation import validate_password as django_validate_password
 
-
+from django.core.exceptions import ValidationError
 
 
 
@@ -18,6 +18,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         validators=[],
     )
 
+
+    # emailという入力項目をメールアドレス用のSerializerフィールドとして扱う。ただし、自動で追加されるvalidatorは使わない。
     email = serializers.EmailField(
         validators=[],
     )
@@ -38,6 +40,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
+
     # passwordフィールドが送られてきた時、この関数が実行される。validate_フィールド名という決まった書き方。今回はpasswordをチェックしたいから、validate_password
     def validate_password(self, value):  # value: フロントから送られてきたパスワードが入る。
 
@@ -49,9 +52,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
 
-
-        django_validate_password(
-            value,  #  Django標準のパスワードチェック。settings.pyのAUTH_PASSWORD_VALIDATORSに書かれてるやつを全部走らせる。
+        django_validate_password(   #  Django標準のパスワードチェック。settings.pyのAUTH_PASSWORD_VALIDATORSに書かれてるやつを全部走らせる。
+            value,
             user=user,
         )
 
@@ -82,7 +84,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
     # 登録OKになったデータを使って、実際にUserをデータベースに作成する処理
-    def create(self, validated_data):  # validated_dataは、チェック完了後の安全な入力データ。
+    def create(self, validated_data):  # validated_dataは、チェック完了後の安全な入力データ。validated_data が作られるのは、バリデーションを全部通過した後。
 
         user = User.objects.create_user(   # create_user(): パスワードをハッシュ化してUserを作るDjangoのメソッド。
             **validated_data  # **はvalidate_dataを展開してる。
@@ -92,4 +94,37 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
+    # def validate() は、validate_usenameとか、各フィールドチェックでエラーがあると、実行されなくなる。
+    # def validate(self, attrs):
+
+        #     print("★★★ validate() 実行 ★★★")
+
+        #     # DBに保存する前に、Userオブジェクトを作る。一時的なUserオブジェクトを作るため。
+        #     user = User(
+        #         username = attrs.get("username"),
+        #         email = attrs.get("email"),
+        #     )
+
+        #     try:
+        #         django_validate_password(
+        #         attrs.get("password"),
+        #         user=user,
+        #     )
+
+        #     except ValidationError as e:
+
+        #         print("★★★ password error ★★★")
+        #         print(e.messages)
+
+        #         raise serializers.ValidationError({
+        #             "password": e.messages
+        #         })
+
+
+        #     # django_validate_password(   #  Django標準のパスワードチェック。settings.pyのAUTH_PASSWORD_VALIDATORSに書かれてるやつを全部走らせる。
+        #     #     attrs.get("password"),
+        #     #     user=user,
+        #     # )
+
+        #     return attrs
 
