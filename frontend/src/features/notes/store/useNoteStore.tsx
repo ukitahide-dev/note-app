@@ -179,7 +179,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             const data = await getNotesApi(page, pageSize, ordering);
 
-            console.log(data);
+            // console.log(data);
 
             set({
                 notes: data.results,

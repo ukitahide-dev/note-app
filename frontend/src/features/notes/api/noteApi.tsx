@@ -10,7 +10,7 @@ export const getNotesApi = async (
     ordering: string = "-created_at",
 
 ) =>  {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.get(
         "/notes/",
@@ -21,9 +21,9 @@ export const getNotesApi = async (
                 ordering,
             },
 
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
+            // headers: {
+            //     Authorization: `Bearer ${token}`
+            // },
         }
 
 
@@ -38,7 +38,7 @@ export const getNotesApi = async (
 
 export const getAllNotesApi = async () => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
 
     const res = await api.get(
@@ -48,9 +48,9 @@ export const getAllNotesApi = async () => {
                 page_size: 9999,
             },
 
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
+            // headers: {
+            //     Authorization: `Bearer ${token}`
+            // },
         }
     );
 
@@ -64,15 +64,15 @@ export const getAllNotesApi = async () => {
 
 // ノート詳細を取得する
 export const getNote = async(id: number) => {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.get(
         `/notes/${id}`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     )
 
     return res.data;
@@ -90,7 +90,7 @@ export const createNote = async (
     color: string,
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.post(
         "/notes/",
@@ -100,11 +100,11 @@ export const createNote = async (
             label_ids: labelIds,
             color: color
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
 
     );
 
@@ -120,18 +120,19 @@ export const updateNote = async (
     content: string
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
+
     const res = await api.patch(
         `/notes/${id}/`,
         {
             title,
             content,
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -144,18 +145,18 @@ export const updateNote = async (
 // ノートをゴミ箱に移動させる
 export const moveToTrash = async(id: number) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(  // patchは一部だけ更新という意味。
         `/notes/${id}/`,
         {
             is_deleted: true,  // is_deletedをtrue に変えてという意味。
         },
-        {
-            headers: { // headersはリクエストの追加情報。
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: { // headersはリクエストの追加情報。
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -165,15 +166,15 @@ export const moveToTrash = async(id: number) => {
 
 // ゴミ箱に入れたノートを取得する
 export const getTrashNotes = async () => {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.get(
         "/notes/trash/",
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -184,18 +185,18 @@ export const getTrashNotes = async () => {
 
 // ゴミ箱に入れたノートを復元する
 export const restoreNoteApi = async (id: number) => {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `/notes/${id}/`,
         {
             is_deleted: false
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -209,15 +210,15 @@ export const restoreNoteApi = async (id: number) => {
 
 // ノートを完全に削除する
 export const deleteNoteForever = async (id: number) => {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     await api.delete(
         `/notes/${id}/`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 }
 
@@ -225,15 +226,15 @@ export const deleteNoteForever = async (id: number) => {
 
 // ゴミ箱内のノートを全て一括で削除する
 export const emptyTrash = async () => {
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     await api.delete(
         "/notes/trash/all/",
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
 }
@@ -248,19 +249,19 @@ export const updateNoteLabelsApi = async (
     labelIds: number[]
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `/notes/${noteId}/`,
         {
             label_ids: labelIds,
         },
-        {
-            headers: {
-                Authorization:
-                    `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization:
+        //             `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -276,18 +277,18 @@ export const updateNoteColor = async (
     color: string
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `notes/${id}/`,
         {
             color
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
 
     );
 
@@ -304,19 +305,22 @@ export const updateNoteFavorite = async (
 
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `notes/${id}/`,
         {
             is_favorite
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
+
+    console.log(res);
+    // console.log(res.data);
 
     return res.data;
 
@@ -332,18 +336,18 @@ export const updateNotePinned = async (
 ) => {
 
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `notes/${id}/`,
         {
             is_pinned
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
 
     );
 
@@ -361,15 +365,15 @@ export const getNoteHistory = async (
 
 ): Promise<History[]> => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.get(
         `/notes/${id}/history/`,  // views.py、NoteViewSetの@historyメソッドが実行される
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        },
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // },
     );
 
     return res.data;
@@ -388,7 +392,7 @@ export const uploadNoteImage = async (
     image: File,
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const formData = new FormData();
 
@@ -398,11 +402,11 @@ export const uploadNoteImage = async (
     const res = await api.post(  // resにはサーバーから返ってきたレスポンス全体が渡ってくる。
         `notes/${noteId}/images/`,
         formData,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
     );
 
     return res.data;
@@ -422,15 +426,15 @@ export const deleteNoteImageApi = async(
 
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.delete(
         `/note-images/${imageId}/`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        },
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // },
     );
 
     return res.data;
@@ -453,16 +457,16 @@ export const reorderNoteImageApi = async (
 
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `notes/${noteId}/images/reorder/`,
         images,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // }
 
     );
 
@@ -482,16 +486,16 @@ export const incrementNoteViewApi = async (
 
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.post(
         `/notes/${noteId}/view/`,
         {},
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        },
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // },
 
     );
 
@@ -506,18 +510,18 @@ export const updateNoteViewTimeApi = async (
     seconds: number,
 ) => {
 
-    const token = localStorage.getItem("access");
+    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `/notes/${noteId}/view_time/`,
         {
             seconds
         },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        },
+        // {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // },
 
     );
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useNavigate } from 'react-router-dom'
 
-import { loginApi } from "../api/authApi";
+import { loginApi, refreshAccessToken } from "../api/authApi";
 
 
 import styles from "./LoginPage.module.css";
@@ -32,13 +32,25 @@ export default function LoginPage() {
             setError("");
 
             const data = await loginApi(email, password);
-            console.log(data);
+            // console.log(`ログイン成功後のdata: ${data}`);
 
+            console.log(`ログイン成功後のアクセストークン: ${data.access}`);
+            // console.log(`ログイン成功後のリフレッシュトークン: ${data.refresh}`);
             localStorage.setItem("access", data.access);
             localStorage.setItem("refresh", data.refresh);
 
             alert("ログイン成功");
             navigate("/notes");  // NotesPage.tsxへ
+
+
+            // const newAccessToken = await refreshAccessToken();
+
+            // localStorage.setItem(
+                // "access",
+                // newAccessToken
+            // );
+
+            // console.log(`新しいアクセストークン: ${newAccessToken}`);
 
 
 
@@ -122,3 +134,7 @@ export default function LoginPage() {
     )
 
 }
+
+
+
+
