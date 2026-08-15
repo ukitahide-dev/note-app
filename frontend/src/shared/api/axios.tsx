@@ -34,8 +34,6 @@ api.interceptors.request.use((config) => {
 // Djangoからレスポンスが返ってきた後 に実行される。
 api.interceptors.response.use(
 
-
-
     (response) => {
         console.log("api.interceptors.response.use実行");
 
@@ -50,46 +48,49 @@ api.interceptors.response.use(
             console.log("失敗したリクエスト:", error.config);   // error.config: Axiosのエラーには、元々どんなリクエストを送ったのかが入っている。
 
 
+            // このリクエストですでにRefreshを試しているなら、// これ以上Refreshしない
+            if (error.config._retry) {
+                return Promise.reject(error);
+            }
 
-            const newAccessToken = await refreshAccessToken();
-
-            console.log(
-                "Refresh後の新しいAccess Token:",
-                newAccessToken
-            );
-
-
-            localStorage.setItem(
-                "access",
-                newAccessToken
-            );
-
-            error.config.headers.Authorization = `Bearer ${newAccessToken}`;   // 失敗したリクエストのAuthorizationを新しいTokenに交換。
+            // 「このリクエストはRefresh済み」という印を付ける
+            error.config._retry = true;
 
 
-            console.log(
-                "再送するAuthorization:",
-                error.config.headers.Authorization
-            );
+            try {
+
+                const newAccessToken = await refreshAccessToken();
+
+                console.log(
+                    "Refresh後の新しいAccess Token:",
+                    newAccessToken
+                );
+
+                localStorage.setItem(
+                    "access",
+                    newAccessToken
+                );
 
 
-            console.log("localStorageの中にあるrefresh後の新しいaccessToken");
+                error.config.headers.Authorization = `Bearer ${newAccessToken}`;   // 失敗したリクエストのAuthorizationを新しいTokenに交換。
 
-            console.log(
-
-                localStorage.getItem("access")
-            );
-
-            console.log(error.response?.data);
+                return api(error.config);   // さっき失敗したリクエストを、もう一回 api で送る。error.config に入っている設定どおりに、もう一度リクエストを送る。
 
 
-            return api(error.config);   // さっき失敗したリクエストを、もう一回 api で送る。error.config に入っている設定どおりに、もう一度リクエストを送る。
+            } catch (refreshError) {
 
+                console.log("Refresh Tokenが無効です");
+
+                localStorage.removeItem("access");
+                localStorage.removeItem("refresh");
+
+                // window.location.href = "/login";
+
+                return Promise.reject(refreshError);
+
+            }
 
         }
-
-
-        return Promise.reject(error);
 
     }
 
@@ -98,11 +99,23 @@ api.interceptors.response.use(
 
 
 
-//  Refresh Token専用のAPI。
-export const refreshApi = axios.create({
+//  認証系API専用のAxios
+export const authApi = axios.create({
     baseURL: "http://127.0.0.1:8000/api",
+
+
 });
 
+
+
+
+authApi.interceptors.request.use((config) => {
+
+    console.log("authApi request:", config.url);
+
+    return config;
+
+});
 
 
 export default api;

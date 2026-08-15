@@ -30,7 +30,7 @@ urlpatterns = [
 
     path(
         'logout/',
-        TokenBlacklistView.as_view(),
+        TokenBlacklistView.as_view(),   # Simple JWTが用意しているrefresh tokenをブラックリストに入れるためのAPI。
         name="logout",
     ),
 

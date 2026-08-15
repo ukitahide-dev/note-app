@@ -29,6 +29,7 @@ import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelecte
 // ---- react-icon ----
 import { BsPin } from "react-icons/bs";
 import { MdPushPin } from "react-icons/md";
+import { logoutApi } from "../../../features/auth/api/authApi";
 
 
 
@@ -102,7 +103,7 @@ export default function Header({
     } = useSelectedNoteLabels();
 
 
-    // hooks 
+    // hooks
     const {
         handleMoveToTrash,
         handleDuplicateNotes,
@@ -427,7 +428,22 @@ export default function Header({
                     onFocus={() => navigate("/search")}
                 />
 
+
+
+
+                <button
+                    onClick={async () => {
+                        await logoutApi();
+                        navigate("/login");
+                    }}
+
+                >
+                    ログアウト
+
+                </button>
+
             </header>
+
 
 
         )}
