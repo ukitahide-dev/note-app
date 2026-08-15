@@ -19,83 +19,98 @@ import FavoriteNotesPage from './features/notes/pages/FavoriteNotesPage/Favorite
 import SearchResultsPage from './features/search/pages/SearchResultsPage/SearchResultsPage'
 import CalendarPage from './features/notes/pages/CalendarPage/CalendarPage'
 import RegisterPage from './features/auth/pages/RegisterPage/RegisterPage'
+import ProtectedRoute from './shared/routes/ProtectedRoute'
 
 
 
 function App() {
 
     return (
+
         <BrowserRouter>
+
             <Routes>
-                <Route path="/" element={<Navigate to="/login" />}/>
-                <Route path="/login" element={<LoginPage />} />
-                
+
+                {/* 誰でもアクセスできるページ */}
+                <Route
+                    path="/"
+                    element={<Navigate to="/login" />}
+                />
+
+                <Route
+                    path="/login"
+                    element={<LoginPage />}
+                />
+
                 <Route
                     path="/register"
                     element={<RegisterPage />}
                 />
 
-                <Route
-                    path="/notes"
-                    element={
-                        <Layout>
-                            <NotesPage />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="/labels/:labelName"
-                    element={
-                        <Layout>
-                            <LabelNotesPage />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="/notes/trash"
-                    element={
-                        <Layout>
-                            <TrashNotesPage />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="/notes/favorites"
-                    element={
-                        <Layout>
-                            <FavoriteNotesPage />
-                        </Layout>
-                    }
-                />
-                <Route
-                    path="/search"
-                    element={
-                        <Layout>
-                            <SearchResultsPage />
-                        </Layout>
-                    }
-                />
 
-                <Route
-                    path="/calendar"
-                    element={<CalendarPage />}
-                />
+                {/* ログイン必須 */}
+                {/* この中に入っているRouteへアクセスするときは、まず ProtectedRoute を通す。 */}
+                <Route element={<ProtectedRoute />}>
 
-                {/* <Route path="/notes" element={<NotesPage />} /> */}
-                {/* <Route path="/notes/:id" element={<NoteDetailPage />} /> */}
+                    <Route
+                        path="/notes"
+                        element={
+                            <Layout>
+                                <NotesPage />
+                            </Layout>
+                        }
+                    />
+
+                    <Route
+                        path="/labels/:labelName"
+                        element={
+                            <Layout>
+                                <LabelNotesPage />
+                            </Layout>
+                        }
+                    />
+
+                    <Route
+                        path="/notes/trash"
+                        element={
+                            <Layout>
+                                <TrashNotesPage />
+                            </Layout>
+                        }
+                    />
+
+                    <Route
+                        path="/notes/favorites"
+                        element={
+                            <Layout>
+                                <FavoriteNotesPage />
+                            </Layout>
+                        }
+                    />
+
+                    <Route
+                        path="/search"
+                        element={
+                            <Layout>
+                                <SearchResultsPage />
+                            </Layout>
+                        }
+                    />
+
+                    <Route
+                        path="/calendar"
+                        element={<CalendarPage />}
+                    />
 
 
+                </Route>
 
-
-                    {/* <Route path="/register" element={<RegisterPage />} /> */}
-                    {/* <Route path="/" element={<Layout />}> */}
-                        {/* <Route index element={<Home />} /> */}
-                        {/* <Route path="/notes/:id" element={<NoteDetail />} /> */}
-                    {/* </Route> */}
             </Routes>
 
         </BrowserRouter>
+
     )
+
 }
 
 export default App
