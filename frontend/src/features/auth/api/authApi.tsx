@@ -61,6 +61,7 @@ export const registerApi = async (
     });
 
     return res.data;
+    
 }
 
 
@@ -91,7 +92,7 @@ export const refreshAccessToken = async (
         console.log("Refresh Tokenが無効です");
         console.log(error);
 
-        throw error;  // 呼び出し元にエラー内容を伝える。
+        throw error;  // 呼び出し元にエラー内容を伝える。自分のところでエラーを処理しきれないので、refreshAccessToken() を呼んだ側にエラーを投げ返す。
     }
 
 

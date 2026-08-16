@@ -46,6 +46,12 @@ export default function NotesPage() {
 
 
 
+    const errorMessage = useNoteStore(
+        (state) => state.errorMessage
+    );
+
+
+
     useEffect(() => {
         fetchNotes();
     }, []);
@@ -111,8 +117,12 @@ export default function NotesPage() {
 
                 />
 
-                
 
+                {errorMessage && (
+                    <div>
+                        {errorMessage}
+                    </div>
+                )}
 
 
             </div>

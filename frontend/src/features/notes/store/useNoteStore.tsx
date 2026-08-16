@@ -1,27 +1,28 @@
 import { create } from "zustand";
 import type { Note, NoteImage } from "../../../types/note"
 import {
-    createNote as createNoteApi,
-    deleteNoteForever as deleteNoteForeverApi,
+    createNoteApi,
+    deleteNoteForeverApi,
     deleteNoteImageApi,
-    emptyTrash as emptyTrashApi,
+    emptyTrashApi,
 
     getAllNotesApi,
 
     getNotesApi,
-    getTrashNotes as getTrashNotesApi,
+    getTrashNotesApi,
     incrementNoteViewApi,
-    moveToTrash as moveToTrashApi,
+    moveToTrashApi,
     reorderNoteImageApi,
     restoreNoteApi,
-    updateNote as updateNoteApi,
-    updateNoteColor as updateNoteColorApi,
-    updateNoteFavorite,
+    updateNoteApi,
+    updateNoteColorApi,
+    updateNoteFavoriteApi,
     updateNoteLabelsApi,
-    updateNotePinned,
+    updateNotePinnedApi,
     updateNoteViewTimeApi
 }
 from "../api/noteApi";
+import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
 
 
@@ -47,12 +48,7 @@ type NoteStore = {
     changeOrdering: (ordering: string) => Promise<void>;
 
 
-    // deletedNote: Note | null;
 
-    // deletedNote: {
-    //     note: Note;
-    //     index: number;
-    // } | null;
 
     deletedNotes: DeletedNote[];
 
@@ -63,7 +59,13 @@ type NoteStore = {
 
     hideUndo: () => void;
 
-    // newImages: NoteImage[];
+
+    errorMessage: string | null;
+
+
+    setError: (error: unknown) => void;
+
+    clearError: () => void;
 
     fetchNotes: (
         page: number,
@@ -164,6 +166,25 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     undoTimer: null as ReturnType<typeof setTimeout> | null,
 
+
+    errorMessage: null,
+
+
+    setError: (error) => {
+
+        console.error(error);
+
+        set({
+            errorMessage: getApiErrorMessage(error)
+        })
+
+    },
+
+    clearError: () => {
+        set({
+            errorMessage: null,
+        })
+    },
 
 
 
@@ -301,7 +322,18 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         } catch (error) {
 
             console.error(error);
+
+
+            get().setError(error);
+
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+            // set({
+            //     errorMessage: getApiErrorMessage(error)
+            // });
+
+
+
+
 
         }
 
@@ -347,7 +379,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
+
 
         }
 
@@ -374,7 +410,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
         }
 
@@ -480,7 +518,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
+            // console.error(error);
 
         }
     },
@@ -609,7 +651,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
+
         }
 
 
@@ -634,7 +680,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
 
         }
 
@@ -657,7 +706,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
 
         }
 
@@ -680,7 +732,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
+
 
         }
 
@@ -701,7 +756,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const updatedNote = await updateNoteFavorite(id, !is_favorite);
+            const updatedNote = await updateNoteFavoriteApi(id, !is_favorite);
 
             set((state) => ({
                 notes: state.notes.map(
@@ -713,7 +768,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            console.error(error);
+            get().setError(error);
+
+            throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
         }
 
@@ -730,7 +787,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const updatedNote = await updateNotePinned(id, !is_pinned);
+            const updatedNote = await updateNotePinnedApi(id, !is_pinned);
 
             set((state) => ({
                 notes: state.notes.map(
@@ -769,7 +826,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
                 selectedNotes.map(async (note) => {
 
-                    return await updateNotePinned(
+                    return await updateNotePinnedApi(
                         note.id,
                         mode === "add",
                     );

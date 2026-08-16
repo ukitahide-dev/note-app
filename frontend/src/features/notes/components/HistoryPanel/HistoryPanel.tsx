@@ -7,7 +7,7 @@ import styles from "./HistoryPanel.module.css";
 
 import type { Note, History } from "../../../../types/note";
 import { useEffect, useState } from "react";
-import { getNoteHistory } from "../../api/noteApi";
+import { getNoteHistoryApi } from "../../api/noteApi";
 
 
 type Props = {
@@ -35,7 +35,7 @@ export function HistoryPanel ({
 
         const fetchHistory = async () => {
 
-            const data = await getNoteHistory(note.id);
+            const data = await getNoteHistoryApi(note.id);
             setHistories(data);
 
         }

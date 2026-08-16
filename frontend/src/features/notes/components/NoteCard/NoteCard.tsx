@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 // import { useNavigate } from "react-router-dom";
-import { uploadNoteImage } from "../../api/noteApi";
+import { uploadNoteImageApi } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
@@ -262,7 +262,7 @@ export default function NoteCard({
                 (!paletteRef.current || !paletteRef.current.contains(event.target as Node))
             ) {
 
-                console.log("NoteCard outside");
+                // console.log("NoteCard outside");
 
 
                 setOpenMenuId(null);
@@ -371,7 +371,7 @@ export default function NoteCard({
 
         try {
 
-            const image = await uploadNoteImage(note.id, file);
+            const image = await uploadNoteImageApi(note.id, file);
             console.log(image);
             fetchNotes();
 

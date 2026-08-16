@@ -63,7 +63,7 @@ export const getAllNotesApi = async () => {
 
 
 // ノート詳細を取得する
-export const getNote = async(id: number) => {
+export const getNoteApi = async(id: number) => {
     // const token = localStorage.getItem("access");
 
     const res = await api.get(
@@ -82,15 +82,13 @@ export const getNote = async(id: number) => {
 
 
 
-// ノートを投稿する
-export const createNote = async (
+// ノートを投稿する。async が付いている関数は、必ずPromiseを返す。
+export const createNoteApi = async (
     title: string,
     content: string,
     labelIds: number[],
     color: string,
 ) => {
-
-    // const token = localStorage.getItem("access");
 
     const res = await api.post(
         "/notes/",
@@ -100,13 +98,12 @@ export const createNote = async (
             label_ids: labelIds,
             color: color
         },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
-
     );
+
+    // ↑のapi呼び出し部分でエラーが起こると、これ以降のコードは実行されない。
+
+    console.log("aaaaaaa");
+    console.log(`createNoteApiのres: ${res}`);
 
     return res.data;
 }
@@ -114,7 +111,7 @@ export const createNote = async (
 
 
 // ノートのタイトル内容を変更する
-export const updateNote = async (
+export const updateNoteApi = async (
     id: number,
     title: string,
     content: string
@@ -143,7 +140,7 @@ export const updateNote = async (
 
 
 // ノートをゴミ箱に移動させる
-export const moveToTrash = async(id: number) => {
+export const moveToTrashApi = async(id: number) => {
 
     // const token = localStorage.getItem("access");
 
@@ -165,7 +162,7 @@ export const moveToTrash = async(id: number) => {
 
 
 // ゴミ箱に入れたノートを取得する
-export const getTrashNotes = async () => {
+export const getTrashNotesApi = async () => {
     // const token = localStorage.getItem("access");
 
     const res = await api.get(
@@ -209,7 +206,7 @@ export const restoreNoteApi = async (id: number) => {
 
 
 // ノートを完全に削除する
-export const deleteNoteForever = async (id: number) => {
+export const deleteNoteForeverApi = async (id: number) => {
     // const token = localStorage.getItem("access");
 
     await api.delete(
@@ -225,16 +222,12 @@ export const deleteNoteForever = async (id: number) => {
 
 
 // ゴミ箱内のノートを全て一括で削除する
-export const emptyTrash = async () => {
+export const emptyTrashApi = async () => {
     // const token = localStorage.getItem("access");
 
     await api.delete(
         "/notes/trash/all/",
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 
 }
@@ -272,7 +265,7 @@ export const updateNoteLabelsApi = async (
 
 
 // ノートの背景色を変更する
-export const updateNoteColor = async (
+export const updateNoteColorApi = async (
     id: number,
     color: string
 ) => {
@@ -299,7 +292,7 @@ export const updateNoteColor = async (
 
 
 // ノートのお気に入りを切り替える
-export const updateNoteFavorite = async (
+export const updateNoteFavoriteApi = async (
     id: number,
     is_favorite: boolean
 
@@ -330,7 +323,7 @@ export const updateNoteFavorite = async (
 
 
 
-export const updateNotePinned = async (
+export const updateNotePinnedApi = async (
     id: number,
     is_pinned: boolean,
 ) => {
@@ -360,7 +353,7 @@ export const updateNotePinned = async (
 
 
 // ノート単体の変更履歴を取得する
-export const getNoteHistory = async (
+export const getNoteHistoryApi = async (
     id: number,
 
 ): Promise<History[]> => {
@@ -387,7 +380,7 @@ export const getNoteHistory = async (
 
 
 // ノートに画像を追加する
-export const uploadNoteImage = async (
+export const uploadNoteImageApi = async (
     noteId: number,
     image: File,
 ) => {

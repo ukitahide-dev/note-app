@@ -20,7 +20,7 @@ api.interceptors.request.use((config) => {
     // console.log(token);
 
     if (token) {
-        console.log("tokenある場合です");
+        // console.log("tokenある場合です");
 
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -77,7 +77,7 @@ api.interceptors.response.use(
                 return api(error.config);   // さっき失敗したリクエストを、もう一回 api で送る。error.config に入っている設定どおりに、もう一度リクエストを送る。
 
 
-            } catch (refreshError) {
+            } catch (refreshError) {   // refreshErrorには throw error で、渡されたエラーが入る。
 
                 console.log("Refresh Tokenが無効です");
 
@@ -86,11 +86,15 @@ api.interceptors.response.use(
 
                 // window.location.href = "/login";
 
-                return Promise.reject(refreshError);
+                return Promise.reject(refreshError);    // この非同期処理は失敗したことにして、refreshError を呼び出し元へ返す
 
             }
 
         }
+
+
+        // 401以外のエラーは呼び出し元へ返す
+        return Promise.reject(error);
 
     }
 
