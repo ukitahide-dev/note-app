@@ -34,6 +34,8 @@ api.interceptors.request.use((config) => {
 // Djangoからレスポンスが返ってきた後 に実行される。
 api.interceptors.response.use(
 
+
+
     (response) => {
         console.log("api.interceptors.response.use実行");
 
@@ -92,7 +94,7 @@ api.interceptors.response.use(
 
         }
 
-
+        console.log("error発生");
         // 401以外のエラーは呼び出し元へ返す
         return Promise.reject(error);
 

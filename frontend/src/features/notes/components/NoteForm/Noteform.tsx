@@ -17,7 +17,7 @@ import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
 
-
+import axios from "axios";
 
 
 // Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
@@ -51,7 +51,13 @@ export default function NoteForm({
         "menu" | "label" | "color" | null
     >(null);
 
-    
+
+    const [fieldErrors, setFieldErrors] = useState<{
+        title?: string[],
+        content?: string[],
+    }>({});
+
+
 
     const {
         selectedLabels,
@@ -76,11 +82,61 @@ export default function NoteForm({
 
 
 
+
+    const validateNoteForm = (
+        title: string,
+        content: string,
+
+    ) => {
+
+
+        const errors: {
+            title?: string[],
+            content?: string[],
+        } = {};
+
+
+        if (!title.trim()) {
+            errors.title = ["タイトルを入力してください!!!!!!888"];
+        }
+
+
+        if (!content.trim()) {
+            errors.content = ["本文を入力してください。"];
+        }
+
+
+        if (title.length > 100) {
+            errors.title = ["タイトルは100文字以内です。"];
+        }
+
+        return errors;
+
+    };
+
+
+
     const handleSubmit = async (
         e: React.SyntheticEvent
     ) => {
 
         e.preventDefault();
+
+        setFieldErrors({});
+
+
+        const clientErrors = validateNoteForm(title, content);
+
+
+        // フロント側で、不正な入力を見つけて、api通信することなく、ここで処理を終わらせる。フロントで完結させる。
+        if (Object.keys(clientErrors).length > 0) {
+
+            setFieldErrors(clientErrors);
+            return;
+
+        }
+
+
 
         try {
 
@@ -92,17 +148,37 @@ export default function NoteForm({
             setContent("");
             setIsExpanded(false);
 
-            // setSelectedLabels([]);
+
             setActivePanel(null);
             setTempColor("#ffffff");
 
-    } catch (error) {
+        } catch (error) {
 
-            console.error(error.response?.data);
+            if (axios.isAxiosError(error)) {
 
-            alert("投稿失敗");
+                const data = error.response?.data;
+
+                console.log(data);
+
+                console.error(error.response?.data);
+
+
+                if (error.response?.status === 400) {
+
+                    setFieldErrors(data);
+
+                }
+
+
+            }
+
+            // alert("投稿失敗");
         }
+
+
     }
+
+
 
 
     const handleContentChange = (
@@ -181,6 +257,8 @@ export default function NoteForm({
         >
 
             {isExpanded && (
+
+                <>
                 <input
                     className={styles.titleInput}
                     type="text"
@@ -188,6 +266,20 @@ export default function NoteForm({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
+
+                {fieldErrors.title?.map((message, index) => (
+
+                    <p
+                        key={index}
+                    >
+                        {message}
+                    </p>
+
+                ))}
+
+
+
+                </>
             )}
 
 
@@ -200,6 +292,17 @@ export default function NoteForm({
                 onChange={handleContentChange}
                 className={styles.contentInput}
             />
+
+            {fieldErrors.content?.map((message, index) => (
+
+                <p
+                    key={index}
+                >
+                    {message}
+
+                </p>
+
+            ))}
 
 
 

@@ -322,6 +322,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         } catch (error) {
 
             console.error(error);
+            const status = error.response?.status;
+            console.log(`エラーステータス: ${status}`);
+            console.log("affwfw")
 
 
             get().setError(error);
