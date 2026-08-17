@@ -34,6 +34,13 @@ type Props = {
 }
 
 
+type FieldErrors = {
+    title?: string[],
+    content?: string[],
+}
+
+
+
 // 親：NotesPage.jsx
 
 
@@ -52,10 +59,13 @@ export default function NoteForm({
     >(null);
 
 
-    const [fieldErrors, setFieldErrors] = useState<{
-        title?: string[],
-        content?: string[],
-    }>({});
+    const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+
+    // const [fieldErrors, setFieldErrors] = useState<{
+    //     title?: string[],
+    //     content?: string[],
+    // }>({});
 
 
 
@@ -87,13 +97,16 @@ export default function NoteForm({
         title: string,
         content: string,
 
-    ) => {
+    ): FieldErrors => {
 
 
-        const errors: {
-            title?: string[],
-            content?: string[],
-        } = {};
+
+        const errors: FieldErrors = {};
+
+        // const errors: {
+        //     title?: string[],
+        //     content?: string[],
+        // } = {};
 
 
         if (!title.trim()) {
@@ -172,7 +185,7 @@ export default function NoteForm({
 
             }
 
-            // alert("投稿失敗");
+
         }
 
 
@@ -186,6 +199,11 @@ export default function NoteForm({
     ) => {
 
         setContent(e.target.value);
+
+        setFieldErrors((prev) => ({
+            ...prev,
+            content: undefined,
+        }));
 
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto";  // autoはブラウザに自然な高さを決めてもらうという意味。これにより、文字を削除して行数が減っていくと、自動的に自然な高さになってくれる。
@@ -264,13 +282,21 @@ export default function NoteForm({
                     type="text"
                     placeholder="タイトル"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => {
+                        setTitle(e.target.value);
+                        setFieldErrors((prev) => ({
+                            ...prev,
+                            title: undefined,
+                        }));
+                    }}
+
                 />
 
                 {fieldErrors.title?.map((message, index) => (
 
                     <p
                         key={index}
+                        className={styles.fieldError}
                     >
                         {message}
                     </p>
@@ -297,6 +323,7 @@ export default function NoteForm({
 
                 <p
                     key={index}
+                    className={styles.fieldError}
                 >
                     {message}
 
@@ -399,44 +426,3 @@ export default function NoteForm({
 
 
 
-
-// ----- useNoteFormLabels hooksに移して不要になった -----
-    // const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
-
-    // const { labels } = useLabelStore();
-
-
-    // const selectedLabelNames = labels
-    //     .filter(label => selectedLabels.includes(label.id))
-    //     .map(label => label.name);
-
-
-
-    // const labelStates = labels.map((label) => ({
-    //     id: label.id,
-    //     // state: "unchecked",
-    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked"
-
-    // }));
-
-    //
-
-// const handleSelectLabel = (
-    //     labelId: number,
-
-    // ) => {
-    //     if (selectedLabels.includes(labelId)) {
-
-    //         setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
-    //         // setLabels(labels.filter((name) => name !== labelName));
-
-    //     } else {
-
-    //         setSelectedLabels([
-    //             ...selectedLabels,
-    //             labelId
-    //         ]);
-
-    //     }
-    // }
-// ----- -----
