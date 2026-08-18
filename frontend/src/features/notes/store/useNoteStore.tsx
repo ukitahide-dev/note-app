@@ -22,7 +22,8 @@ import {
     updateNoteViewTimeApi
 }
 from "../api/noteApi";
-import { getApiErrorMessage } from "../../../shared/errors/apiError";
+import { useErrorStore } from "../../../shared/stores/useErrorStore";
+// import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
 
 
@@ -60,11 +61,11 @@ type NoteStore = {
     hideUndo: () => void;
 
 
-    errorMessage: string | null;
+    // errorMessage: string | null;
 
-    setError: (error: unknown) => void;
+    // setError: (error: unknown) => void;
 
-    clearError: () => void;
+    // clearError: () => void;
 
 
     fetchNotes: (
@@ -170,21 +171,21 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     errorMessage: null,
 
 
-    setError: (error) => {
+    // setError: (error) => {
 
-        console.error(error);
+    //     console.error(error);
 
-        set({
-            errorMessage: getApiErrorMessage(error)
-        })
+    //     set({
+    //         errorMessage: getApiErrorMessage(error)
+    //     })
 
-    },
+    // },
 
-    clearError: () => {
-        set({
-            errorMessage: null,
-        })
-    },
+    // clearError: () => {
+    //     set({
+    //         errorMessage: null,
+    //     })
+    // },
 
 
 
@@ -213,7 +214,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
+            useErrorStore.getState().setError(error);
             console.error(error);
 
         }
@@ -223,6 +225,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     fetchAllNotes: async () => {
+        
          try {
 
             const data = await getAllNotesApi();
@@ -234,7 +237,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch(error) {
 
-            get().setError(error);
+            // get().setError(error);
+            useErrorStore.getState().setError(error);
             console.error(error);
 
         }
@@ -288,7 +292,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
+            useErrorStore.getState().setError(error);
             console.error(error);
 
         }
@@ -330,7 +335,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             console.log("affwfw")
 
 
-            get().setError(error);
+            useErrorStore.getState().setError(error);
+
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
             // set({
@@ -385,7 +392,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -416,7 +423,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -524,7 +531,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -657,7 +664,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -686,7 +693,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -712,7 +719,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -738,7 +745,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -774,7 +781,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
@@ -806,7 +813,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
 
             console.error(error);
 
@@ -858,7 +865,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
             console.error(error);
 
         }
@@ -899,7 +906,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
             console.error(error);
 
         }
@@ -945,7 +952,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
             console.error(error);
 
         }
@@ -976,7 +983,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            get().setError(error);
+            // get().setError(error);
             console.error(error);
 
         }

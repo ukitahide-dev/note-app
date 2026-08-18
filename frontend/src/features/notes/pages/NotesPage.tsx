@@ -23,6 +23,7 @@ import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
 import Pagination from "../components/Pagination/Pagination";
 import SortSelect from "../components/SortSelect/SortSelect";
 import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
+import { useErrorStore } from "../../../shared/stores/useErrorStore";
 
 
 
@@ -46,10 +47,14 @@ export default function NotesPage() {
     } = useNoteStore();
 
 
+    const {
+        errorMessage
+    } = useErrorStore();
 
-    const errorMessage = useNoteStore(
-        (state) => state.errorMessage
-    );
+    
+    // const errorMessage = useNoteStore(
+    //     (state) => state.errorMessage
+    // );
 
 
 
@@ -99,7 +104,7 @@ export default function NotesPage() {
 
                     <Snackbar
                         message={errorMessage}
-                        
+
                     />
 
                 )}
