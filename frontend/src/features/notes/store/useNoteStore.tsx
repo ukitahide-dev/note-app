@@ -62,10 +62,10 @@ type NoteStore = {
 
     errorMessage: string | null;
 
-
     setError: (error: unknown) => void;
 
     clearError: () => void;
+
 
     fetchNotes: (
         page: number,
@@ -213,6 +213,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -233,6 +234,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch(error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -286,6 +288,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -803,6 +806,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
+
             console.error(error);
 
         }
@@ -853,6 +858,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -893,6 +899,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -938,6 +945,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }
@@ -968,6 +976,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
+            get().setError(error);
             console.error(error);
 
         }

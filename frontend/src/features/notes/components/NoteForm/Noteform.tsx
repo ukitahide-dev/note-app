@@ -61,6 +61,8 @@ export default function NoteForm({
 
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
+    const [isSubmiting, setIsSubmiting] = useState(false);
+
 
     // const [fieldErrors, setFieldErrors] = useState<{
     //     title?: string[],
@@ -145,6 +147,7 @@ export default function NoteForm({
         if (Object.keys(clientErrors).length > 0) {
 
             setFieldErrors(clientErrors);
+
             return;
 
         }
@@ -153,9 +156,11 @@ export default function NoteForm({
 
         try {
 
+            setIsSubmiting(true);
+
             await createNote(title, content, selectedLabels, tempColor);
 
-            alert("投稿成功");
+            // alert("投稿成功");
 
             setTitle("");
             setContent("");
@@ -376,8 +381,9 @@ export default function NoteForm({
                         <button
                             type="submit"
                             className={styles.submitButton}
+                            disabled={isSubmiting}
                         >
-                            投稿
+                            {isSubmiting ? "投稿中" : "投稿"}
                         </button>
 
                     </div>

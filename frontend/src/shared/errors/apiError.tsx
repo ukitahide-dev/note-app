@@ -2,8 +2,12 @@ import axios from "axios";
 
 
 
+// API通信エラーの共通処理
+
+
 export const getApiErrorMessage = (
     error: unknown,
+
 ): string => {
 
     if (!axios.isAxiosError(error)) {

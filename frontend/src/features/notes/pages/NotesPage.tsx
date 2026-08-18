@@ -22,6 +22,7 @@ import styles from "./NotesPage.module.css";
 import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
 import Pagination from "../components/Pagination/Pagination";
 import SortSelect from "../components/SortSelect/SortSelect";
+import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
 
 
 
@@ -56,31 +57,7 @@ export default function NotesPage() {
         fetchNotes();
     }, []);
 
-    // const handleAddNote = (
-    //     newNote: Note
-    // ) => {
 
-    //     setNotes((prev) => [
-    //         newNote,
-    //         ...prev
-    //     ]);
-    // };
-
-
-    // useEffect(() => {
-    //     const fetchNotes = async () => {
-
-    //         try {
-    //             const data = await getNotes();
-    //             setNotes(data);
-    //         } catch (error) {
-    //             console.error("ノート取得に失敗");
-    //         }
-    //     }
-
-    //     fetchNotes();
-
-    // }, [])
 
 
 
@@ -119,10 +96,19 @@ export default function NotesPage() {
 
 
                 {errorMessage && (
+
+                    <Snackbar
+                        message={errorMessage}
+                        
+                    />
+
+                )}
+
+                {/* {errorMessage && (
                     <div>
                         {errorMessage}
                     </div>
-                )}
+                )} */}
 
 
             </div>
