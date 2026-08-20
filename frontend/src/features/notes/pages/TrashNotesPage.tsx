@@ -18,6 +18,9 @@ import ConfirmModal from "../../../shared/ui/ConfirmModal/ConfirmModal";
 // ---- types ----
 // import type { Note } from "../../../types/note";
 import { useNoteStore } from "../store/useNoteStore";
+import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
+import Pagination from "../components/Pagination/Pagination";
+import SortSelect from "../components/SortSelect/SortSelect";
 
 
 
@@ -34,10 +37,13 @@ export default function TrashNotesPage() {
         notes,
         fetchTrashNotes,
         emptyTrash,
+        isFetchtingNotes,
+        pageSize,
+        ordering,
     } = useNoteStore();
 
 
-    
+
     useEffect(() => {
         fetchTrashNotes();
     }, []);
@@ -49,30 +55,62 @@ export default function TrashNotesPage() {
 
 
     return (
+
         <>
+
+            <Pagination
+                onPageChange={(page) => fetchTrashNotes(page, pageSize, ordering)}
+            />
+
+            <SortSelect
+
+            />
+
             <div className={styles.container}>
-                <h1>ゴミ箱</h1>
 
-                <button
-                    onClick={() => setIsModalOpen(true)}
+                <div
+                    className={styles.top}
                 >
-                    ゴミ箱を空にする
 
-                </button>
+                    <p>ゴミ箱内のメモは7日後に削除されます。</p>
+
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        ゴミ箱を空にする
+
+                    </button>
+
+                </div>
+
+
+                {isFetchtingNotes && (
+
+                    <NoteListSkeleton />
+
+                )}
+
+
+                {!isFetchtingNotes && (
+
 
                 <div className={styles.notesContainer}>
 
-                    {notes.map((note) => (
-                        <TrashNoteCard
-                            key={note.id}
-                            note={note}
-                            // onRestore={handleRestore}
-                            // onDelete={handleDelete}
-                        />
-                    ))}
 
+                        {notes.map((note) => (
+
+                            <TrashNoteCard
+                                key={note.id}
+                                note={note}
+
+                            />
+
+                        ))}
 
                 </div>
+
+
+                )}
 
             </div>
 
@@ -86,7 +124,7 @@ export default function TrashNotesPage() {
                             await emptyTrash();
                             setIsModalOpen(false);
                         }
-                        // async() => await emptyTrash();
+
                     }
                 onClose={() => setIsModalOpen(false)}
             />
@@ -102,100 +140,3 @@ export default function TrashNotesPage() {
 
 
 
-// ------- useNoteStoreで不要になった ------
-    // useEffect(() => {
-    //     const fetchTrashNotes = async () => {
-    //         try {
-    //             const data = await getTrashNotes();
-    //             setNotes(data);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     }
-
-    //     fetchTrashNotes();
-
-    // }, []);
-
-
-
-
-    // const handleRestore = async (id: number) => {
-    //     try {
-    //         await restoreNote(id);
-    //         setNotes((prev) => prev.filter((note) => note.id !== id));
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-
-
-
-    // const handleDelete = async (id: number) => {
-    //     try {
-    //         await deleteNoteForever(id);
-
-    //         setNotes((prev) =>
-    //             prev.filter((note) => note.id !== id)
-    //         );
-
-    //     } catch(error) {
-    //         console.error(error);
-    //     }
-    // }
-
-
-
-    // const handleEmptyTrash = async () => {
-
-    //     try {
-
-    //         await emptyTrash();
-
-    //         setNotes([]);
-    //         setIsModalOpen(false);
-
-
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-
-    // }
-    //  ------ -------
-
-
-
-
-
-{/* {notes.map((note) => (
-
-                <div
-                    key={note.id}
-                    style={{
-                        border:
-                            "1px solid gray",
-                        padding: 16,
-                        marginBottom: 16,
-                    }}
-                >
-
-                    <h3>{note.title}</h3>
-                    <p>{note.content}</p>
-
-                    <button
-                        onClick={() =>
-                            handleRestore(note.id)
-                        }
-                    >
-                        復元
-                    </button>
-
-                    <button
-                        onClick={() =>
-                            handleDelete(note.id)
-                        }
-                    >
-                        完全削除
-                    </button>
-                </div>
-            ))} */}

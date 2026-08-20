@@ -61,12 +61,23 @@ class NoteViewSet(ModelViewSet):
                 user=self.request.user
             )
 
-        return Note.objects.filter(
+
+
+        queryset = Note.objects.filter(
             user=self.request.user,
             is_deleted=False,
         )
 
 
+        is_favorite = self.request.query_params.get("is_favorite")
+
+        if is_favorite:
+            queryset = queryset.filter(
+                is_favorite=True
+            )
+
+
+        return queryset
 
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所
@@ -127,7 +138,11 @@ class NoteViewSet(ModelViewSet):
     # ゴミ箱内のノートを全て取得する
     @action(detail=False, methods=["get"])
     def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
-        notes = Note.objects.filter(user=request.user, is_deleted=True).order_by("-updated_at")
+        notes = Note.objects.filter(
+            user=request.user,
+            is_deleted=True
+        ).order_by("-updated_at")
+
 
         serializer = self.get_serializer(
             notes,

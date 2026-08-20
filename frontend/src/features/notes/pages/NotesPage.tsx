@@ -24,6 +24,7 @@ import Pagination from "../components/Pagination/Pagination";
 import SortSelect from "../components/SortSelect/SortSelect";
 import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
 import { useErrorStore } from "../../../shared/stores/useErrorStore";
+import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
 
 
 
@@ -44,6 +45,12 @@ export default function NotesPage() {
     const {
         notes,
         fetchNotes,
+        isFetchtingNotes,
+
+        pageSize,
+        ordering,
+        setPageSize,
+        setOrdering,
     } = useNoteStore();
 
 
@@ -51,7 +58,7 @@ export default function NotesPage() {
         errorMessage
     } = useErrorStore();
 
-    
+
     // const errorMessage = useNoteStore(
     //     (state) => state.errorMessage
     // );
@@ -69,28 +76,63 @@ export default function NotesPage() {
 
     return (
         <>
+
             <Pagination
+                onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                onPageSizeChange={ async (size) => {
+
+                    setPageSize(size);
+
+                    await fetchNotes(1, size, ordering);
+
+                }}
+
 
             />
 
             <SortSelect
+                onPageOrderChange={async (ordering) => {
 
+                    setOrdering(ordering);
+
+                    await fetchNotes(1, pageSize, ordering);
+
+                }}
             />
 
             <div className={styles.container}>
+
                 <NoteForm
-                    // onAddNote={handleAddNote}
+
                 />
 
-                <NoteList
-                    notes={notes}
-                    // setNotes={setNotes}
-                    enableSort={true}
-                    // onMoveToTrash={handleMoveToTrash}
-                />
+
+                {isFetchtingNotes ? (
+
+                    <NoteListSkeleton
+
+                    />
+
+                ) : (
+
+                    <NoteList
+                        notes={notes}
+                        enableSort={true}
+
+                    />
+
+                )}
+
 
                 <Pagination
+                    onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                    onPageSizeChange={ async (size) => {
 
+                        setPageSize(size);
+
+                        await fetchNotes(1, size, ordering);
+
+                    }}
                 />
 
 
@@ -109,11 +151,7 @@ export default function NotesPage() {
 
                 )}
 
-                {/* {errorMessage && (
-                    <div>
-                        {errorMessage}
-                    </div>
-                )} */}
+
 
 
             </div>

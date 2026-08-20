@@ -10,20 +10,18 @@ export const getNotesApi = async (
     ordering: string = "-created_at",
 
 ) =>  {
-    // const token = localStorage.getItem("access");
+
 
     const res = await api.get(
         "/notes/",
         {
             params: {  //  axiosが自動的に/notes/?page=1&page_size=20&ordering=-created_atに変換する。
                 page,
-                pageSize,
+                page_size: pageSize,
                 ordering,
             },
 
-            // headers: {
-            //     Authorization: `Bearer ${token}`
-            // },
+
         }
 
 
@@ -38,9 +36,6 @@ export const getNotesApi = async (
 
 export const getAllNotesApi = async () => {
 
-    // const token = localStorage.getItem("access");
-
-
     const res = await api.get(
         "/notes/",
         {
@@ -48,12 +43,8 @@ export const getAllNotesApi = async () => {
                 page_size: 9999,
             },
 
-            // headers: {
-            //     Authorization: `Bearer ${token}`
-            // },
         }
     );
-
 
     return res.data;
 
@@ -64,16 +55,38 @@ export const getAllNotesApi = async () => {
 
 // ノート詳細を取得する
 export const getNoteApi = async(id: number) => {
-    // const token = localStorage.getItem("access");
+
 
     const res = await api.get(
         `/notes/${id}`,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     )
+
+    return res.data;
+
+
+}
+
+
+
+export const getFavoriteNotesApi = async (
+    page: number = 1,
+    pageSize: number = 20,
+    ordering: string = "-created_at",
+
+) => {
+
+    const res = await api.get(
+        "/notes/",
+        {
+            params: {
+                page,
+                page_size: pageSize,
+                ordering,
+                is_favorite: true,
+            }
+        },
+    );
 
     return res.data;
 
@@ -162,16 +175,25 @@ export const moveToTrashApi = async(id: number) => {
 
 
 // ゴミ箱に入れたノートを取得する
-export const getTrashNotesApi = async () => {
-    // const token = localStorage.getItem("access");
+export const getTrashNotesApi = async (
+    page: number = 1,
+    pageSize: number = 20,
+    ordering: string = "-created_at",
+
+) => {
+
 
     const res = await api.get(
         "/notes/trash/",
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+        {
+            params: {  //  axiosが自動的に/notes/?page=1&page_size=20&ordering=-created_atに変換する。
+                page,
+                pageSize,
+                ordering,
+            },
+
+        },
+
     );
 
     return res.data;

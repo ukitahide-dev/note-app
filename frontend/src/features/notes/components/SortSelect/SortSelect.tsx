@@ -5,15 +5,26 @@ import { useNoteStore } from "../../store/useNoteStore"
 import styles from "./SortSelect.module.css";
 
 
+type Props = {
+    onPageOrderChange: (
+        ordering: string,
+
+    ) => void;
+}
 
 
-export default function SortSelect() {
+
+export default function SortSelect({
+    onPageOrderChange,
+
+}: Props) {
 
 
     // Store
     const {
         ordering,
-        changeOrdering,
+        // setOrdering
+        // changeOrdering,
     } = useNoteStore();
 
 
@@ -32,7 +43,8 @@ export default function SortSelect() {
             <select
                 className={styles.select}
                 value={ordering}
-                onChange={(e) => changeOrdering(e.target.value)}
+                onChange={(e) => onPageOrderChange(e.target.value)}
+                // onChange={(e) => changeOrdering(e.target.value)}
             >
 
                 <option value="-created_at">

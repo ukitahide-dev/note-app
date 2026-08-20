@@ -30,9 +30,6 @@ import LabelItem from "../LabelItem/LabelItem";
 
 type Props = {
     note: Note;
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
 
     openMenuId: number | null;
 
@@ -43,7 +40,7 @@ type Props = {
             >
         >;
 
-    // onMoveToTrash: (id: number) => void;
+
 
     setOpenMenuId:
         React.Dispatch<
@@ -59,17 +56,6 @@ type Props = {
             >
         >;
 
-    // onSave: (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-    // ) => Promise<void>
-
-    // onUpdateColor: (
-    //     id: number,
-    //     color: string,
-    // ) => Promise<void>
-
     dragHandleProps?: any;
 
     panelType: "label" | null;
@@ -80,20 +66,7 @@ type Props = {
             >
         >;
 
-    // onToggleFavorite: (
-    //     id: number,
-    //     is_favorite: boolean,
-    // ) => Promise<void>;
 
-    // onTogglePin: (
-    //     id: number,
-    //     is_pinned: boolean,
-    // ) => Promise<void>;
-
-
-    // onDuplicateNote: (
-    //     note: Note,
-    // ) => Promise<void>;
 };
 
 
@@ -589,238 +562,3 @@ export default function NoteCard({
 
 
 
-// LabelItemコンポに切り出した
-                        // <div
-                        //     key={label.id}
-                        //     className={cardStyles.label}
-                        // >
-                        //     <span
-
-                        //     >
-                        //         {label.name}
-                        //     </span>
-
-                        //     <button
-                        //         className={cardStyles.removeLabel}
-                        //         onClick={(e) => {
-                        //             e.stopPropagation();
-                        //             handleRemoveLabel(
-                        //                 label.id
-                        //             );
-                        //         }}
-                        //     >
-                        //         ×
-                        //     </button>
-
-                        // </div>
-
-
-
-{/* {openMenuId === note.id && (
-
-                    panelType === "label" ? (
-
-                        <LabelPanel
-                            labelPanelRef={labelPanelRef}
-                            selectedLabels={selectedLabels}
-                            labelStates={labelStates}
-                            // onCreateLabel={handleCreateLabel}
-                            onSelectLabel={handleSelectLabel}
-                        />
-                    ): (
-
-                        <NoteMenu
-                            menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
-                            // onOpenLabel={handleOpenLabel}
-                            onOpenLabel={() => setPanelType("label")}
-                            onMoveToTrash={() => moveToTrash(note.id)}
-                            onDuplicateNote={
-                                () =>
-                                    createNote(
-                                        note.title,
-                                        note.content,
-                                        note.labels.map((label) => label.id),
-                                        note.color
-                                    )
-                                }
-                        // onDuplicateNote={() => onDuplicateNote(note)}
-                        />
-
-                    )
-
-                )} */}
-
-
-
-
-
-// ---- 元々NoteCardに書いていたけど、修正で不要になったもの ----
-
-
-
-
-// const handleOpenLabel = () => {
-    //     setIsLabelOpen((prev) => !prev);
-    //     // setIsLabelOpen(true);
-    // }
-
-
-
-
-    // const updateLabels = async (
-    //     newIds: number[]
-    // ) => {
-
-    //     setSelectedLabels(newIds);
-
-    //     const updatedNote = await updateNoteLabels(note.id, newIds);
-
-    //     // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-    //     setNotes((prev) =>
-    //         prev.map((n) =>
-    //             n.id === note.id ? updatedNote : n
-    //         )
-    //     );
-
-    // }
-
-
-
-
-    // const handleSelectLabel = async (labelId: number) => {
-
-    //     try {
-
-    //         let newIds;
-
-    //         if (selectedLabels.includes(labelId)) {
-
-    //             newIds = selectedLabels.filter((id) => id !== labelId);
-
-    //         } else {
-
-    //             newIds = [...selectedLabels, labelId];
-    //         }
-
-    //         updateLabels(newIds);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    // };
-
-
-
-
-    // const handleRemoveLabel = async (
-    //     labelId: number
-    // ) => {
-
-    //     try {
-
-    //         const newIds = selectedLabels.filter((id) => id !== labelId);
-
-    //         updateLabels(newIds);
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
-
-
-
-
-
-    // const handleToggleFavorite = async (
-
-        // ) => {
-
-        //     try {
-
-        //         const updatedNote = await updateNoteFavorite(note.id, !note.is_favorite);
-
-        //         setNotes((prev) =>
-        //             prev.map((n) =>
-        //                 n.id === note.id ? updatedNote : n
-        //             )
-        //         );
-
-        //     } catch (error) {
-
-        //         console.error(error);
-
-        //     }
-
-
-        // }
-
-
-
-
-
-// useLabelStoreを使う
-    // const {
-    //     labels
-    // } = useLabelStore();
-
-
-    // useNoteLabels hooksに移した
-    // const labelStates = labels.map(label => ({  // ({}) {}を()で囲んでいる。mapの省略形の書き方。
-
-    //     id: label.id,
-
-    //     state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
-
-
-    // }));
-
-
-
-
-
-// ---- useNoteColor hook に移した ----
-
-    // 色の選択をUIに表示する
-    // const handleSelectColor = (
-    //     color: string
-    // ) => {
-    //     setTempColor(color);
-    // }
-
-
-    // // useStateで定義したtempColorは初回マウント時しか値を取得しない。だから、これを書くことで、モーダルから色を変更し、setNotesを更新したときに、tempColorが変更後の色を取得できるようになる。
-    // useEffect(() => {
-    //     setTempColor(note.color);
-    // }, [note.color]);
-
-
-
-
-    // ノート単体の色を変える。ノートカードから色を変えたときの用途。
-    // const saveColor = async () => {
-
-    //     console.log("saveColor実行");
-    //     console.log(`tempColor: ${tempColor}`);
-
-    //     try {
-
-    //         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-    //         updateNote(updatedNote);  // useNoteStore
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    //     // setOpenColorId(null);
-
-
-    // }
-    // ---- -----

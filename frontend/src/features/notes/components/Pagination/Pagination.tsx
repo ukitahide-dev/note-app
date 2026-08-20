@@ -7,10 +7,30 @@ import styles from "./Pagination.module.css";
 
 
 
+
+type Props = {
+    onPageChange: (
+        page: number,
+    ) => void;
+
+    onPageSizeChange: (
+        size: number,
+    ) => void;
+
+
+
+}
+
+
 // 親: NotePage.tsx
 
 
-export default function Pagination() {
+export default function Pagination({
+    onPageChange,
+    onPageSizeChange,
+
+
+}: Props) {
 
 
     // Store
@@ -19,10 +39,10 @@ export default function Pagination() {
         count,
         previous,
         next,
-        fetchNotes,
+        // fetchNotes,
         pageSize,
         ordering,
-        changePageSize,
+        setPageSize,
     } = useNoteStore();
 
 
@@ -45,6 +65,7 @@ export default function Pagination() {
     return (
 
         <>
+
         <div
             className={styles.pagination}
         >
@@ -52,7 +73,8 @@ export default function Pagination() {
             <button
                 disabled={!previous}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage - 1, pageSize, ordering)}
+                onClick={() => onPageChange(currentPage - 1)}
+                // onClick={() => fetchNotes(currentPage - 1, pageSize, ordering)}
             >
                 ←
             </button>
@@ -78,7 +100,8 @@ export default function Pagination() {
                                 ? styles.active
                                 : styles.pageButton
                         }
-                        onClick={() => fetchNotes(Number(page), pageSize, ordering)}
+                        onClick={() => onPageChange(Number(page))}
+                        // onClick={() => fetchNotes(Number(page), pageSize, ordering)}
                     >
                         {page}
 
@@ -97,7 +120,8 @@ export default function Pagination() {
             <button
                 disabled={!next}
                 className={styles.arrowButton}
-                onClick={() => fetchNotes(currentPage + 1, pageSize, ordering)}
+                onClick={() => onPageChange(currentPage + 1)}
+                // onClick={() => fetchNotes(currentPage + 1, pageSize, ordering)}
             >
                 →
             </button>
@@ -119,7 +143,8 @@ export default function Pagination() {
                             ? styles.activeSize
                             : styles.sizeButton
                     }
-                    onClick={() => changePageSize(size)}
+                    onClick={() => onPageSizeChange(size)}
+                    // onClick={() => setPageSize(size)}
                 >
                     {size}
                 </button>

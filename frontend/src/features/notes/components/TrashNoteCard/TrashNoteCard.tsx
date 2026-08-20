@@ -56,18 +56,28 @@ export default function TrashNoteCard({
 
 
     return (
+
         <>
-            <Card className={styles.trashCard}>
+
+            <Card
+                className={styles.trashCard}
+            >
+
                 <h3>{note.title}</h3>
                 <p>{note.content}</p>
+
                 <div className={styles.actions}>
+
                     <button onClick={async () => await restoreNote(note.id)}>
                         復元
                     </button>
+
                     <button onClick={() => setIsModalOpen(true)}>
                         完全削除
                     </button>
+
                 </div>
+
             </Card>
 
 
@@ -78,7 +88,6 @@ export default function TrashNoteCard({
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={async () => {
                     await deleteNoteForever(note.id);
-                    // onDelete(note.id);
                     setIsModalOpen(false);
                 }}
             />

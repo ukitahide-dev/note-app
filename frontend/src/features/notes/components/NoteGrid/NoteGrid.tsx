@@ -18,9 +18,7 @@ type Props = {
 
     notes: Note[];
 
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
+
 
     openMenuId: number | null;
 
@@ -31,7 +29,7 @@ type Props = {
             >
         >;
 
-    // onMoveToTrash: (id: number) => void;
+
 
     setOpenMenuId:
         React.Dispatch<
@@ -55,33 +53,8 @@ type Props = {
             >
         >;
 
-    // onSave: (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-    // ) => Promise<void>
-
-    // onUpdateColor: (
-    //     id: number,
-    //     color: string,
-    // ) => Promise<void>
-
     dragHandleProps?: any;
 
-    // onToggleFavorite: (
-    //     id: number,
-    //     is_favorite: boolean,
-    // ) => Promise<void>;
-
-    // onTogglePin: (
-    //     id: number,
-    //     is_pinned: boolean,
-    // ) => Promise<void>;
-
-
-    // onDuplicateNote: (
-    //     note: Note,
-    // ) => Promise<void>;
 };
 
 
@@ -89,7 +62,7 @@ type Props = {
 export default function NoteGrid ({
     enableSort,
     notes,
-    // setNotes,
+
     openMenuId,
     setOpenMenuId,
     openColorId,
@@ -98,12 +71,7 @@ export default function NoteGrid ({
     setOpenNoteDetailId,
     panelType,
     setPanelType,
-    // onSave,           // useNoteStoreを使うことで、不要になった。
-    // onUpdateColor,    // useNoteStoreを使うことで、不要になった。
-    // onMoveToTrash,   // useNoteStoreを使うことで、不要になった。
-    // onToggleFavorite,  // useNoteStoreを使うことで、不要になった。
-    // onTogglePin,
-    // onDuplicateNote,  // useNoteStoreを使うことで、不要になった。
+
 
 }: Props) {
 
@@ -147,10 +115,6 @@ export default function NoteGrid ({
 
 
     )
-
-
-
-
 
 
 }

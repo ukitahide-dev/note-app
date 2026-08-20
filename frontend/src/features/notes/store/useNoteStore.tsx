@@ -8,6 +8,8 @@ import {
 
     getAllNotesApi,
 
+    getFavoriteNotesApi,
+
     getNotesApi,
     getTrashNotesApi,
     incrementNoteViewApi,
@@ -43,10 +45,10 @@ type NoteStore = {
     previous: string | null;
 
     pageSize: number;
-    changePageSize: (size: number) => Promise <void>;
+    setPageSize: (size: number) => Promise <void>;
 
     ordering: string;
-    changeOrdering: (ordering: string) => Promise<void>;
+    setOrdering: (ordering: string) => Promise<void>;
 
 
 
@@ -69,9 +71,9 @@ type NoteStore = {
 
 
     fetchNotes: (
-        page: number,
-        size: number,
-        ordering: string,
+        page?: number,
+        pageSize?: number,
+        ordering?: string,
     ) => Promise<void>;
 
 
@@ -79,6 +81,16 @@ type NoteStore = {
 
 
     fetchTrashNotes: () => Promise<void>;
+
+
+    fetchFavoriteNotes: (
+        page?: number,
+        pageSize?: number,
+        ordering?: string
+    ) => Promise<void>;
+
+
+    isFetchtingNotes: boolean;
 
 
     createNote: (
@@ -186,7 +198,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     //         errorMessage: null,
     //     })
     // },
-
+    isFetchtingNotes: false,
 
 
 
@@ -197,11 +209,17 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     ) => {
 
+        console.log(`pageSize: ${pageSize}`);
+
+        set({
+            isFetchtingNotes: true,
+        });
+
         try {
 
             const data = await getNotesApi(page, pageSize, ordering);
 
-            // console.log(data);
+            console.log(data);
 
             set({
                 notes: data.results,
@@ -214,9 +232,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            // get().setError(error);
+
             useErrorStore.getState().setError(error);
             console.error(error);
+
+        } finally {
+
+            set({
+                isFetchtingNotes: false,
+            });
 
         }
 
@@ -225,10 +249,16 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     fetchAllNotes: async () => {
-        
-         try {
+
+        set({
+            isFetchtingNotes: true,
+        });
+
+        try {
 
             const data = await getAllNotesApi();
+
+            console.log(data);
 
             set({
                 notes: data.results,
@@ -241,28 +271,33 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             useErrorStore.getState().setError(error);
             console.error(error);
 
+        } finally {
+
+            set({
+                isFetchtingNotes: false,
+            });
+
         }
     },
 
 
 
 
-    changePageSize: async (size: number) => {
+    setPageSize: async (size: number) => {
 
         set({
             pageSize: size,
             currentPage: 1,
         });
 
-        await get().fetchNotes(1, size, get().ordering);
-        // await get().fetchNotes(get().currentPage);
-        // await get().fetchNotes();
+        // await get().fetchNotes(1, size, get().ordering);
+
 
     },
 
 
 
-    changeOrdering: async (
+    setOrdering: async (
         ordering: string,
 
     ) => {
@@ -273,13 +308,22 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         });
 
-        await get().fetchNotes(1, get().pageSize, ordering);
+        // await get().fetchNotes(1, get().pageSize, ordering);
 
     },
 
 
 
-    fetchTrashNotes: async () => {
+    fetchTrashNotes: async (
+        page = 1,  // pageが渡されなかったら1を使う。
+        pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
+        ordering = "-created_at",
+
+    ) => {
+
+        set({
+            isFetchtingNotes: true,
+        });
 
         try {
 
@@ -295,6 +339,70 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             // get().setError(error);
             useErrorStore.getState().setError(error);
             console.error(error);
+
+        } finally {
+
+            set({
+                isFetchtingNotes: false,
+            });
+
+        }
+
+
+
+
+    },
+
+
+
+
+
+    fetchFavoriteNotes: async (
+        page = 1,  // pageが渡されなかったら1を使う。
+        pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
+        ordering = "-created_at",
+
+    ) => {
+
+
+        set({
+            isFetchtingNotes: true,
+        });
+
+
+        try {
+
+
+            // const data = await getNotesApi(page, pageSize, ordering);
+            const data = await getFavoriteNotesApi(
+                page,
+                pageSize,
+                ordering,
+            );
+
+            console.log(data);
+
+            set({
+                notes: data.results,
+                currentPage: page,
+                count: data.count,
+                next: data.next,
+                previous: data.previous,
+            });
+
+            console.log(get().notes);
+
+
+        } catch (error) {
+
+            useErrorStore.getState().setError(error);
+            console.error(error);
+
+        } finally {
+
+            set({
+                isFetchtingNotes: false,
+            });
 
         }
 

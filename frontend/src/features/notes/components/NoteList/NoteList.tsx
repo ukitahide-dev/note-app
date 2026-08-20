@@ -1,5 +1,5 @@
 // ---- react ----
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // ---- dnd ----
 import {
@@ -14,24 +14,14 @@ import {
 } from "@dnd-kit/sortable";
 
 
-// ---- api ----
-// import { createNote, moveToTrash, updateNote, updateNoteColor, updateNoteFavorite, updateNotePinned } from "../../api/noteApi";
-
-
-// ---- components ----
-// import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
-// import NoteCard from "../NoteCard/NoteCard";
 import NoteGrid from "../NoteGrid/NoteGrid";
 
 
-// ---- css ----
-// import styles from "./NoteList.module.css";
 
 
 
 // ---- types ----
 import type { Note } from "../../../../types/note";
-// import { useNoteStore } from "../../store/useNoteStore";
 
 
 
@@ -69,7 +59,7 @@ export default function NoteList({
 
 
 
-   
+
 
 
 
@@ -108,8 +98,6 @@ export default function NoteList({
             );
         });
     };
-
-
 
 
 
@@ -261,219 +249,3 @@ export default function NoteList({
 
 
 
-// <div className={styles.notesContainer}>
-
-            //     {notes.map((note) => (
-
-            //         <NoteCard
-            //             key={note.id}
-            //             note={note}
-            //             setNotes={setNotes}
-            //             openMenuId={openMenuId}
-            //             setOpenMenuId={setOpenMenuId}
-            //             openColorId={openColorId}
-            //             setOpenColorId={setOpenColorId}
-            //             openNoteDetailId={openNoteDetailId}
-            //             setOpenNoteDetailId={setOpenNoteDetailId}
-            //             onSave={handleSave}
-            //             onUpdateColor={handleUpdateColor}
-            //             onMoveToTrash={handleMoveToTrash}
-            //             onToggleFavorite={handleToggleFavorite}
-            //             onTogglePin={handleTogglePin}
-            //             onDuplicateNote={handleDuplicateNote}
-            //         />
-
-            //     ))}
-
-            // </div>
-
-
-
-
-{/* <div className={styles.notesContainer}>
-
-                    {notes.map((note) => (
-
-                        <SortableNoteCard
-                            key={note.id}
-                            note={note}
-                            setNotes={setNotes}
-                            openMenuId={openMenuId}
-                            setOpenMenuId={setOpenMenuId}
-                            openColorId={openColorId}
-                            setOpenColorId={setOpenColorId}
-                            openNoteDetailId={openNoteDetailId}
-                            setOpenNoteDetailId={setOpenNoteDetailId}
-                            onSave={handleSave}
-                            onUpdateColor={handleUpdateColor}
-                            onMoveToTrash={handleMoveToTrash}
-                            onToggleFavorite={handleToggleFavorite}
-                            onTogglePin={handleTogglePin}
-                            onDuplicateNote={handleDuplicateNote}
-                        />
-                    ))}
-
-                </div> */}
-
-
-
-
-// useNoteStoreを使うことで、NoteCard、NoteDetailModalに直接書けるようになった。
-    // const handleMoveToTrash = async (
-    //     id: number
-    // ) => {
-
-    //     try {
-
-    //         await moveToTrash(id);
-
-    //         setNotes((prev) =>
-    //             prev.filter(
-    //                 (note) => note.id !== id
-    //             )
-    //         );
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-    // };
-
-
-
-    // useNoteStoreを使うことで、NoteFormに直接書けるようになった。
-    // const handleSave = async (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-
-    // ) => {
-
-    //     try {
-    //         const updatedNote = await updateNote(Number(id), title, content);
-
-    //         setNotes((prev) => prev.map(
-    //             (n) => n.id === updatedNote.id ? updatedNote : n
-    //         ))
-
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("保存失敗");
-    //     }
-
-    //     setOpenNoteDetailId(null);
-
-    // }
-
-
-
-    // useNoteStoreを使うことで、NoteCardに直接書けるようになった。
-    // const handleUpdateColor = async (
-    //     id: number,
-    //     color: string,
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNoteColor(Number(id), color);
-
-    //         // setNotes((prev) => (
-    //         //     prev.map((n) =>
-    //         //         n.id === updatedNote.id ? updatedNote : n
-    //         //         )
-    //         //     ));
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-    //     setOpenColorId(null);
-
-    // }
-
-
-
-    //  useNoteStoreを使うことで、不要になった。
-    // const handleToggleFavorite = async (
-    //     id: number,
-    //     is_favorite: boolean,
-
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNoteFavorite(id, !is_favorite);
-
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 id === n.id ? updatedNote : n
-    //             )
-    //         )
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-    //     }
-
-    // }
-
-
-    // useNoteStoreを使うことで、不要になった。
-    // const handleTogglePin = async (
-    //     id: number,
-    //     is_pinned: boolean,
-    // ) => {
-
-    //     try {
-
-    //         const updatedNote = await updateNotePinned(id, !is_pinned);
-
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 id === n.id ? updatedNote : n
-    //             )
-    //         );
-
-    //     } catch (error) {
-
-    //         console.error(error);
-    //     }
-
-    // }
-
-
-
-    // useNoteStoreを使うことで、不要になった。
-    // const handleDuplicateNote = async (
-    //     note: Note,
-    // ) => {
-
-    //     try {
-
-    //         const copiedNote = await createNote (
-    //             note.title,
-    //             note.content,
-    //             note.labels.map((label) => label.id),
-    //             note.color,
-    //         );
-
-    //         setNotes(prev => [
-
-    //             copiedNote,
-    //             ...prev,
-
-    //         ]);
-
-
-    //     } catch (error) {
-
-    //         console.error(error);
-
-    //     }
-
-
-    // }

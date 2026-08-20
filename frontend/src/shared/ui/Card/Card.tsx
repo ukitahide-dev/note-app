@@ -26,6 +26,7 @@ const Card = forwardRef<
     ) => {
 
         return (
+
             <div
                 ref={ref}
                 className={`
@@ -36,7 +37,9 @@ const Card = forwardRef<
                 style={style}
             >
                 {children}
+
             </div>
+
         );
     }
 );
