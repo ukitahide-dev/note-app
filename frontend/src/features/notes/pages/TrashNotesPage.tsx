@@ -21,6 +21,7 @@ import { useNoteStore } from "../store/useNoteStore";
 import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
 import Pagination from "../components/Pagination/Pagination";
 import SortSelect from "../components/SortSelect/SortSelect";
+import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
 
 
 
@@ -28,9 +29,10 @@ import SortSelect from "../components/SortSelect/SortSelect";
 
 
 export default function TrashNotesPage() {
-    // const [notes, setNotes] = useState<Note[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     // useNoteStore
     const {
@@ -118,6 +120,7 @@ export default function TrashNotesPage() {
                             <TrashNoteCard
                                 key={note.id}
                                 note={note}
+                                onDeleteSuccess={() => setSnackbarMessage("ノートを削除しました。")}
 
                             />
 
@@ -139,11 +142,21 @@ export default function TrashNotesPage() {
                         async () => {
                             await emptyTrash();
                             setIsModalOpen(false);
+                            setSnackbarMessage("ゴミ箱内のノートを全て削除しました。")
+                            // setIsSnackbarOpen(true);
                         }
 
                     }
                 onClose={() => setIsModalOpen(false)}
             />
+
+
+            {snackbarMessage && (
+                <Snackbar
+                    message={snackbarMessage}
+                    onClose={() => setSnackbarMessage("")}
+                />
+            )}
 
         </>
 

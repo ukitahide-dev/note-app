@@ -134,7 +134,7 @@ export default function NoteList({
                         <NoteGrid
                             enableSort={enableSort}
                             notes={pinnedNotes}
-                            // setNotes={setNotes}
+                            
                             openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
                             openColorId={openColorId}
@@ -143,12 +143,7 @@ export default function NoteList({
                             setOpenNoteDetailId={setOpenNoteDetailId}
                             panelType={panelType}
                             setPanelType={setPanelType}
-                            // onSave={handleSave}
-                            // onUpdateColor={handleUpdateColor}
-                            // onMoveToTrash={handleMoveToTrash}
-                            // onToggleFavorite={handleToggleFavorite}
-                            // onTogglePin={handleTogglePin}
-                            // onDuplicateNote={handleDuplicateNote}
+
                         />
 
                         <h3>その他</h3>
@@ -161,7 +156,6 @@ export default function NoteList({
                 <NoteGrid
                     enableSort={enableSort}
                     notes={normalNotes}
-                    // setNotes={setNotes}
                     openMenuId={openMenuId}
                     setOpenMenuId={setOpenMenuId}
                     openColorId={openColorId}
@@ -170,12 +164,7 @@ export default function NoteList({
                     setOpenNoteDetailId={setOpenNoteDetailId}
                     panelType={panelType}
                     setPanelType={setPanelType}
-                    // onSave={handleSave}
-                    // onUpdateColor={handleUpdateColor}
-                    // onMoveToTrash={handleMoveToTrash}
-                    // onToggleFavorite={handleToggleFavorite}
-                    // onTogglePin={handleTogglePin}
-                    // onDuplicateNote={handleDuplicateNote}
+
                 />
 
                 </>
@@ -197,7 +186,6 @@ export default function NoteList({
                     <NoteGrid
                         enableSort={enableSort}
                         notes={pinnedNotes}
-                        // setNotes={setNotes}
                         openMenuId={openMenuId}
                         setOpenMenuId={setOpenMenuId}
                         openColorId={openColorId}
@@ -206,12 +194,7 @@ export default function NoteList({
                         setOpenNoteDetailId={setOpenNoteDetailId}
                         panelType={panelType}
                         setPanelType={setPanelType}
-                        // onSave={handleSave}
-                        // onUpdateColor={handleUpdateColor}
-                        // onMoveToTrash={handleMoveToTrash}
-                        // onToggleFavorite={handleToggleFavorite}
-                        // onTogglePin={handleTogglePin}
-                        // onDuplicateNote={handleDuplicateNote}
+
                     />
 
                     <h3>その他</h3>
@@ -223,7 +206,7 @@ export default function NoteList({
                 <NoteGrid
                     enableSort={enableSort}
                     notes={normalNotes}
-                    // setNotes={setNotes}
+
                     openMenuId={openMenuId}
                     setOpenMenuId={setOpenMenuId}
                     openColorId={openColorId}
@@ -232,12 +215,7 @@ export default function NoteList({
                     setOpenNoteDetailId={setOpenNoteDetailId}
                     panelType={panelType}
                     setPanelType={setPanelType}
-                    // onSave={handleSave}
-                    // onUpdateColor={handleUpdateColor}
-                    // onMoveToTrash={handleMoveToTrash}
-                    // onToggleFavorite={handleToggleFavorite}
-                    // onTogglePin={handleTogglePin}
-                    // onDuplicateNote={handleDuplicateNote}
+
                 />
 
             </>

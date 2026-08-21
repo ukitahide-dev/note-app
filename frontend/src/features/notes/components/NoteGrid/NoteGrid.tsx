@@ -93,7 +93,7 @@ export default function NoteGrid ({
                 <CardComponent
                     key={note.id}
                     note={note}
-                    // setNotes={setNotes}
+                    
                     openMenuId={openMenuId}
                             setOpenMenuId={setOpenMenuId}
                             openColorId={openColorId}
@@ -102,12 +102,7 @@ export default function NoteGrid ({
                             setOpenNoteDetailId={setOpenNoteDetailId}
                             panelType={panelType}
                             setPanelType={setPanelType}
-                            // onSave={onSave}
-                            // onUpdateColor={onUpdateColor}
-                            // onMoveToTrash={onMoveToTrash}
-                            // onToggleFavorite={onToggleFavorite}
-                            // onTogglePin={onTogglePin}
-                            // onDuplicateNote={onDuplicateNote}
+
                         />
             ))}
 

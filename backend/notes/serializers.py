@@ -52,10 +52,10 @@ class NoteSerializer(serializers.ModelSerializer):
     )
 
 
-    # Noteモデルのフィールド(カラム)をSerializerで扱います、という意味。
+
     class Meta:
         model = Note
-        fields = '__all__'
+        fields = '__all__'  # Noteモデルの全フィールド(カラム)をSerializerで扱います、という意味。
         read_only_fields = ["user"]  # userは読み取り専用にする。これがないと、フロントからuserを送信しない場合、エラーになる。
 
 

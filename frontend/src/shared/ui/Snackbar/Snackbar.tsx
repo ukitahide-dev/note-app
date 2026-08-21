@@ -14,6 +14,10 @@ type Props = {
 
 
 
+
+// 親: NotesPage.tsx、UndoSnackbar.tsx、TrashNotesPage.tsx、TrashNOteCard.tsx、
+
+
 export function Snackbar ({
 
     message,
@@ -47,14 +51,14 @@ export function Snackbar ({
                     </button>
                 )}
 
-                {onClose && (
-                    <button
-                        className={styles.closeButton}
-                        onClick={onClose}
-                    >
-                        ×
-                    </button>
-                )}
+
+                <button
+                    className={styles.closeButton}
+                    onClick={onClose}
+                >
+                    ×
+                </button>
+
 
             </div>
 

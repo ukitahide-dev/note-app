@@ -79,7 +79,7 @@ export const getFavoriteNotesApi = async (
     const res = await api.get(
         "/notes/",
         {
-            params: {
+            params: {   //  ex) /notes/?page=1&pageSize=20&ordering=-created_at&is_favorite=true  ?以降はクエリーパラメーター:  URLの「? より後ろ」に付けて、サーバーに条件を伝えるための情報。
                 page,
                 page_size: pageSize,
                 ordering,

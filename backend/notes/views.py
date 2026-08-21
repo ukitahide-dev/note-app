@@ -89,7 +89,8 @@ class NoteViewSet(ModelViewSet):
             )
 
 
-        return queryset
+        return queryset   # DRFに候補データを渡す。
+
 
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所

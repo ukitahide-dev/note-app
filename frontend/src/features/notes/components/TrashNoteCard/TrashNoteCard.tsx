@@ -12,6 +12,7 @@ import ConfirmModal from "../../../../shared/ui/ConfirmModal/ConfirmModal";
 // ---- css ----
 import styles from "./TrashNoteCard.module.css"
 import { useNoteStore } from "../../store/useNoteStore";
+import { Snackbar } from "../../../../shared/ui/Snackbar/Snackbar";
 
 
 
@@ -28,6 +29,7 @@ type Note = {
 
 type Props = {
     note: Note;
+    onDeleteSuccess: () => void;
     // onRestore: (id: number) => void;   // useNoteStoreで不要になった
     // onDelete: (id: number) => void;    // useNoteStoreで不要になった
 };
@@ -40,12 +42,13 @@ type Props = {
 
 export default function TrashNoteCard({
     note,
+    onDeleteSuccess,
     // onRestore,
     // onDelete,
 }: Props) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    // const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
     // useNoteStore
     const {
@@ -72,9 +75,15 @@ export default function TrashNoteCard({
                         復元
                     </button>
 
-                    <button onClick={() => setIsModalOpen(true)}>
+                    <button
+                        onClick={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
                         完全削除
                     </button>
+
+
 
                 </div>
 
@@ -89,8 +98,19 @@ export default function TrashNoteCard({
                 onConfirm={async () => {
                     await deleteNoteForever(note.id);
                     setIsModalOpen(false);
+                    onDeleteSuccess();
+                    // setIsSnackbarOpen(true);
+                    console.log("fdsfds")
                 }}
             />
+
+
+            {/* {isSnackbarOpen && (
+                <Snackbar
+                    message="ノートを削除しました。"
+                />
+            )} */}
+
 
         </>
     );
