@@ -34,7 +34,7 @@ class NoteViewSet(ModelViewSet):
         OrderingFilter
     ]
 
-    # ユーザーが並び替えに使っていいカラムを指定する。
+    # ユーザーが並び替えに使っていいカラムを指定する。ユーザーには、この5項目についてだけ並び替えを許可したいという設計。
     ordering_fields = [
         "created_at",
         "updated_at",
@@ -65,8 +65,20 @@ class NoteViewSet(ModelViewSet):
 
         queryset = Note.objects.filter(
             user=self.request.user,
-            is_deleted=False,
         )
+
+        # ゴミ箱かどうか
+        is_deleted = self.request.query_params.get("is_deleted")
+
+
+        if is_deleted == "true":
+            queryset = queryset.filter(
+                is_deleted=True
+            )
+        else:
+            queryset = queryset.filter(
+                is_deleted=False
+            )
 
 
         is_favorite = self.request.query_params.get("is_favorite")
@@ -136,20 +148,20 @@ class NoteViewSet(ModelViewSet):
 
 
     # ゴミ箱内のノートを全て取得する
-    @action(detail=False, methods=["get"])
-    def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
-        notes = Note.objects.filter(
-            user=request.user,
-            is_deleted=True
-        ).order_by("-updated_at")
+    # @action(detail=False, methods=["get"])
+    # def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
+    #     notes = Note.objects.filter(
+    #         user=request.user,
+    #         is_deleted=True
+    #     ).order_by("-updated_at")
 
 
-        serializer = self.get_serializer(
-            notes,
-            many=True
-        )
+    #     serializer = self.get_serializer(
+    #         notes,
+    #         many=True
+    #     )
 
-        return Response(serializer.data)
+    #     return Response(serializer.data)
 
 
 

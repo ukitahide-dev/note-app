@@ -40,6 +40,8 @@ export default function TrashNotesPage() {
         isFetchtingNotes,
         pageSize,
         ordering,
+        setPageSize,
+        setOrdering,
     } = useNoteStore();
 
 
@@ -60,9 +62,23 @@ export default function TrashNotesPage() {
 
             <Pagination
                 onPageChange={(page) => fetchTrashNotes(page, pageSize, ordering)}
+                onPageSizeChange={ async (size) => {
+
+                    setPageSize(size);
+
+                    await fetchTrashNotes(1, size, ordering);
+
+                }}
             />
 
             <SortSelect
+                onPageOrderChange={async (ordering) => {
+
+                    setOrdering(ordering);
+
+                    await fetchTrashNotes(1, pageSize, ordering);
+
+                }}
 
             />
 

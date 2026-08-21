@@ -155,18 +155,13 @@ export const updateNoteApi = async (
 // ノートをゴミ箱に移動させる
 export const moveToTrashApi = async(id: number) => {
 
-    // const token = localStorage.getItem("access");
 
     const res = await api.patch(  // patchは一部だけ更新という意味。
         `/notes/${id}/`,
         {
             is_deleted: true,  // is_deletedをtrue に変えてという意味。
         },
-        // {
-        //     headers: { // headersはリクエストの追加情報。
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 
     return res.data;
@@ -184,12 +179,13 @@ export const getTrashNotesApi = async (
 
 
     const res = await api.get(
-        "/notes/trash/",
+        "/notes/",
         {
             params: {  //  axiosが自動的に/notes/?page=1&page_size=20&ordering=-created_atに変換する。
                 page,
-                pageSize,
+                page_size: pageSize,
                 ordering,
+                is_deleted: true,
             },
 
         },
@@ -525,18 +521,14 @@ export const updateNoteViewTimeApi = async (
     seconds: number,
 ) => {
 
-    // const token = localStorage.getItem("access");
+
 
     const res = await api.patch(
         `/notes/${noteId}/view_time/`,
         {
             seconds
         },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // },
+
 
     );
 

@@ -49,7 +49,7 @@ export default function NoteDetailModal({
     note,
     onClose,
 
-    setOpenNoteDetailId,
+    // setOpenNoteDetailId,
 
 }: Props) {
 
@@ -97,7 +97,7 @@ export default function NoteDetailModal({
 
     const handleClose = async () => {
 
-        console.log("handleClose実行")
+        // console.log("handleClose実行")
 
         if (closed.current) {
             return;
@@ -107,7 +107,7 @@ export default function NoteDetailModal({
 
 
         const seconds = Math.floor((Date.now() - startTime.current) / 1000) ;
-        console.log(seconds);
+        // console.log(seconds);
 
         await updateNoteViewTime(note.id, seconds);
 
@@ -124,7 +124,7 @@ export default function NoteDetailModal({
 
         // setOpenNoteDetailId(null);  この書き方はコンポーネントの再利用性が下がる。親がopenNoteDetailIdという状態を持っていることが前提になっているから。
         onClose();  // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
-        // setOpenNoteDetailId();
+
     }
 
 
@@ -308,122 +308,3 @@ export default function NoteDetailModal({
 
 
 
-
-
-
-// utilsに移して不要になった
-    // const imageCount = note.images.length;
-
-    // const remainder = imageCount % 3;
-
-    // let largeCount = 0;
-
-    // if (remainder === 1) {
-    //     largeCount = 1;
-    // }
-
-    // if (remainder === 2) {
-    //     largeCount = 2;
-    // }
-
-    // ノートが所持している画像を計算する
-    // const normalImages = note.images.filter((_, index) => index >= largeCount);
-    // const largeImages = note.images.filter((_, index) => index < largeCount);
-
-
-
-
-// LabelItemコンポに切り出した
-                            // <div
-                            //     key={label.id}
-                            //     className={styles.label}
-                            // >
-                            //     <span
-
-                            //     >
-                            //         {label.name}
-                            //     </span>
-
-                            //     <button
-                            //         className={styles.removeLabel}
-                            //         onClick={(e) => {
-                            //             e.stopPropagation();
-                            //             handleRemoveLabel(
-                            //                 label.id
-                            //             );
-                            //         }}
-                            //     >
-                            //         ×
-                            //     </button>
-
-                            // </div>
-
-// ) : (
-
-//                         <NoteMenu
-//                             onOpenLabel={handleOpenLabel}
-//                             onMoveToTrash={() => moveToTrash(note.id)}
-//                             onDuplicateNote={
-//                                 () =>
-//                                     createNote(
-//                                         note.title,
-//                                         note.content,
-//                                         note.labels.map((label) => label.id),
-//                                         note.color
-//                                     )
-//                             }
-//                             // onDuplicateNote={() => onDuplicateNote(note)}
-
-//                         />
-
-//                     )
-
-// const saveColor = async () => {
-
-//     try {
-
-//         const updatedNote = await updateNoteColor(Number(note.id), tempColor);
-//         updateNote(updatedNote);  // useNoteStore
-
-//     } catch (error) {
-
-//         console.error(error);
-
-//     }
-
-// }
-
-// const handleSave = async (
-//     id: number,
-//     title: string,
-//     content: string,
-
-// ) => {
-
-//     try {
-//         const updatedNote = await updateNoteApi(Number(id), title, content);
-//         updateNote(updatedNote);  // useNoteStore
-
-//     } catch (error) {
-//         console.error(error);
-//         alert("保存失敗");
-//     }
-
-//     setOpenNoteDetailId(null);  // これはここに書けない。どうするか。今のままだと、閉じたときに、モーダルが開いたままになる。
-
-// }
-
-// 色の選択をUIに表示する
-// const handleSelectColor = (
-//     color: string
-// ) => {
-//     setTempColor(color);
-// }
-
-// const saveColor = async (
-
-// ) => {
-//     await updateNoteColor(note.id, tempColor);
-//     setPanelType(null);
-
-// }

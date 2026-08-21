@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, } from "react";
+import { useEffect, useRef,  } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 // import { useNavigate } from "react-router-dom";
 import { uploadNoteImageApi } from "../../api/noteApi";

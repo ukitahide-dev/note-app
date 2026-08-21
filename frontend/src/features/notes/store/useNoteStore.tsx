@@ -80,7 +80,11 @@ type NoteStore = {
     fetchAllNotes: () => Promise<void>;
 
 
-    fetchTrashNotes: () => Promise<void>;
+    fetchTrashNotes: (
+        page?: number,
+        pageSize?: number,
+        ordering?: string,
+    ) => Promise<void>;
 
 
     fetchFavoriteNotes: (
@@ -327,11 +331,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const data = await getTrashNotesApi();
+            const data = await getTrashNotesApi(page, pageSize, ordering);
 
             set({
-                notes: data
+                notes: data.results,
+                currentPage: page,
+                count: data.count,
+                next: data.next,
+                previous: data.previous,
             });
+
+            // set({
+            //     notes: data
+            // });
 
 
         } catch (error) {
@@ -889,8 +901,6 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            // get().setError(error);
-
             throw error;  // 捕まえたエラーを、もう一度外側へ投げる。
 
         }
@@ -1310,7 +1320,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 )
             }));
 
-            await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);
+            // await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);
 
 
         } catch (error) {
