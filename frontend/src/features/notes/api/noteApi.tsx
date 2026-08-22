@@ -200,18 +200,13 @@ export const getTrashNotesApi = async (
 
 // ゴミ箱に入れたノートを復元する
 export const restoreNoteApi = async (id: number) => {
-    // const token = localStorage.getItem("access");
 
     const res = await api.patch(
         `/notes/${id}/`,
         {
             is_deleted: false
         },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 
     return res.data;

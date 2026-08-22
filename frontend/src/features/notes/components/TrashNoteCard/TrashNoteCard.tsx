@@ -12,7 +12,7 @@ import ConfirmModal from "../../../../shared/ui/ConfirmModal/ConfirmModal";
 // ---- css ----
 import styles from "./TrashNoteCard.module.css"
 import { useNoteStore } from "../../store/useNoteStore";
-import { Snackbar } from "../../../../shared/ui/Snackbar/Snackbar";
+// import { Snackbar } from "../../../../shared/ui/Snackbar/Snackbar";
 
 
 
@@ -30,6 +30,7 @@ type Note = {
 type Props = {
     note: Note;
     onDeleteSuccess: () => void;
+    onRestoreNote: () => void;
     // onRestore: (id: number) => void;   // useNoteStoreで不要になった
     // onDelete: (id: number) => void;    // useNoteStoreで不要になった
 };
@@ -43,6 +44,7 @@ type Props = {
 export default function TrashNoteCard({
     note,
     onDeleteSuccess,
+    onRestoreNote,
     // onRestore,
     // onDelete,
 }: Props) {
@@ -71,9 +73,18 @@ export default function TrashNoteCard({
 
                 <div className={styles.actions}>
 
-                    <button onClick={async () => await restoreNote(note.id)}>
+                    <button
+                        onClick={async () => {
+                            await restoreNote(note.id);
+                            onRestoreNote();
+                        }}
+                    >
                         復元
                     </button>
+
+                    {/* <button onClick={async () => await restoreNote(note.id)}>
+                        復元
+                    </button> */}
 
                     <button
                         onClick={() => {
@@ -94,14 +105,13 @@ export default function TrashNoteCard({
                 isOpen={isModalOpen}
                 title="本当に削除しますか？"
                 message="この操作は取り消せません。"
-                onClose={() => setIsModalOpen(false)}
                 onConfirm={async () => {
                     await deleteNoteForever(note.id);
                     setIsModalOpen(false);
                     onDeleteSuccess();
                     // setIsSnackbarOpen(true);
-                    console.log("fdsfds")
                 }}
+                onClose={() => setIsModalOpen(false)}
             />
 
 

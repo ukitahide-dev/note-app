@@ -121,7 +121,7 @@ export default function TrashNotesPage() {
                                 key={note.id}
                                 note={note}
                                 onDeleteSuccess={() => setSnackbarMessage("ノートを削除しました。")}
-
+                                onRestoreNote={() => setSnackbarMessage("ノートを復元しました。")}
                             />
 
                         ))}

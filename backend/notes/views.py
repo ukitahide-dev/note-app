@@ -13,6 +13,9 @@ from rest_framework.pagination import PageNumberPagination
 
 from rest_framework.filters import OrderingFilter
 
+from django.utils import timezone
+
+
 from django.db.models import F
 
 
@@ -100,6 +103,7 @@ class NoteViewSet(ModelViewSet):
 
 
     def partial_update(self, request, *args, **kwargs):
+
         note = self.get_object()  # 更新前のノートを取得
 
         print(request.data)
@@ -109,13 +113,22 @@ class NoteViewSet(ModelViewSet):
         old_title = note.title
         old_content = note.content
         old_color = note.color
+        old_is_deleted = note.is_deleted
 
 
-        # 通常の更新処理。DBを更新。
+        # 通常の更新処理。DBを更新する。
         response = super().partial_update(request, *args, **kwargs)  # DBを更新。親クラス(ModelViewSet)のpartial_updateを実行して
 
         # 更新後の値を取得
         note.refresh_from_db()
+
+
+        # 更新前にゴミ箱にはない、かつ、新しくゴミ箱に移されたノートの場合
+        if not old_is_deleted and note.is_deleted:
+            note.deleted_at = timezone.now()
+            note.save(
+                update_fields=["deleted_at"]
+            )
 
 
         # DB更新前と、更新後を比較
