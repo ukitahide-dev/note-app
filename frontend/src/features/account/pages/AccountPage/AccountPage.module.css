@@ -1,0 +1,118 @@
+.page {
+    min-height: 100vh;    /* .page の高さを、最低でも「画面の高さと同じ」にする*/
+    background-color: #f5f5f5;
+    padding: 1px 0 60px;
+}
+
+
+.title {
+    max-width: 800px;
+    margin: 60px 100px 30px;
+    background-color: aquamarine;
+}
+
+.title h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+
+.container {
+    margin: 0 100px;
+}
+
+
+.accountSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 24px 28px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+
+    background-color: #fff;
+
+    margin-bottom: 16px;
+}
+
+
+.accountInfo {
+    min-width: 0px;
+    /* min-width: 200px; */
+    /* flex-shrink: 0; */
+    /* flex-shrink: 1; */
+    background-color: cornflowerblue;
+}
+
+
+.accountInfo h2 {
+    margin: 0 0 8px;
+
+    font-size: 17px;
+    font-weight: 600;
+}
+
+
+.accountInfo p {
+    margin: 0;
+
+    font-size: 14px;
+    color: #666;
+}
+
+
+
+
+
+
+.changeButton {
+    flex-shrink: 0;   /* 画面幅が狭くなっても、ボタン幅は縮ませない。flex-shrink: 0 = 「Flexboxで横幅が苦しくなっても、この要素は縮ませない」*/
+
+    margin-left: 30px;
+
+    padding: 8px 20px;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+
+    background-color: #fff;
+
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
+}
+
+.changeButton:hover {
+    background-color: #f5f5f5;
+}
+
+
+
+
+
+
+/*
+@media (max-width: 600px) {
+    .title {
+        margin: 24px 16px;
+    }
+
+    .container {
+        margin: 0 16px;
+    }
+
+    .accountSection {
+        padding: 20px;
+    }
+
+    .accountSection button {
+        margin-left: 16px;
+    }
+} */

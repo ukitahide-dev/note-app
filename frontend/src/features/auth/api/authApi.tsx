@@ -1,4 +1,4 @@
-import  { authApi, } from "../../../shared/api/axios";
+import  api, { authApi, } from "../../../shared/api/axios";
 
 
 // ログイン
@@ -61,10 +61,55 @@ export const registerApi = async (
     });
 
     return res.data;
-    
+
 }
 
 
+
+
+// パスワード変更
+export const changePasswordApi = async (
+    currentPassword: string,
+    newPassword: string,
+
+) => {
+
+    const res = await api.post(
+        "/password/change/",
+        {
+            current_password: currentPassword,
+            new_password: newPassword,
+        },
+    );
+
+    return res.data;
+
+
+
+}
+
+
+
+
+
+// メールアドレス変更
+export const changeEmailApi = async (
+    currentPassword: string,
+    newEmail: string,
+    newEmailConfirm: string,
+) => {
+
+    const res = await api.post(
+        "/account/email/",
+        {
+            current_password: currentPassword,
+            new_email: newEmail,
+            new_email_confirm: newEmailConfirm,
+        }
+    );
+
+    return res.data;
+};
 
 
 

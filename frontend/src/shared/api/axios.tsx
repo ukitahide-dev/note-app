@@ -14,7 +14,7 @@ const api = axios.create({  // create は自分用にカスタマイズしたaxi
 // JWTを付けてアクセスする必要があるAPI。通常の認証済みAPI用。Djangoへリクエストを送信する前に実行される。
 api.interceptors.request.use((config) => {
 
-    console.log("api.interceptors.request.use実行");
+    // console.log("api.interceptors.request.use実行");
 
     const token = localStorage.getItem("access");
     // console.log(token);

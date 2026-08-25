@@ -2,17 +2,11 @@ import Menu from "../../../../../shared/ui/Menu/Menu";
 
 
 type Props = {
-    // formRef:
-    // setIsMenuOpen: React.Dispatch<
-    //     React.SetStateAction<boolean>
-    // >;
-    // setIsLabelOpen: React.Dispatch<
-    //     React.SetStateAction<boolean>
-    // >;
+
 
     onOpenLabel: () => void;
 
-    
+
 }
 
 
@@ -30,6 +24,7 @@ export default function NoteFormMenu({
     return (
 
         <Menu>
+
             <button
                 onClick={onOpenLabel}
 
@@ -45,12 +40,7 @@ export default function NoteFormMenu({
                 ピン留め
             </button>
 
-            {/* <button
-                onClick={() => onMoveToTrash(noteId)}
-            >
-                削除
-
-            </button> */}
+            
 
         </Menu>
 

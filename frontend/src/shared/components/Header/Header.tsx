@@ -30,6 +30,7 @@ import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelecte
 import { BsPin } from "react-icons/bs";
 import { MdPushPin } from "react-icons/md";
 import { logoutApi } from "../../../features/auth/api/authApi";
+import AccountMenu from "../../../features/account/components/AccountMenu/AccountMenu";
 
 
 
@@ -54,7 +55,7 @@ export default function Header({
 
     const [panelType, setPanelType] = useState<"color" | "menu" | "label" | null>(null);
     // const [tempColor, setTempColor] = useState();
-
+    const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -441,6 +442,25 @@ export default function Header({
                     ログアウト
 
                 </button>
+
+
+                <div
+                    className={styles.accountWrapper}
+                    onMouseEnter={() => setIsAccountMenuOpen(true)}
+                    onMouseLeave={() => setIsAccountMenuOpen(false)}
+                >
+
+                    <button>
+                        👤
+                    </button>
+
+                    {isAccountMenuOpen && (
+                        <AccountMenu />
+                    )}
+
+                </div>
+
+                
 
             </header>
 

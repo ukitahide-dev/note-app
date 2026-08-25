@@ -20,6 +20,9 @@ import SearchResultsPage from './features/search/pages/SearchResultsPage/SearchR
 import CalendarPage from './features/notes/pages/CalendarPage/CalendarPage'
 import RegisterPage from './features/auth/pages/RegisterPage/RegisterPage'
 import ProtectedRoute from './shared/routes/ProtectedRoute'
+import AccountPage from './features/account/pages/AccountPage/AccountPage'
+import EmailChangePage from './features/account/pages/EmailChangePage/EmailChangePage'
+import PasswordChangePage from './features/account/pages/PasswordChangePage/PasswordChangePage'
 
 
 
@@ -100,6 +103,21 @@ function App() {
                     <Route
                         path="/calendar"
                         element={<CalendarPage />}
+                    />
+
+                    <Route
+                        path="/account"
+                        element={<AccountPage />}
+                    />
+
+                    <Route
+                        path="/account/email"
+                        element={<EmailChangePage />}
+                    />
+
+                    <Route
+                        path="/account/password"
+                        element={<PasswordChangePage />}
                     />
 
 

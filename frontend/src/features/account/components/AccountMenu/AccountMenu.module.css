@@ -1,0 +1,27 @@
+.accountMenu {
+    position: absolute;
+    top: 100%;
+    /* top: calc(100% + 8px); */
+    left: 0;
+
+    width: 180px;
+    background: olivedrab;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    padding-top: 10px;
+    
+}
+
+
+
+.accountMenuContent {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    padding: 8px;
+
+}

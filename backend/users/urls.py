@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import RegisterView
+
+
+from .views import (
+    RegisterView,
+    AccountView,
+    PasswordChangeView
+)
+
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -14,6 +21,20 @@ urlpatterns = [
         RegisterView.as_view(),
         name="register"
     ),
+
+
+    path(
+        "me/",
+        AccountView.as_view(),
+        name="account",
+    ),
+
+    path(
+        "password/change/",
+        PasswordChangeView.as_view(),
+        name="password_change",
+    ),
+
 
     # /login/ にアクセスされたら、SimpleJWTが用意している TokenObtainPairView を使ってログイン処理を行う。このURLの名前は login とする。
     path(
