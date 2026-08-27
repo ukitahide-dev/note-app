@@ -1,34 +1,56 @@
+import { useEffect } from "react";
+import { verifyEmailChangeApi } from "../../../auth/api/authApi";
 
 
 type Props = {
+    token: string | undefined;
     onSuccess: () => void;
 }
 
 
 
-
+// 画面を作るためのコンポーネントではなく、メールリンクから渡されたtokenを使って認証APIを実行するためのコンポーネント
 export default function EmailVerification({
+    token,
     onSuccess,
 
 }: Props) {
 
-    return (
 
-        <div>
-            <h2>メール認証</h2>
 
-            <p>
-                登録したメールアドレスに確認コードを送信しました。
-            </p>
+    useEffect(() => {
 
-            <input
-                type="text"
-                placeholder="確認コード"
-            />
+        if (!token) {
+            return;
+        }
 
-            <button>
-                認証する
-            </button>
-        </div>
-    );
+
+        const verify = async () => {
+
+            try {
+
+                await verifyEmailChangeApi(token);
+
+                onSuccess();
+
+                console.log("メール認証成功");
+
+            } catch (error) {
+
+                console.log("メール認証失敗");
+                console.log(error);
+
+            }
+
+        };
+
+
+        verify();
+
+    }, [token]);
+
+
+    return null;
+
+
 }

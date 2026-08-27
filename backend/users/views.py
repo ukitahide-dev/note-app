@@ -1,18 +1,31 @@
 from django.shortcuts import render
 
 from rest_framework.views import APIView
-from rest_framework import generics, status
+from rest_framework import generics, serializers, status
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
+from django.utils import timezone
+from datetime import timedelta
+
+from django.core.mail import send_mail
 
 
-from .models import User
+
+from .models import (
+    User,
+    EmailChangeRequest,
+)
+
 
 from .serializers import (
     RegisterSerializer,
     AccountSerializer,
     PasswordChangeSerializer,
+    EmailChangeSerializer,
+    EmailChangeVerifySerializer,
 )
 
 
@@ -72,3 +85,118 @@ class PasswordChangeView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+
+
+
+# メールアドレス変更を申し込む
+class EmailChangeView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        serializer = EmailChangeSerializer(
+            data=request.data,  # request.data: フロントから送られてきたデータ。ex) {password: 123, }
+            context={
+                "request": request,
+            }
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+
+        # バリデーションが全部成功したら、EmailChangeRequestをDBに1件作る。tokenはDjango側で自動生成される。
+        email_change_request = EmailChangeRequest.objects.create(
+            user=request.user,
+            new_email=serializer.validated_data["new_email"],
+        )
+
+
+        token = email_change_request.token
+
+
+        verification_url = (
+            f"http://localhost:5173/account/email/verify/{token}"
+        )
+
+
+        send_mail(
+            subject="メールアドレス変更の確認",   # 件名
+            message=(   # 本文
+                "メールアドレス変更の確認です。\n\n"
+                "以下のリンクをクリックして、"
+                "メールアドレスの変更を完了してください。\n\n"
+                f"{verification_url}\n\n"
+                "このリンクの有効期限は1時間です。"
+            ),
+            from_email=None,
+            recipient_list=[
+                email_change_request.new_email,
+            ],
+        )
+
+
+        return Response(
+            {
+                "message": "確認メールを送信しました。"
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+
+
+
+
+
+# 確認トークンをチェックして、メールアドレス変更を確定する
+class EmailChangeVerifyView(APIView):
+
+    # permission_classes = [IsAuthenticated]   確認メールを受け取ってリンクをクリックできるかどうかを確認したいから、ログインしているという状態は不要。
+
+    def post(self, request):
+
+        serializer = EmailChangeVerifySerializer(
+            data=request.data
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        token = serializer.validated_data["token"]
+
+        # email_change_request = EmailChangeRequest.objects.get(
+        #     token=token
+        # )
+
+        email_change_request = get_object_or_404(
+            EmailChangeRequest,
+            token=token,
+        )
+
+
+        expires_at = (
+            email_change_request.created_at
+            + timedelta(hours=1)
+        )
+
+        if timezone.now() > expires_at:
+            raise serializers.ValidationError(
+                "確認リンクの有効期限が切れています。"
+        )
+
+
+
+        user = email_change_request.user
+
+        user.email = email_change_request.new_email
+        user.save()
+
+        email_change_request.delete()
+
+        return Response({
+            "message": "メールアドレスを変更しました。"
+        })

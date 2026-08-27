@@ -4,7 +4,9 @@ from django.urls import path
 from .views import (
     RegisterView,
     AccountView,
-    PasswordChangeView
+    PasswordChangeView,
+    EmailChangeView,
+    EmailChangeVerifyView,
 )
 
 
@@ -33,6 +35,18 @@ urlpatterns = [
         "password/change/",
         PasswordChangeView.as_view(),
         name="password_change",
+    ),
+
+    path(
+        "email/change/",
+        EmailChangeView.as_view(),
+        name="email_change",
+    ),
+
+    path(
+        "email/change/verify/",
+        EmailChangeVerifyView.as_view(),
+        name="email_change_verify",
     ),
 
 

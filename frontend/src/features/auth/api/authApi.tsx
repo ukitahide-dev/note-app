@@ -92,7 +92,7 @@ export const changePasswordApi = async (
 
 
 
-// メールアドレス変更
+// メールアドレス変更申請。
 export const changeEmailApi = async (
     currentPassword: string,
     newEmail: string,
@@ -100,7 +100,7 @@ export const changeEmailApi = async (
 ) => {
 
     const res = await api.post(
-        "/account/email/",
+        "/email/change/",
         {
             current_password: currentPassword,
             new_email: newEmail,
@@ -110,6 +110,27 @@ export const changeEmailApi = async (
 
     return res.data;
 };
+
+
+
+
+
+
+// メールアドレス変更の確認
+export const verifyEmailChangeApi = async (
+    token: string,
+) => {
+
+    const res = await authApi.post(
+        "/email/change/verify/",
+        {
+            token,
+        }
+    );
+
+    return res.data;
+};
+
 
 
 

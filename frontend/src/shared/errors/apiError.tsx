@@ -20,8 +20,8 @@ export const getApiErrorMessage = (
     const url = error.config?.url;
 
 
-    console.log("API ERROR STATUS:", status);
-    console.log("API ERROR URL:", error.config?.url);
+    // console.log("API ERROR STATUS:", status);
+    // console.log("API ERROR URL:", error.config?.url);
 
 
     if (url === "/token/refresh/" && status === 400) {

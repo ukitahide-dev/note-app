@@ -9,6 +9,10 @@ import styles from "./AccountPage.module.css";
 import { Link } from "react-router-dom";
 
 
+
+
+// 遷移元: AccountMenu.tsx
+
 export default function AccountPage() {
 
     // const navigate = useNavigate();

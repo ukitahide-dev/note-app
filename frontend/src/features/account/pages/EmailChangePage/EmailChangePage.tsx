@@ -7,13 +7,33 @@ import styles from "./EmailChangePage.module.css";
 import EmailVerification from "../../components/EmailVerification/EmailVerification";
 
 
+import { useParams } from "react-router-dom";
+import EmailChangeComplete from "../../components/EmailChangeComplete/EmailChangeComplete";
+import EmailChangePending from "../../components/EmailChangePending/EmailChangePending";
+
+// 遷移元: AccountPage.tsx
 
 export default function EmailChangePage() {
 
 
+
+    const { token } = useParams();
+
+
     const [step, setStep] = useState<
-        "input" | "verify" | "complete"
+        "input" | "pending"
     >("input");
+
+
+    // const [step, setStep] = useState<
+    //     "input" | "verify" | "complete"
+    // >(
+    //     token ? "verify" : "input"
+    // );
+
+    // const [step, setStep] = useState<
+    //     "input" | "verify" | "complete"
+    // >("input");
 
 
     return (
@@ -33,17 +53,26 @@ export default function EmailChangePage() {
             {step === "input" && (
 
                 <EmailChangeForm
-                    onSuccess={() => setStep("verify")}
+                    onSuccess={() => setStep("pending")}
+
+                />
+
+            )}
+
+            {step === "pending" && (
+
+                <EmailChangePending
 
                 />
 
             )}
 
 
-            {step === "verify" && (
+            {/* {step === "verify" && (
 
 
                 <EmailVerification
+                    token={token}
                     onSuccess={() => setStep("complete")}
                 />
 
@@ -51,11 +80,13 @@ export default function EmailChangePage() {
 
             {step === "complete" && (
 
-                <div>EmailChangeComplete.tsx</div>
+                <EmailChangeComplete
+
+                />
 
                 // <EmailChangeComplete />
 
-            )}
+            )} */}
 
 
         </div>

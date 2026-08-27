@@ -23,6 +23,7 @@ import ProtectedRoute from './shared/routes/ProtectedRoute'
 import AccountPage from './features/account/pages/AccountPage/AccountPage'
 import EmailChangePage from './features/account/pages/EmailChangePage/EmailChangePage'
 import PasswordChangePage from './features/account/pages/PasswordChangePage/PasswordChangePage'
+import EmailChangeVerifyPage from './features/account/pages/EmailChangeVerifyPage/EmailChangeVerifyPage'
 
 
 
@@ -114,6 +115,16 @@ function App() {
                         path="/account/email"
                         element={<EmailChangePage />}
                     />
+
+                    <Route
+                        path="/account/email/verify/:token"
+                        element={<EmailChangeVerifyPage />}
+                    />
+
+                    {/* <Route
+                        path="/account/email/verify/:token"
+                        element={<EmailChangePage />}
+                    /> */}
 
                     <Route
                         path="/account/password"

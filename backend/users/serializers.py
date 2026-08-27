@@ -203,8 +203,6 @@ class EmailChangeSerializer(serializers.Serializer):
 
 
 
-
-
     def validate_current_password(self, value):
 
         user = self.context["request"].user
@@ -218,10 +216,6 @@ class EmailChangeSerializer(serializers.Serializer):
 
 
 
-
-
-
-
     # new_email がすでに誰かに使われてないかをチェックする。validate_〇〇 → その項目だけをチェックする。
     def validate_new_email(self, value):
 
@@ -231,7 +225,6 @@ class EmailChangeSerializer(serializers.Serializer):
             )
 
         return value
-
 
 
 
@@ -249,3 +242,6 @@ class EmailChangeSerializer(serializers.Serializer):
 
 
 
+class EmailChangeVerifySerializer(serializers.Serializer):
+
+    token = serializers.UUIDField()

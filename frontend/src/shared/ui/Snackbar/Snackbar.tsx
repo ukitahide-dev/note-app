@@ -15,7 +15,7 @@ type Props = {
 
 
 
-// 親: NotesPage.tsx、UndoSnackbar.tsx、TrashNotesPage.tsx、TrashNOteCard.tsx、
+// 親: NotesPage.tsx、UndoSnackbar.tsx、TrashNotesPage.tsx、TrashNoteCard.tsx、
 
 
 export function Snackbar ({
