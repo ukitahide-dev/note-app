@@ -9,6 +9,7 @@ import EmailChangeComplete from "../../components/EmailChangeComplete/EmailChang
 export default function EmailChangeVerifyPage() {
 
     const [isComplete, setIsComplete] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const { token } = useParams();
 
@@ -17,11 +18,29 @@ export default function EmailChangeVerifyPage() {
     if (isComplete) {
 
         return (
-            <EmailChangeComplete />
+            <EmailChangeComplete
+
+            />
         );
 
     }
 
+
+
+    if (errorMessage) {
+
+        return (
+            <div>
+                <h2>メールアドレスの認証に失敗しました</h2>
+
+                <p>{errorMessage}</p>
+            </div>
+        );
+
+    }
+
+
+    
 
     return (
 
@@ -31,6 +50,7 @@ export default function EmailChangeVerifyPage() {
             <EmailVerification
                 token={token}
                 onSuccess={() => setIsComplete(true)}
+                onError={(message) => setErrorMessage(message)}
             />
         </div>
 

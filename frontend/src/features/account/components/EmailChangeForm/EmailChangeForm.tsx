@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import styles from "./EmailChangeForm.module.css";
 import { changeEmailApi } from "../../../auth/api/authApi";
 
+
+import axios from "axios";
 
 type Props = {
     onSuccess: () => void;
@@ -27,11 +29,22 @@ export default function EmailChangeForm({
     const [newEmailConfirm, setNewEmailConfirm] = useState("");
 
 
+    const [errors, setErrors] = useState<{
+        current_password?: string[];
+        new_email?: string[];
+        new_email_confirm?: string[];
+    }>({});
+
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        setIsSubmitting(true);
 
 
         try {
@@ -48,8 +61,15 @@ export default function EmailChangeForm({
 
         } catch (error) {
 
-            console.log(error);
+            if (axios.isAxiosError(error)) {
 
+                console.log(error.response?.data);   // {current_password: Array(1), new_email: Array(1), new_email_confirm: Array(1)}
+                setErrors(error.response?.data || {});
+
+            }
+
+        } finally {
+            setIsSubmitting(false);
         }
 
 
@@ -98,7 +118,12 @@ export default function EmailChangeForm({
                         type="password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
+                        required
                     />
+
+                    {errors.current_password && (
+                        <p>{errors.current_password[0]}</p>
+                    )}
 
                 </div>
 
@@ -121,7 +146,12 @@ export default function EmailChangeForm({
                         type="email"
                         value={newEmail}
                         onChange={(e) => setNewEmail(e.target.value)}
+                        required
                     />
+
+                    {errors.new_email && (
+                        <p>{errors.new_email[0]}</p>
+                    )}
 
                 </div>
 
@@ -143,7 +173,13 @@ export default function EmailChangeForm({
                         type="email"
                         value={newEmailConfirm}
                         onChange={(e) => setNewEmailConfirm(e.target.value)}
+                        required
                     />
+
+                    {errors.new_email_confirm && (
+                        <p>{errors.new_email_confirm[0]}</p>
+                    )}
+
 
                 </div>
 
@@ -153,9 +189,13 @@ export default function EmailChangeForm({
                     <button
                         type="submit"
                         className={styles.submitButton}
+                        disabled={isSubmitting}
                         // onClick={() => onSuccess()}
                     >
-                        確認メールを送信
+                        {isSubmitting
+                            ? "送信中..."
+                            : "確認メールを送信"
+                        }
                     </button>
 
                 </div>

@@ -166,16 +166,25 @@ class EmailChangeVerifyView(APIView):
             raise_exception=True
         )
 
-        token = serializer.validated_data["token"]
+        token = serializer.validated_data["token"]   # フロントから送信されたtokenを取得
 
         # email_change_request = EmailChangeRequest.objects.get(
         #     token=token
         # )
 
-        email_change_request = get_object_or_404(
-            EmailChangeRequest,
-            token=token,
-        )
+        try:
+            email_change_request = EmailChangeRequest.objects.get(
+                token=token
+            )
+        except EmailChangeRequest.DoesNotExist:
+            raise serializers.ValidationError(
+                "確認リンクが無効です。"
+            )
+
+        # email_change_request = get_object_or_404(
+        #     EmailChangeRequest,
+        #     token=token,
+        # )
 
 
         expires_at = (
