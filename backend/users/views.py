@@ -13,6 +13,12 @@ from datetime import timedelta
 from django.core.mail import send_mail
 
 
+from .services import (
+    verify_email_change,
+    EmailChangeError,
+)
+
+
 
 from .models import (
     User,
@@ -168,18 +174,33 @@ class EmailChangeVerifyView(APIView):
 
         token = serializer.validated_data["token"]   # フロントから送信されたtokenを取得
 
+
+        try:
+            verify_email_change(token)
+
+        except EmailChangeError as e:
+            raise serializers.ValidationError(str(e))
+
+
+
+        return Response({
+            "message": "メールアドレスを変更しました。"
+        })
+
+        # verify_email_change(token)
+
         # email_change_request = EmailChangeRequest.objects.get(
         #     token=token
         # )
 
-        try:
-            email_change_request = EmailChangeRequest.objects.get(
-                token=token
-            )
-        except EmailChangeRequest.DoesNotExist:
-            raise serializers.ValidationError(
-                "確認リンクが無効です。"
-            )
+        # try:
+        #     email_change_request = EmailChangeRequest.objects.get(
+        #         token=token
+        #     )
+        # except EmailChangeRequest.DoesNotExist:
+        #     raise serializers.ValidationError(
+        #         "確認リンクが無効です。"
+        #     )
 
         # email_change_request = get_object_or_404(
         #     EmailChangeRequest,
@@ -187,25 +208,23 @@ class EmailChangeVerifyView(APIView):
         # )
 
 
-        expires_at = (
-            email_change_request.created_at
-            + timedelta(hours=1)
-        )
+        # expires_at = (
+        #     email_change_request.created_at
+        #     + timedelta(hours=1)
+        # )
 
-        if timezone.now() > expires_at:
-            raise serializers.ValidationError(
-                "確認リンクの有効期限が切れています。"
-        )
+        # if timezone.now() > expires_at:
+        #     raise serializers.ValidationError(
+        #         "確認リンクの有効期限が切れています。"
+        # )
 
 
 
-        user = email_change_request.user
+        # user = email_change_request.user
 
-        user.email = email_change_request.new_email
-        user.save()
+        # user.email = email_change_request.new_email
+        # user.save()
 
-        email_change_request.delete()
+        # email_change_request.delete()
 
-        return Response({
-            "message": "メールアドレスを変更しました。"
-        })
+

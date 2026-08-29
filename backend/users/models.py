@@ -25,7 +25,7 @@ class User(AbstractUser):  # AbstractUser: Django標準のUserを継承する。
 
 
 
-# これから変更する予定の情報。
+# まだ確定していないメールアドレス変更を、一時的に保存しておく場所。
 class EmailChangeRequest(models.Model):
 
     user = models.ForeignKey(
