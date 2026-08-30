@@ -11,7 +11,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from django.core.mail import send_mail
-
+from django.db import transaction
 
 from .services import (
     verify_email_change,
@@ -101,6 +101,7 @@ class EmailChangeView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+
     def post(self, request):
 
         serializer = EmailChangeSerializer(
@@ -113,35 +114,39 @@ class EmailChangeView(APIView):
         serializer.is_valid(raise_exception=True)
 
 
-        # バリデーションが全部成功したら、EmailChangeRequestをDBに1件作る。tokenはDjango側で自動生成される。
-        email_change_request = EmailChangeRequest.objects.create(
-            user=request.user,
-            new_email=serializer.validated_data["new_email"],
-        )
+        with transaction.atomic():   # DB処理をひとまとまりにして、途中で例外が起きたらDBの変更をロールバックする。この中で行うDB処理を、ひとまとまりとして扱う。
 
 
-        token = email_change_request.token
+            # バリデーションが全部成功したら、EmailChangeRequestをDBに1件作る。tokenはDjango側で自動生成される。
+            email_change_request = EmailChangeRequest.objects.create(
+                user=request.user,
+                new_email=serializer.validated_data["new_email"],
+            )
 
 
-        verification_url = (
-            f"http://localhost:5173/account/email/verify/{token}"
-        )
+            token = email_change_request.token
 
 
-        send_mail(
-            subject="メールアドレス変更の確認",   # 件名
-            message=(   # 本文
-                "メールアドレス変更の確認です。\n\n"
-                "以下のリンクをクリックして、"
-                "メールアドレスの変更を完了してください。\n\n"
-                f"{verification_url}\n\n"
-                "このリンクの有効期限は1時間です。"
-            ),
-            from_email=None,
-            recipient_list=[
-                email_change_request.new_email,
-            ],
-        )
+            verification_url = (
+                f"http://localhost:5173/account/email/verify/{token}"
+            )
+
+
+            send_mail(
+                subject="メールアドレス変更の確認",   # 件名
+                message=(   # 本文
+                    "メールアドレス変更の確認です。\n\n"
+                    "以下のリンクをクリックして、"
+                    "メールアドレスの変更を完了してください。\n\n"
+                    f"{verification_url}\n\n"
+                    "このリンクの有効期限は1時間です。"
+                ),
+                from_email=None,
+                recipient_list=[
+                    email_change_request.new_email,
+                ],
+            )
+
 
 
         return Response(

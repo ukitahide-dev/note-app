@@ -232,7 +232,7 @@ class EmailChangeSerializer(serializers.Serializer):
     def validate(self, attrs):    # attrs は、各フィールドのバリデーションを通過した値をまとめたもの。validate() は、その attrs を使ってさらに全体のバリデーションを行う。validate() → 複数の項目を組み合わせてチェックする。
 
         if attrs["new_email"] != attrs["new_email_confirm"]:
-            raise serializers.ValidationError({
+            raise serializers.ValidationError({   # DRFが、エラーをHTTPレスポンスにして返す。
                 "new_email_confirm": "メールアドレスが一致していません。"
             })
 
