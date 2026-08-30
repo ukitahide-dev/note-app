@@ -172,7 +172,7 @@ class EmailChangeVerifyView(APIView):
             raise_exception=True
         )
 
-        token = serializer.validated_data["token"]   # フロントから送信されたtokenを取得
+        token = serializer.validated_data["token"]   # フロントから送信されたtokenを取得。
 
 
         try:
@@ -186,6 +186,8 @@ class EmailChangeVerifyView(APIView):
         return Response({
             "message": "メールアドレスを変更しました。"
         })
+
+
 
         # verify_email_change(token)
 
