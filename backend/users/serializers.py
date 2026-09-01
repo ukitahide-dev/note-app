@@ -5,6 +5,22 @@ from django.contrib.auth.password_validation import validate_password as django_
 
 from django.core.exceptions import ValidationError
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    # ユーザーのJWTを作るとき、まずSimpleJWT本来のTokenを作ってもらう。そのTokenにUserが持っている token_version を追加して、そのTokenを返すという処理。
+    @classmethod
+    def get_token(cls, user):
+
+        token = super().get_token(user)   # SimpleJWT本来のJWT作成処理をまず実行して、その結果をくださいという意味。SimpleJWTが本来作るTokenをそのまま利用する。
+
+        token["token_version"] = user.token_version    # SimpleJWTが作ったtokenのtoken_versionキーに、自分のトークンバージョンを設定する。
+
+        return token
 
 
 
@@ -154,6 +170,11 @@ class PasswordChangeSerializer(serializers.Serializer):   # serializers.Serializ
     )
 
 
+    new_password_confirm = serializers.CharField(
+        write_only=True
+    )
+
+
 
     def validate_current_password(self, value):  # value: フロントから送られてきたcurrent_passwordの値。
 
@@ -173,12 +194,45 @@ class PasswordChangeSerializer(serializers.Serializer):   # serializers.Serializ
 
         user = self.context["request"].user
 
-        django_validate_password(   # #  Django標準のパスワードチェック。settings.pyのAUTH_PASSWORD_VALIDATORSに書かれてるやつを全部走らせる。
+        django_validate_password(   #  Django標準のパスワードチェック。settings.pyのAUTH_PASSWORD_VALIDATORSに書かれてるやつを全部走らせる。
             value,
             user=user,   # パスワードを検証するときに、このUserオブジェクトを参考情報として渡す。これで、パスワードがユーザー名と似すぎていないかをチェックできる。
         )
 
         return value
+
+
+
+
+    def validate(self, attrs):
+
+        user = self.context["request"].user
+
+
+        # 現在のパスワードと同じではないか
+        if user.check_password(attrs["new_password"]):
+            raise serializers.ValidationError({
+                "new_password":
+                    "現在のパスワードと同じパスワードには変更できません。"
+        })
+
+
+        # 新しいパスワードと確認用パスワードが一致しているか
+        if attrs["new_password"] != attrs["new_password_confirm"]:
+            raise serializers.ValidationError({
+                "new_password_confirm":
+                    "新しいパスワードと一致していません。"
+            })
+
+
+
+
+        return attrs
+
+
+
+
+
 
 
 

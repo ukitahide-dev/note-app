@@ -7,6 +7,7 @@ from .views import (
     PasswordChangeView,
     EmailChangeView,
     EmailChangeVerifyView,
+    MyTokenObtainPairView,
 )
 
 
@@ -53,7 +54,8 @@ urlpatterns = [
     # /login/ にアクセスされたら、SimpleJWTが用意している TokenObtainPairView を使ってログイン処理を行う。このURLの名前は login とする。
     path(
         'login/',
-        TokenObtainPairView.as_view(),   # SimpleJWTが用意しているJWTログイン用のクラスベースViewを、DjangoのURLに接続している。私は、loginにアクセスする処理を書くだけで済む。authApi.tsxに書いてる。
+        MyTokenObtainPairView.as_view(),
+        # TokenObtainPairView.as_view(),   # SimpleJWTが用意しているJWTログイン用のクラスベースViewを、DjangoのURLに接続している。私は、loginにアクセスする処理を書くだけで済む。authApi.tsxに書いてる。
         name="login"
     ),
 

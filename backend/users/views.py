@@ -13,6 +13,16 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.db import transaction
 
+
+from rest_framework_simplejwt.token_blacklist.models import (
+    OutstandingToken,
+    BlacklistedToken,
+)
+
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
 from .services import (
     verify_email_change,
     EmailChangeError,
@@ -32,9 +42,18 @@ from .serializers import (
     PasswordChangeSerializer,
     EmailChangeSerializer,
     EmailChangeVerifySerializer,
+    MyTokenObtainPairSerializer,
 )
 
 
+
+
+
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+
+    serializer_class = MyTokenObtainPairSerializer
 
 
 
@@ -78,11 +97,24 @@ class PasswordChangeView(APIView):
 
         user = request.user
 
-        user.set_password(   # set_password() がハッシュ化してくれる。
-            serializer.validated_data["new_password"]   # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
-        )
 
-        user.save()   # DBに保存。
+        with transaction.atomic():
+
+            # パスワードを変更
+            user.set_password(    # set_password() がハッシュ化してくれる。
+                serializer.validated_data["new_password"]     # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
+            )
+
+            user.token_version += 1
+            user.save()
+
+            # このユーザーの既存Refresh Tokenをすべて無効化。このユーザーに発行済みのRefresh Tokenを全部取り出して、1個ずつブラックリストに入れる。
+            for token in OutstandingToken.objects.filter(user=user):
+
+                BlacklistedToken.objects.get_or_create(
+                    token=token
+                )
+
 
 
         return Response(
@@ -91,6 +123,14 @@ class PasswordChangeView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+        # user.set_password(   # set_password() がハッシュ化してくれる。
+        #     serializer.validated_data["new_password"]   # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
+        # )
+
+        # user.save()   # DBに保存。
+
+
 
 
 

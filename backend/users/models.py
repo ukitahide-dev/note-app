@@ -10,8 +10,8 @@ import uuid
 # 現在確定しているユーザー情報。
 class User(AbstractUser):  # AbstractUser: Django標準のUserを継承する。
 
-
     email = models.EmailField(unique=True)
+    token_version = models.PositiveIntegerField(default=0)   # パスワード変更時に、accessTokenを無効化するために必要。
 
     USERNAME_FIELD = "email"  # ログイン時はusernameではなくemailを使う
     REQUIRED_FIELDS = ["username"]  # createsuperuser コマンド用。

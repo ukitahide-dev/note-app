@@ -52,12 +52,6 @@ export default function AccountPage() {
                         変更
                     </Link>
 
-                    {/* <button
-                        onClick={() => navigate("/account/email")}
-                        // onClick={() => setOpenForm("email")}
-                    >
-                        変更
-                    </button> */}
 
                 </section>
 

@@ -4,11 +4,11 @@ import EmailChangeForm from "../../components/EmailChangeForm/EmailChangeForm";
 
 
 import styles from "./EmailChangePage.module.css";
-import EmailVerification from "../../components/EmailVerification/EmailVerification";
+// import EmailVerification from "../../components/EmailVerification/EmailVerification";
 
 
-import { useParams } from "react-router-dom";
-import EmailChangeComplete from "../../components/EmailChangeComplete/EmailChangeComplete";
+// import { useParams } from "react-router-dom";
+// import EmailChangeComplete from "../../components/EmailChangeComplete/EmailChangeComplete";
 import EmailChangePending from "../../components/EmailChangePending/EmailChangePending";
 
 // 遷移元: AccountPage.tsx
@@ -17,7 +17,7 @@ export default function EmailChangePage() {
 
 
 
-    const { token } = useParams();
+    // const { token } = useParams();
 
 
     const [step, setStep] = useState<

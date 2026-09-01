@@ -71,7 +71,8 @@ export const registerApi = async (
 export const changePasswordApi = async (
     currentPassword: string,
     newPassword: string,
-
+    newPassWordConfirm: string,
+    
 ) => {
 
     const res = await api.post(
@@ -79,6 +80,7 @@ export const changePasswordApi = async (
         {
             current_password: currentPassword,
             new_password: newPassword,
+            new_password_confirm: newPassWordConfirm,
         },
     );
 

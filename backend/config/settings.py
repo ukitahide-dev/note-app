@@ -53,9 +53,13 @@ INSTALLED_APPS = [
 # ---- 追記 ----
 REST_FRAMEWORK = {
 
-    # APIにアクセスしてきた人が、本当にログイン済みのユーザーなのかを、JWTを使って確認する。ログイン後、API時へアクセスするときに「この人は誰なの？」をJWTで確認するための設定。
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # APIにアクセスしてきた人が、本当にログイン済みのユーザーなのかを、JWTを使って確認する。ログイン後、APIへアクセスするときに「この人は誰なの？」をJWTで確認するための設定。
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
+
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "users.authentication.VersionedJWTAuthentication",   # users/authentication.pyに書いたやつ。
     ),
 
     # ページネーション設定
