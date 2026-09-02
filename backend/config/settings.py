@@ -179,6 +179,10 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
+# ---- 追記 ---- 
+DEFAULT_FROM_EMAIL = "noreply@example.com"
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 

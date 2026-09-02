@@ -47,6 +47,8 @@ from .serializers import (
 
 
 
+from .emails import send_password_changed_email
+
 
 
 
@@ -102,7 +104,7 @@ class PasswordChangeView(APIView):
 
             # パスワードを変更
             user.set_password(    # set_password() がハッシュ化してくれる。
-                serializer.validated_data["new_password"]     # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
+                serializer.validated_data["new_password"]   # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
             )
 
             user.token_version += 1
@@ -116,6 +118,8 @@ class PasswordChangeView(APIView):
                 )
 
 
+        send_password_changed_email(user)
+
 
         return Response(
             {
@@ -123,13 +127,6 @@ class PasswordChangeView(APIView):
             },
             status=status.HTTP_200_OK
         )
-
-        # user.set_password(   # set_password() がハッシュ化してくれる。
-        #     serializer.validated_data["new_password"]   # serializerによるチェックを全部通過した、新しいパスワードのこと。Serializerからチェック済みのデータを、Viewが受け取っている。
-        # )
-
-        # user.save()   # DBに保存。
-
 
 
 

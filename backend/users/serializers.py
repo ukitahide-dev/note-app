@@ -160,7 +160,6 @@ class AccountSerializer(serializers.ModelSerializer):   # serializers.ModelSeria
 # パスワード変更APIに送られてきたデータを受け取って、チェックする。
 class PasswordChangeSerializer(serializers.Serializer):   # serializers.Serializer: APIで受け取るデータの形・ルールを自分で定義するためのSerializer。
 
-
     current_password = serializers.CharField(
         write_only=True
     )
@@ -168,7 +167,6 @@ class PasswordChangeSerializer(serializers.Serializer):   # serializers.Serializ
     new_password = serializers.CharField(
         write_only=True
     )
-
 
     new_password_confirm = serializers.CharField(
         write_only=True

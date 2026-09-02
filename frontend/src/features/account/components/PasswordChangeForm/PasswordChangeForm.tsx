@@ -69,7 +69,7 @@ export default function PasswordChangeForm() {
                     error.response?.data ?? {}
                 );
 
-                 console.log(error.response?.data);
+                console.log(error.response?.data);
 
             }
 
@@ -167,6 +167,7 @@ export default function PasswordChangeForm() {
 
 
                 <div className={styles.buttonArea}>
+
                     <button
                         type="submit"
                         className={styles.submitButton}
@@ -175,8 +176,11 @@ export default function PasswordChangeForm() {
                     >
                         {isSubmitting ? "送信中..." : "パスワードを変更"}
                     </button>
+
                 </div>
+
             </form>
+
         </div>
 
     );
