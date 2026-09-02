@@ -27,6 +27,9 @@ export default function PasswordChangeForm() {
         new_password_confirm?: string[];
     }>({});
 
+    const [rateLimitError, setRateLimitError] = useState("");
+
+
     const navigate = useNavigate();
 
 
@@ -39,6 +42,7 @@ export default function PasswordChangeForm() {
         e.preventDefault();
 
         setErrors({});
+        setRateLimitError("");
         setIsSubmitting(true);
 
 
@@ -65,9 +69,14 @@ export default function PasswordChangeForm() {
 
             if (axios.isAxiosError(error)) {
 
-                setErrors(
-                    error.response?.data ?? {}
-                );
+                if (error.response?.status === 429) {
+                    setRateLimitError(
+                        error.response.data.detail
+                    );
+                } else {
+                    setErrors(error.response?.data ?? {});
+                }
+
 
                 console.log(error.response?.data);
 
@@ -89,6 +98,12 @@ export default function PasswordChangeForm() {
         <div className={styles.formContainer}>
 
             <form className={styles.form} onSubmit={handleSubmit}>
+
+                {rateLimitError && (
+                    <p className={styles.rateLimitError}>
+                        {rateLimitError}
+                    </p>
+                )}
 
                 <div className={styles.formGroup}>
 

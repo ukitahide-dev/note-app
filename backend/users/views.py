@@ -23,6 +23,9 @@ from rest_framework_simplejwt.token_blacklist.models import (
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
+
+
+
 from .services import (
     verify_email_change,
     EmailChangeError,
@@ -49,7 +52,7 @@ from .serializers import (
 
 from .emails import send_password_changed_email
 
-
+from .throttles import PasswordChangeThrottle
 
 
 
@@ -81,6 +84,7 @@ class AccountView(generics.RetrieveAPIView):  # データを1件取得するAPI�
 class PasswordChangeView(APIView):
 
     permission_classes = [IsAuthenticated]
+    throttle_classes = [PasswordChangeThrottle]
 
 
     def post(self, request):

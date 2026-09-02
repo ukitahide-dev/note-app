@@ -62,6 +62,11 @@ REST_FRAMEWORK = {
         "users.authentication.VersionedJWTAuthentication",   # users/authentication.pyに書いたやつ。
     ),
 
+
+    "DEFAULT_THROTTLE_RATES": {
+        "password_change": "3/hour",
+    },
+
     # ページネーション設定
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 20,
@@ -179,7 +184,7 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
-# ---- 追記 ---- 
+# ---- 追記 ----
 DEFAULT_FROM_EMAIL = "noreply@example.com"
 
 
