@@ -24,6 +24,7 @@ import AccountPage from './features/account/pages/AccountPage/AccountPage'
 import EmailChangePage from './features/account/pages/EmailChangePage/EmailChangePage'
 import PasswordChangePage from './features/account/pages/PasswordChangePage/PasswordChangePage'
 import EmailChangeVerifyPage from './features/account/pages/EmailChangeVerifyPage/EmailChangeVerifyPage'
+import AccountDeletePage from './features/account/pages/AccountDeletePage/AccountDeletePage'
 
 
 
@@ -129,6 +130,11 @@ function App() {
                     <Route
                         path="/account/password"
                         element={<PasswordChangePage />}
+                    />
+
+                    <Route
+                        path="/account/delete"
+                        element={<AccountDeletePage />}
                     />
 
 

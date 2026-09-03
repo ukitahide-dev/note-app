@@ -232,6 +232,22 @@ class PasswordChangeSerializer(serializers.Serializer):   # serializers.Serializ
 
 
 
+class AccountDeleteSerializer(serializers.Serializer):
+
+    current_password = serializers.CharField(write_only=True)
+
+
+    def validate_current_password(self, value):
+
+        user = self.context["request"].user
+
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                "現在のパスワードが正しくありません。"
+            )
+
+
+        return value
 
 
 

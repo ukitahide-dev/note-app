@@ -8,6 +8,7 @@ from .views import (
     EmailChangeView,
     EmailChangeVerifyView,
     MyTokenObtainPairView,
+    AccountDeleteView,
 )
 
 
@@ -69,6 +70,14 @@ urlpatterns = [
         'logout/',
         TokenBlacklistView.as_view(),   # Simple JWTが用意しているrefresh tokenをブラックリストに入れるためのAPI。
         name="logout",
+    ),
+
+
+
+    path(
+        "account/delete/",
+        AccountDeleteView.as_view(),
+        name="account_delete",
     ),
 
 

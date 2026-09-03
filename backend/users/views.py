@@ -13,6 +13,8 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.db import transaction
 
+from django.core.files.storage import default_storage   # Djangoが現在使っているファイル保存場所を操作するためのもの
+
 
 from rest_framework_simplejwt.token_blacklist.models import (
     OutstandingToken,
@@ -33,6 +35,9 @@ from .services import (
 
 
 
+from notes.models import NoteImage
+
+
 from .models import (
     User,
     EmailChangeRequest,
@@ -46,13 +51,20 @@ from .serializers import (
     EmailChangeSerializer,
     EmailChangeVerifySerializer,
     MyTokenObtainPairSerializer,
+    AccountDeleteSerializer,
 )
 
 
 
-from .emails import send_password_changed_email
+from .emails import (
+    send_password_changed_email,
+    send_account_deleted_email,
+)
 
-from .throttles import PasswordChangeThrottle
+from .throttles import (
+    PasswordChangeThrottle,
+    AccountDeleteThrottle,
+)
 
 
 
@@ -235,44 +247,56 @@ class EmailChangeVerifyView(APIView):
 
 
 
-        # verify_email_change(token)
-
-        # email_change_request = EmailChangeRequest.objects.get(
-        #     token=token
-        # )
-
-        # try:
-        #     email_change_request = EmailChangeRequest.objects.get(
-        #         token=token
-        #     )
-        # except EmailChangeRequest.DoesNotExist:
-        #     raise serializers.ValidationError(
-        #         "確認リンクが無効です。"
-        #     )
-
-        # email_change_request = get_object_or_404(
-        #     EmailChangeRequest,
-        #     token=token,
-        # )
-
-
-        # expires_at = (
-        #     email_change_request.created_at
-        #     + timedelta(hours=1)
-        # )
-
-        # if timezone.now() > expires_at:
-        #     raise serializers.ValidationError(
-        #         "確認リンクの有効期限が切れています。"
-        # )
 
 
 
-        # user = email_change_request.user
+class AccountDeleteView(APIView):
 
-        # user.email = email_change_request.new_email
-        # user.save()
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [AccountDeleteThrottle]
 
-        # email_change_request.delete()
+
+    def delete(self, request):
+
+        serializer = AccountDeleteSerializer(
+            data=request.data,
+            context={"request": request},
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+
+        user = request.user
+        email = user.email
+
+
+        image_names = list(    # image_names: ex) [ "note_images/a.jpg", "note_images/b.jpg", "note_images/c.jpg"]
+            NoteImage.objects
+            .filter(note__user=user)  # __: Django ORMで関連モデルをたどるための記法
+            .values_list("image", flat=True)
+        )
+
+
+
+        with transaction.atomic():
+
+            user.delete()
+
+
+        # 実際の画像ファイルも削除する。
+        for image_name in image_names:
+
+            if image_name and default_storage.exists(image_name):
+
+                default_storage.delete(image_name)
+
+
+        send_account_deleted_email(email)
+
+
+        return Response(
+            {"detail": "アカウントを削除しました。"},
+            status=status.HTTP_200_OK,
+        )
 
 

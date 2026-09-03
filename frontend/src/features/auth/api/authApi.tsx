@@ -72,7 +72,7 @@ export const changePasswordApi = async (
     currentPassword: string,
     newPassword: string,
     newPassWordConfirm: string,
-    
+
 ) => {
 
     const res = await api.post(
@@ -184,3 +184,27 @@ export const refreshAccessToken = async (
 
 
 }
+
+
+
+
+
+
+// アカウント削除
+export const deleteAccountApi = async (
+    currentPassword: string,
+
+) => {
+
+    const res = await api.delete(
+        "/account/delete/",
+        {
+            data: {
+                current_password: currentPassword,
+            },
+        },
+    );
+
+    return res.data;
+
+};

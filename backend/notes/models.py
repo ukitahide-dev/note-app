@@ -44,7 +44,7 @@ class Note(models.Model):
 class NoteHistory(models.Model):
     note = models.ForeignKey(
         Note,
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE,    # Noteが削除されたら、そのNoteのNoteHistoryも削除される。
         related_name="histories",
     )
 
