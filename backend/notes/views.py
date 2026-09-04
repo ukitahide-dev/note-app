@@ -11,6 +11,7 @@ from .serializers import (
     NoteHistorySerializer,
     NoteImageSerializer,
     ViewTimeSerializer,
+    NoteImageReorderSerializer,
 )
 
 
@@ -311,6 +312,7 @@ class NoteImagesViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+
     # get_queryset()は、このViewで扱っていいデータの範囲を決めるためのメソッド。
     def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
 
@@ -360,28 +362,44 @@ class NoteImagesViewSet(ModelViewSet):
 
     @action(detail=False, methods=["patch"], url_path="reorder")
     def reorder(self, request, note_pk=None):
-        print(request.data)
+
+        print(request.data)  # [{'id': 72, 'order': 0}, {'id': 78, 'order': 1}, {'id': 71, 'order': 2}]
+
+        serializer = NoteImageReorderSerializer(
+            data=request.data,
+            many=True,
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
 
 
         # 画像の並び順を更新する
-        for image_data in request.data:
+        for image_data in serializer.validated_data:
+        # for image_data in request.data:
 
             image_id = image_data["id"]
             order = image_data["order"]
 
-            image = self.get_queryset().get(   # get_querysetが呼ばれる(note__user、note__idとかでデータをフィルターする)。そのうえで、id=image_idでデータを取得する。
+
+            image = self.get_queryset().get(   # get_querysetが呼ばれる(note__user、note__idとかでデータをフィルターする)。そのうえで、get(id=image_id)で、データを取得する。get()は条件に合う一件のオブジェクトを取得する。
                 id=image_id
             )
 
             image.order = order
-            image.save()
+
+            image.save(
+                update_fields=["order"]
+            )
+            # image.save()
 
 
 
         images = self.get_queryset()  # QuerySetを取得し、imagesという変数に保存。
 
 
-        # NoteImageオブジェクトをJSONに変換する準備をして、という意味
+        # NoteImageオブジェクトをJSONに変換する準備をして、という意味。フロント側にデータを返すなら必要なコードだけど、今回の場合は、データを返していない。204で処理が成功したことを返しているだけ。だからこのコード自体不要になる。
         serializer = NoteImageSerializer(
             images,  # 上で取得した、images QuerySetを、JSONに変換する。
             many=True

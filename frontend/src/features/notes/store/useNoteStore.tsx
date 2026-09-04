@@ -1225,15 +1225,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     updateNoteImageOrder: async(
         noteId: number,
         newImages: NoteImage[],
-        // reorderedImages:
+
     ) => {
 
 
-        // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。
+        // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。API用データに変換している。
         const reorderedImages = newImages.map((image, index) => ({
+
             id: image.id,
             order: index,
+
         }));
+
+        console.log(`reorderedImages: ${reorderedImages}`);
 
 
         try {

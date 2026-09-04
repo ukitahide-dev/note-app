@@ -138,3 +138,11 @@ class ViewTimeSerializer(serializers.Serializer):
         min_value=0
     )
 
+
+
+
+
+
+class NoteImageReorderSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    order = serializers.IntegerField(min_value=0)

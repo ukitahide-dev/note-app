@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 import type { NoteImage } from "../../../types/note";
 
@@ -32,9 +32,6 @@ export function useSortableNoteImages(
 
 
 
-    // const [sortedImages, setSortedImages] = useState(images);
-
-
     // Store
     const {
         updateNoteImageOrder,
@@ -61,8 +58,10 @@ export function useSortableNoteImages(
 
 
         const oldIndex = images.findIndex((image) => image.id === active.id);
-
         const newIndex = images.findIndex((image) => image.id === over.id);
+
+        console.log(`oldIndex: ${oldIndex}`);
+        console.log(`newIndex: ${newIndex}`);
 
 
         // oldIndex の要素を newIndex の位置へ移動して、間の要素は1つずつずれる。
@@ -72,10 +71,11 @@ export function useSortableNoteImages(
             newIndex
         );
 
+        // console.log(`newImages: ${newImages}`);
 
         await updateNoteImageOrder(noteId, newImages);
 
-        // setSortedImages(newImages);
+
 
 
 
@@ -85,7 +85,6 @@ export function useSortableNoteImages(
 
 
     return {
-        // sortedImages,
         handleDragEnd,
 
     }

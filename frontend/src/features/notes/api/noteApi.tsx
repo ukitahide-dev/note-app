@@ -463,16 +463,9 @@ export const reorderNoteImageApi = async (
 
 ) => {
 
-    // const token = localStorage.getItem("access");
-
     const res = await api.patch(
         `notes/${noteId}/images/reorder/`,
         images,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
 
     );
 

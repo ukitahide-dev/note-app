@@ -1,6 +1,6 @@
 
 import type { NoteImage, Note, } from "../../../../types/note"
-import { useNoteStore } from "../../store/useNoteStore";
+// import { useNoteStore } from "../../store/useNoteStore";
 import ImageItem from "../ImageItem/ImageItem";
 
 
@@ -15,12 +15,12 @@ import {
 } from "@dnd-kit/sortable";
 
 
-import { arrayMove } from "@dnd-kit/sortable";
+// import { arrayMove } from "@dnd-kit/sortable";
 
-import type { DragEndEvent } from "@dnd-kit/core";
-// import { DragEndEvent } from "@dnd-kit/core";
-import { useState } from "react";
-import { reorderNoteImageApi } from "../../api/noteApi";
+// import type { DragEndEvent } from "@dnd-kit/core";
+// // import { DragEndEvent } from "@dnd-kit/core";
+// import { useState } from "react";
+// import { reorderNoteImageApi } from "../../api/noteApi";
 import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 
 
@@ -53,13 +53,12 @@ export function ImageList({
 
     // hook
     const {
-        // sortedImages,
         handleDragEnd,
     } = useSortableNoteImages(images, noteId);
 
 
 
-
+    console.log(images);  // [{…}, {…}] ex) [{id: 71, image: 'http://127.0.0.1:8000/media/note_images/%E3%82%B3%E3%83%AD%E3%83%92%E3%83%BC%E3%83%AD%E3%83%BC.png', order: 0, note: 298}, {id: 72, image: 'http://127.0.0.1:8000/media/note_images/%E3%83%9B%E3%82%A4%E3%83%9F%E3%83%B3.png', order: 1, note: 298}]
 
     return (
 
@@ -78,7 +77,7 @@ export function ImageList({
                         image={image}
                         isLarge={isLarge}
                         onDeleteImage={() => onDeleteImage(image.id)}
-                        
+
                     />
                 ))}
 

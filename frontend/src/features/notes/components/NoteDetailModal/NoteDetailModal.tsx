@@ -169,6 +169,7 @@ export default function NoteDetailModal({
                 >
 
                     <div className={styles.largeImages}>
+
                         <ImageList
                             images={largeImages}
                             isLarge={true}
