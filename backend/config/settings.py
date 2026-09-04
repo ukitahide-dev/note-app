@@ -65,7 +65,7 @@ REST_FRAMEWORK = {
 
     "DEFAULT_THROTTLE_RATES": {
         "password_change": "3/hour",
-        "account_delete": "30/hour",
+        "account_delete": "5/hour",
     },
 
     # ページネーション設定

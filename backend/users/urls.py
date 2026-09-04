@@ -60,11 +60,13 @@ urlpatterns = [
         name="login"
     ),
 
+
     path(
         'token/refresh/',
-        TokenRefreshView.as_view(),
+        TokenRefreshView.as_view(),    # Refresh Tokenを使って、新しいAccess Tokenを発行する。
         name="token_refresh",
     ),
+
 
     path(
         'logout/',

@@ -20,7 +20,9 @@ export const loginApi = async (
 
 
 // ログアウト
-export const logoutApi = async () => {
+export const logoutApi = async (
+    
+) => {
 
     const refresh = localStorage.getItem("refresh");
 

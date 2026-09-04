@@ -5,7 +5,14 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Note, Label, NoteHistory, NoteImage
-from .serializers import NoteSerializer, LabelSerializer, NoteHistorySerializer, NoteImageSerializer
+from .serializers import (
+    NoteSerializer,
+    LabelSerializer,
+    NoteHistorySerializer,
+    NoteImageSerializer,
+    ViewTimeSerializer,
+)
+
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -240,18 +247,36 @@ class NoteViewSet(ModelViewSet):
 
     @action(detail=True, methods=["patch"])
     def view_time(self, request, pk=None):
+
         note = self.get_object()
 
-        seconds = request.data.get("seconds", 0)
+        # seconds = request.data.get("seconds", 0)  # HTTPリクエストのJSONから seconds を取り出して。なかったら0にして。これだと、Viewが直接リクエストデータを扱うことになる。
+
+        serializer = ViewTimeSerializer(   # ユーザーからHTTPで送られてきたデータを、 ViewTimeSerializer に渡している。
+            data=request.data
+        )
+
+        serializer.is_valid(   # 渡したデータをSerializerに検査させる。
+            raise_exception=True
+        )
+
+
+        seconds = serializer.validated_data["seconds"]   # serializerの検査を通過したデータを取り出す。
 
         note.total_view_seconds += seconds
-        note.save()
+
+
+        note.save(
+            update_fields=["total_view_seconds"]
+        )
+
 
         return Response(
             {
                 "total_view_seconds": note.total_view_seconds
             }
         )
+
 
 
 
@@ -391,6 +416,7 @@ class ImageViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+
         return NoteImage.objects.filter(
             note__user=self.request.user
         )

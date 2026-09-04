@@ -62,7 +62,7 @@ export default function AccountDeleteForm() {
 
     const handleOpenConfirmModal = () => {
 
-        if (!currentPassword) {
+        if (!currentPassword.trim()) {   // ユーザーが、パスワード入力欄に何も書いていない場合は、フロントで処理を中断させる。わざわざ、django側で検証する必要もない。(react経由していれば)
             setError("現在のパスワードを入力してください。");
             return;
         }
@@ -72,44 +72,7 @@ export default function AccountDeleteForm() {
 
     }
 
-    // const handleSubmit = async (e: React.FormEvent) => {
 
-    //     e.preventDefault();
-
-    //     setError("");
-    //     setIsSubmitting(true);
-
-    //     try {
-
-    //         await deleteAccountApi(currentPassword);
-
-    //         localStorage.removeItem("access");
-    //         localStorage.removeItem("refresh");
-
-    //         navigate("/login");
-
-    //     } catch (error) {
-
-    //         if (axios.isAxiosError(error)) {
-
-    //             setError(
-    //                 error.response?.data?.current_password?.[0]
-    //                 ?? error.response?.data?.detail
-    //                 ?? "アカウントの削除に失敗しました。"
-    //             );
-
-    //         } else {
-
-    //             setError("アカウントの削除に失敗しました。");
-
-    //         }
-
-    //     } finally {
-
-    //         setIsSubmitting(false);
-
-    //     }
-    // };
 
 
 
@@ -159,8 +122,6 @@ export default function AccountDeleteForm() {
 
                     <button
                         onClick={handleOpenConfirmModal}
-                        // onClick={() => setIsConfirmModalOpen(true)}
-                        // type="submit"
                         type="button"
                         className={styles.deleteButton}
                         disabled={isSubmitting}
@@ -180,9 +141,8 @@ export default function AccountDeleteForm() {
         <ConfirmModal
             isOpen={isConfirmModalOpen}
             title="本当にアカウントを削除しますか？"
-            message="この操作は取り消せません。"
+            message="アカウントを削除すると、ノート・ラベル・画像などのデータも削除されます。この操作は取り消せません。"
             onConfirm={handleDelete}
-            // onConfirm={() => handleSubmit}
             onClose={() => setIsConfirmModalOpen(false)}
         />
 

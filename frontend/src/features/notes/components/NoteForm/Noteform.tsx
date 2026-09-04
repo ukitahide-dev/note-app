@@ -137,6 +137,16 @@ export default function NoteForm({
 
         e.preventDefault();
 
+        setIsSubmiting(true);
+
+        setTitle("");
+        setContent("");
+        setIsExpanded(false);
+
+
+        setActivePanel(null);
+        setTempColor("#ffffff");
+
         setFieldErrors({});
 
 
@@ -156,19 +166,13 @@ export default function NoteForm({
 
         try {
 
-            setIsSubmiting(true);
+
 
             await createNote(title, content, selectedLabels, tempColor);
 
             // alert("投稿成功");
 
-            setTitle("");
-            setContent("");
-            setIsExpanded(false);
 
-
-            setActivePanel(null);
-            setTempColor("#ffffff");
 
         } catch (error) {
 
@@ -190,6 +194,10 @@ export default function NoteForm({
 
             }
 
+
+        } finally {
+
+            setIsSubmiting(false);
 
         }
 

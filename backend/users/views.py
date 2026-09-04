@@ -249,7 +249,7 @@ class EmailChangeVerifyView(APIView):
 
 
 
-
+# アカウント削除
 class AccountDeleteView(APIView):
 
     permission_classes = [IsAuthenticated]

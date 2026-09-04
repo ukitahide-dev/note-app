@@ -133,7 +133,8 @@ class NoteHistorySerializer(serializers.ModelSerializer):
 
 
 
-
-
-
+class ViewTimeSerializer(serializers.Serializer):
+    seconds = serializers.IntegerField(
+        min_value=0
+    )
 
