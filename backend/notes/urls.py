@@ -4,11 +4,13 @@ from .views import NoteViewSet, LabelViewSet, NoteImagesViewSet, ImageViewSet
 
 router = DefaultRouter()
 
+
 router.register(
     'notes',
     NoteViewSet,
     basename='note'
 )
+
 
 router.register(
     "labels",

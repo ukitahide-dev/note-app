@@ -19,13 +19,13 @@ class NoteImageSerializer(serializers.ModelSerializer):
         model = NoteImage
         fields =  "__all__"
 
-        read_only_fields=["note"]  # NoteImageViewSetのperform_create内で対象のnoteを取得しているから、フロントからnoteを送らせないようにする。
+        read_only_fields=["note"]  # NoteImageViewSetのperform_create内で対象のnoteをAPIのurlから取得しているから、フロントからnoteを送らせないようにする。
 
 
 
 
 
-class NoteSerializer(serializers.ModelSerializer):
+class NoteSerializer(serializers.ModelSerializer):   # 基本的なバリデーションは ModelSerializer が自動でやってくれる。必要になったら validate_フィールド名() を追加する。
 
     # 表示用
     labels = LabelSerializer(
@@ -84,13 +84,14 @@ class NoteSerializer(serializers.ModelSerializer):
 
     # validate_: 空白だけ禁止など、自分独自のルールを書く場所。自分で追加のチェックをする。
     def validate_title(self, value):   # validate_ + フィールド名、という形がDRFのルール。self は、現在動いている NoteSerializer 自身。value には、フロントから送られてきた、titleフィールドの値が入る。
+
         value = value.strip()
 
         print("titleのvalue:", value)
 
         if not value:
             raise serializers.ValidationError(
-                "タイトルを入力してください。!!!!!!!"
+                "タイトルを入力してください。"
             )
 
         return value
@@ -98,6 +99,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
     def validate_content(self, value):
+        
         value = value.strip()
 
         if not value:

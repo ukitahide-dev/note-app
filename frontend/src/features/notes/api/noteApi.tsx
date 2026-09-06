@@ -115,22 +115,23 @@ export const createNoteApi = async (
 
     // ↑のapi呼び出し部分でエラーが起こると、これ以降のコードは実行されない。
 
-    console.log("aaaaaaa");
-    console.log(`createNoteApiのres: ${res}`);
+    // console.log("aaaaaaa");
+    // console.log(`createNoteApiのres: ${res}`);
 
     return res.data;
 }
 
 
 
-// ノートのタイトル内容を変更する
+
+// ノートのタイトル、内容を変更する
 export const updateNoteApi = async (
     id: number,
     title: string,
     content: string
 ) => {
 
-    // const token = localStorage.getItem("access");
+
 
     const res = await api.patch(
         `/notes/${id}/`,
@@ -138,16 +139,61 @@ export const updateNoteApi = async (
             title,
             content,
         },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 
     return res.data;
 
 }
+
+
+
+
+
+// ノートの背景色を変更する
+export const updateNoteColorApi = async (
+    id: number,
+    color: string
+) => {
+
+
+
+    const res = await api.patch(
+        `notes/${id}/`,
+        {
+            color
+        },
+
+
+    );
+
+    return res.data;
+
+}
+
+
+
+
+
+
+// 各ノートのラベルを更新する
+export const updateNoteLabelsApi = async (
+    noteId: number,
+    labelIds: number[]
+) => {
+
+
+    const res = await api.patch(
+        `/notes/${noteId}/`,
+        {
+            label_ids: labelIds,
+        },
+
+    );
+
+    return res.data;
+};
+
 
 
 
@@ -249,58 +295,13 @@ export const emptyTrashApi = async () => {
 
 
 
-// 各ノートのラベルを更新する
-export const updateNoteLabelsApi = async (
-    noteId: number,
-    labelIds: number[]
-) => {
-
-    // const token = localStorage.getItem("access");
-
-    const res = await api.patch(
-        `/notes/${noteId}/`,
-        {
-            label_ids: labelIds,
-        },
-        // {
-        //     headers: {
-        //         Authorization:
-        //             `Bearer ${token}`
-        //     }
-        // }
-    );
-
-    return res.data;
-};
 
 
 
 
 
-// ノートの背景色を変更する
-export const updateNoteColorApi = async (
-    id: number,
-    color: string
-) => {
 
-    // const token = localStorage.getItem("access");
 
-    const res = await api.patch(
-        `notes/${id}/`,
-        {
-            color
-        },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
-
-    );
-
-    return res.data;
-
-}
 
 
 
@@ -398,7 +399,6 @@ export const uploadNoteImageApi = async (
     image: File,
 ) => {
 
-    // const token = localStorage.getItem("access");
 
     const formData = new FormData();
 
@@ -408,11 +408,7 @@ export const uploadNoteImageApi = async (
     const res = await api.post(  // resにはサーバーから返ってきたレスポンス全体が渡ってくる。
         `notes/${noteId}/images/`,
         formData,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 
     return res.data;
