@@ -65,11 +65,11 @@ type Props = {
         is_pinned: boolean,
     ) => Promise<void>;
 
-    panelType: "label" | null;
+    panelType: "label" | "history" | null;
 
     setPanelType: React.Dispatch<
             React.SetStateAction<
-                "label" | null
+                "label" | "history" | null
             >
         >;
 

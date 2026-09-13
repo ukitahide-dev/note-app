@@ -45,11 +45,11 @@ type Props = {
             >
         >;
 
-    panelType: "label" | null;
+    panelType: "label" | "history" | null;
 
     setPanelType: React.Dispatch<
             React.SetStateAction<
-                "label" | null
+                "label" | "history" | null
             >
         >;
 
@@ -91,9 +91,9 @@ export default function NoteGrid ({
             {notes.map((note) => (
 
                 <CardComponent
+
                     key={note.id}
                     note={note}
-
                     openMenuId={openMenuId}
                     setOpenMenuId={setOpenMenuId}
                     openColorId={openColorId}
@@ -109,7 +109,7 @@ export default function NoteGrid ({
         </div>
 
 
-    )
+    );
 
 
 }

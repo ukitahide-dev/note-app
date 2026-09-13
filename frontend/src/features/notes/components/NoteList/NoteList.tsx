@@ -21,9 +21,6 @@ import SortSelect from "../SortSelect/SortSelect";
 type Props = {
     notes: Note[];
     pinnedNotes: Note[];
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
 
     enableSort: boolean;
 };
@@ -37,7 +34,6 @@ type Props = {
 export default function NoteList({
     notes,
     pinnedNotes,
-    // setNotes,
     enableSort,
 
 }: Props) {
@@ -62,10 +58,18 @@ export default function NoteList({
 
     } = useNoteStore();
 
-    // const pinnedNotes = notes.filter((note) => note.is_pinned);
-    // const normalNotes = notes.filter((note) => !note.is_pinned);
 
-    // const normalNotes = notes;
+
+    const noteGridProps = {
+        openMenuId,   // 省略記法: 本当は、openMenuId: openMenuId
+        setOpenMenuId,
+        openColorId,
+        setOpenColorId,
+        openNoteDetailId,
+        setOpenNoteDetailId,
+        panelType,
+        setPanelType,
+    };
 
 
 
@@ -76,10 +80,10 @@ export default function NoteList({
     // ドラッグ終了時に実行される関数
     const handleNormalDragEnd = (event: any) => {
 
-        const { active, over } = event; // event.active, event.overを分割代入で取得。active: ドラッグしてた要素。over: 上に乗った(移動先の)相手。
+        const { active, over } = event;  // event.active, event.overを分割代入で取得。active: ドラッグしてた要素。over: 上に乗った(移動先の)相手。
 
-        if (!over) return; // 上に乗った相手がいないなら終了
-        if (active.id === over.id) return; // 同じ場所なら何もしない
+        if (!over) return;  // 移動先の相手がいないなら終了
+        if (active.id === over.id) return;  // 同じ場所なら何もしない
 
         const oldIndex = notes.findIndex((note) => note.id === active.id);
         const newIndex = notes.findIndex((note) => note.id === over.id);
@@ -92,24 +96,7 @@ export default function NoteList({
 
         reorderNotes(newNotes);
 
-        // setNotes((prev) => {  // prevは更新直前の最新のstate
 
-        //     const oldIndex =
-        //         prev.findIndex(
-        //             (note) => note.id === active.id
-        //         );
-
-        //     const newIndex =
-        //         prev.findIndex(
-        //             (note) => note.id === over.id
-        //         );
-
-        //     return arrayMove(
-        //         prev,  // 並び替え対象の配列
-        //         oldIndex,  // 移動させたい要素の現在位置
-        //         newIndex  // 移動先位置
-        //     );
-        // });
     };
 
 
@@ -172,16 +159,17 @@ export default function NoteList({
                             >
 
                                 <NoteGrid
+                                    {...noteGridProps}
                                     enableSort={true}
                                     notes={pinnedNotes}
-                                    openMenuId={openMenuId}
-                                    setOpenMenuId={setOpenMenuId}
-                                    openColorId={openColorId}
-                                    setOpenColorId={setOpenColorId}
-                                    openNoteDetailId={openNoteDetailId}
-                                    setOpenNoteDetailId={setOpenNoteDetailId}
-                                    panelType={panelType}
-                                    setPanelType={setPanelType}
+                                    // openMenuId={openMenuId}
+                                    // setOpenMenuId={setOpenMenuId}
+                                    // openColorId={openColorId}
+                                    // setOpenColorId={setOpenColorId}
+                                    // openNoteDetailId={openNoteDetailId}
+                                    // setOpenNoteDetailId={setOpenNoteDetailId}
+                                    // panelType={panelType}
+                                    // setPanelType={setPanelType}
                                 />
 
                             </SortableContext>
@@ -192,29 +180,30 @@ export default function NoteList({
                         <NoteGrid
                             enableSort={false}
                             notes={pinnedNotes}
-                            openMenuId={openMenuId}
-                            setOpenMenuId={setOpenMenuId}
-                            openColorId={openColorId}
-                            setOpenColorId={setOpenColorId}
-                            openNoteDetailId={openNoteDetailId}
-                            setOpenNoteDetailId={setOpenNoteDetailId}
-                            panelType={panelType}
-                            setPanelType={setPanelType}
+                            {...noteGridProps}
+                            // openMenuId={openMenuId}
+                            // setOpenMenuId={setOpenMenuId}
+                            // openColorId={openColorId}
+                            // setOpenColorId={setOpenColorId}
+                            // openNoteDetailId={openNoteDetailId}
+                            // setOpenNoteDetailId={setOpenNoteDetailId}
+                            // panelType={panelType}
+                            // setPanelType={setPanelType}
                         />
                     )}
 
                     <h3>その他</h3>
 
-                    <SortSelect
-                        ordering={ordering}
-                        onPageOrderChange={setOrdering}
-                        manualOrderValue={"order"}
-                        // onPageOrderChange={async (ordering) => {
-                        //     await setOrdering(ordering);
-                        // }}
-                    />
                 </>
             )}
+
+
+            <SortSelect
+                ordering={ordering}
+                onPageOrderChange={setOrdering}
+                manualOrderValue={"order"}
+
+            />
 
             {/* 📝 通常ノート */}
             {canSortNormalNotes ? (
@@ -230,16 +219,17 @@ export default function NoteList({
                     >
 
                         <NoteGrid
+                            {...noteGridProps}
                             enableSort={true}
                             notes={notes}
-                            openMenuId={openMenuId}
-                            setOpenMenuId={setOpenMenuId}
-                            openColorId={openColorId}
-                            setOpenColorId={setOpenColorId}
-                            openNoteDetailId={openNoteDetailId}
-                            setOpenNoteDetailId={setOpenNoteDetailId}
-                            panelType={panelType}
-                            setPanelType={setPanelType}
+                            // openMenuId={openMenuId}
+                            // setOpenMenuId={setOpenMenuId}
+                            // openColorId={openColorId}
+                            // setOpenColorId={setOpenColorId}
+                            // openNoteDetailId={openNoteDetailId}
+                            // setOpenNoteDetailId={setOpenNoteDetailId}
+                            // panelType={panelType}
+                            // setPanelType={setPanelType}
                         />
 
                     </SortableContext>
@@ -248,16 +238,17 @@ export default function NoteList({
             ) : (
                 // 通常ノートが「手動順」以外なら通常表示
                 <NoteGrid
+                    {...noteGridProps}
                     enableSort={false}
                     notes={notes}
-                    openMenuId={openMenuId}
-                    setOpenMenuId={setOpenMenuId}
-                    openColorId={openColorId}
-                    setOpenColorId={setOpenColorId}
-                    openNoteDetailId={openNoteDetailId}
-                    setOpenNoteDetailId={setOpenNoteDetailId}
-                    panelType={panelType}
-                    setPanelType={setPanelType}
+                    // openMenuId={openMenuId}
+                    // setOpenMenuId={setOpenMenuId}
+                    // openColorId={openColorId}
+                    // setOpenColorId={setOpenColorId}
+                    // openNoteDetailId={openNoteDetailId}
+                    // setOpenNoteDetailId={setOpenNoteDetailId}
+                    // panelType={panelType}
+                    // setPanelType={setPanelType}
                 />
 
             )}
@@ -266,189 +257,4 @@ export default function NoteList({
 
     );
 
-
-
-
-
-    // return canSortNormalNotes ? (
-
-    //     <>
-    //         {/* 📌 ピン留めノート */}
-    //         {pinnedNotes.length > 0 && (
-    //             <>
-    //                 <h3>📌 固定済み</h3>
-
-    //                 <SortSelect
-    //                     ordering={pinnedOrdering}
-    //                     onPageOrderChange={async (pinnedOrdering) => {
-    //                         await setPinnedOrdering(pinnedOrdering);
-    //                     }}
-    //                     // onPageOrderChange={setPinnedOrdering}
-    //                 />
-
-
-    //                 <DndContext
-    //                     collisionDetection={closestCenter}
-    //                     onDragEnd={handlePinnedDragEnd}
-    //                 >
-
-    //                     <SortableContext
-    //                         items={pinnedNotes.map((note) => note.id)}
-    //                         strategy={rectSortingStrategy}
-    //                     >
-
-    //                         <NoteGrid
-    //                             enableSort={true}
-    //                             notes={pinnedNotes}
-    //                             openMenuId={openMenuId}
-    //                             setOpenMenuId={setOpenMenuId}
-    //                             openColorId={openColorId}
-    //                             setOpenColorId={setOpenColorId}
-    //                             openNoteDetailId={openNoteDetailId}
-    //                             setOpenNoteDetailId={setOpenNoteDetailId}
-    //                             panelType={panelType}
-    //                             setPanelType={setPanelType}
-    //                         />
-
-    //                     </SortableContext>
-
-    //                 </DndContext>
-
-
-    //                 {/* <NoteGrid
-    //                     enableSort={false}
-    //                     notes={pinnedNotes}
-    //                     openMenuId={openMenuId}
-    //                     setOpenMenuId={setOpenMenuId}
-    //                     openColorId={openColorId}
-    //                     setOpenColorId={setOpenColorId}
-    //                     openNoteDetailId={openNoteDetailId}
-    //                     setOpenNoteDetailId={setOpenNoteDetailId}
-    //                     panelType={panelType}
-    //                     setPanelType={setPanelType}
-    //                 /> */}
-
-    //                 <h3>その他</h3>
-    //             </>
-    //         )}
-
-    //         {/* 📝 通常ノート */}
-    //         <DndContext
-    //             collisionDetection={closestCenter}
-    //             onDragEnd={handleNormalDragEnd}
-    //         >
-    //             <SortableContext
-    //                 items={notes.map((note) => note.id)}
-    //                 strategy={rectSortingStrategy}
-    //             >
-    //                 <NoteGrid
-    //                     enableSort={true}
-    //                     notes={notes}
-    //                     openMenuId={openMenuId}
-    //                     setOpenMenuId={setOpenMenuId}
-    //                     openColorId={openColorId}
-    //                     setOpenColorId={setOpenColorId}
-    //                     openNoteDetailId={openNoteDetailId}
-    //                     setOpenNoteDetailId={setOpenNoteDetailId}
-    //                     panelType={panelType}
-    //                     setPanelType={setPanelType}
-    //                 />
-    //             </SortableContext>
-    //         </DndContext>
-    //     </>
-    // ) : (
-    //     // <DndContext  // DndContextは「drag&drop機能を有効化する範囲」。dragシステム全体管理。
-    //     //     collisionDetection={closestCenter}
-    //     //     onDragEnd={handleNormalDragEnd}  // ドラッグ修了時に実行される
-    //     // >
-
-    //     //     <SortableContext  // SortableContextは並び替え機能。
-    //     //         items={notes.map((note) => note.id)}  // 並び替え対象はid一覧という意味。
-    //     //         strategy={rectSortingStrategy}  // グリッド並び替え。カードUI向け。
-    //     //     >
-
-    //     //         <>
-
-    //     //             {pinnedNotes.length > 0 && (
-
-    //     //             <>
-    //     //                 <h3>📌 固定済み</h3>
-
-    //     //                 <NoteGrid
-    //     //                     enableSort={enableSort}
-    //     //                     notes={pinnedNotes}
-
-    //     //                     openMenuId={openMenuId}
-    //     //                     setOpenMenuId={setOpenMenuId}
-    //     //                     openColorId={openColorId}
-    //     //                     setOpenColorId={setOpenColorId}
-    //     //                     openNoteDetailId={openNoteDetailId}
-    //     //                     setOpenNoteDetailId={setOpenNoteDetailId}
-    //     //                     panelType={panelType}
-    //     //                     setPanelType={setPanelType}
-
-    //     //                 />
-
-    //     //                 <h3>その他</h3>
-
-    //     //             </>
-
-    //     //             )}
-
-    //     //         <NoteGrid
-    //     //             enableSort={enableSort}
-    //     //             notes={normalNotes}
-    //     //             openMenuId={openMenuId}
-    //     //             setOpenMenuId={setOpenMenuId}
-    //     //             openColorId={openColorId}
-    //     //             setOpenColorId={setOpenColorId}
-    //     //             openNoteDetailId={openNoteDetailId}
-    //     //             setOpenNoteDetailId={setOpenNoteDetailId}
-    //     //             panelType={panelType}
-    //     //             setPanelType={setPanelType}
-
-    //     //         />
-
-    //     //         </>
-
-    //     //     </SortableContext>
-
-    //     // </DndContext>
-
-    //     <>
-    //         {pinnedNotes.length > 0 && (
-    //             <>
-    //                 <h3>📌 固定済み</h3>
-
-    //                 <NoteGrid
-    //                     enableSort={enableSort}
-    //                     notes={pinnedNotes}
-    //                     openMenuId={openMenuId}
-    //                     setOpenMenuId={setOpenMenuId}
-    //                     openColorId={openColorId}
-    //                     setOpenColorId={setOpenColorId}
-    //                     openNoteDetailId={openNoteDetailId}
-    //                     setOpenNoteDetailId={setOpenNoteDetailId}
-    //                     panelType={panelType}
-    //                     setPanelType={setPanelType}
-    //                 />
-
-    //                 <h3>その他</h3>
-    //             </>
-    //         )}
-
-    //         <NoteGrid
-    //             enableSort={enableSort}
-    //             notes={normalNotes}
-    //             openMenuId={openMenuId}
-    //             setOpenMenuId={setOpenMenuId}
-    //             openColorId={openColorId}
-    //             setOpenColorId={setOpenColorId}
-    //             openNoteDetailId={openNoteDetailId}
-    //             setOpenNoteDetailId={setOpenNoteDetailId}
-    //             panelType={panelType}
-    //             setPanelType={setPanelType}
-    //         />
-    //     </>
-    // );
 }

@@ -58,7 +58,7 @@ type Props = {
 
     dragHandleProps?: any;
 
-    panelType: "label" | null;
+    panelType: "label" | "history" | null;
 
     setPanelType: React.Dispatch<
             React.SetStateAction<
