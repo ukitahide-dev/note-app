@@ -27,9 +27,7 @@ type Note = {
 
 type Props = {
     note: Note;
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
+
 
 }
 
@@ -41,12 +39,11 @@ type Props = {
 
 export function useNoteLabels({
     note,
-    // setNotes,
+
 
 }: Props) {
 
 
-    // const [isLabelOpen, setIsLabelOpen] = useState(false);
 
     const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map(
@@ -90,6 +87,7 @@ export function useNoteLabels({
 
     const updateLabels = async (
         newIds: number[]
+        
     ) => {
         // console.log(`newIds: ${newIds}`);
         // console.log(`setSelectedLabels(newIds)前のselectedLabels: ${selectedLabels}`)
@@ -123,11 +121,7 @@ export function useNoteLabels({
 
             updateLabels(newIds);
 
-            // setSelectedLabels(newIds);
-            // updateNoteLabels(note.id, selectedLabels);
-            // updateNoteLabels(note.id, newIds);
 
-            // updateLabels(newIds);
 
         } catch (error) {
 
@@ -167,9 +161,6 @@ export function useNoteLabels({
 
     return {
         labelStates,
-        // isLabelOpen,
-        // handleOpenLabel,
-        // handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,
@@ -179,33 +170,3 @@ export function useNoteLabels({
 }
 
 
- // useNoteStore使うことで、不要になった。
-    // const updateLabels = async (
-    //         newIds: number[]
-    //     ) => {
-
-    //         // setSelectedLabels(newIds);
-
-    //         const updatedNote = await updateNoteLabels(note.id, newIds);
-
-    //         // これで、ラベル追加・削除と同時に、各ノートのラベル名表示も反映される。
-    //         setNotes((prev) =>
-    //             prev.map((n) =>
-    //                 n.id === note.id ? updatedNote : n
-    //             )
-    //         );
-
-    //     }
-
-
-// const handleCloseLabel = () => {
-    //     // console.log("handleOpenLabelが実行された");
-    //     // setIsLabelOpen((prev) => !prev);  // こっちにすると、NoteCardからカラーパレット開いた場合、カラーパレットが閉じなくなる。原因不明。
-    //     setIsLabelOpen(false);
-    //     // setIsLabelOpen(true);
-    // }
-
-
-    // const handleOpenLabel = () => {
-    //     setIsLabelOpen(true);
-    // }

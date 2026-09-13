@@ -30,16 +30,12 @@ import { splitImages } from '../../utils/splitImages'
 
 
 type Props = {
+
   note: Note;
 
   onClose: () => void;
 
-//   setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
-
-// setOpenNoteDetailId: () => void;
-
-
-}
+};
 
 
 
@@ -49,7 +45,7 @@ export default function NoteDetailModal({
     note,
     onClose,
 
-    // setOpenNoteDetailId,
+
 
 }: Props) {
 
@@ -67,9 +63,13 @@ export default function NoteDetailModal({
 
 
     // useNoteLabels hooks
-    const { labelStates, handleSelectLabel, handleRemoveLabel } = useNoteLabels({
-        note,
-    })
+    const {
+        labelStates,
+        handleSelectLabel,
+        handleRemoveLabel
+    } = useNoteLabels({
+            note,
+        });
 
 
     // useNoteStore
@@ -182,6 +182,7 @@ export default function NoteDetailModal({
                     </div>
 
                     <div className={styles.images}>
+                        
                         <ImageList
                             images={normalImages}
                             isLarge={false}
@@ -224,12 +225,9 @@ export default function NoteDetailModal({
                     <div className={styles.bottom}>
                         <button
                             onClick={(e) => {
-                            e.stopPropagation()
-                            setPanelType('color')
-                            // setIsColorOpen((prev) => !prev);
-                            // setIsMenuOpen(false)
-                            // setOpenMenuId(null);
-                            // setOpenColorId((prev) => prev === note.id ? null : note.id);
+                                e.stopPropagation()
+                                setPanelType('color')
+
                             }}
                         >
                             🎨
@@ -238,10 +236,9 @@ export default function NoteDetailModal({
                         <button
                             className={styles.menuButton}
                             onClick={(e) => {
-                            e.stopPropagation()
-                            setPanelType('menu')
-                            // setIsMenuOpen((prev) => !prev);
-                            // setIsColorOpen(false)
+                                e.stopPropagation()
+                                setPanelType('menu')
+
                             }}
                         >
                             ⋮
@@ -250,15 +247,7 @@ export default function NoteDetailModal({
                         <button
                             className={styles.button}
                             onClick={handleClose}
-                            // onClick={
-                            //         async () => {
-                            //                 await handleSave(note.id, title, content);
-                            //                 await saveColor();
-                            //                 // onSave(note.id, title, content);
-                            //                 // onUpdateColor(note.id, tempColor);
 
-                            //             }
-                            //     }
                         >
                             閉じる
                         </button>
@@ -267,12 +256,11 @@ export default function NoteDetailModal({
                     {panelType === 'color' && (
                         <ColorPalette
                             onSelectColor={handleSelectColor}
-                            // onUpdateColor={onUpdateColor}
-                            // note={note}
                             tempColor={tempColor}
                             onClose={saveColor}
                         />
                     )}
+
 
                     {panelType === 'menu' && (
                     <NoteMenu
@@ -287,13 +275,11 @@ export default function NoteDetailModal({
                                 note.color,
                             )
                         }
-                        // onDuplicateNote={() => onDuplicateNote(note)}
                     />
                     )}
 
                     {panelType === 'label' && (
                         <LabelPanel
-                            // selectedLabels={selectedLabels}
                             labelStates={labelStates}
                             onSelectLabel={handleSelectLabel}
                         />

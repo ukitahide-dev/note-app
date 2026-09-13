@@ -11,10 +11,13 @@ import {
     getFavoriteNotesApi,
 
     getNotesApi,
+    getPinnedNotesApi,
     getTrashNotesApi,
     incrementNoteViewApi,
     moveToTrashApi,
     reorderNoteImageApi,
+    reorderNotesApi,
+    reorderPinnedNotesApi,
     restoreNoteApi,
     updateNoteApi,
     updateNoteColorApi,
@@ -28,6 +31,8 @@ import { useErrorStore } from "../../../shared/stores/useErrorStore";
 // import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
 
+import axios  from "axios";
+
 
 type DeletedNote = {
     note: Note,
@@ -38,6 +43,8 @@ type DeletedNote = {
 type NoteStore = {
 
     notes: Note[];
+
+    pinnedNotes: Note[];
 
     currentPage: number;
     count: number;
@@ -50,6 +57,10 @@ type NoteStore = {
     ordering: string;
     setOrdering: (ordering: string) => Promise<void>;
 
+    pinnedOrdering: string;
+    setPinnedOrdering: (
+        ordering: string
+    ) => Promise<void>;
 
 
 
@@ -62,18 +73,16 @@ type NoteStore = {
 
     hideUndo: () => void;
 
-
-    // errorMessage: string | null;
-
-    // setError: (error: unknown) => void;
-
-    // clearError: () => void;
-
-
     fetchNotes: (
         page?: number,
         pageSize?: number,
         ordering?: string,
+    ) => Promise<void>;
+
+
+    fetchPinnedNotes: (
+        ordering?: string,
+
     ) => Promise<void>;
 
 
@@ -117,6 +126,9 @@ type NoteStore = {
 
     restoreNote: (id: number) => Promise<void>;
 
+
+
+
     emptyTrash: () => Promise<void>;
 
     moveSelectedToTrash: (ids: number[]) => Promise<void>;
@@ -150,6 +162,18 @@ type NoteStore = {
     => Promise<void>;
 
 
+
+    reorderNotes: (
+        newNotes: Note[],
+
+    ) => Promise<void>;
+
+
+    reorderPinnedNotes: (
+        notes: Note[]
+    ) => Promise<void>;
+
+
     undoDelete: () => Promise<void>;
 
 
@@ -166,6 +190,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     notes: [],
 
+    pinnedNotes: [],
+
     currentPage: 1,
     count: 0,
     next: null,
@@ -173,9 +199,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     pageSize: 20,
 
-    ordering: "-created_at",
+    // ordering: "-created_at",
+    ordering: "order",
 
-    // deletedNote: null,
+    pinnedOrdering: "pinned_order",
+
+
 
     deletedNotes: [],
 
@@ -187,21 +216,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     errorMessage: null,
 
 
-    // setError: (error) => {
 
-    //     console.error(error);
-
-    //     set({
-    //         errorMessage: getApiErrorMessage(error)
-    //     })
-
-    // },
-
-    // clearError: () => {
-    //     set({
-    //         errorMessage: null,
-    //     })
-    // },
     isFetchtingNotes: false,
 
 
@@ -209,11 +224,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     fetchNotes: async (
         page = 1,  // pageが渡されなかったら1を使う。
         pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
-        ordering = "-created_at",
+        // ordering = "-created_at",
+        ordering = "order",
 
     ) => {
 
-        console.log(`pageSize: ${pageSize}`);
+        // console.log(`pageSize: ${pageSize}`);
 
         set({
             isFetchtingNotes: true,
@@ -248,6 +264,29 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         }
 
+    },
+
+
+
+    fetchPinnedNotes: async (
+        ordering = "pinned_order",
+
+    ) => {
+
+        try {
+
+            const data = await getPinnedNotesApi(ordering);
+
+            set({
+                pinnedNotes: data,
+            });
+
+        } catch (error) {
+
+            useErrorStore.getState().setError(error);
+            console.error(error);
+
+        }
     },
 
 
@@ -312,8 +351,18 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         });
 
-        // await get().fetchNotes(1, get().pageSize, ordering);
+        await get().fetchNotes(1, get().pageSize, ordering);
 
+    },
+
+
+    setPinnedOrdering: async (ordering) => {
+
+        set({
+            pinnedOrdering: ordering,
+        });
+
+        await get().fetchPinnedNotes(ordering);
     },
 
 
@@ -1085,6 +1134,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     updateNoteLabels: async (
         noteId: number,
         labelIds: number[],
+
     ) => {
 
         try {
@@ -1101,8 +1151,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } catch (error) {
 
-            // get().setError(error);
-            console.error(error);
+            if (axios.isAxiosError(error)) {
+                console.error("response data:", error.response?.data);
+                console.error("response status:", error.response?.status);
+            }
 
         }
 
@@ -1184,6 +1236,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     deleteNoteImage: async (
         noteId: number,
         imageId: number,
+
     ) => {
 
 
@@ -1237,7 +1290,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         }));
 
-        console.log(`reorderedImages: ${reorderedImages}`);
+        // console.log(`reorderedImages: ${reorderedImages}`);
 
 
         try {
@@ -1267,6 +1320,103 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
 
 
+
+    },
+
+
+
+
+
+    reorderNotes: async (
+        newNotes: Note[],
+
+    ) => {
+
+
+        const orders = newNotes
+            .map((note) => note.order)
+            .sort((a, b) => a - b);
+
+
+        console.log(orders);
+
+        // Apiに渡すデータに変換するため、idとorderだけを抽出。
+        const reorderedNotes = newNotes.map((note, index) => ({
+
+            id: note.id,
+            order: orders[index],
+
+        }));
+
+
+        // フロントで更新するために、orderをここで書き換える。newNotesのままだと、orderが書き換えられていないから。
+        const updatedNotes = newNotes.map((note, index) => ({
+
+            ...note,
+            order: orders[index],
+
+        }));
+
+
+
+        // const reorderedNotes = newNotes.map((note, index) => ({
+
+        //     id: note.id,
+        //     order: index,
+
+        // }));
+
+        console.log(reorderedNotes);
+
+
+        try {
+
+            await reorderNotesApi(reorderedNotes);
+
+            set({
+                notes: updatedNotes,
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    },
+
+
+
+
+    reorderPinnedNotes: async (
+        newPinnedNotes: Note[],
+
+    ) => {
+
+
+        const reorderedNotes = newPinnedNotes.map((note, index) => ({
+
+            id: note.id,
+            pinned_order: index,
+
+        }));
+
+
+        try {
+
+            await reorderPinnedNotesApi(reorderedNotes);
+
+            set({
+                pinnedNotes: newPinnedNotes
+            });
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     },
 

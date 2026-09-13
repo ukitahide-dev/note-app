@@ -12,6 +12,8 @@ from .serializers import (
     NoteImageSerializer,
     ViewTimeSerializer,
     NoteImageReorderSerializer,
+    NoteReorderSerializer,
+    NotePinnedReorderSerializer,
 )
 
 from rest_framework.decorators import action
@@ -26,6 +28,12 @@ from django.utils import timezone
 
 from django.core.files.storage import default_storage
 from django.db.models import F
+
+from django.db import models
+
+
+
+
 
 
 
@@ -56,13 +64,16 @@ class NoteViewSet(ModelViewSet):
         "updated_at",
         "title",
         "view_count",
-        "total_view_seconds"
+        "total_view_seconds",
+        "order",
+        "pinned_order",
     ]
 
     # ordering指定がなかった場合のデフォルト。
-    ordering = [
-        "-created_at"
-    ]
+    ordering = ["order"]
+    # ordering = [
+    #     "-created_at"
+    # ]
 
 
 
@@ -95,7 +106,8 @@ class NoteViewSet(ModelViewSet):
             )
         else:
             queryset = queryset.filter(
-                is_deleted=False
+                is_deleted=False,
+                is_pinned=False,
             )
 
 
@@ -106,10 +118,7 @@ class NoteViewSet(ModelViewSet):
         elif is_favorite == "false":
             queryset = queryset.filter(is_favorite=False)
 
-        # if is_favorite:
-        #     queryset = queryset.filter(
-        #         is_favorite=True
-        #     )
+
 
 
         return queryset   # DRFに候補データを渡す。
@@ -118,15 +127,28 @@ class NoteViewSet(ModelViewSet):
 
 
     def perform_create(self, serializer):  # perform_createは、POSTされたときに保存処理をカスタムする場所
+
+        last_order = Note.objects.filter(
+            user=self.request.user
+        ).aggregate(
+            max_order=models.Max("order")
+        )["max_order"]
+
+        next_order = 0 if last_order is None else last_order + 1
+
         serializer.save(
-            user=self.request.user   # ノート作成時にサーバー側で自動で user を付ける。フロントからのなりすましを防ぐ。
+            user=self.request.user,   # ノート作成時にサーバー側で自動で user を付ける。フロントからのなりすましを防ぐ。
+            order=next_order,
         )
 
 
 
-    # Noteを更新する直前に、このアプリ固有のルールだけ追加する。
-    def perform_update(self, serializer):  # この時点で、serializerにはバリデーションを通過した安全なデータが入っている。DRF標準のpartial_update()の内部で行われている。
 
+
+    # Noteを更新する直前に、このアプリ固有のルールだけ追加する。更新するときに、何を追加でやるかを担当する場所。
+    def perform_update(self, serializer):  # この時点で、serializerにはバリデーションを通過した安全なデータが入っている。DRF標準のpartial_update()の内部で行われている。対象のNote → serializer.instance。検証済みの変更(リクエスト)内容 → serializer.validated_data。
+
+        # print(serializer.validated_data)
         note = serializer.instance  # partial_update()内部で取得された、ノートinstanceを取得している。self.get_object(): PATCH → partial_update()の過程で実行される。URLで指定されたIDのオブジェクトを、get_queryset() の範囲から1件取得する。get_queryset() で許可された範囲から、URLのPKに一致する1件を取得する。ex) PATCH /api/notes/123/　まず、get_queryset()で候補が絞られ、get_object()で、その候補から対象の1件を取得する。srerializer.instanceはそのデータそのもの。
 
         # note = self.get_object()  # self.get_object(): PATCH → partial_update()の過程で実行される。URLで指定されたIDのオブジェクトを、get_queryset() の範囲から1件取得する。get_queryset() で許可された範囲から、URLのPKに一致する1件を取得する。ex) PATCH /api/notes/123/ まず、get_queryset()で候補が絞られ、get_object()で、その候補から対象の1件を取得する。srerializer.instanceはそのデータそのもの。
@@ -156,7 +178,8 @@ class NoteViewSet(ModelViewSet):
 
         with transaction.atomic():
 
-            serializer.save()
+            super().perform_update(serializer)
+            # serializer.save()
 
             note.refresh_from_db()   #  DBに現在保存されている最新状態を note に読み直す。
 
@@ -194,83 +217,49 @@ class NoteViewSet(ModelViewSet):
 
 
 
-    # def partial_update(self, request, *args, **kwargs):
+    # ピン止めノート取得。通常ノートとは違い、pinned_orderを使って並び替える。ページネーションには含まない。だから、ここで通常ノートとは違う独自の処理を書く。
+    @action(detail=False, methods=["get"])
+    def pinned(self, request):
 
-    #     note = self.get_object()  # 更新前のノートを取得
-
-    #     print(request.data)
-
-
-    #     # 更新前の値を保存
-    #     old_title = note.title
-    #     old_content = note.content
-    #     old_color = note.color
-    #     old_is_deleted = note.is_deleted
+        notes = Note.objects.filter(
+            user=request.user,
+            is_deleted=False,
+            is_pinned=True,
+        )
 
 
+        ordering = request.query_params.get(
+            "ordering",
+            "pinned_order",
+        )
 
-    #     with transaction.atomic():
+        allowed_ordering = [
+            "pinned_order",
+            "-created_at",
+            "created_at",
+            "-updated_at",
+            "updated_at",
+            "title",
+            "-view_count",
+            "-total_view_seconds",
+        ]
 
-    #         # 通常の更新処理。DBを更新する。
-    #         response = super().partial_update(request, *args, **kwargs)  # DBを更新。親クラス(ModelViewSet)のpartial_updateを実行して
-
-    #         # 更新後の値を取得
-    #         note.refresh_from_db()
-
-
-    #         # 更新前にゴミ箱にはない、かつ、新しくゴミ箱に移されたノートの場合
-    #         if not old_is_deleted and note.is_deleted:
-    #             note.deleted_at = timezone.now()
-    #             note.save(
-    #                 update_fields=["deleted_at"]
-    #             )
-
-
-    #         # DB更新前と、更新後を比較
-    #         if old_title != note.title:
-    #             NoteHistory.objects.create(  # 左辺のnote、actionはNoteHistoryモデルのカラム名。
-    #                 note=note,  # 右辺のnoteは更新後のnote。
-    #                 action="タイトル変更"
-    #             )
+        if ordering not in allowed_ordering:
+            ordering = "pinned_order"
 
 
-    #         if old_content != note.content:
-    #             NoteHistory.objects.create(
-    #                 note=note,
-    #                 action="内容を変更"
-    #             )
-
-
-    #         if old_color != note.color:
-    #             NoteHistory.objects.create(
-    #                 note=note,
-    #                 action="背景色を変更"
-    #             )
-
-
-        # return response
+        notes = notes.order_by(ordering)
 
 
 
+        serializer = self.get_serializer(
+            notes,
+            many=True,
+        )
+
+        return Response(serializer.data)
 
 
-
-
-    # ゴミ箱内のノートを全て取得する
-    # @action(detail=False, methods=["get"])
-    # def trash(self, request):  # /notes/trash/へアクセスされたとき、この関数を実行する
-    #     notes = Note.objects.filter(
-    #         user=request.user,
-    #         is_deleted=True
-    #     ).order_by("-updated_at")
-
-
-    #     serializer = self.get_serializer(
-    #         notes,
-    #         many=True
-    #     )
-
-    #     return Response(serializer.data)
 
 
 
@@ -317,6 +306,7 @@ class NoteViewSet(ModelViewSet):
     # ノート単体の更新履歴を取得する
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):   # ex) GET /notes/24/history/
+
         note = self.get_object()  # ex) Note.objects.get(id=24)
 
         histories = note.histories.all()  # related_name="histories"。NoteモデルからHistoryモデルを逆参照。
@@ -333,10 +323,12 @@ class NoteViewSet(ModelViewSet):
     # ノートの閲覧数を増やす
     @action(detail=True, methods=["post"])  # detail=True は/notes/24/view/ のように1件のノートに対するAPIという意味。
     def view(self, request, pk=None):
+
         note = self.get_object()
 
-        note.view_count = F("view_count") + 1  # Pythonで計算する」のではなく、「データベースで計算してください」とお願いするための書き方。競合アクセスでカウントが正しく増えなくなることを防ぐ。１
-        note.save(update_fields=["view_count"])  # view_count だけ保存する。閲覧数を1増やしたいだけだから、余計なカラムは更新しないようにする。
+        note.view_count = F("view_count") + 1  # Pythonで計算するのではなく、「データベースで計算してください」とお願いするための書き方。競合アクセスでカウントが正しく増えなくなることを防ぐ。１
+        note.save(update_fields=["view_count"])
+
 
         note.refresh_from_db()
 
@@ -351,7 +343,7 @@ class NoteViewSet(ModelViewSet):
     @action(detail=True, methods=["patch"])
     def view_time(self, request, pk=None):
 
-        note = self.get_object()
+        note = self.get_object()  # Noteインスタンスをnote変数に入れる。python上のNoteインスタンス。
 
         # seconds = request.data.get("seconds", 0)  # HTTPリクエストのJSONから seconds を取り出して。なかったら0にして。これだと、Viewが直接リクエストデータを扱うことになる。
 
@@ -366,12 +358,15 @@ class NoteViewSet(ModelViewSet):
 
         seconds = serializer.validated_data["seconds"]   # serializerの検査を通過したデータを取り出す。
 
-        note.total_view_seconds += seconds
+        note.total_view_seconds = F("total_view_seconds") + seconds   # DBの total_view_seconds にsecondsを足せというF式を、Noteインスタンスの属性に設定。Pythonで、今の値を取得して計算するんじゃなくて、DBの中にある値を使って計算するという意味。DBにある total_view_seconds + seconds。
 
 
         note.save(
-            update_fields=["total_view_seconds"]
+            update_fields=["total_view_seconds"]  # DBを更新。
         )
+
+
+        note.refresh_from_db()   # このNoteインスタンスの値を、DBから読み直す。これをしないと、Noteインスタンスnoteのtotal_view_secondsがF式のままになる恐れがある。
 
 
         return Response(
@@ -383,17 +378,112 @@ class NoteViewSet(ModelViewSet):
 
 
 
+
+    @action(detail=False, methods=["patch"], url_path="reorder")
+    def reorder(self, request):
+
+        serializer = NoteReorderSerializer(
+            data=request.data,
+            many=True,
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+
+        with transaction.atomic():
+
+            for note_data in serializer.validated_data:
+
+                note_id = note_data["id"]
+                order = note_data["order"]
+
+                # NoteViewSet の get_queryset() が返したノートの中から、id=note_id のものを探す。これだと、get_querysetの取得条件に依存してしまう。get_querysetはViewSet全体の都合で作られた取得条件。将来的にget_querysetのコードが書き換えられると、それに依存してしまう。
+                # note = get_object_or_404(
+                #     self.get_queryset(),
+                #     id=note_id
+                # )
+
+                # def reorderの中で、どんなデータを扱うのかを明示的に書く。
+                note = get_object_or_404(
+                    Note.objects.filter(
+                        user=request.user,
+                        is_deleted=False,
+                        is_pinned=False,
+                    ),
+                    id=note_id,
+                )
+
+
+                note.order = order
+                note.save(
+                    update_fields=["order"]
+                )
+
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+    # ピン止めノートを並び替える
+    @action(detail=False, methods=["patch"],url_path="pinned/reorder")
+    def reorder_pinned(self, request):
+
+        serializer = NotePinnedReorderSerializer(
+            data=request.data,
+            many=True,
+        )
+
+        serializer.is_valid(raise_exception=True)
+
+        print(serializer.validated_data)
+
+
+        with transaction.atomic():
+
+            for note_data in serializer.validated_data:
+
+                note_id = note_data["id"]
+                pinned_order = note_data["pinned_order"]
+
+                note = get_object_or_404(
+                    Note.objects.filter(
+                        user=request.user,
+                        is_pinned=True,
+                        is_deleted=False,
+                    ),
+                    id=note_id,
+                )
+
+                note.pinned_order = pinned_order
+                note.save(update_fields=["pinned_order"])
+
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
 class LabelViewSet(ModelViewSet):
+
     serializer_class = LabelSerializer
     permission_classes = [IsAuthenticated]
 
 
     def get_queryset(self):
-        return Label.objects.filter(user=self.request.user)
+        return Label.objects.filter(
+            user=self.request.user
+        )
 
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(
+            user=self.request.user
+        )
+
 
 
 
@@ -411,7 +501,7 @@ class LabelViewSet(ModelViewSet):
 # --------------------------------------------
 class NoteImagesViewSet(ModelViewSet):
 
-    serializer_class = NoteImageSerializer
+    serializer_class = NoteImageSerializer   # このViewSetでSerializerを使うときは NoteImageSerializerを使う。
     permission_classes = [IsAuthenticated]
 
 
@@ -420,7 +510,7 @@ class NoteImagesViewSet(ModelViewSet):
     def get_queryset(self):  # get_queryset() は GET のためだけのメソッドじゃない。ModelViewSet が「オブジェクトを探す必要がある操作」では全部使われる。
 
         queryset = NoteImage.objects.filter(
-            note__user=self.request.user   # note__user: NoteImageからNoteを辿り、Userを辿る。
+            note__user=self.request.user   # note__user: NoteImageからNoteを辿り、Userを辿る。ログイン中のユーザーが所有しているNoteに紐づいている、レコードを抽出する。
         )
 
         note_pk = self.kwargs.get("note_pk")   # APIのURLの中に含まれている note_pk という値を、Djangoが self.kwargs から取り出している。URLの設定を、path("notes/<int:note_pk>/images/")のようにする必要がある。
@@ -435,8 +525,8 @@ class NoteImagesViewSet(ModelViewSet):
 
 
 
-    # 対象のノートに、新しく画像を追加する。 ex) POST /api/notes/24/images/ にアクセスすると実行される。
-    def perform_create(self, serializer):   #  親クラスの perform_createを上書き。perform_create() は「バリデーションが終わった後、実際に保存する直前のカスタマイズ場所」。 serializer は、リクエストデータをNoteImageSerializerに渡して、バリデーションを通過した状態のデータ。
+    # 対象のノートに、新しく画像を追加する。 ex) POST /api/notes/24/images/ にアクセスすると実行される。HTTPがPOSTの時は、get_queryset()は基本的に実行されない。
+    def perform_create(self, serializer):   #  親クラスの perform_createを上書き。perform_create() は「バリデーションが終わった後、実際に保存する直前のカスタマイズ場所」。 serializer は、リクエストデータをNoteImageSerializerに渡して、バリデーションを通過した状態のデータ。NoteImageSerializerのインスタンス。
         # perform_create(self, serializer) に入ってきた時点で、serializer の中にはフロントから送られた image を含むデータが入り、さらに is_valid() を通過している。perform_create(serializer) に来た時点で、フロントから送られて、バリデーションを通過した入力データを持っている。
 
 
@@ -444,14 +534,8 @@ class NoteImagesViewSet(ModelViewSet):
             Note,
             pk=self.kwargs["note_pk"],   # URLからノートIDを取得する。
             user=self.request.user,
+            is_deleted=False,
         )
-
-
-        # # ex) ログイン中のユーザーの24番のノートを取ってきて、という意味。
-        # note = Note.objects.get(
-        #     pk=self.kwargs["note_pk"],  # URLからノートIDを取得する。
-        #     user=self.request.user
-        # )
 
 
         last_image = note.images.order_by("-order").first()
@@ -465,7 +549,7 @@ class NoteImagesViewSet(ModelViewSet):
 
 
 
-        #  検証済みの画像データを、note と order を追加して、NoteImageとしてDBに保存してという意味。NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。
+        #  検証済みの画像データを、note と order を追加して、NoteImageとしてDBに保存してという意味。NoteImageモデルのnoteカラムに、取得したNoteオブジェクトを入れて保存して、という意味。NoteImageモデルに保存することになるのは、NoteImageSerializerで、NoteImageモデルを対象にすると書いているから。
         serializer.save(  # フロントから送られたimageは、すでにserializerに入っている。だから、ここでは書かない。
             note=note,  # 左辺はNoteImageモデルのnoteカラム。保存先をサーバーが指定している。つまり、フロント側からnoteは送らない設計。
             order=order,  # orderもサーバー側で決める。
@@ -537,6 +621,7 @@ class NoteImagesViewSet(ModelViewSet):
 # 「画像単体(Resource)」を操作する。
 # --------------------------------------------
 class ImageViewSet(ModelViewSet):
+
     serializer_class = NoteImageSerializer
     permission_classes = [IsAuthenticated]
 
@@ -548,11 +633,11 @@ class ImageViewSet(ModelViewSet):
 
 
 
-    def perform_destroy(self, instance):  # 親クラスのperform_destroyを上書き（オーバーライド）。親クラスのperform_destroyではなく、このImageViewSetのperform_destroyを使う。標準の削除処理を自分用に差し替えている。NoteImageモデルからデータを消すだけじゃなく、ファイルから画像を消したいから。
+    def perform_destroy(self, instance):  # 親クラスのperform_destroyを上書き（オーバーライド）。親クラスのperform_destroyではなく、このImageViewSetのperform_destroyを使う。標準の削除処理を自分用に差し替えている。NoteImageモデルからデータを消すだけじゃなく、ファイルから画像を消したいから。instanceにはNoteImageモデルインスタンスが入る。
 
         image_name = instance.image.name   # 削除対象の画像ファイル名を取得。ex) "note_images/abc.jpg"
 
-        instance.delete()  # DBの NoteImage レコードを削除。
+        instance.delete()  # NoteImage のDBレコードを削除する
 
 
         if image_name and default_storage.exists(image_name):

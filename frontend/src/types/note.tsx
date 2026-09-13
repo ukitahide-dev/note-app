@@ -27,6 +27,8 @@ export type Note = {
     view_count: number;
     total_view_seconds: number;
     created_at: string;
+    order: number,
+    pinned_order: number,
 };
 
 

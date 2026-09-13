@@ -16,16 +16,12 @@ type Props = {
 }
 
 
+
 export default function LabelItem ({
     label,
     onRemoveLabel,
 
 }: Props) {
-
-
-
-
-
 
 
     return (

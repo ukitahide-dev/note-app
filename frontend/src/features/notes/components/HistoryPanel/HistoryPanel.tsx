@@ -37,6 +37,7 @@ export function HistoryPanel ({
 
             const data = await getNoteHistoryApi(note.id);
             setHistories(data);
+            console.log(data);
 
         }
 

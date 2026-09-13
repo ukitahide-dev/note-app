@@ -143,7 +143,7 @@ export default function TrashNotesPage() {
                             await emptyTrash();
                             setIsModalOpen(false);
                             setSnackbarMessage("ゴミ箱内のノートを全て削除しました。")
-                            // setIsSnackbarOpen(true);
+
                         }
 
                     }

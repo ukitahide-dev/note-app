@@ -9,14 +9,13 @@ class Label(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(
-    #             fields=["name", "user"],
-    #             name="unique_label_per_user"
-    #         )
-        # ]
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "name"],
+                name="unique_label_name_per_user",
+            )
+        ]
 
 
 
@@ -34,9 +33,13 @@ class Note(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    pinned_order = models.PositiveIntegerField(default=0)    # ピン止めしたノートの順番を並べ替えるため。
+
 
     class Meta:
-        ordering = ["-created_at"]
+        # ordering = ["-created_at"]
+        ordering = ["order"]
 
 
 

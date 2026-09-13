@@ -6,26 +6,33 @@ import styles from "./SortSelect.module.css";
 
 
 type Props = {
+
+    ordering: string;
+
     onPageOrderChange: (
         ordering: string,
 
     ) => void;
+
+    manualOrderValue: "order" | "pinned_order";
 }
 
 
+// 親: NotesPage.tsx、
 
 export default function SortSelect({
+    ordering,
     onPageOrderChange,
+    manualOrderValue,
 
 }: Props) {
 
 
     // Store
-    const {
-        ordering,
-        // setOrdering
-        // changeOrdering,
-    } = useNoteStore();
+    // const {
+    //     ordering,
+
+    // } = useNoteStore();
 
 
 
@@ -44,7 +51,6 @@ export default function SortSelect({
                 className={styles.select}
                 value={ordering}
                 onChange={(e) => onPageOrderChange(e.target.value)}
-                // onChange={(e) => changeOrdering(e.target.value)}
             >
 
                 <option value="-created_at">
@@ -69,6 +75,10 @@ export default function SortSelect({
 
                 <option value="-total_view_seconds">
                     合計滞在時間順
+                </option>
+
+                <option value={manualOrderValue}>
+                    手動順
                 </option>
 
             </select>

@@ -7,7 +7,7 @@ import type { History } from "../../../types/note";
 export const getNotesApi = async (
     page: number = 1,
     pageSize: number = 20,
-    ordering: string = "-created_at",
+    ordering: string = "order",
 
 ) =>  {
 
@@ -30,6 +30,29 @@ export const getNotesApi = async (
     return res.data;
 
 }
+
+
+
+
+
+// ピン留めノートを取得する
+export const getPinnedNotesApi = async (
+    ordering: string = "pinned_order",
+
+) => {
+
+    const res = await api.get(
+        "/notes/pinned/",
+        {
+            params: {
+                ordering,
+            },
+        },
+    );
+
+    return res.data;
+
+};
 
 
 
@@ -124,6 +147,52 @@ export const createNoteApi = async (
 
 
 
+
+// ノートの並び順を変更する。
+export const reorderNotesApi = async (
+
+    notes: {
+        id: Number;
+        order: Number;
+    }[],
+
+) => {
+
+    const res = await api.patch(
+        "/notes/reorder/",
+        notes,
+    );
+
+
+    return res.data;
+
+}
+
+
+
+
+// ピン止めノートを並び替える
+export const reorderPinnedNotesApi = async (
+    notes: {
+        id: number;
+        pinned_order: number;
+    }[],
+
+) => {
+
+    const res = await api.patch(
+        "/notes/pinned/reorder/",
+        notes,
+    );
+
+
+    return res.data;
+
+}
+
+
+
+
 // ノートのタイトル、内容を変更する
 export const updateNoteApi = async (
     id: number,
@@ -180,6 +249,7 @@ export const updateNoteColorApi = async (
 export const updateNoteLabelsApi = async (
     noteId: number,
     labelIds: number[]
+
 ) => {
 
 
@@ -266,15 +336,11 @@ export const restoreNoteApi = async (id: number) => {
 
 // ノートを完全に削除する
 export const deleteNoteForeverApi = async (id: number) => {
-    // const token = localStorage.getItem("access");
+
 
     await api.delete(
         `/notes/${id}/`,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // }
+
     );
 }
 
@@ -428,15 +494,9 @@ export const deleteNoteImageApi = async(
 
 ) => {
 
-    // const token = localStorage.getItem("access");
-
     const res = await api.delete(
         `/note-images/${imageId}/`,
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // },
+
     );
 
     return res.data;

@@ -3,6 +3,44 @@
     min-height: 180px;
 }
 
+.images {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    flex-wrap: wrap;
+
+
+
+}
+
+
+.images > .image {
+    width: calc((100% - 4px) / 3);
+    aspect-ratio: 1;
+    /* width: calc(100% / 3); */
+    /* border-radius: 4%; */
+
+
+}
+
+.chars {
+    padding: 12px 10px;
+}
+
+
+.chars > .title {
+    font-size: 18px;
+    font-weight: 450;
+
+}
+
+
+.chars > .content {
+    font-size: 14px;
+    margin-top: 10px;
+    line-height: 1.8;
+}
+
 
 
 .actions {

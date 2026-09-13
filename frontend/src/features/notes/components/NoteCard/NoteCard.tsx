@@ -1,6 +1,6 @@
 import { useEffect, useRef,  } from "react";
 import Card from "../../../../shared/ui/Card/Card";
-// import { useNavigate } from "react-router-dom";
+
 import { uploadNoteImageApi } from "../../api/noteApi";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
@@ -19,7 +19,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels";
 import type { Note } from "../../../../types/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
-// import { useLabelStore } from "../../../labels/store/labelStore";
+
 import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 import LabelItem from "../LabelItem/LabelItem";
@@ -113,15 +113,12 @@ export default function NoteCard({
     // useNoteLabels hooksを使う
     const {
         labelStates,
-        // isLabelOpen,
-        // handleOpenLabel,
-        // handleCloseLabel,
         selectedLabels,
         handleSelectLabel,
         handleRemoveLabel,
     } = useNoteLabels({
         note,
-        // setNotes,
+
     });
 
 
@@ -148,7 +145,6 @@ export default function NoteCard({
 
     // Store
     const {
-
         createNote,
         moveToTrash,
         toggleFavorite,
@@ -176,6 +172,7 @@ export default function NoteCard({
     if (panelType === "label") {
 
         panel = (
+
             <LabelPanel
                 labelPanelRef={labelPanelRef}
                 selectedLabels={selectedLabels}
@@ -199,7 +196,6 @@ export default function NoteCard({
         panel = (
             <NoteMenu
                 menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
-                // onOpenLabel={handleOpenLabel}
                 onOpenLabel={() => setPanelType("label")}
                 onOpenHistory={() => setPanelType("history")}
                 onMoveToTrash={() => moveToTrash(note.id)}
@@ -335,6 +331,7 @@ export default function NoteCard({
 
     const handleImageChange = async (
         e: React.ChangeEvent<HTMLInputElement>
+
     ) => {
 
         const file = e.target.files?.[0];  // e.target.files は、選択されたファイル一覧。

@@ -39,10 +39,8 @@ export default function Pagination({
         count,
         previous,
         next,
-        // fetchNotes,
         pageSize,
-        ordering,
-        setPageSize,
+
     } = useNoteStore();
 
 
@@ -74,7 +72,6 @@ export default function Pagination({
                 disabled={!previous}
                 className={styles.arrowButton}
                 onClick={() => onPageChange(currentPage - 1)}
-                // onClick={() => fetchNotes(currentPage - 1, pageSize, ordering)}
             >
                 ←
             </button>
@@ -101,7 +98,6 @@ export default function Pagination({
                                 : styles.pageButton
                         }
                         onClick={() => onPageChange(Number(page))}
-                        // onClick={() => fetchNotes(Number(page), pageSize, ordering)}
                     >
                         {page}
 

@@ -1,12 +1,3 @@
-// ---- react ----
-// import { useEffect, useState } from "react";
-
-
-
-
-// ----api----
-// import { getNotes,  } from "../api/noteApi";
-// moveToTrash
 
 // ----components----
 import { useEffect } from "react";
@@ -28,34 +19,35 @@ import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
 
 
 
-// ---- types ----
-// import type { Note } from "../../../types/note";
-
-
 
 
 
 
 
 export default function NotesPage() {
-    // const [notes, setNotes] = useState<Note[]>([]);
-    // const [openMenuId, setOpenMenuId] = useState<number | null>(null);  // どのノートのメニューが開いているか」を全ノートで共有したいから、SortableNoteCardではなくて、このコンポーネントで定義する。
+
 
 
     const {
         notes,
+        pinnedNotes,
+
         fetchNotes,
+        fetchPinnedNotes,
+
         isFetchtingNotes,
 
         pageSize,
         ordering,
         setPageSize,
         setOrdering,
+
     } = useNoteStore();
 
 
     const {
         errorMessage
+
     } = useErrorStore();
 
 
@@ -63,7 +55,10 @@ export default function NotesPage() {
 
 
     useEffect(() => {
+
         fetchNotes();
+        fetchPinnedNotes();
+
     }, []);
 
 
@@ -72,10 +67,13 @@ export default function NotesPage() {
 
 
     return (
+
         <>
 
             <Pagination
+
                 onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+
                 onPageSizeChange={ async (size) => {
 
                     setPageSize(size);
@@ -87,7 +85,9 @@ export default function NotesPage() {
 
             />
 
-            <SortSelect
+            {/* <SortSelect
+                ordering={ordering}
+
                 onPageOrderChange={async (ordering) => {
 
                     setOrdering(ordering);
@@ -95,7 +95,7 @@ export default function NotesPage() {
                     await fetchNotes(1, pageSize, ordering);
 
                 }}
-            />
+            /> */}
 
             <div className={styles.container}>
 
@@ -114,6 +114,7 @@ export default function NotesPage() {
 
                     <NoteList
                         notes={notes}
+                        pinnedNotes={pinnedNotes}
                         enableSort={true}
 
                     />
@@ -148,12 +149,12 @@ export default function NotesPage() {
 
                 )}
 
-
-
-
             </div>
+
         </>
+
     )
+
 }
 
 

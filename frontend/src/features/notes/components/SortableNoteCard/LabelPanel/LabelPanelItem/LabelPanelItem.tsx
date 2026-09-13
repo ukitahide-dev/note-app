@@ -34,6 +34,7 @@ export default function LabelPanelItem({
     label,
     labelState,
     onSelectLabel,
+
 }: Props) {
 
 
@@ -44,10 +45,14 @@ export default function LabelPanelItem({
 
     // useEffectは、画面が描画された後に実行される
     useEffect(() => {
+
         if (checkboxRef.current) {  // checkboxRef.currentはinput要素のこと
+
             checkboxRef.current.indeterminate =
                 labelState?.state === "indeterminate";
+
         }
+
     }, [labelState]);
 
 
@@ -55,7 +60,9 @@ export default function LabelPanelItem({
 
 
     return (
+
         <label className={styles.labelPanellItem}>
+
             <input
                 ref={checkboxRef}
                 type="checkbox"
@@ -64,6 +71,8 @@ export default function LabelPanelItem({
             />
 
             <span>{label.name}</span>
+
         </label>
-    );
+
+);
 }

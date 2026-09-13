@@ -1,5 +1,4 @@
-// import { useEffect, useState, useRef } from "react";
-// import { useNavigate } from "react-router-dom";
+
 
 import {
     useSortable,
@@ -10,25 +9,6 @@ import {
 } from "@dnd-kit/utilities";
 
 
-// ---- components ----
-// import LabelPanel from "./LabelPanel/LabelPanel";
-
-
-// ---- shared ----
-// import Card from "../../../../shared/ui/Card/Card";
-
-
-// ---- api ----
-// import { updateNoteColor, updateNoteFavorite, updateNoteLabels } from "../../api/noteApi";
-
-
-// ---- shared ----
-// import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-
-
-//  ---- css ----
-// import cardStyles from "./SortableNoteCard.module.css";
-// import NoteMenu from "./NoteMenu/NoteMenu";
 import NoteCard from "../NoteCard/NoteCard";
 
 
@@ -40,28 +20,11 @@ import type { Note } from "../../../../types/note";
 
 
 
-// type Label = {
-//     id: number;
-//     name: string;
-// };
-
-// type Note = {
-//     id: number;
-//     title: string;
-//     content: string;
-//     color: string;
-//     is_favorite: boolean;
-//     labels:  Label[];  // labelsはLabel型の配列。ex) labels: [{id: 1, name: "ゲーム"}, {id: 2, name: "本"}]
-// };
-
-
 
 
 type Props = {
     note: Note;
-    // setNotes: React.Dispatch<
-    //     React.SetStateAction<Note[]>
-    // >;
+
 
     openMenuId: number | null;
 
@@ -72,7 +35,7 @@ type Props = {
             >
         >;
 
-    // onMoveToTrash: (id: number) => void;
+
 
     setOpenMenuId:
         React.Dispatch<
@@ -88,16 +51,7 @@ type Props = {
             >
         >;
 
-    // onSave: (
-    //     id: number,
-    //     title: string,
-    //     content: string,
-    // ) => Promise<void>;
 
-    // onUpdateColor: (
-    //     id: number,
-    //     color: string,
-    // ) => Promise<void>;
 
 
     onToggleFavorite: (
@@ -120,9 +74,7 @@ type Props = {
         >;
 
 
-    // onDuplicateNote: (
-    //     note: Note,
-    // ) => Promise<void>
+
 };
 
 
@@ -135,21 +87,19 @@ type Props = {
 
 export default function SortableNoteCard({
     note,
-    // setNotes,
+
     openMenuId,
     setOpenMenuId,
     openColorId,
     setOpenColorId,
     openNoteDetailId,
     setOpenNoteDetailId,
-    // onSave,
-    // onUpdateColor,
-    // onMoveToTrash,
+
     onToggleFavorite,
     onTogglePin,
     panelType,
     setPanelType,
-    // onDuplicateNote
+
 }: Props)
 {
 
@@ -198,18 +148,18 @@ export default function SortableNoteCard({
             ref={setNodeRef}
             style={style}
         >
+
             <NoteCard
                 note={note}
-                // setNotes={setNotes}
+
                 openMenuId={openMenuId}
                 setOpenMenuId={setOpenMenuId}
                 openColorId={openColorId}
                 setOpenColorId={setOpenColorId}
-                // onMoveToTrash={onMoveToTrash}
+
                 openNoteDetailId={openNoteDetailId}
                 setOpenNoteDetailId={setOpenNoteDetailId}
-                // onSave={onSave}
-                // onUpdateColor={onUpdateColor}
+
 
                 dragHandleProps={{
                     ...attributes,
@@ -221,8 +171,9 @@ export default function SortableNoteCard({
                 panelType={panelType}
                 setPanelType={setPanelType}
 
-                // onDuplicateNote={onDuplicateNote}
+
             />
+
         </div>
 
 

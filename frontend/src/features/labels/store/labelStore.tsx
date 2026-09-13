@@ -5,10 +5,10 @@ import type { Label } from "../../../types/note";
 
 // ---- api ----
 import {
-    getLabels,
-    createLabel,
-    updateLabel,
-    deleteLabel,
+    getLabelsApi,
+    createLabelApi,
+    updateLabelApi,
+    deleteLabelApi,
 } from "../../notes/api/labelApi";
 
 
@@ -18,6 +18,7 @@ import {
 
 
 type LabelStore = {
+
     labels: Label[];  // labelsはLabel型の配列
 
     fetchLabels: () => Promise<void>;
@@ -34,6 +35,7 @@ type LabelStore = {
     handleDeleteLabel: (
         id: number
     ) => Promise<void>;
+
 };
 
 
@@ -48,8 +50,8 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
         try {
 
-            const data = await getLabels();
-            console.log(data);
+            const data = await getLabelsApi();
+            // console.log(data);
 
             set({
                 labels: data  // グローバルstate更新。useLabelStore()使ってる全コンポーネントを再レンダリングする。
@@ -67,11 +69,12 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
     // ラベル作成
     handleCreateLabel: async (
         name: string
+
     ) => {
 
         try {
 
-            const newLabel = await createLabel(name);
+            const newLabel = await createLabelApi(name);
 
             set((state) => ({  // state は「現在のstoreの状態」。store = 状態をまとめた箱のこと。今回の場合は、{labels: [], fetchLabels: fn, handleCreateLabel: fn}全体のこと。今の labels に newLabel を追加して更新する処理。
                 labels: [
@@ -89,15 +92,16 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
 
 
-    // ラベル編集
+    // ラベル名編集
     handleUpdateLabel: async (
         id: number,
         name: string
+
     ) => {
 
         try {
 
-            const newLabel = await updateLabel(id, name);
+            const newLabel = await updateLabelApi(id, name);
 
             set((state) => {  // set() に渡してるのは関数。(state) => { }という関数。
 
@@ -136,7 +140,7 @@ export const useLabelStore = create<LabelStore>((set) => ({  // create()はZusta
 
         try {
 
-            await deleteLabel(id);
+            await deleteLabelApi(id);
 
             set((state) => ({
                 labels: state.labels.filter(

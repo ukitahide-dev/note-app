@@ -1,14 +1,14 @@
 // FavoritesPage.tsx
 
 import { useEffect, useState } from "react";
-import { getNotesApi } from "../../api/noteApi";
+// import { getNotesApi } from "../../api/noteApi";
 
 import NoteList from "../../components/NoteList/NoteList";
 
 
 // ---- types ----
-import type { Note } from "../../../../types/note";
-import { useNodeRef } from "@dnd-kit/utilities";
+// import type { Note } from "../../../../types/note";
+// import { useNodeRef } from "@dnd-kit/utilities";
 import { useNoteStore } from "../../store/useNoteStore";
 import Pagination from "../../components/Pagination/Pagination";
 import SortSelect from "../../components/SortSelect/SortSelect";
@@ -25,11 +25,13 @@ export default function FavoriteNotesPage() {
 
     const {
         notes,
+        pinnedNotes,
         fetchFavoriteNotes,
         pageSize,
         ordering,
         setPageSize,
         setOrdering,
+
     } = useNoteStore();
 
 
@@ -39,24 +41,6 @@ export default function FavoriteNotesPage() {
 
     }, []);
 
-    // const [notes, setNotes] = useState<Note[]>([]);
-
-    // useEffect(() => {
-
-    //     const fetchNotes = async () => {
-
-    //         const data = await getNotesApi();
-
-    //         setNotes(
-    //             data.filter(
-    //                 (note: Note) => note.is_favorite
-    //             )
-    //         );
-    //     };
-
-    //     fetchNotes();
-
-    // }, []);
 
 
 
@@ -64,6 +48,7 @@ export default function FavoriteNotesPage() {
 
     return (
         <>
+
         <Pagination
             onPageChange={(page) => fetchFavoriteNotes(page, pageSize, ordering)}
             onPageSizeChange={async (size) => {
@@ -74,6 +59,7 @@ export default function FavoriteNotesPage() {
         />
 
         <SortSelect
+
             onPageOrderChange={async (ordering) => {
 
                 setOrdering(ordering);
@@ -86,6 +72,8 @@ export default function FavoriteNotesPage() {
 
         <NoteList
             notes={notes}
+            pinnedNotes={pinnedNotes}
+            enableSort={false}
             // setNotes={setNotes}
         />
 

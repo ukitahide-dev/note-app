@@ -4,7 +4,8 @@ import api from "../../../shared/api/axios";
 
 
 // ラベルを取得する
-export const getLabels = async () => {
+export const getLabelsApi = async () => {
+
     const token = localStorage.getItem("access");
 
     const res = await api.get(
@@ -22,7 +23,8 @@ export const getLabels = async () => {
 
 
 // 新規ラベルを作成する
-export const createLabel = async (name: string) => {
+export const createLabelApi = async (name: string) => {
+
     const token = localStorage.getItem("access");
 
     const res = await api.post(
@@ -41,11 +43,13 @@ export const createLabel = async (name: string) => {
 
 
 
-// ラベルを編集する
-export const updateLabel = async (
+// ラベル名を編集する
+export const updateLabelApi = async (
     id: number,
     name: string
+
 ) => {
+
     const token = localStorage.getItem("access");
 
     const res = await api.patch(
@@ -66,8 +70,9 @@ export const updateLabel = async (
 
 
 // ラベルを削除する
-export const deleteLabel = async (
+export const deleteLabelApi = async (
     id: number
+
 ) => {
 
     const token = localStorage.getItem("access");

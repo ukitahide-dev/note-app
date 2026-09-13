@@ -15,24 +15,19 @@ import { useNoteStore } from "../../store/useNoteStore";
 // import { Snackbar } from "../../../../shared/ui/Snackbar/Snackbar";
 
 
+import type { Note } from "../../../../types/note";
 
 
-// 親: TrashNotesPage.tsx
 
 
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-};
+
 
 
 type Props = {
     note: Note;
     onDeleteSuccess: () => void;
     onRestoreNote: () => void;
-    // onRestore: (id: number) => void;   // useNoteStoreで不要になった
-    // onDelete: (id: number) => void;    // useNoteStoreで不要になった
+
 };
 
 
@@ -45,12 +40,13 @@ export default function TrashNoteCard({
     note,
     onDeleteSuccess,
     onRestoreNote,
-    // onRestore,
-    // onDelete,
+
 }: Props) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+
+
+
 
     // useNoteStore
     const {
@@ -65,11 +61,45 @@ export default function TrashNoteCard({
         <>
 
             <Card
+                style={{ backgroundColor: note.color }}
                 className={styles.trashCard}
             >
 
-                <h3>{note.title}</h3>
-                <p>{note.content}</p>
+                <div
+                    className={styles.images}
+                >
+
+                    {note.images.map((image) => (
+                        <img
+                            key={image.id}
+                            className={styles.image}
+                            src={image.image}
+                            // src={`http://127.0.0.1:8000${image.image}`}
+                            alt=""
+                        />
+
+                    ))}
+                </div>
+
+                <div
+                    className={styles.chars}
+                >
+
+                    <h3
+                        className={styles.title}
+                    >
+                        {note.title}
+                    </h3>
+
+                    <p
+                        className={styles.content}
+                    >
+                        {note.content}
+                    </p>
+
+                </div>
+
+
 
                 <div className={styles.actions}>
 
