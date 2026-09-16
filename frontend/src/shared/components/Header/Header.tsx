@@ -54,7 +54,7 @@ export default function Header({
 
 
     const [panelType, setPanelType] = useState<"color" | "menu" | "label" | null>(null);
-    // const [tempColor, setTempColor] = useState();
+
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -64,43 +64,41 @@ export default function Header({
 
 
 
-    // useSearchStore
+    // Store
     const {
         searchText,
-        setSearchText
+        setSearchText,
+
     } = useSearchStore();
 
 
 
 
-    // useNoteSelectionStore
+    // Store
     const {
-        selectedNoteIds,
+        selectedNoteIds,   // SelectedNotesの計算と、Headerの表示切替に使う。
         previewColor,
         setPreviewColor,
-        // clearSelection,
+
     } = useNoteSelectionStore();
 
 
 
-    // useNoteStoreを使う
+    // Store
     const {
         notes,
-        // moveSelectedToTrash,
-        // createNote,
         updateSelectedNoteColor,
         updateSelectedNotePin,
-        // duplicateSelectedNotes,
-        // updateSelectedNoteLabels,
+
     } = useNoteStore();
 
 
 
-
+    // hooks
     const {
-        // selectedNotes,
         labelStates,
         handleSelectLabel,
+
     } = useSelectedNoteLabels();
 
 
@@ -108,6 +106,7 @@ export default function Header({
     const {
         handleMoveToTrash,
         handleDuplicateNotes,
+
     } = useSelectedNoteActions();
 
 
@@ -121,87 +120,12 @@ export default function Header({
 
 
 
-    // useSelectedNoteLabels hooks に移した。
-    // 選択中のノートを抽出する
-    // const selectedNotes = notes.filter((note) => selectedNoteIds.includes(note.id));
-    // console.log(`selectedNotes: ${selectedNotes}`);
-
-
-    // const labelStates = labels.map((label) => {  // => {} と書いた場合は、アロー関数のこと。{}には関数内の処理を書く。 => ({})のように、()で囲むのは、省略記法。今回はifとか使いたいから、{}で、関数内の処理として書く必要がある。
-
-    //     const count = selectedNotes.filter((note) =>
-
-    //         note.labels.some((l) => l.id === label.id)  // 選択中のノートが、今見ているラベルを所持しているかを調べる。
-
-    //     ).length
-
-
-    //     if (count === 0) {
-
-    //         return {
-    //             id: label.id,
-    //             state: "unchecked",
-    //         }
-
-    //     }
-
-    //     if (count === selectedNotes.length) {
-
-    //         return {
-    //             id: label.id,
-    //             state: "checked",
-    //         }
-    //     }
-
-    //     return {
-    //         id: label.id,
-    //         state: "indeterminate",
-    //     }
-
-    // });
-
-
-
-
-    // const handleSelectLabel = (
-    //     labelId: number,
-
-    // ) => {
-
-    //     const labelState = labelStates.find((l) => l.id === labelId)!;  // 選択したラベルの状態を抽出する・!はTypescriptに、この値は絶対にnullやundefinedではないことを教える。!消すとlabelStateに赤線出る。
-
-
-    //     if (labelState.state === "checked") {
-    //         // すべてのノートから、今見ているラベルのチェックを外す
-    //         updateSelectedNoteLabels(selectedNoteIds, labelId, "remove");
-
-    //     } else {
-    //         // 全てのノートに、今見ているラベルのチェックを付ける
-    //         updateSelectedNoteLabels(selectedNoteIds, labelId, "add");
-    //     }
-
-
-
-
-
-    // }
 
 
 
     const handleSaveSelectedColor =  async (
 
     ) => {
-
-        // const state = useNoteSelectionStore.getState();
-
-        // console.log("store", state.previewColor);
-
-
-        // console.log("保存時", previewColor);
-
-
-        // console.log("color:", previewColor);
-        // console.log("ids:", selectedNoteIds);
 
 
         setPanelType(null);
@@ -223,6 +147,7 @@ export default function Header({
 
             const handleClickOutside = (
                 event: MouseEvent
+
             ) => {
 
 
@@ -252,31 +177,6 @@ export default function Header({
             };
 
         }, [previewColor]);  // previewColorを書かないと、previewColorの値が初回マウント時のまま、外クリックイベントに登録されてしまう。
-
-
-
-    // hooksに移した
-    // const handleMoveToTrash = async (
-
-    // ) => {
-
-    //     // console.log("handleMoveTrash実行");
-
-    //     setPanelType(null);
-
-    //     await moveSelectedToTrash(selectedNoteIds);
-
-
-    // }
-
-
-
-    // hooksに移した
-    // const handleDuplicateNotes = async () => {
-
-    //     await duplicateSelectedNotes(selectedNoteIds);
-
-    // }
 
 
 
@@ -316,7 +216,8 @@ export default function Header({
                             ) : (
                                 <BsPin
                                     size={20}
-                                    color="#22b4dc"
+                                    color="#f459fc"
+                                    // color="#22b4dc"
                                 />
                             )
                         }
@@ -335,7 +236,7 @@ export default function Header({
 
                     <button
                         onClick={(e) => {
-                            e.stopPropagation(); // これがないとdocumentにクリックが伝播してバグる
+                            e.stopPropagation();  // これがないとdocumentにクリックが伝播してバグる
                             setPanelType("menu");
                         }}
 
@@ -352,16 +253,7 @@ export default function Header({
                     <ColorPalette
                         onSelectColor={setPreviewColor}
                         paletteRef={paletteRef}
-                        // onClose={() => {
 
-                        //     console.log("onClose");
-                        //     console.log("onClose previewColor", previewColor);
-
-                        //     handleSaveSelectedColor();
-                        //     setPanelType(null);
-
-
-                        // }}
                     />
 
 
@@ -375,13 +267,13 @@ export default function Header({
                             await handleMoveToTrash();
                             setPanelType(null);
                         }}
-                        // onMoveToTrash={handleMoveToTrash}
+
                         onOpenLabel={() => setPanelType("label")}
                         onDuplicateNote={async () => {
                             await handleDuplicateNotes();
                             setPanelType(null);
                         }}
-                        // onDuplicateNote={handleDuplicateNotes}
+
 
                     />
 
@@ -389,11 +281,10 @@ export default function Header({
 
 
                 {panelType === "label" && (
-                    <LabelPanel
 
+                    <LabelPanel
                         labelStates={labelStates}
                         onSelectLabel={handleSelectLabel}
-
                     />
 
                 )}
@@ -401,7 +292,7 @@ export default function Header({
             </header>
 
 
-        ): (
+        ):(
 
 
             <header className={styles.header}>
@@ -460,7 +351,7 @@ export default function Header({
 
                 </div>
 
-                
+
 
             </header>
 
@@ -475,72 +366,3 @@ export default function Header({
 
 
 
-// useNoteStoreにmoveSelectedToTrashを作り、api呼び出しもそこに書いたことで、ここから不要になった。
-        // try {
-
-        //     await Promise.all(
-        //         selectedNoteIds.map(
-        //             (id) => moveToTrashApi(id)
-        //         )
-        //     )
-
-
-        // } catch (error) {
-
-        //     console.error(error);
-
-        // }
-
-
-
-// useNoteStoreにapi呼び出しも書くことで、不要になった
-        // try {
-
-        //     await Promise.all(
-        //         selectedNoteIds.map((id) =>
-        //             updateNoteColor(id, previewColor)
-        //         )
-        //     );
-
-
-
-
-        // } catch (error) {
-
-        //      console.log(error.response?.status);
-
-        //     // console.log(error.response?.data);
-        //     // console.error(error);
-
-        // }
-
-
-
-// useNoteStoreにduplicateSelectedNotes関数作ることで、これ以降いらなくなった。
-        // 書き方1
-        // for (const note of notes) {
-
-        //     if (selectedNoteIds.includes(note.id)) {
-        //         createNote(
-        //             note.title,
-        //             note.content,
-        //             note.labels.map((label) => label.id),
-        //             note.color
-        //         )
-        //     }
-
-        // }
-
-        // 書き方2
-        // await Promise.all(
-        //     notes
-        //         .filter(note => selectedNoteIds.includes(note.id))
-        //         .map(note =>
-        //             createNote(
-        //                 note.title,
-        //                 note.content,
-        //                 note.labels.map(label => label.id),
-        //                 note.color
-        //             )
-        //         )
-        //     );

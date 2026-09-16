@@ -1,74 +1,42 @@
-
 // ---- react ----
 import { useState } from "react";
-
 
 // ---- shared ui ----
 import Card from "../../../../shared/ui/Card/Card";
 import ConfirmModal from "../../../../shared/ui/ConfirmModal/ConfirmModal";
 
-
-
 // ---- css ----
-import styles from "./TrashNoteCard.module.css"
+import styles from "./TrashNoteCard.module.css";
 import { useNoteStore } from "../../store/useNoteStore";
 // import { Snackbar } from "../../../../shared/ui/Snackbar/Snackbar";
 
-
-import type { Note } from "../../../../types/note";
-
-
-
-
-
-
+import type { Note } from "../../../../types/api/note";
 
 type Props = {
     note: Note;
     onDeleteSuccess: () => void;
     onRestoreNote: () => void;
-
 };
 
-
-
-
 // 親: TrashNotesPage.tsx
-
 
 export default function TrashNoteCard({
     note,
     onDeleteSuccess,
     onRestoreNote,
-
 }: Props) {
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-
-
-
     // useNoteStore
-    const {
-        deleteNoteForever,
-        restoreNote,
-    } = useNoteStore();
-
-
+    const { deleteNoteForever, restoreNote } = useNoteStore();
 
     return (
-
         <>
-
             <Card
                 style={{ backgroundColor: note.color }}
                 className={styles.trashCard}
             >
-
-                <div
-                    className={styles.images}
-                >
-
+                <div className={styles.images}>
                     {note.images.map((image) => (
                         <img
                             key={image.id}
@@ -77,32 +45,16 @@ export default function TrashNoteCard({
                             // src={`http://127.0.0.1:8000${image.image}`}
                             alt=""
                         />
-
                     ))}
                 </div>
 
-                <div
-                    className={styles.chars}
-                >
+                <div className={styles.chars}>
+                    <h3 className={styles.title}>{note.title}</h3>
 
-                    <h3
-                        className={styles.title}
-                    >
-                        {note.title}
-                    </h3>
-
-                    <p
-                        className={styles.content}
-                    >
-                        {note.content}
-                    </p>
-
+                    <p className={styles.content}>{note.content}</p>
                 </div>
 
-
-
                 <div className={styles.actions}>
-
                     <button
                         onClick={async () => {
                             await restoreNote(note.id);
@@ -123,13 +75,8 @@ export default function TrashNoteCard({
                     >
                         完全削除
                     </button>
-
-
-
                 </div>
-
             </Card>
-
 
             <ConfirmModal
                 isOpen={isModalOpen}
@@ -144,14 +91,11 @@ export default function TrashNoteCard({
                 onClose={() => setIsModalOpen(false)}
             />
 
-
             {/* {isSnackbarOpen && (
                 <Snackbar
                     message="ノートを削除しました。"
                 />
             )} */}
-
-
         </>
     );
 }

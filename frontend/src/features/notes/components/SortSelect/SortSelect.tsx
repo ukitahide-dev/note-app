@@ -28,11 +28,7 @@ export default function SortSelect({
 }: Props) {
 
 
-    // Store
-    // const {
-    //     ordering,
-
-    // } = useNoteStore();
+    
 
 
 

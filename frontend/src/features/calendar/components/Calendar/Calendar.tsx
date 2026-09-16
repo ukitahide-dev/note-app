@@ -5,23 +5,19 @@ import styles from "./Calendar.module.css";
 import { useNoteStore } from "../../../notes/store/useNoteStore";
 import NoteDetailModal from "../../../notes/components/NoteDetailModal/NoteDetailModal";
 
-import type { Note } from "../../../../types/note";
+import type { Note } from "../../../../types/api/note";
 import { useCalendarTooltip } from "../../hooks/useCalendarTooltip";
 
-
 import {
-	getDaysInMonth,
-	createDays,
-	getFirstDayOfMonth,
-	createBlanks,
-} from "../../utils/calendarUtils"
+    getDaysInMonth,
+    createDays,
+    getFirstDayOfMonth,
+    createBlanks,
+} from "../../utils/calendarUtils";
 import { CalendarDay } from "../CalendarDay/CalendarDay";
 import { countNotesByDay } from "../../utils/calendarNoteUtils";
 
-
-
 export default function Calendar() {
-
     // store
     const { notes, fetchAllNotes } = useNoteStore();
 
@@ -29,32 +25,17 @@ export default function Calendar() {
         fetchAllNotes();
     }, []);
 
-
-	// hooks
-	const {
-		tooltip,
-		showTooltip,
-		hideTooltip,
-		stopTooltiptimer,
-	} = useCalendarTooltip();
-
-
-
-
-
-
-
-   
+    // hooks
+    const { tooltip, showTooltip, hideTooltip, stopTooltiptimer } =
+        useCalendarTooltip();
 
     // new Date(year, month, day) の month は 0始まり。
     const [currentDate, setCurrentDate] = useState(new Date()); // new Date(): 今この瞬間の日時オブジェクトが作られる。現在表示しているカレンダーの日付を状態として管理する。
 
-	const year = currentDate.getFullYear();
+    const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
 
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-
-
 
     // 「現実世界の今日」
     const today = new Date();
@@ -63,40 +44,24 @@ export default function Calendar() {
     const todayMonth = today.getMonth() + 1;
     const todayDate = today.getDate();
 
+    // 計算ロジックはutilsに移した
+    const daysInMonth = getDaysInMonth(year, month);
+    const days = createDays(daysInMonth);
 
-	// 計算ロジックはutilsに移した
-	const daysInMonth = getDaysInMonth(year, month);
-	const days = createDays(daysInMonth);
-
-
-	const firstDayInMonth = getFirstDayOfMonth(year, month);
-	const blanks = createBlanks(firstDayInMonth);
-
+    const firstDayInMonth = getFirstDayOfMonth(year, month);
+    const blanks = createBlanks(firstDayInMonth);
 
     // calendarNoteUtils
-    const noteCountByDay =
-        countNotesByDay(
-            notes,
-            year,
-            month,
-        );
-
-
-
+    const noteCountByDay = countNotesByDay(notes, year, month);
 
     function isToday(day: number) {
-        return year === todayYear &&
-            month === todayMonth &&
-            day === todayDate;
+        return year === todayYear && month === todayMonth && day === todayDate;
     }
-
-
 
     const handleDayMouseEnter = (
         e: React.MouseEvent<HTMLDivElement>,
         day: number,
     ) => {
-
         const rect = e.currentTarget.getBoundingClientRect();
 
         const notesOfDay = notes.filter((note) => {
@@ -109,24 +74,12 @@ export default function Calendar() {
             );
         });
 
-		showTooltip(notesOfDay, rect.right + 8, rect.top);
-
-
+        showTooltip(notesOfDay, rect.right + 8, rect.top);
     };
 
-
-
-
-
-
-
-
-	return (
-
+    return (
         <div className={styles.calendar}>
-
             <div className={styles.header}>
-
                 <button
                     onClick={() => setCurrentDate(new Date(year, month - 2, 1))}
                 >
@@ -142,11 +95,9 @@ export default function Calendar() {
                 >
                     →
                 </button>
-
             </div>
 
             <div className={styles.weekdays}>
-
                 <div>日</div>
                 <div>月</div>
                 <div>火</div>
@@ -154,22 +105,16 @@ export default function Calendar() {
                 <div>木</div>
                 <div>金</div>
                 <div>土</div>
-
             </div>
 
             <div className={styles.days}>
-
                 {/* 空白 */}
                 {blanks.map((_, index) => (
-                    <div key={`blank-${index}`}
-                        className={styles.blank}
-                    />
+                    <div key={`blank-${index}`} className={styles.blank} />
                 ))}
-
 
                 {/* 日付 */}
                 {days.map((day) => (
-
                     <CalendarDay
                         key={day}
                         day={day}
@@ -177,27 +122,19 @@ export default function Calendar() {
                         count={noteCountByDay[day] ?? 0}
                         onMouseEnter={(e) => handleDayMouseEnter(e, day)}
                         onMouseLeave={hideTooltip}
-
                     />
-
                 ))}
-
             </div>
 
-
             {tooltip && (
-
                 <div
                     className={styles.tooltip}
                     style={{
                         left: tooltip.x,
                         top: tooltip.y,
                     }}
-
-					onMouseEnter={stopTooltiptimer}
-
+                    onMouseEnter={stopTooltiptimer}
                     onMouseLeave={hideTooltip}
-
                 >
                     <h3>
                         {year}年{month}月のノート
@@ -208,17 +145,14 @@ export default function Calendar() {
                             key={note.id}
                             onClick={() => {
                                 setSelectedNote(note);
-								hideTooltip();
-
+                                hideTooltip();
                             }}
                         >
                             {note.title}
                         </div>
                     ))}
                 </div>
-
             )}
-
 
             {selectedNote && (
                 <NoteDetailModal
@@ -226,9 +160,6 @@ export default function Calendar() {
                     onClose={() => setSelectedNote(null)}
                 />
             )}
-
         </div>
-
     );
-
 }

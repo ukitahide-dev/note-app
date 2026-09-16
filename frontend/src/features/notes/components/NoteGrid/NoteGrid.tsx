@@ -1,65 +1,36 @@
 import NoteCard from "../NoteCard/NoteCard";
 import SortableNoteCard from "../SortableNoteCard/SortableNoteCard";
 
-
-import styles from './NoteGrid.module.css';
-
+import styles from "./NoteGrid.module.css";
 
 // ---- types ----
-import type { Note } from "../../../../types/note";
-
-
-
-
-
+import type { Note } from "../../../../types/api/note";
 
 type Props = {
     enableSort: boolean;
 
     notes: Note[];
 
-
-
     openMenuId: number | null;
 
     openColorId: number | null;
-    setOpenColorId: React.Dispatch<
-            React.SetStateAction<
-                number | null
-            >
-        >;
+    setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
 
-
-
-    setOpenMenuId:
-        React.Dispatch<
-            React.SetStateAction<
-                number | null
-            >
-        >;
+    setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
     openNoteDetailId: number | null;
-    setOpenNoteDetailId: React.Dispatch<
-            React.SetStateAction<
-                number | null
-            >
-        >;
+    setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
 
     panelType: "label" | "history" | null;
 
     setPanelType: React.Dispatch<
-            React.SetStateAction<
-                "label" | "history" | null
-            >
-        >;
+        React.SetStateAction<"label" | "history" | null>
+    >;
 
     dragHandleProps?: any;
-
 };
 
-
-
-export default function NoteGrid ({
+export default function NoteGrid({
     enableSort,
     notes,
 
@@ -71,27 +42,13 @@ export default function NoteGrid ({
     setOpenNoteDetailId,
     panelType,
     setPanelType,
-
-
 }: Props) {
-
-
-
     const CardComponent = enableSort ? SortableNoteCard : NoteCard;
 
-
-
-
-
     return (
-
-
         <div className={styles.notesContainer}>
-
             {notes.map((note) => (
-
                 <CardComponent
-
                     key={note.id}
                     note={note}
                     openMenuId={openMenuId}
@@ -102,14 +59,8 @@ export default function NoteGrid ({
                     setOpenNoteDetailId={setOpenNoteDetailId}
                     panelType={panelType}
                     setPanelType={setPanelType}
-
                 />
             ))}
-
         </div>
-
-
     );
-
-
 }

@@ -12,7 +12,7 @@ import { useNoteStore } from "../store/useNoteStore";
 import styles from "./NotesPage.module.css";
 import UndoSnackbar from "../components/UndoSnackbar/UndoSnackbar";
 import Pagination from "../components/Pagination/Pagination";
-import SortSelect from "../components/SortSelect/SortSelect";
+// import SortSelect from "../components/SortSelect/SortSelect";
 import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
 import { useErrorStore } from "../../../shared/stores/useErrorStore";
 import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
@@ -40,7 +40,7 @@ export default function NotesPage() {
         pageSize,
         ordering,
         setPageSize,
-        setOrdering,
+
 
     } = useNoteStore();
 
@@ -85,17 +85,7 @@ export default function NotesPage() {
 
             />
 
-            {/* <SortSelect
-                ordering={ordering}
 
-                onPageOrderChange={async (ordering) => {
-
-                    setOrdering(ordering);
-
-                    await fetchNotes(1, pageSize, ordering);
-
-                }}
-            /> */}
 
             <div className={styles.container}>
 

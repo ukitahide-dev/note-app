@@ -1,40 +1,19 @@
-
 // ---- css ----
 import styles from "./LabelItem.module.css";
 
-
 // ---- type ----
-import type { Label } from "../../../../types/note";
-
-
+import type { Label } from "../../../../types/api/note";
 
 type Props = {
     label: Label;
 
     onRemoveLabel: (labelId: number) => void;
+};
 
-}
-
-
-
-export default function LabelItem ({
-    label,
-    onRemoveLabel,
-
-}: Props) {
-
-
+export default function LabelItem({ label, onRemoveLabel }: Props) {
     return (
-
-        <div
-            key={label.id}
-            className={styles.label}
-        >
-            <span
-
-            >
-                {label.name}
-            </span>
+        <div key={label.id} className={styles.label}>
+            <span>{label.name}</span>
 
             <button
                 className={styles.removeLabel}
@@ -45,13 +24,6 @@ export default function LabelItem ({
             >
                 ×
             </button>
-
         </div>
-
-
-
-    )
-
-
-
+    );
 }

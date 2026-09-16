@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 
-
+// 選択中のノートに関する処理
 
 type NoteSelectionStore = {
 
@@ -17,7 +17,9 @@ type NoteSelectionStore = {
 
     toggleSelect: (
         id: number
+
     ) => void;
+
 
     clearSelection: () => void;
 
@@ -33,6 +35,7 @@ export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
 
     previewColor: null,
 
+
     setPreviewColor: (color) => {
 
         console.log("setPreviewColor", color);
@@ -46,9 +49,11 @@ export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
 
 
     toggleSelect: (id) =>
+
         set((state) => ({
 
             selectedNoteIds:
+
                 state.selectedNoteIds.includes(id)
                     ? state.selectedNoteIds.filter(
                         (noteId) => noteId !== id
@@ -59,6 +64,7 @@ export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
                         ...state.selectedNoteIds,
 
                     ]
+
         })),
 
 

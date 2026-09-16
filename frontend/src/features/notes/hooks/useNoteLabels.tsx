@@ -4,72 +4,37 @@ import { useState } from "react";
 import { useNoteStore } from "../store/useNoteStore";
 import { useLabelStore } from "../../labels/store/labelStore";
 
-
-
-type Label = {
-    id: number,
-    name: string,
-}
-
-
-
-type Note = {
-    id: number;
-    title: string;
-    content: string;
-    color: string;
-    is_favorite: boolean;
-    labels: Label[];
-
-}
-
-
+import type { Note } from "../../../types/api/note";
+import type { LabelState } from "../../../types/ui/label";
 
 type Props = {
     note: Note;
-
-
-}
-
+};
 
 // カスタムフックは、ある機能をまとめたもの。ここでは、ラベル機能を扱うロジックを再利用できるようにしたもの。
 // コンポーネント専用のロジックをまとめたもの。ここではNoteCard専用。
+// 「NoteCardに必要なラベル機能のロジック」をNoteCardから切り離している。
+// 1つのNoteについてラベルを操作するロジック
 
+// 呼び出し元: NoteCard.tsx、
 
+export function useNoteLabels({ note }: Props) {
 
-export function useNoteLabels({
-    note,
-
-
-}: Props) {
-
-
-
-    const [selectedLabels, setSelectedLabels] = useState<number[]>(  // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
-        note.labels.map(
-            (label) => label.id
-        )  // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
+    const [selectedLabels, setSelectedLabels] = useState<number[]>( // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
+        note.labels.map((label) => label.id), // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
     );
 
-
-
     // useNoteStore
-    const {
-        updateNoteLabels,
-    } = useNoteStore();
+    const { updateNoteLabels } = useNoteStore();
 
 
     // useLabelStore
-        const {
-            labels
-        } = useLabelStore();
+    const { labels } = useLabelStore();
 
 
-
-
-
-
-    const labelStates = labels.map(label => ({  // ({  はmapの短縮記法
+    // ある1つのノートの、ラベル選択状態を調べる。
+    const labelStates: LabelState[] = labels.map((label) => ({
+        // ({  はmapの短縮記法
 
         id: label.id,
 
@@ -77,87 +42,43 @@ export function useNoteLabels({
 
     }));
 
-
-
-
-
-
-
-
-
-    const updateLabels = async (
-        newIds: number[]
-        
-    ) => {
+    const updateLabels = async (newIds: number[]) => {
         // console.log(`newIds: ${newIds}`);
         // console.log(`setSelectedLabels(newIds)前のselectedLabels: ${selectedLabels}`)
 
-        setSelectedLabels(newIds);  // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
+        setSelectedLabels(newIds); // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
 
         // console.log(`setSelectedLabels(newIds)直後のselectedLabels: ${selectedLabels}`)
 
-        await updateNoteLabels(note.id, newIds);  // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
-
-    }
-
-
-
-
+        await updateNoteLabels(note.id, newIds); // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
+    };
 
     const handleSelectLabel = async (labelId: number) => {
-
         try {
-
+            
             let newIds;
 
             if (selectedLabels.includes(labelId)) {
-
                 newIds = selectedLabels.filter((id) => id !== labelId);
-
             } else {
-
                 newIds = [...selectedLabels, labelId];
             }
 
-            updateLabels(newIds);
-
-
-
+            await updateLabels(newIds);
         } catch (error) {
-
             console.error(error);
-
         }
-
     };
 
-
-
-
-    const handleRemoveLabel = async (
-        labelId: number
-    ) => {
-
+    const handleRemoveLabel = async (labelId: number) => {
         try {
-
             const newIds = selectedLabels.filter((id) => id !== labelId);
 
             updateLabels(newIds);
-
-            // setSelectedLabels(newIds);
-            // updateNoteLabels(note.id, selectedLabels);
-
-            // updateLabels(newIds);
-
         } catch (error) {
-
             console.error(error);
-
         }
     };
-
-
-
 
     return {
         labelStates,
@@ -165,8 +86,4 @@ export function useNoteLabels({
         handleSelectLabel,
         handleRemoveLabel,
     };
-
-
 }
-
-

@@ -8,23 +8,24 @@ import { useLabelStore } from "../../../../labels/store/labelStore";
 import styles from "./LabelPanel.module.css";
 import LabelPanelItem from "./LabelPanelItem/LabelPanelItem";
 
-type LabelState = {
-    id: number;
-    state: "checked" | "unchecked" | "indeterminate";
-};
+
+// ---- type ----
+import type { LabelState } from "../../../../../types/ui/label";
+
+// type LabelState = {
+//     id: number;
+//     state: "checked" | "unchecked" | "indeterminate";
+// };
 
 
 type Props = {
 
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
 
-    selectedLabels: number[];
-
     labelStates?: LabelState[];
 
     onSelectLabel: (labelId: number) => void;
 
-    onSelectLabelName?: (labelName: string) => void;
 
 };
 
@@ -44,9 +45,11 @@ export default function LabelPanel({
     const isTyping = newLabel.trim() !== "";
 
 
+    // Store
     const {
         labels,
         handleCreateLabel,
+
     } = useLabelStore();
 
 

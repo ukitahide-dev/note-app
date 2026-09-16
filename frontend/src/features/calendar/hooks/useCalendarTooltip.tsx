@@ -1,36 +1,17 @@
 import { useRef, useState } from "react";
 
+import type { Note } from "../../../types/api/note";
 
-
-import type { Note  } from "../../../types/note";
-
-
-export function useCalendarTooltip(
-
-) {
-
-
-
+export function useCalendarTooltip() {
     const [tooltip, setTooltip] = useState<{
-        notes: Note[],
+        notes: Note[];
         x: number;
         y: number;
     } | null>(null);
 
-
     const tooltipTimer = useRef<number | null>(null);
 
-
-
-
-
-    const showTooltip = (
-        notes: Note[],
-        x: number,
-        y: number,
-
-    ) => {
-
+    const showTooltip = (notes: Note[], x: number, y: number) => {
         if (tooltipTimer.current) {
             clearTimeout(tooltipTimer.current);
         }
@@ -40,37 +21,25 @@ export function useCalendarTooltip(
             x: x,
             y: y,
         });
-
-    }
-
+    };
 
     // カレンダーの日付と、tooltipからマウスが離れたときに発動。
     const hideTooltip = () => {
         tooltipTimer.current = setTimeout(() => {
             setTooltip(null);
         }, 200);
-    }
-
-
+    };
 
     const stopTooltiptimer = () => {
-
         if (tooltipTimer.current) {
             clearTimeout(tooltipTimer.current);
         }
-
-    }
-
-
-
-
+    };
 
     return {
         tooltip,
         showTooltip,
         hideTooltip,
         stopTooltiptimer,
-    }
-
-
+    };
 }
