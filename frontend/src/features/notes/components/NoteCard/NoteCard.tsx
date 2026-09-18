@@ -65,29 +65,36 @@ export default function NoteCard({
     const paletteRef = useRef<HTMLDivElement | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+
     // store
     const { searchText } = useSearchStore();
 
+
     // hooks
-    const { labelStates, handleSelectLabel, handleRemoveLabel } = useNoteLabels(
+    const { labelStates, handleSelectLabel, handleRemoveNoteLabel } = useNoteLabels(
         {
             note,
         },
     );
 
+
     // hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
+
 
     // Store
     const {
         selectedNoteIds,
         toggleSelect,
         previewColor, // 複数のNoteCard色変更用
+
     } = useNoteSelectionStore();
+
 
     // Store
     const { createNote, moveToTrash, toggleFavorite, togglePin, fetchNotes } =
         useNoteStore();
+
 
     // このノートが選択中で、かつ previewColor が存在するなら previewColor を使う。そうでなければ tempColor を使う
     const displayColor =
@@ -135,6 +142,7 @@ export default function NoteCard({
     }
 
     useEffect(() => {
+
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 cardRef.current &&
@@ -175,6 +183,7 @@ export default function NoteCard({
     // tempColor, openColorId
     // tempColor, openColorId, saveColor
     // note.id, tempColor,  useNoteColorにロジック移すと、依存配列こう書かないとバグるようになった。
+
 
     const highlightText = (text: string) => {
         if (!searchText.trim()) {
@@ -218,7 +227,13 @@ export default function NoteCard({
         // console.log(file);
     };
 
+
+
+
+
+
     return (
+        
         <Card
             style={{ backgroundColor: displayColor }}
             onClick={() => setOpenNoteDetailId(note.id)}
@@ -259,7 +274,9 @@ export default function NoteCard({
                 ))}
             </div>
 
+
             <div className={cardStyles.chars}>
+
                 <h3 className={cardStyles.title}>
                     {highlightText(note.title)}
                 </h3>
@@ -267,19 +284,26 @@ export default function NoteCard({
                 <p className={cardStyles.content}>
                     {highlightText(note.content)}
                 </p>
+
             </div>
 
+
             <div className={cardStyles.labels}>
+
                 {note.labels.map((label) => (
                     <LabelItem
                         key={label.id}
                         label={label}
-                        onRemoveLabel={(labelId) => handleRemoveLabel(labelId)}
+                        onRemoveLabel={handleRemoveNoteLabel}
+                        // onRemoveLabel={(labelId) => handleRemoveLabel(labelId)}
                     />
                 ))}
+
             </div>
 
+
             <div className={cardStyles.buttons}>
+
                 <button
                     onClick={(e) => {
                         e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。

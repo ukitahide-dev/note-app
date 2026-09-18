@@ -110,6 +110,8 @@ export default function LabelPanel({
 
                 </div>
             )}
+
         </div>
+
     );
 }

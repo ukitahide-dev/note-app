@@ -134,17 +134,28 @@ export const updateNoteColorApi = async (id: number, color: string) => {
     return res.data;
 };
 
+
+
+
 // 各ノートのラベルを更新する
 export const updateNoteLabelsApi = async (
     noteId: number,
     labelIds: number[],
+
 ) => {
-    const res = await api.patch(`/notes/${noteId}/`, {
-        label_ids: labelIds,
-    });
+
+    const res = await api.patch(
+
+        `/notes/${noteId}/`,
+        { label_ids: labelIds, }
+
+    );
 
     return res.data;
+
 };
+
+
 
 // ノートをゴミ箱に移動させる
 export const moveToTrashApi = async (id: number) => {
@@ -256,6 +267,7 @@ export const uploadNoteImageApi = async (noteId: number, image: File) => {
     return res.data;
 };
 
+
 // ノートが所持している画像を削除する
 export const deleteNoteImageApi = async (imageId: number) => {
     const res = await api.delete(`/note-images/${imageId}/`);
@@ -263,17 +275,27 @@ export const deleteNoteImageApi = async (imageId: number) => {
     return res.data;
 };
 
+
+
 export const reorderNoteImageApi = async (
     noteId: number,
     images: {
         id: number;
         order: number;
     }[],
+
 ) => {
-    const res = await api.patch(`notes/${noteId}/images/reorder/`, images);
+
+    const res = await api.patch(
+        `notes/${noteId}/images/reorder/`,
+        images
+    );
 
     return res.data;
+    
 };
+
+
 
 export const incrementNoteViewApi = async (noteId: number) => {
     // const token = localStorage.getItem("access");

@@ -32,6 +32,8 @@ class LabelSerializer(serializers.ModelSerializer):
 
 
 
+
+
 class NoteImageSerializer(serializers.ModelSerializer):
 
     class Meta:

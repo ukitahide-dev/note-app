@@ -21,15 +21,36 @@ import { useNoteColor } from "../../hooks/useNoteColor";
 // ---- utils ----
 import { splitImages } from "../../utils/splitImages";
 
+
+import type { DragEndEvent } from "@dnd-kit/core";
+
+import { DndContext } from "@dnd-kit/core";
+
+import {
+    SortableContext,
+    rectSortingStrategy,
+    arrayMove,
+} from "@dnd-kit/sortable";
+import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
+
+
 type Props = {
     note: Note;
 
     onClose: () => void;
 };
 
+
+
 // 親: NoteCard.tsx
 
-export default function NoteDetailModal({ note, onClose }: Props) {
+export default function NoteDetailModal({
+    note,
+    onClose,
+
+}: Props) {
+
+
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
 
@@ -37,17 +58,20 @@ export default function NoteDetailModal({ note, onClose }: Props) {
         "menu" | "color" | "label" | "history" | null
     >(null);
 
-    // useNoteColor hooks
+
+    // hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
 
-    // useNoteLabels hooks
-    const { labelStates, handleSelectLabel, handleRemoveLabel } = useNoteLabels(
+
+    // hooks
+    const { labelStates, handleSelectLabel, handleRemoveNoteLabel } = useNoteLabels(
         {
             note,
         },
     );
 
-    // useNoteStore
+
+    // Store
     const {
         updateNote,
         updateNoteColor,
@@ -56,14 +80,24 @@ export default function NoteDetailModal({ note, onClose }: Props) {
         deleteNoteImage,
         incrementNoteView,
         updateNoteViewTime,
+        updateNoteImageOrder,
+
     } = useNoteStore();
 
+
     // utils
-    const { largeImages, normalImages } = splitImages(note.images);
+    const {
+        largeImages,
+        normalImages
+
+    } = splitImages(note.images);
+
 
     const closed = useRef(false);
 
+
     const handleClose = async () => {
+
         if (closed.current) {
             return;
         }
@@ -74,6 +108,7 @@ export default function NoteDetailModal({ note, onClose }: Props) {
 
         await updateNoteViewTime(note.id, seconds);
 
+
         if (title !== note.title || content !== note.content) {
             await updateNote(note.id, title, content);
         }
@@ -83,12 +118,14 @@ export default function NoteDetailModal({ note, onClose }: Props) {
             // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
         }
 
-        // setOpenNoteDetailId(null);  この書き方はコンポーネントの再利用性が下がる。親がopenNoteDetailIdという状態を持っていることが前提になっているから。
         onClose(); // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
+
     };
+
 
     const viewed = useRef(false); // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
     const startTime = useRef(0); // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
+
 
     useEffect(() => {
         if (viewed.current) {
@@ -100,36 +137,106 @@ export default function NoteDetailModal({ note, onClose }: Props) {
         viewed.current = true;
 
         incrementNoteView(note.id);
+
     }, [note.id]);
 
+
+
+    // hooks 
+    const {
+        handleDragEnd,
+
+    } = useSortableNoteImages(note.images, note.id)
+
+
+
+
+    // const handleDragEnd = async (event: DragEndEvent) => {
+
+    //     const { active, over } = event;
+
+    //     if (!over) return;
+
+    //     if (active.id === over.id) return;
+
+
+    //     const oldIndex = note.images.findIndex(
+    //         (image) => image.id === active.id
+    //     );
+
+
+    //     const newIndex = note.images.findIndex(
+    //         (image) => image.id === over.id
+    //     );
+
+
+    //     if (oldIndex === -1 || newIndex === -1) return;
+
+
+    //     const newImages = arrayMove(
+    //         note.images,
+    //         oldIndex,
+    //         newIndex
+    //     );
+
+    //     await updateNoteImageOrder(note.id, newImages);
+
+    // };
+
+
+
+
     return (
-        <div className={styles.overlay} onClick={handleClose}>
+
+        <div
+            className={styles.overlay}
+            onClick={handleClose}
+        >
+
             <div
                 className={styles.modal}
                 style={{ backgroundColor: tempColor }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className={styles.largeImages}>
-                    <ImageList
-                        images={largeImages}
-                        isLarge={true}
-                        noteId={note.id}
-                        onDeleteImage={async (imageId) => {
-                            await deleteNoteImage(note.id, imageId);
-                        }}
-                    />
-                </div>
 
-                <div className={styles.images}>
-                    <ImageList
-                        images={normalImages}
-                        isLarge={false}
-                        noteId={note.id}
-                        onDeleteImage={async (imageId: number) => {
-                            await deleteNoteImage(note.id, imageId);
-                        }}
-                    />
-                </div>
+                <DndContext
+                    onDragEnd={handleDragEnd}
+                >
+
+                    <SortableContext
+                        items={note.images.map((image) => image.id)}
+                        strategy={rectSortingStrategy}
+                    >
+
+                        <div className={styles.largeImages}>
+
+                            <ImageList
+                                images={largeImages}
+                                isLarge={true}
+                                noteId={note.id}
+                                onDeleteImage={async (imageId) => {
+                                    await deleteNoteImage(note.id, imageId);
+                                }}
+                            />
+
+                        </div>
+
+                        <div className={styles.images}>
+
+                            <ImageList
+                                images={normalImages}
+                                isLarge={false}
+                                noteId={note.id}
+                                onDeleteImage={async (imageId: number) => {
+                                    await deleteNoteImage(note.id, imageId);
+                                }}
+                            />
+
+                        </div>
+
+                    </SortableContext>
+
+                </DndContext>
 
                 <input
                     className={styles.titleInput}
@@ -151,7 +258,7 @@ export default function NoteDetailModal({ note, onClose }: Props) {
                         <LabelItem
                             label={label}
                             onRemoveLabel={(labelId: number) =>
-                                handleRemoveLabel(labelId)
+                                handleRemoveNoteLabel(labelId)
                             }
                         />
                     ))}
@@ -183,6 +290,7 @@ export default function NoteDetailModal({ note, onClose }: Props) {
                     </button>
                 </div>
 
+
                 {panelType === "color" && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
@@ -190,6 +298,7 @@ export default function NoteDetailModal({ note, onClose }: Props) {
                         onClose={saveColor}
                     />
                 )}
+
 
                 {panelType === "menu" && (
                     <NoteMenu
@@ -207,6 +316,7 @@ export default function NoteDetailModal({ note, onClose }: Props) {
                     />
                 )}
 
+
                 {panelType === "label" && (
                     <LabelPanel
                         labelStates={labelStates}
@@ -214,13 +324,17 @@ export default function NoteDetailModal({ note, onClose }: Props) {
                     />
                 )}
 
+
                 {panelType === "history" && (
                     <HistoryPanel
                         note={note}
                         onClose={() => setPanelType(null)}
                     />
                 )}
+
             </div>
+
         </div>
+
     );
 }

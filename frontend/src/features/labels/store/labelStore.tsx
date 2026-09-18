@@ -9,10 +9,14 @@ import {
     createLabelApi,
     updateLabelApi,
     deleteLabelApi,
+
 } from "../../notes/api/labelApi";
 
+
+
 type LabelStore = {
-    labels: Label[]; // labelsはLabel型の配列
+
+    labels: Label[];  // labelsはLabel型の配列
 
     fetchLabels: () => Promise<void>;
 
@@ -21,7 +25,11 @@ type LabelStore = {
     handleUpdateLabel: (id: number, name: string) => Promise<void>;
 
     handleDeleteLabel: (id: number) => Promise<void>;
+
 };
+
+
+
 
 export const useLabelStore = create<LabelStore>((set) => ({
     // create()はZustandの関数。共有stateを作るという意味。このstoreは LabelStore 型。set はZustandのstate更新関数。
@@ -30,20 +38,27 @@ export const useLabelStore = create<LabelStore>((set) => ({
 
     // ラベル一覧取得
     fetchLabels: async () => {
+
         try {
             const data = await getLabelsApi();
 
             set({
                 labels: data, // グローバルstate更新。useLabelStore()使ってる全コンポーネントを再レンダリングする。
             });
+
         } catch (error) {
             console.error(error);
         }
     },
 
     // ラベル作成
-    handleCreateLabel: async (name: string) => {
+    handleCreateLabel: async (
+        name: string,
+
+    ) => {
+
         try {
+
             const newLabel = await createLabelApi(name);
 
             set((state) => ({
@@ -53,23 +68,34 @@ export const useLabelStore = create<LabelStore>((set) => ({
                     newLabel,
                 ],
             }));
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
 
     // ラベル名編集
-    handleUpdateLabel: async (labelId: number, name: string) => {
+    handleUpdateLabel: async (
+        labelId: number,
+        name: string,
+
+    ) => {
+
         try {
+            
             const newLabel = await updateLabelApi(labelId, name);
 
             set((state) => {
                 // set() に渡してるのは関数。(state) => { }という関数。
 
                 return {
+
                     labels: state.labels.map((label) =>
                         label.id === labelId ? newLabel : label,
                     ),
+
                 };
             });
 

@@ -16,7 +16,10 @@ type Props = {
 // 「NoteCardに必要なラベル機能のロジック」をNoteCardから切り離している。
 // 1つのNoteについてラベルを操作するロジック
 
+
+
 // 呼び出し元: NoteCard.tsx、
+
 
 export function useNoteLabels({ note }: Props) {
 
@@ -42,41 +45,63 @@ export function useNoteLabels({ note }: Props) {
 
     }));
 
-    const updateLabels = async (newIds: number[]) => {
-        // console.log(`newIds: ${newIds}`);
-        // console.log(`setSelectedLabels(newIds)前のselectedLabels: ${selectedLabels}`)
 
-        setSelectedLabels(newIds); // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
 
-        // console.log(`setSelectedLabels(newIds)直後のselectedLabels: ${selectedLabels}`)
+    const updateLabels = async (
+        newIds: number[],
 
-        await updateNoteLabels(note.id, newIds); // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
+    ) => {
+
+        setSelectedLabels(newIds);  // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
+
+        await updateNoteLabels(note.id, newIds);  // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
+
     };
 
+
+
     const handleSelectLabel = async (labelId: number) => {
+
         try {
-            
+
             let newIds;
 
             if (selectedLabels.includes(labelId)) {
+
                 newIds = selectedLabels.filter((id) => id !== labelId);
+
             } else {
+
                 newIds = [...selectedLabels, labelId];
+
             }
 
             await updateLabels(newIds);
+
         } catch (error) {
+
             console.error(error);
+
         }
     };
 
-    const handleRemoveLabel = async (labelId: number) => {
+
+
+    const handleRemoveNoteLabel = async (
+        labelId: number,
+
+    ) => {
+
         try {
+
             const newIds = selectedLabels.filter((id) => id !== labelId);
 
-            updateLabels(newIds);
-        } catch (error) {
+            await updateLabels(newIds);
+
+        }  catch (error) {
+
             console.error(error);
+
         }
     };
 
@@ -84,6 +109,7 @@ export function useNoteLabels({ note }: Props) {
         labelStates,
         selectedLabels,
         handleSelectLabel,
-        handleRemoveLabel,
+        handleRemoveNoteLabel,
+
     };
 }

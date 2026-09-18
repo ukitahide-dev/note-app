@@ -148,7 +148,7 @@ class NoteViewSet(ModelViewSet):
     # Noteを更新する直前に、このアプリ固有のルールだけ追加する。更新するときに、何を追加でやるかを担当する場所。
     def perform_update(self, serializer):  # この時点で、serializerにはバリデーションを通過した安全なデータが入っている。DRF標準のpartial_update()の内部で行われている。対象のNote → serializer.instance。検証済みの変更(リクエスト)内容 → serializer.validated_data。
 
-        # print(serializer.validated_data)
+        print(serializer.validated_data)
         note = serializer.instance  # partial_update()内部で取得された、ノートinstanceを取得している。self.get_object(): PATCH → partial_update()の過程で実行される。URLで指定されたIDのオブジェクトを、get_queryset() の範囲から1件取得する。get_queryset() で許可された範囲から、URLのPKに一致する1件を取得する。ex) PATCH /api/notes/123/　まず、get_queryset()で候補が絞られ、get_object()で、その候補から対象の1件を取得する。srerializer.instanceはそのデータそのもの。
 
         # note = self.get_object()  # self.get_object(): PATCH → partial_update()の過程で実行される。URLで指定されたIDのオブジェクトを、get_queryset() の範囲から1件取得する。get_queryset() で許可された範囲から、URLのPKに一致する1件を取得する。ex) PATCH /api/notes/123/ まず、get_queryset()で候補が絞られ、get_object()で、その候補から対象の1件を取得する。srerializer.instanceはそのデータそのもの。
@@ -561,7 +561,7 @@ class NoteImagesViewSet(ModelViewSet):
     @action(detail=False, methods=["patch"], url_path="reorder")
     def reorder(self, request, note_pk=None):
 
-        # print(request.data)  # [{'id': 72, 'order': 0}, {'id': 78, 'order': 1}, {'id': 71, 'order': 2}]
+        # print(request.data)   # [{'id': 72, 'order': 0}, {'id': 78, 'order': 1}, {'id': 71, 'order': 2}]
 
         serializer = NoteImageReorderSerializer(
             data=request.data,

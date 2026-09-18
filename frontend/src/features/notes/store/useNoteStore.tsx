@@ -714,7 +714,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     // ノートについているラベルを更新する
     updateNoteLabels: async (noteId: number, labelIds: number[]) => {
+
         try {
+
             const updatedNote = await updateNoteLabelsApi(noteId, labelIds);
 
             set((state) => ({
@@ -722,11 +724,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     note.id === noteId ? updatedNote : note,
                 ),
             }));
+
         } catch (error) {
+
             if (axios.isAxiosError(error)) {
                 console.error("response data:", error.response?.data);
                 console.error("response status:", error.response?.status);
             }
+
         }
     },
 
@@ -778,13 +783,22 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
     // 各ノートが所持している画像を削除する
-    deleteNoteImage: async (noteId: number, imageId: number) => {
+    deleteNoteImage: async (
+        noteId: number,
+        imageId: number,
+
+    ) => {
+
         try {
+
             await deleteNoteImageApi(imageId);
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
+
                     note.id === noteId
                         ? {
                               ...note,
@@ -794,14 +808,25 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                           }
                         : note,
                 ),
+
             }));
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
 
+
+
     // ノートの画像並び順を更新する
-    updateNoteImageOrder: async (noteId: number, newImages: NoteImage[]) => {
+    updateNoteImageOrder: async (
+        noteId: number,
+        newImages: NoteImage[],
+
+    ) => {
+
         // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。API用データに変換している。
         const reorderedImages = newImages.map((image, index) => ({
             id: image.id,
@@ -811,9 +836,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         // console.log(`reorderedImages: ${reorderedImages}`);
 
         try {
+
             await reorderNoteImageApi(noteId, reorderedImages);
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
                     note.id === noteId
                         ? {
@@ -822,11 +849,17 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                           }
                         : note,
                 ),
+
             }));
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
+
+
 
     reorderNotes: async (newNotes: Note[]) => {
         const orders = newNotes.map((note) => note.order).sort((a, b) => a - b);
@@ -865,6 +898,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     reorderPinnedNotes: async (newPinnedNotes: Note[]) => {
         const reorderedNotes = newPinnedNotes.map((note, index) => ({
             id: note.id,
@@ -881,6 +916,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             console.error(error);
         }
     },
+
+
 
     incrementNoteView: async (noteId: number) => {
         try {
