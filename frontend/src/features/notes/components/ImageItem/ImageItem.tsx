@@ -13,7 +13,9 @@ import type { NoteImage } from "../../../../types/api/note";
 type Props = {
     image: NoteImage;
     isLarge: boolean;
-    onDeleteImage: () => Promise<void>;
+    onDeleteImage: () => void;
+
+    onSelectImage: () => void;
 
 };
 
@@ -24,12 +26,19 @@ export default function ImageItem({
     image,
     isLarge,
     onDeleteImage,
-    
+    onSelectImage,
+
 }: Props) {
 
 
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({
+    const {
+        attributes,   // dnd-kitが必要とする属性
+        listeners,    // 「この要素を操作したらドラッグ開始できます」
+        setNodeRef,   //「この要素が並び替える対象です」
+        transform,    // 並び替え時の移動
+        transition,
+
+    } = useSortable({
             id: image.id,
         });
 
@@ -57,10 +66,15 @@ export default function ImageItem({
             style={style}
             // className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
             className={`${styles.imageWrapper} ${wrapperClass}`}
+            // {...attributes}
+            // {...listeners}
         >
+
             <img
                 src={image.image}
                 className={imageClass}
+                onClick={onSelectImage}
+
                 {...attributes}
                 {...listeners}
             />

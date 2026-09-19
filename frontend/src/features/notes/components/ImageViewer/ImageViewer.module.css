@@ -1,0 +1,68 @@
+.viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+.image {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+
+.closeButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    border: none;
+    background: none;
+
+    color: white;
+    font-size: 32px;
+
+    cursor: pointer;
+}
+
+
+
+
+
+.prevButton {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: none;
+
+    color: white;
+    font-size: 48px;
+
+    cursor: pointer;
+}
+
+
+.nextButton {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: none;
+
+    color: white;
+    font-size: 48px;
+
+    cursor: pointer;
+}

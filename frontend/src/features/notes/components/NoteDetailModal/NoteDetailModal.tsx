@@ -22,16 +22,21 @@ import { useNoteColor } from "../../hooks/useNoteColor";
 import { splitImages } from "../../utils/splitImages";
 
 
-import type { DragEndEvent } from "@dnd-kit/core";
+import {
+    DndContext,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core";
 
-import { DndContext } from "@dnd-kit/core";
 
 import {
     SortableContext,
     rectSortingStrategy,
-    arrayMove,
+
 } from "@dnd-kit/sortable";
 import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
+import ImageViewer from "../ImageViewer/ImageViewer";
 
 
 type Props = {
@@ -59,6 +64,20 @@ export default function NoteDetailModal({
     >(null);
 
 
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,     // 8px以上動かしたら「ドラッグ」と判断する。
+            },
+        }),
+    );
+
+
+
     // hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
 
@@ -71,6 +90,13 @@ export default function NoteDetailModal({
     );
 
 
+    // hooks
+    const {
+        handleDragEnd,
+
+    } = useSortableNoteImages(note.images, note.id)
+
+
     // Store
     const {
         updateNote,
@@ -80,7 +106,7 @@ export default function NoteDetailModal({
         deleteNoteImage,
         incrementNoteView,
         updateNoteViewTime,
-        updateNoteImageOrder,
+
 
     } = useNoteStore();
 
@@ -88,17 +114,22 @@ export default function NoteDetailModal({
     // utils
     const {
         largeImages,
-        normalImages
+        normalImages,
 
     } = splitImages(note.images);
 
 
-    const closed = useRef(false);
+    // useRefの理由: 値を保存しておきたいけど、その値が変わったことで再レンダリングする必要はないから。
+    const closed = useRef(false);   // { current: false }
+
+    const viewed = useRef(false);   // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
+    const startTime = useRef(0);    // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
+
 
 
     const handleClose = async () => {
 
-        if (closed.current) {
+        if (closed.current) {   // モーダルを閉じる処理を、1回だけ実行するためのストッパー。APIを複数回呼ぶ可能性を消している。
             return;
         }
 
@@ -123,12 +154,51 @@ export default function NoteDetailModal({
     };
 
 
-    const viewed = useRef(false); // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
-    const startTime = useRef(0); // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
 
 
+
+    const handleSelectImage = (
+        imageId: number,
+
+    ) => {
+
+        console.log("handleSelectImage")
+
+        const index = note.images.findIndex((image) => image.id === imageId);
+
+        if (index === -1) return;
+
+
+        setSelectedImageIndex(index);
+
+
+    };
+
+
+
+    const handleNextImage = () => {
+
+        if (selectedImageIndex === null) return;
+        if (selectedImageIndex >= note.images.length - 1) return;
+
+        setSelectedImageIndex(selectedImageIndex + 1);
+    };
+
+
+    const handlePrevImage = () => {
+
+        if (selectedImageIndex === null) return;
+        if (selectedImageIndex <= 0) return;
+
+        setSelectedImageIndex(selectedImageIndex - 1);
+    };
+
+
+
+    
     useEffect(() => {
-        if (viewed.current) {
+
+        if (viewed.current) {   // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
             return;
         }
 
@@ -138,58 +208,26 @@ export default function NoteDetailModal({
 
         incrementNoteView(note.id);
 
-    }, [note.id]);
-
-
-
-    // hooks 
-    const {
-        handleDragEnd,
-
-    } = useSortableNoteImages(note.images, note.id)
+    }, [note.id]);   // note.id が変わったときに、この処理を実行する
 
 
 
 
-    // const handleDragEnd = async (event: DragEndEvent) => {
-
-    //     const { active, over } = event;
-
-    //     if (!over) return;
-
-    //     if (active.id === over.id) return;
 
 
-    //     const oldIndex = note.images.findIndex(
-    //         (image) => image.id === active.id
-    //     );
 
 
-    //     const newIndex = note.images.findIndex(
-    //         (image) => image.id === over.id
-    //     );
-
-
-    //     if (oldIndex === -1 || newIndex === -1) return;
-
-
-    //     const newImages = arrayMove(
-    //         note.images,
-    //         oldIndex,
-    //         newIndex
-    //     );
-
-    //     await updateNoteImageOrder(note.id, newImages);
-
-    // };
 
 
 
 
     return (
 
+        <>
+
         <div
             className={styles.overlay}
+
             onClick={handleClose}
         >
 
@@ -201,6 +239,7 @@ export default function NoteDetailModal({
 
                 <DndContext
                     onDragEnd={handleDragEnd}
+                    sensors={sensors}
                 >
 
                     <SortableContext
@@ -214,9 +253,10 @@ export default function NoteDetailModal({
                                 images={largeImages}
                                 isLarge={true}
                                 noteId={note.id}
-                                onDeleteImage={async (imageId) => {
-                                    await deleteNoteImage(note.id, imageId);
+                                onDeleteImage={(imageId) => {
+                                    deleteNoteImage(note.id, imageId);
                                 }}
+                                onSelectImage={handleSelectImage}
                             />
 
                         </div>
@@ -227,9 +267,10 @@ export default function NoteDetailModal({
                                 images={normalImages}
                                 isLarge={false}
                                 noteId={note.id}
-                                onDeleteImage={async (imageId: number) => {
-                                    await deleteNoteImage(note.id, imageId);
+                                onDeleteImage={(imageId: number) => {
+                                    deleteNoteImage(note.id, imageId);
                                 }}
+                                onSelectImage={handleSelectImage}
                             />
 
                         </div>
@@ -335,6 +376,23 @@ export default function NoteDetailModal({
             </div>
 
         </div>
+
+        {selectedImageIndex !== null && (
+
+            <ImageViewer
+                images={note.images}
+                currentIndex={selectedImageIndex}
+                onClose={() => setSelectedImageIndex(null)}
+                onNext={handleNextImage}
+                onPrev={handlePrevImage}
+                // onNext={() => setSelectedImageIndex(selectedImageIndex + 1)}
+                // onPrev={() => setSelectedImageIndex(selectedImageIndex - 1)}
+            />
+
+
+        )}
+
+        </>
 
     );
 }

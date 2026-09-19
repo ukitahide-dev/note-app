@@ -11,7 +11,7 @@ import { useNoteStore } from "../store/useNoteStore";
 
 
 
-// 呼び出し元: ImageList
+// 呼び出し元: NoteDetailModal, 
 
 
 export function useSortableNoteImages(

@@ -2,12 +2,7 @@ import type { NoteImage } from "../../../../types/api/note";
 
 import ImageItem from "../ImageItem/ImageItem";
 
-// // ---- Drag用 ----
-// import { DndContext } from "@dnd-kit/core";
 
-// import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-
-// import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 
 type Props = {
     images: NoteImage[];
@@ -15,7 +10,10 @@ type Props = {
 
     noteId: number;
 
-    onDeleteImage: (imageId: number) => Promise<void>;
+    // onDeleteImage: (imageId: number) => Promise<void>;
+    onDeleteImage: (imageId: number) => void;
+
+    onSelectImage: (imageId: number) => void;
 };
 
 
@@ -27,14 +25,14 @@ type Props = {
 export function ImageList({
     images,
     isLarge,
-    // noteId,
+
     onDeleteImage,
+    onSelectImage,
 
 }: Props) {
 
 
-    // hook
-    // const { handleDragEnd } = useSortableNoteImages(images, noteId);
+
 
 
     // console.log(images);  // [{…}, {…}] ex) [{id: 71, image: 'http://127.0.0.1:8000/media/note_images/%E3%82%B3%E3%83%AD%E3%83%92%E3%83%BC%E3%83%AD%E3%83%BC.png', order: 0, note: 298}, {id: 72, image: 'http://127.0.0.1:8000/media/note_images/%E3%83%9B%E3%82%A4%E3%83%9F%E3%83%B3.png', order: 1, note: 298}]
@@ -43,12 +41,6 @@ export function ImageList({
 
     return (
 
-        // <DndContext onDragEnd={handleDragEnd}>
-
-            // <SortableContext
-            //     items={images.map((image) => image.id)}
-            //     strategy={rectSortingStrategy}
-            // >
             <>
                 {images.map((image) => (
                     <ImageItem
@@ -56,13 +48,14 @@ export function ImageList({
                         image={image}
                         isLarge={isLarge}
                         onDeleteImage={() => onDeleteImage(image.id)}  // あとで実行する関数を新しく作って渡す
+                        onSelectImage={() => onSelectImage(image.id)}
                         // onDeleteImage={onDeleteImage(image.id)}   // 関数を実行して、その結果を渡す。
                     />
                 ))}
             </>
 
-            // </SortableContext>
 
-        // </DndContext>
+
+
     );
 }

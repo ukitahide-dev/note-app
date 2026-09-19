@@ -339,14 +339,21 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // 新規ノート作成。単体ノート複製もこのメソッドを使っている。
     createNote: async (title, content, labels, color) => {
+
         try {
+
             const newNote = await createNoteApi(title, content, labels, color);
 
             set((state) => ({
+
                 notes: [newNote, ...state.notes],
+                
             }));
+
         } catch (error) {
             console.error(error);
             const status = error.response?.status;
@@ -364,10 +371,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     addNote: (newNote) =>
         set((state) => ({
             notes: [newNote, ...state.notes],
         })),
+
+
 
     updateNote: async (id: number, title: string, content: string) => {
         try {
@@ -385,15 +396,22 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     updateNoteColor: async (id: number, color: string) => {
+
         try {
+
             const updatedNote = await updateNoteColorApi(id, color);
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
                     note.id === updatedNote.id ? updatedNote : note,
                 ),
+
             }));
+
         } catch (error) {
             // get().setError(error);
 
