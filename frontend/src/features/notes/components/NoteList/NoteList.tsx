@@ -17,6 +17,8 @@ import type { Note } from "../../../../types/api/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import SortSelect from "../SortSelect/SortSelect";
 
+
+
 type Props = {
     notes: Note[];
     pinnedNotes: Note[];
@@ -24,9 +26,16 @@ type Props = {
     enableSort: boolean;
 };
 
+
+
+
+
+
+
 // 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx、SearchResultsPage.tsx
 
 export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
+
     const [openMenuId, setOpenMenuId] = useState<number | null>(null); // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
     const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(
@@ -37,6 +46,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         null,
     );
 
+
     const {
         reorderNotes,
         reorderPinnedNotes,
@@ -44,7 +54,9 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         setOrdering,
         pinnedOrdering,
         setPinnedOrdering,
+
     } = useNoteStore();
+
 
     const noteGridProps = {
         openMenuId, // 省略記法: 本当は、openMenuId: openMenuId
@@ -55,13 +67,18 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         setOpenNoteDetailId,
         panelType,
         setPanelType,
+
     };
+
+
 
     const canSortNormalNotes = enableSort && ordering === "order";
     const canSortPinnedNotes = enableSort && pinnedOrdering === "pinned_order";
 
+
     // ドラッグ終了時に実行される関数
     const handleNormalDragEnd = (event: any) => {
+
         const { active, over } = event; // event.active, event.overを分割代入で取得。active: ドラッグしてた要素。over: 上に乗った(移動先の)相手。
 
         if (!over) return; // 移動先の相手がいないなら終了
@@ -79,7 +96,9 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         reorderNotes(newNotes);
     };
 
+
     const handlePinnedDragEnd = (event: any) => {
+
         const { active, over } = event;
 
         if (!over) return;
@@ -91,9 +110,16 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         const newPinnedNotes = arrayMove(pinnedNotes, oldIndex, newIndex);
 
         reorderPinnedNotes(newPinnedNotes);
+
     };
 
+
+
+
+
+
     return (
+
         <>
             {/* 📌 固定済みノート */}
             {pinnedNotes.length > 0 && (
@@ -112,17 +138,22 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                             collisionDetection={closestCenter}
                             onDragEnd={handlePinnedDragEnd}
                         >
+
                             <SortableContext
                                 items={pinnedNotes.map((note) => note.id)}
                                 strategy={rectSortingStrategy}
                             >
+
                                 <NoteGrid
                                     {...noteGridProps}
                                     enableSort={true}
                                     notes={pinnedNotes}
                                 />
+
                             </SortableContext>
+
                         </DndContext>
+
                     ) : (
                         // 固定済みが「手動順」以外なら通常表示
                         <NoteGrid
@@ -133,6 +164,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                     )}
 
                     <h3>その他</h3>
+                    
                 </>
             )}
 
@@ -149,21 +181,34 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                     collisionDetection={closestCenter}
                     onDragEnd={handleNormalDragEnd}
                 >
+
                     <SortableContext
                         items={notes.map((note) => note.id)}
                         strategy={rectSortingStrategy}
                     >
+
                         <NoteGrid
                             {...noteGridProps}
                             enableSort={true}
                             notes={notes}
                         />
+
                     </SortableContext>
+
                 </DndContext>
+
             ) : (
+
                 // 通常ノートが「手動順」以外なら通常表示
-                <NoteGrid {...noteGridProps} enableSort={false} notes={notes} />
+                <NoteGrid
+                    {...noteGridProps}
+                    enableSort={false}
+                    notes={notes}
+                />
+
             )}
+
         </>
+
     );
 }

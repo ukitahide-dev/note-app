@@ -162,8 +162,6 @@ export default function NoteDetailModal({
 
     ) => {
 
-        console.log("handleSelectImage")
-
         const index = note.images.findIndex((image) => image.id === imageId);
 
         if (index === -1) return;
@@ -195,7 +193,7 @@ export default function NoteDetailModal({
 
 
 
-    
+
     useEffect(() => {
 
         if (viewed.current) {   // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
@@ -377,6 +375,7 @@ export default function NoteDetailModal({
 
         </div>
 
+
         {selectedImageIndex !== null && (
 
             <ImageViewer
@@ -385,8 +384,7 @@ export default function NoteDetailModal({
                 onClose={() => setSelectedImageIndex(null)}
                 onNext={handleNextImage}
                 onPrev={handlePrevImage}
-                // onNext={() => setSelectedImageIndex(selectedImageIndex + 1)}
-                // onPrev={() => setSelectedImageIndex(selectedImageIndex - 1)}
+                
             />
 
 

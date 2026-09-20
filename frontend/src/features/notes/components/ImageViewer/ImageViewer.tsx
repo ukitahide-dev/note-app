@@ -43,11 +43,15 @@ export default function ImageViewer({
 
     return (
 
-        <div className={styles.viewer}>
+        <div
+            className={styles.viewer}
+            onClick={onClose}
+        >
 
             <button
                 className={styles.closeButton}
-                onClick={onClose}
+
+                // onClick={onClose}
             >
                 ✕
             </button>
@@ -56,7 +60,11 @@ export default function ImageViewer({
 
                 <button
                     className={styles.prevButton}
-                    onClick={onPrev}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onPrev();
+                    }}
+                    // onClick={onPrev}
                 >
                     ←
                 </button>
@@ -68,13 +76,20 @@ export default function ImageViewer({
                 className={styles.image}
                 src={image.image}
                 alt=""
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
             />
 
             {currentIndex < images.length - 1 && (
 
                 <button
                     className={styles.nextButton}
-                    onClick={onNext}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onNext();
+                    }}
+                    // onClick={onNext}
                 >
                     →
                 </button>
@@ -83,7 +98,7 @@ export default function ImageViewer({
 
 
         </div>
-        
+
     );
 
 }

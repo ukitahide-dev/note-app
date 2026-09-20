@@ -7,6 +7,7 @@ import {
     emptyTrashApi,
     getAllNotesApi,
     getFavoriteNotesApi,
+    getLabelNotesApi,
     getNotesApi,
     getPinnedNotesApi,
     getTrashNotesApi,
@@ -64,6 +65,8 @@ type NoteStore = {
         page?: number,
         pageSize?: number,
         ordering?: string,
+        labelName?: string,
+
     ) => Promise<void>;
 
     fetchPinnedNotes: (ordering?: string) => Promise<void>;
@@ -81,6 +84,19 @@ type NoteStore = {
         pageSize?: number,
         ordering?: string,
     ) => Promise<void>;
+
+
+
+    fetchLabelNotes: (
+        labelName: string,
+        page?: number,
+        pageSize?: number,
+        ordering?: string,
+
+    ) => Promise<void>;
+
+
+
 
     isFetchtingNotes: boolean;
 
@@ -174,11 +190,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     isFetchtingNotes: false,
 
+
     fetchNotes: async (
         page = 1, // pageが渡されなかったら1を使う。
         pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
         // ordering = "-created_at",
         ordering = "order",
+        labelName?: string,
+
     ) => {
         // console.log(`pageSize: ${pageSize}`);
 
@@ -187,7 +206,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         });
 
         try {
-            const data = await getNotesApi(page, pageSize, ordering);
+
+            const data = await getNotesApi(page, pageSize, ordering, labelName);
 
             console.log(data);
 
@@ -198,35 +218,54 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 next: data.next,
                 previous: data.previous,
             });
+
         } catch (error) {
+
             useErrorStore.getState().setError(error);
             console.error(error);
+
         } finally {
+
             set({
                 isFetchtingNotes: false,
             });
+
         }
     },
 
+
+
     fetchPinnedNotes: async (ordering = "pinned_order") => {
+
         try {
+
             const data = await getPinnedNotesApi(ordering);
 
             set({
+
                 pinnedNotes: data,
+
             });
+
         } catch (error) {
+
             useErrorStore.getState().setError(error);
             console.error(error);
+
         }
     },
 
+
+
     fetchAllNotes: async () => {
+
         set({
             isFetchtingNotes: true,
         });
 
+
         try {
+
             const data = await getAllNotesApi();
 
             console.log(data);
@@ -309,7 +348,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         page = 1, // pageが渡されなかったら1を使う。
         pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
         ordering = "-created_at",
+
     ) => {
+
         set({
             isFetchtingNotes: true,
         });
@@ -329,13 +370,56 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             });
 
             console.log(get().notes);
+
         } catch (error) {
+
             useErrorStore.getState().setError(error);
             console.error(error);
+
         } finally {
+
             set({
                 isFetchtingNotes: false,
             });
+
+        }
+    },
+
+
+
+
+
+    fetchLabelNotes: async (
+        labelName,
+        page = 1,
+        pageSize = get().pageSize,
+        ordering = get().ordering,
+
+    ) => {
+
+        set({ isFetchtingNotes: true });
+
+        try {
+
+            const data = await getLabelNotesApi(
+                labelName,
+                page,
+                pageSize,
+                ordering,
+            );
+
+            set({
+                notes: data.results,
+                currentPage: page,
+                count: data.count,
+                next: data.next,
+                previous: data.previous,
+            });
+
+        } finally {
+
+            set({ isFetchtingNotes: false });
+
         }
     },
 
@@ -351,7 +435,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             set((state) => ({
 
                 notes: [newNote, ...state.notes],
-                
+
             }));
 
         } catch (error) {
@@ -381,14 +465,22 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     updateNote: async (id: number, title: string, content: string) => {
+
         try {
+
             const updatedNote = await updateNoteApi(Number(id), title, content);
 
             set((state) => ({
                 notes: state.notes.map((note) =>
                     note.id === updatedNote.id ? updatedNote : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === updatedNote.id ? updatedNote : note,
+                ),
+
             }));
+
         } catch (error) {
             // get().setError(error);
 
@@ -410,7 +502,13 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     note.id === updatedNote.id ? updatedNote : note,
                 ),
 
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === updatedNote.id ? updatedNote : note,
+                ),
+
             }));
+
+
 
         } catch (error) {
             // get().setError(error);
@@ -592,12 +690,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     // ゴミ箱にあるノートを復活させる
     restoreNote: async (id: number) => {
+
         try {
+
             await restoreNoteApi(id);
 
             set((state) => ({
                 notes: state.notes.filter((note) => note.id !== id),
             }));
+
         } catch (error) {
             // get().setError(error);
 
@@ -607,12 +708,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     // ゴミ箱内のノートをすべて削除する
     emptyTrash: async () => {
+
         try {
+
             await emptyTrashApi();
 
             set({
                 notes: [],
             });
+
         } catch (error) {
             // get().setError(error);
 
@@ -622,16 +726,27 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     // お気に入りを切り替える
     toggleFavorite: async (id: number, is_favorite: boolean) => {
+
         try {
+
             const updatedNote = await updateNoteFavoriteApi(id, !is_favorite);
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
                     note.id === id ? updatedNote : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map((note) =>
+                    note.id === id ? updatedNote : note,
+                ),
+
             }));
+
         } catch (error) {
+
             throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+
         }
     },
 
@@ -730,6 +845,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // ノートについているラベルを更新する
     updateNoteLabels: async (noteId: number, labelIds: number[]) => {
 
@@ -738,9 +855,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             const updatedNote = await updateNoteLabelsApi(noteId, labelIds);
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
                     note.id === noteId ? updatedNote : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === noteId ? updatedNote : note,
+                ),
+
             }));
 
         } catch (error) {
@@ -752,6 +875,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         }
     },
+
 
     // 選択中のノートのラベルを更新する
     updateSelectedNoteLabels: async (
@@ -827,6 +951,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                         : note,
                 ),
 
+                pinnedNotes: state.pinnedNotes.map(note =>
+
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: note.images.filter(
+                                image => image.id !== imageId
+                            ),
+                        }
+                        : note,
+
+                ),
+
             }));
 
         } catch (error) {
@@ -865,6 +1002,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                               ...note,
                               images: newImages,
                           }
+                        : note,
+                ),
+
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: newImages,
+                        }
                         : note,
                 ),
 
@@ -938,8 +1084,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     incrementNoteView: async (noteId: number) => {
+
         try {
+
             const data = await incrementNoteViewApi(noteId);
+
 
             set((state) => ({
                 notes: state.notes.map((note) =>
@@ -951,13 +1100,26 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                           }
                         : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === noteId
+                        ? { ...note, view_count: data.view_count }
+                        : note,
+                ),
+
             }));
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
 
+
+
     updateNoteViewTime: async (noteId: number, seconds: number) => {
+
         try {
             const data = await updateNoteViewTimeApi(noteId, seconds);
 
@@ -970,6 +1132,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                           }
                         : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map((note) =>
+
+                    note.id === noteId
+                        ? {
+                              ...note,
+                              total_view_seconds: data.total_view_seconds,
+                          }
+                        : note,
+
+                ),
+
+
             }));
 
             // await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);

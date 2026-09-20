@@ -1,26 +1,36 @@
 import api from "../../../shared/api/axios";
 import type { History } from "../../../types/api/note";
 
+
+
+
 // ノート一覧を取得する
 export const getNotesApi = async (
     page: number = 1,
     pageSize: number = 20,
     ordering: string = "order",
+
 ) => {
+
     const res = await api.get("/notes/", {
         params: {
             //  axiosが自動的に/notes/?page=1&page_size=20&ordering=-created_atに変換する。
             page,
             page_size: pageSize,
             ordering,
+
+
         },
     });
 
     return res.data;
 };
 
+
+
 // ピン留めノートを取得する
 export const getPinnedNotesApi = async (ordering: string = "pinned_order") => {
+
     const res = await api.get("/notes/pinned/", {
         params: {
             ordering,
@@ -29,6 +39,8 @@ export const getPinnedNotesApi = async (ordering: string = "pinned_order") => {
 
     return res.data;
 };
+
+
 
 export const getAllNotesApi = async () => {
     const res = await api.get("/notes/", {
@@ -40,6 +52,8 @@ export const getAllNotesApi = async () => {
     return res.data;
 };
 
+
+
 // ノート詳細を取得する
 export const getNoteApi = async (id: number) => {
     const res = await api.get(`/notes/${id}`);
@@ -47,12 +61,19 @@ export const getNoteApi = async (id: number) => {
     return res.data;
 };
 
+
+
+
+
 export const getFavoriteNotesApi = async (
     page: number = 1,
     pageSize: number = 20,
     ordering: string = "-created_at",
+
 ) => {
+
     const res = await api.get("/notes/", {
+
         params: {
             //  ex) /notes/?page=1&pageSize=20&ordering=-created_at&is_favorite=true  ?以降はクエリーパラメーター:  URLの「? より後ろ」に付けて、サーバーに条件を伝えるための情報。
             page,
@@ -64,6 +85,35 @@ export const getFavoriteNotesApi = async (
 
     return res.data;
 };
+
+
+
+
+
+export const getLabelNotesApi = async (
+    labelName: string,
+    page: number = 1,
+    pageSize: number = 20,
+    ordering: string = "order",
+
+) => {
+
+    const res = await api.get("/notes/", {
+
+        params: {    // ex)  /notes/?page=1&page_size=20&ordering=order&label_name=筋トレ
+            page,
+            page_size: pageSize,
+            ordering,
+            label_name: labelName,
+        },
+
+    });
+
+    return res.data;
+
+};
+
+
 
 // ノートを投稿する。async が付いている関数は、必ずPromiseを返す。
 export const createNoteApi = async (
@@ -292,8 +342,9 @@ export const reorderNoteImageApi = async (
     );
 
     return res.data;
-    
+
 };
+
 
 
 

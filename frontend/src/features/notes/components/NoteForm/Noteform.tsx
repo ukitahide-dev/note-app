@@ -20,17 +20,12 @@ import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 import axios from "axios";
 
 
-// Propsオブジェクトの型定義   onAddNoteというプロパティにはnewNoteを引数に受け取る関数が入るという意味
-// type Props = {
-//     onAddNote: (
-//         newNote: Note   // newNoteという変数はNote型という意味
-//     ) => void;
-// };
+
 
 
 
 type Props = {
-    labelName: string,
+    labelName?: string,
 }
 
 
@@ -76,6 +71,7 @@ export default function NoteForm({
         selectedLabelNames,
         labelStates,
         handleSelectLabel,
+
     } = useNoteFormLabels(labelName);
 
 
@@ -87,7 +83,7 @@ export default function NoteForm({
     const formRef = useRef<HTMLFormElement | null>(null);
 
 
-    // useNoteStore
+    // eStore
     const {
         createNote,
     } = useNoteStore();
@@ -133,6 +129,7 @@ export default function NoteForm({
 
     const handleSubmit = async (
         e: React.SyntheticEvent
+        
     ) => {
 
         e.preventDefault();
@@ -273,6 +270,7 @@ export default function NoteForm({
         };
 
     }, []);  // []は初回レンダリング時の時だけ、useEffect内を実行するという意味。
+
 
 
 

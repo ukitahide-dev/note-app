@@ -25,6 +25,7 @@ type Props = {
 
 
 export default function Sidebar({ isOpen }: Props) {
+
     const { labels } = useLabelStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,9 +36,8 @@ export default function Sidebar({ isOpen }: Props) {
 
 
 
-
-
     return (
+
         <>
         <aside
             className={
@@ -92,6 +92,7 @@ export default function Sidebar({ isOpen }: Props) {
 
             ))}
 
+
             <div
                 className={styles.item}
                 onClick={() => setIsModalOpen(true)}
@@ -125,5 +126,7 @@ export default function Sidebar({ isOpen }: Props) {
             />
         )}
         </>
+
     );
+    
 }

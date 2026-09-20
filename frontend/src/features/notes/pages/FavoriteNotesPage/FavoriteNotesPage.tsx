@@ -12,10 +12,13 @@ import NoteList from "../../components/NoteList/NoteList";
 import { useNoteStore } from "../../store/useNoteStore";
 import Pagination from "../../components/Pagination/Pagination";
 import SortSelect from "../../components/SortSelect/SortSelect";
+import NoteForm from "../../components/NoteForm/NoteForm";
+import NoteListSkeleton from "../../components/NoteListSkeleton/NoteListSkeleton";
 
 
 
 
+import styles from "./FavoriteNotesPage.module.css";
 
 
 
@@ -26,17 +29,22 @@ export default function FavoriteNotesPage() {
     const {
         notes,
         pinnedNotes,
+        fetchPinnedNotes,
         fetchFavoriteNotes,
+
+        isFetchtingNotes,
+
         pageSize,
         ordering,
         setPageSize,
-        setOrdering,
+        // setOrdering,
 
     } = useNoteStore();
 
 
     useEffect(() => {
 
+        fetchPinnedNotes();
         fetchFavoriteNotes();
 
     }, []);
@@ -47,35 +55,97 @@ export default function FavoriteNotesPage() {
 
 
     return (
+
         <>
 
-        <Pagination
-            onPageChange={(page) => fetchFavoriteNotes(page, pageSize, ordering)}
-            onPageSizeChange={async (size) => {
-                setPageSize(size);
+            <Pagination
 
-                await fetchFavoriteNotes(1, size, ordering);
-            }}
-        />
+                onPageChange={(page) => fetchFavoriteNotes(page, pageSize, ordering)}
 
-        <SortSelect
+                onPageSizeChange={ async (size) => {
 
-            onPageOrderChange={async (ordering) => {
+                    setPageSize(size);
 
-                setOrdering(ordering);
+                    await fetchFavoriteNotes(1, size, ordering);
 
-                await fetchFavoriteNotes(1, pageSize, ordering);
+                }}
 
-            }}
 
-        />
+            />
 
-        <NoteList
-            notes={notes}
-            pinnedNotes={pinnedNotes}
-            enableSort={false}
-            // setNotes={setNotes}
-        />
+
+
+            <div className={styles.container}>
+
+                <NoteForm
+
+                />
+
+
+                {isFetchtingNotes ? (
+
+                    <NoteListSkeleton
+
+                    />
+
+                ) : (
+
+                    <NoteList
+                        notes={notes}
+                        pinnedNotes={pinnedNotes}
+                        enableSort={true}
+
+                    />
+
+                )}
+
+
+                <Pagination
+                    onPageChange={(page) => fetchFavoriteNotes(page, pageSize, ordering)}
+                    onPageSizeChange={ async (size) => {
+
+                        setPageSize(size);
+
+                        await fetchFavoriteNotes(1, size, ordering);
+
+                    }}
+                />
+
+
+                {/* <UndoSnackbar
+
+
+                />
+
+
+                {errorMessage && (
+
+                    <Snackbar
+                        message={errorMessage}
+
+                    />
+
+                )} */}
+
+            </div>
+
+            {/* <Pagination
+                onPageChange={(page) => fetchFavoriteNotes(page, pageSize, ordering)}
+                onPageSizeChange={async (size) => {
+                    setPageSize(size);
+
+                    await fetchFavoriteNotes(1, size, ordering);
+                }}
+            />
+
+
+
+            <NoteList
+                notes={notes}
+                pinnedNotes={pinnedNotes}
+                enableSort={false}
+
+            /> */}
 
         </>
     );

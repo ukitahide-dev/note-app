@@ -22,7 +22,7 @@ type Props = {
 }
 
 
-// 親: NotePage.tsx
+// 親: NotesPage.tsx, FavoriteNotesPage, LabelNotesPage,
 
 
 export default function Pagination({
@@ -81,7 +81,7 @@ export default function Pagination({
 
                 page === "..." ? (
                     <span
-                        key={`ellipsis-${index}`}　
+                        key={`ellipsis-${index}`}
                         // key={index} こっちだとバグる。button兄弟要素のkeyと重複する時があるから。
                         className={styles.ellipsis}
                     >

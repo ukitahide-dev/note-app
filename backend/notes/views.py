@@ -71,9 +71,7 @@ class NoteViewSet(ModelViewSet):
 
     # ordering指定がなかった場合のデフォルト。
     ordering = ["order"]
-    # ordering = [
-    #     "-created_at"
-    # ]
+
 
 
 
@@ -99,24 +97,66 @@ class NoteViewSet(ModelViewSet):
         # ゴミ箱かどうか
         is_deleted = self.request.query_params.get("is_deleted")
 
+        is_favorite = self.request.query_params.get("is_favorite")
+
+        label_name = self.request.query_params.get("label_name")
+
+
 
         if is_deleted == "true":
+
             queryset = queryset.filter(
                 is_deleted=True
             )
+
         else:
+
             queryset = queryset.filter(
-                is_deleted=False,
-                is_pinned=False,
+                is_deleted=False
+            )
+
+            if is_favorite != "true" and not label_name:
+                queryset = queryset.filter(
+                    is_pinned=False
+                )
+
+            if label_name:
+                queryset = queryset.filter(
+                    labels__name=label_name
+                )
+
+
+        if is_favorite == "true":
+
+            queryset = queryset.filter(
+                is_favorite=True
+            )
+
+        elif is_favorite == "false":
+
+            queryset = queryset.filter(
+                is_favorite=False
             )
 
 
-        is_favorite = self.request.query_params.get("is_favorite")
 
-        if is_favorite == "true":
-            queryset = queryset.filter(is_favorite=True)
-        elif is_favorite == "false":
-            queryset = queryset.filter(is_favorite=False)
+
+        # if is_deleted == "true":
+        #     queryset = queryset.filter(
+        #         is_deleted=True
+        #     )
+        # else:
+        #     queryset = queryset.filter(
+        #         is_deleted=False,
+        #         is_pinned=False,
+        #     )
+
+
+
+        # if is_favorite == "true":
+        #     queryset = queryset.filter(is_favorite=True)
+        # elif is_favorite == "false":
+        #     queryset = queryset.filter(is_favorite=False)
 
 
 
@@ -217,13 +257,14 @@ class NoteViewSet(ModelViewSet):
 
 
 
-    # ピン止めノート取得。通常ノートとは違い、pinned_orderを使って並び替える。ページネーションには含まない。だから、ここで通常ノートとは違う独自の処理を書く。
+    # ピン止めノート取得。通常ノートとは違い、pinned_orderを使って並べ替える。ページネーションには含まない。だから、ここで通常ノートとは違う独自の処理を書く。
     @action(detail=False, methods=["get"])
     def pinned(self, request):
 
         notes = Note.objects.filter(
             user=request.user,
             is_deleted=False,
+
             is_pinned=True,
         )
 
@@ -249,7 +290,6 @@ class NoteViewSet(ModelViewSet):
 
 
         notes = notes.order_by(ordering)
-
 
 
         serializer = self.get_serializer(
@@ -324,7 +364,15 @@ class NoteViewSet(ModelViewSet):
     @action(detail=True, methods=["post"])  # detail=True は/notes/24/view/ のように1件のノートに対するAPIという意味。
     def view(self, request, pk=None):
 
-        note = self.get_object()
+        note = get_object_or_404(
+            Note.objects.filter(
+                user=request.user,
+                is_deleted=False,
+            ),
+            pk=pk,
+        )
+
+        # note = self.get_object()   # これだと、get_querysetから対象のノートを探すことになる。今のget_queryset()では、is_pinned=Falseのノートを返す設計にしているから、ピン止めノートを取得できず、ピン止めノートの閲覧数が更新されなくなる。
 
         note.view_count = F("view_count") + 1  # Pythonで計算するのではなく、「データベースで計算してください」とお願いするための書き方。競合アクセスでカウントが正しく増えなくなることを防ぐ。１
         note.save(update_fields=["view_count"])
@@ -343,7 +391,16 @@ class NoteViewSet(ModelViewSet):
     @action(detail=True, methods=["patch"])
     def view_time(self, request, pk=None):
 
-        note = self.get_object()  # Noteインスタンスをnote変数に入れる。python上のNoteインスタンス。
+
+        note = get_object_or_404(
+            Note.objects.filter(
+                user=request.user,
+                is_deleted=False,
+            ),
+            pk=pk,
+        )
+
+        # note = self.get_object()  # Noteインスタンスをnote変数に入れる。python上のNoteインスタンス。
 
         # seconds = request.data.get("seconds", 0)  # HTTPリクエストのJSONから seconds を取り出して。なかったら0にして。これだと、Viewが直接リクエストデータを扱うことになる。
 

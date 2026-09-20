@@ -56,6 +56,8 @@ export default function NoteCard({
     dragHandleProps,
     panelType,
     setPanelType,
+
+
 }: Props) {
     // const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
 
@@ -141,9 +143,13 @@ export default function NoteCard({
         );
     }
 
+
+
+
     useEffect(() => {
 
         const handleClickOutside = (event: MouseEvent) => {
+
             if (
                 cardRef.current &&
                 !cardRef.current.contains(event.target as Node) && // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
@@ -154,6 +160,7 @@ export default function NoteCard({
                 (!paletteRef.current ||
                     !paletteRef.current.contains(event.target as Node))
             ) {
+
                 setOpenMenuId(null);
                 setOpenColorId(null);
 
@@ -164,6 +171,7 @@ export default function NoteCard({
                     console.log("保存するのはこのカード");
                     saveColor();
                 }
+
             }
         };
 
@@ -178,6 +186,7 @@ export default function NoteCard({
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
+
     }, [note.id, tempColor]); // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
 
     // tempColor, openColorId
@@ -186,6 +195,7 @@ export default function NoteCard({
 
 
     const highlightText = (text: string) => {
+
         if (!searchText.trim()) {
             return text;
         }
@@ -209,9 +219,13 @@ export default function NoteCard({
         );
     };
 
+
+
     const handleImageChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
+
     ) => {
+
         const file = e.target.files?.[0]; // e.target.files は、選択されたファイル一覧。
 
         if (!file) return;
@@ -220,8 +234,11 @@ export default function NoteCard({
             const image = await uploadNoteImageApi(note.id, file);
             console.log(image);
             fetchNotes();
+
         } catch (error) {
+
             console.error(error);
+
         }
 
         // console.log(file);
@@ -233,12 +250,13 @@ export default function NoteCard({
 
 
     return (
-        
+
         <Card
             style={{ backgroundColor: displayColor }}
             onClick={() => setOpenNoteDetailId(note.id)}
             ref={cardRef}
         >
+
             <button
                 onClick={(e) => {
                     e.stopPropagation();
@@ -379,6 +397,7 @@ export default function NoteCard({
                     onClose={() => setOpenNoteDetailId(null)}
                 />
             )}
+            
         </Card>
     );
 }

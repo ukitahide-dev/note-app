@@ -30,6 +30,8 @@ type Props = {
     dragHandleProps?: any;
 };
 
+
+
 export default function NoteGrid({
     enableSort,
     notes,
@@ -42,12 +44,20 @@ export default function NoteGrid({
     setOpenNoteDetailId,
     panelType,
     setPanelType,
+
 }: Props) {
+
+
     const CardComponent = enableSort ? SortableNoteCard : NoteCard;
 
+
+
     return (
+
         <div className={styles.notesContainer}>
+
             {notes.map((note) => (
+                
                 <CardComponent
                     key={note.id}
                     note={note}
@@ -60,7 +70,9 @@ export default function NoteGrid({
                     panelType={panelType}
                     setPanelType={setPanelType}
                 />
+
             ))}
+
         </div>
     );
 }
