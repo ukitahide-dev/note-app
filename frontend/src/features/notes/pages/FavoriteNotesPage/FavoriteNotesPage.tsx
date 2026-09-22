@@ -36,6 +36,7 @@ export default function FavoriteNotesPage() {
 
         pageSize,
         ordering,
+        pinnedOrdering,
         setPageSize,
         // setOrdering,
 
@@ -47,7 +48,15 @@ export default function FavoriteNotesPage() {
         fetchPinnedNotes();
         fetchFavoriteNotes();
 
-    }, []);
+    }, [ordering]);
+
+
+
+    useEffect(() => {
+
+        fetchPinnedNotes(pinnedOrdering);
+
+    }, [pinnedOrdering]);
 
 
 
@@ -93,7 +102,7 @@ export default function FavoriteNotesPage() {
                     <NoteList
                         notes={notes}
                         pinnedNotes={pinnedNotes}
-                        enableSort={true}
+                        enableSort={false}
 
                     />
 

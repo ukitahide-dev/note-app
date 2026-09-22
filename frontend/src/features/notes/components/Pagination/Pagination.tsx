@@ -124,6 +124,7 @@ export default function Pagination({
 
         </div>
 
+
         <div className={styles.pageSizeButtons}>
 
             <span className={styles.pageSizeLabel}>

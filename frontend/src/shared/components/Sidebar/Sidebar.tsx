@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // ---- css ----
 import styles from "./Sidebar.module.css";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LabelEditModal from "./LabelEditModal/LabelEditModal";
 
 
@@ -26,12 +26,24 @@ type Props = {
 
 export default function Sidebar({ isOpen }: Props) {
 
-    const { labels } = useLabelStore();
+    const { usedLabels,
+            fetchUsedLabels,
+
+    } = useLabelStore();
+
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
 
+
+
+    useEffect(() => {
+
+        fetchUsedLabels();
+
+    }, []);
 
 
 
@@ -76,7 +88,8 @@ export default function Sidebar({ isOpen }: Props) {
                 )}
             </div>
 
-            {labels.map((label) => (
+
+            {usedLabels.map((label) => (
 
                 <div key={label.id}
                      className={styles.item}
@@ -125,8 +138,9 @@ export default function Sidebar({ isOpen }: Props) {
 
             />
         )}
+
         </>
 
     );
-    
+
 }

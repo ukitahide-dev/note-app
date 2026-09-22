@@ -32,13 +32,15 @@ export default function NotesPage() {
         notes,
         pinnedNotes,
 
+        isFetchtingNotes,
+
         fetchNotes,
         fetchPinnedNotes,
 
-        isFetchtingNotes,
+        ordering,
+        pinnedOrdering,
 
         pageSize,
-        ordering,
         setPageSize,
 
 
@@ -56,10 +58,18 @@ export default function NotesPage() {
 
     useEffect(() => {
 
-        fetchNotes();
-        fetchPinnedNotes();
+        fetchNotes(1, pageSize, ordering);
 
-    }, []);
+
+    }, [ordering]);
+
+
+
+    useEffect(() => {
+
+        fetchPinnedNotes(pinnedOrdering);
+
+    }, [pinnedOrdering])
 
 
 

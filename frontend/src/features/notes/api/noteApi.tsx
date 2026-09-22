@@ -90,6 +90,7 @@ export const getFavoriteNotesApi = async (
 
 
 
+// 対象のラベルを持つノート一覧を取得する
 export const getLabelNotesApi = async (
     labelName: string,
     page: number = 1,

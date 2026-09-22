@@ -50,8 +50,10 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
     const {
         reorderNotes,
         reorderPinnedNotes,
+
         ordering,
         setOrdering,
+
         pinnedOrdering,
         setPinnedOrdering,
 
@@ -76,6 +78,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
     const canSortPinnedNotes = enableSort && pinnedOrdering === "pinned_order";
 
 
+    
     // ドラッグ終了時に実行される関数
     const handleNormalDragEnd = (event: any) => {
 
@@ -164,7 +167,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                     )}
 
                     <h3>その他</h3>
-                    
+
                 </>
             )}
 

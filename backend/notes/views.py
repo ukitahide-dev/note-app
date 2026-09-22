@@ -544,6 +544,30 @@ class LabelViewSet(ModelViewSet):
 
 
 
+    # 現在存在する（ゴミ箱に入っていない）ノートで実際に使われているラベルだけを取得する処理
+    @action(detail=False, methods=["get"])
+    def used(self, request):
+
+        # ログイン中のユーザーが作ったラベルのうち、削除されていないノートに使われているラベルだけを取得する
+        labels = Label.objects.filter(
+            user=self.request.user,
+            note__is_deleted=False,
+        ).distinct()
+
+
+        serializer = self.get_serializer(
+            labels,
+            many=True,
+        )
+
+
+        return Response(
+            serializer.data
+        )
+
+
+
+
 # --------------------------------------------
 # NoteImagesViewSet
 #

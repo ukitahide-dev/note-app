@@ -90,3 +90,18 @@ export const deleteLabelApi = async (
 }
 
 
+
+
+
+// ノートに使われているラベルだけを取得する。
+export const getUsedLabelsApi = async () => {
+
+    const res = await api.get(
+
+        "/labels/used/"
+
+    );
+
+    return res.data;
+
+};

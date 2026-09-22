@@ -9,6 +9,7 @@ import {
     createLabelApi,
     updateLabelApi,
     deleteLabelApi,
+    getUsedLabelsApi,
 
 } from "../../notes/api/labelApi";
 
@@ -18,6 +19,8 @@ type LabelStore = {
 
     labels: Label[];  // labelsはLabel型の配列
 
+    usedLabels: Label[];
+
     fetchLabels: () => Promise<void>;
 
     handleCreateLabel: (name: string) => Promise<void>;
@@ -25,6 +28,9 @@ type LabelStore = {
     handleUpdateLabel: (id: number, name: string) => Promise<void>;
 
     handleDeleteLabel: (id: number) => Promise<void>;
+
+
+    fetchUsedLabels: () => Promise<void>;
 
 };
 
@@ -35,6 +41,8 @@ export const useLabelStore = create<LabelStore>((set) => ({
     // create()はZustandの関数。共有stateを作るという意味。このstoreは LabelStore 型。set はZustandのstate更新関数。
 
     labels: [], // labelsの初期値は空配列。
+
+    usedLabels: [],
 
     // ラベル一覧取得
     fetchLabels: async () => {
@@ -84,7 +92,7 @@ export const useLabelStore = create<LabelStore>((set) => ({
     ) => {
 
         try {
-            
+
             const newLabel = await updateLabelApi(labelId, name);
 
             set((state) => {
@@ -109,16 +117,49 @@ export const useLabelStore = create<LabelStore>((set) => ({
         }
     },
 
+
     // ラベル削除
     handleDeleteLabel: async (id: number) => {
+
         try {
+
             await deleteLabelApi(id);
 
             set((state) => ({
                 labels: state.labels.filter((label) => label.id !== id),
             }));
+
         } catch (error) {
+
             console.error(error);
+            
         }
     },
+
+
+
+    // ノートに使われているラベルだけを取得する
+    fetchUsedLabels: async (
+
+    ) => {
+
+        try {
+
+            const data = await getUsedLabelsApi();
+
+            set({
+                usedLabels: data
+            })
+
+        }  catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    }
+
+
+
 }));

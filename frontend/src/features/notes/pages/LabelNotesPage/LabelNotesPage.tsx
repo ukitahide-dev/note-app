@@ -22,11 +22,12 @@ export default function LabelNotesPage() {
         notes,
         pinnedNotes,
         fetchPinnedNotes,
-        fetchNotes,
+        // fetchNotes,
         fetchLabelNotes,
 
         pageSize,
         ordering,
+        pinnedOrdering,
         isFetchtingNotes,
 
         setPageSize,
@@ -38,12 +39,17 @@ export default function LabelNotesPage() {
 
         if (!labelName) return;
 
-        fetchPinnedNotes();
-        // fetchNotes();
         fetchLabelNotes(labelName);
-        // fetchNotes(1, pageSize, ordering, labelName);
+        
+    }, [labelName, ordering]);
 
-    }, [labelName]);
+
+
+    useEffect(() => {
+
+        fetchPinnedNotes(pinnedOrdering);
+
+    }, [pinnedOrdering]);
 
 
 
@@ -58,12 +64,12 @@ export default function LabelNotesPage() {
         <>
 
             <Pagination
-                onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                onPageChange={(page) => fetchLabelNotes(labelName!, page, pageSize, ordering)}
 
                 onPageSizeChange={async (size) => {
                     setPageSize(size);
 
-                    await fetchNotes(1, size, ordering);
+                    await fetchLabelNotes(labelName!, 1, size, ordering);
 
                 }}
             />
@@ -89,14 +95,14 @@ export default function LabelNotesPage() {
                 <Pagination
 
                     onPageChange={(page) =>
-                        fetchNotes(page, pageSize, ordering)
+                        fetchLabelNotes(labelName!, page, pageSize, ordering)
                     }
 
                     onPageSizeChange={async (size) => {
 
                         setPageSize(size);
 
-                        await fetchNotes(1, size, ordering);
+                        await fetchLabelNotes(labelName!, 1, size, ordering);
 
                     }}
 

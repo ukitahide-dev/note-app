@@ -24,15 +24,22 @@ import {
     updateNotePinnedApi,
     updateNoteViewTimeApi,
 } from "../api/noteApi";
+
+
 import { useErrorStore } from "../../../shared/stores/useErrorStore";
+
+import { useLabelStore } from "../../labels/store/labelStore";
+
 // import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
 import axios from "axios";
+
 
 type DeletedNote = {
     note: Note;
     index: number;
 };
+
 
 type NoteStore = {
     notes: Note[];
@@ -45,7 +52,7 @@ type NoteStore = {
     previous: string | null;
 
     pageSize: number;
-    setPageSize: (size: number) => Promise<void>;
+    setPageSize: (size: number) => void;
 
     ordering: string;
     setOrdering: (ordering: string) => Promise<void>;
@@ -107,7 +114,7 @@ type NoteStore = {
         color: string,
     ) => Promise<void>;
 
-    addNote: (note: Note) => void;
+
 
     updateNote: (id: number, title: string, content: string) => Promise<void>;
 
@@ -175,7 +182,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     pageSize: 20,
 
-    // ordering: "-created_at",
+
     ordering: "order",
 
     pinnedOrdering: "pinned_order",
@@ -192,11 +199,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     fetchNotes: async (
-        page = 1, // pageが渡されなかったら1を使う。
+        page = 1,  // pageが渡されなかったら1を使う。
         pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
-        // ordering = "-created_at",
+
         ordering = "order",
-        labelName?: string,
+
 
     ) => {
         // console.log(`pageSize: ${pageSize}`);
@@ -207,7 +214,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         try {
 
-            const data = await getNotesApi(page, pageSize, ordering, labelName);
+            const data = await getNotesApi(page, pageSize, ordering);
 
             console.log(data);
 
@@ -256,7 +263,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
-
+    // いまぼところ、Calendar.tsxで使ってる。
     fetchAllNotes: async () => {
 
         set({
@@ -284,7 +291,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
-    setPageSize: async (size: number) => {
+
+
+    setPageSize: (size: number) => {
+
         set({
             pageSize: size,
             currentPage: 1,
@@ -293,22 +303,37 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         // await get().fetchNotes(1, size, get().ordering);
     },
 
-    setOrdering: async (ordering: string) => {
+
+
+    setOrdering: async (
+        ordering: string,
+
+
+    ) => {
+
         set({
             currentPage: 1,
             ordering: ordering,
         });
 
-        await get().fetchNotes(1, get().pageSize, ordering);
+        // await get().fetchNotes(1, get().pageSize, ordering);
+
     },
 
+
+
+
     setPinnedOrdering: async (ordering) => {
+
         set({
             pinnedOrdering: ordering,
         });
 
-        await get().fetchPinnedNotes(ordering);
+        // await get().fetchPinnedNotes(ordering);
+
     },
+
+
 
     fetchTrashNotes: async (
         page = 1, // pageが渡されなかったら1を使う。
@@ -343,6 +368,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             });
         }
     },
+
+
 
     fetchFavoriteNotes: async (
         page = 1, // pageが渡されなかったら1を使う。
@@ -438,7 +465,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             }));
 
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
+
             console.error(error);
             const status = error.response?.status;
             console.log(`エラーステータス: ${status}`);
@@ -453,14 +483,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             //     errorMessage: getApiErrorMessage(error)
             // });
         }
+
     },
 
 
 
-    addNote: (newNote) =>
-        set((state) => ({
-            notes: [newNote, ...state.notes],
-        })),
 
 
 
@@ -534,9 +561,16 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         });
     },
 
+
+
     // ノート単体をゴミ箱に移動する
-    moveToTrash: async (id: number) => {
+    moveToTrash: async (
+        id: number,
+
+    ) => {
+
         try {
+
             // 削除対象のノートを、削除前に取得する。
             const deletedNote = get().notes.find((note) => note.id === id);
 
@@ -547,9 +581,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             if (!deletedNote) return;
 
+
             // 以前のタイマーがあれば削除
             const oldTimer = get().undoTimer;
-            console.log(`oldTimerの中身: ${oldTimer}`);
+            // console.log(`oldTimerの中身: ${oldTimer}`);
 
             if (oldTimer) {
                 clearTimeout(oldTimer);
@@ -574,7 +609,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 showUndo: true,
 
                 notes: state.notes.filter((note) => note.id !== id),
+
             }));
+
+
+            await useLabelStore.getState().fetchUsedLabels();
+
 
             // 新しいタイマーを作る。5秒後にUndo終了
             const timer = setTimeout(() => {
@@ -587,6 +627,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             set({
                 undoTimer: timer,
             });
+
         } catch (error) {
             // get().setError(error);
 
@@ -596,9 +637,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // 削除処理をキャンセルする。元に戻すを押したとき。
     undoDelete: async () => {
-        const deletedNotes = get().deletedNotes; // Storeに保存しておいた削除したノートを取り出す。
+
+        const deletedNotes = get().deletedNotes;   // Storeに保存しておいた削除したノートを取り出す。
 
         if (!deletedNotes.length) return;
 
@@ -609,12 +653,16 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             clearTimeout(timer);
         }
 
+
         try {
+
             await Promise.all(
                 deletedNotes.map((item) => restoreNoteApi(item.note.id)),
             );
 
+
             set((state) => {
+
                 const newNotes = [...state.notes];
 
                 deletedNotes.forEach((item) =>
@@ -627,14 +675,24 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     deletedNotes: [],
                     undoTimer: null,
                 };
+
             });
+
+
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
 
+
+
     // 選択した複数のノートをゴミ箱に移動する
     moveSelectedToTrash: async (ids: number[]) => {
+
         try {
             // 削除対象のノートとそのインデックスを、削除前に取得する。
             const deletedNotes = get()
@@ -646,7 +704,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             // 以前のタイマーがあれば削除
             const oldTimer = get().undoTimer;
-            console.log(`oldTimerの中身: ${oldTimer}`);
+            // console.log(`oldTimerの中身: ${oldTimer}`);
 
             if (oldTimer) {
                 clearTimeout(oldTimer);
@@ -659,6 +717,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 get().hideUndo();
             }, 5000);
 
+
             set((state) => ({
                 deletedNotes: deletedNotes,
                 showUndo: true,
@@ -666,6 +725,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
                 notes: state.notes.filter((note) => !ids.includes(note.id)),
             }));
+
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
             // get().setError(error);
 
@@ -673,20 +735,31 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // ノート単体を削除する
     deleteNoteForever: async (id: number) => {
+
         try {
+
             await deleteNoteForeverApi(id);
 
             set((state) => ({
                 notes: state.notes.filter((note) => note.id !== id),
             }));
+
+
+            await useLabelStore.getState().fetchUsedLabels();
+
+
         } catch (error) {
             // get().setError(error);
 
             throw error; // 捕まえたエラーを、もう一度外側へ投げる。
         }
     },
+
+
 
     // ゴミ箱にあるノートを復活させる
     restoreNote: async (id: number) => {
@@ -699,12 +772,16 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 notes: state.notes.filter((note) => note.id !== id),
             }));
 
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
             // get().setError(error);
 
             throw error; // 捕まえたエラーを、もう一度外側へ投げる。
         }
     },
+
+
 
     // ゴミ箱内のノートをすべて削除する
     emptyTrash: async () => {
@@ -717,12 +794,16 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 notes: [],
             });
 
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
             // get().setError(error);
 
             throw error; // 捕まえたエラーを、もう一度外側へ投げる。
         }
     },
+
+
 
     // お気に入りを切り替える
     toggleFavorite: async (id: number, is_favorite: boolean) => {
@@ -750,9 +831,13 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // ピンのつけ外し
     togglePin: async (id: number, is_pinned: boolean) => {
+
         try {
+
             const updatedNote = await updateNotePinnedApi(id, !is_pinned);
 
             set((state) => ({
@@ -760,10 +845,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     note.id === id ? updatedNote : note,
                 ),
             }));
+
         } catch (error) {
             // get().setError(error);
-
             console.error(error);
+
         }
     },
 
@@ -771,6 +857,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     updateSelectedNotePin: async (
         noteIds: number[],
         mode: "add" | "remove",
+
     ) => {
         const notes = get().notes;
         const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
@@ -797,8 +884,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
+
     // 選択した複数のノートの色を変える
     updateSelectedNoteColor: async (ids: number[], color: string) => {
+
         try {
             await Promise.all(ids.map((id) => updateNoteColorApi(id, color)));
 
@@ -818,11 +909,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // 選択した複数のノートをコピーする
     duplicateSelectedNotes: async (ids: number[]) => {
+
         const notes = get().notes;
 
         try {
+
             const newNotes = await Promise.all(
                 notes
                     .filter((note) => ids.includes(note.id))
@@ -839,6 +934,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             set((state) => ({
                 notes: [...newNotes, ...state.notes],
             }));
+
         } catch (error) {
             // get().setError(error);
             console.error(error);
@@ -866,6 +962,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             }));
 
+
+            await useLabelStore.getState().fetchUsedLabels();
+
+
         } catch (error) {
 
             if (axios.isAxiosError(error)) {
@@ -877,39 +977,50 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
+
     // 選択中のノートのラベルを更新する
     updateSelectedNoteLabels: async (
         noteIds: number[],
         labelId: number,
         mode: "add" | "remove",
+
     ) => {
+
         const notes = get().notes;
 
         // noteIdsを使い、選択中のノートを抽出する。
         const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
 
         try {
+
             const updatedNotes = await Promise.all(
                 // Promise.all() は、Promise.all(配列)の形じゃないとだめ。選択中の全ノートに対してラベル更新を同時に実行する。
 
                 selectedNotes.map(async (note) => {
+
                     const currentIds = note.labels.map((label) => label.id);
 
                     let newIds: number[];
 
                     if (mode == "add") {
+
                         if (currentIds.includes(labelId)) {
                             newIds = currentIds;
                         } else {
                             newIds = [labelId, ...currentIds];
                         }
+
                     } else {
+
                         newIds = currentIds.filter((id) => id !== labelId);
+
                     }
 
                     return await updateNoteLabelsApi(note.id, newIds);
+
                 }),
             );
+
 
             set((state) => ({
                 notes: state.notes.map((note) => {
@@ -920,8 +1031,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     return updatedNote ?? note;
                 }),
             }));
+
+
+            await useLabelStore.getState().fetchUsedLabels();
+
         } catch (error) {
+
             console.error(error);
+
         }
     },
 
