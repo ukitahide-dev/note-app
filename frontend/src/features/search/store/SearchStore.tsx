@@ -1,4 +1,4 @@
-// features/search/store/searchStore.ts
+
 
 import { create } from "zustand";
 
@@ -12,14 +12,21 @@ type SearchStore = {
 
 
 
-export const useSearchStore =
-    create<SearchStore>((set) => ({
+export const useSearchStore = create<SearchStore>((set) => ({
 
-        searchText: "",
+    searchText: "",
 
-        setSearchText: (text) =>
-            set({
-                searchText: text
-            }),
+
+    setSearchText: (text) =>
+
+        set({
+            searchText: text
+        }),
+
+
+
+
+
+
 
     }));

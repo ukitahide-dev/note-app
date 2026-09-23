@@ -129,7 +129,7 @@ export default function NoteForm({
 
     const handleSubmit = async (
         e: React.SyntheticEvent
-        
+
     ) => {
 
         e.preventDefault();
@@ -290,6 +290,7 @@ export default function NoteForm({
                 <>
                 <input
                     className={styles.titleInput}
+                    style={{ backgroundColor: tempColor }}
                     type="text"
                     placeholder="タイトル"
                     value={title}
@@ -323,6 +324,7 @@ export default function NoteForm({
             {/* ノート内容 */}
             <textarea
                 ref={textareaRef}   // こう書くと、textarea実物をtextareaRef.currentで取得できる
+                style={{ backgroundColor: tempColor }}
                 placeholder="ノートを入力..."
                 value={content}
                 onFocus={() => setIsExpanded(true)}
@@ -347,11 +349,12 @@ export default function NoteForm({
             {isExpanded && (
 
                 <>
+
                 <div className={styles.labels}>
 
                     {selectedLabelNames.map((labelName) =>
 
-                        <span>{labelName}</span>
+                        <span className={styles.label}>{labelName}</span>
 
                     )}
 

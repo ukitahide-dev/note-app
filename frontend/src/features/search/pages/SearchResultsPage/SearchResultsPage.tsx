@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 
 import styles from "./SearchResultsPage.module.css";
 
-// ----notes/components ----
+
+// ----components ----
 import NoteList from "../../../notes/components/NoteList/NoteList";
+
 
 // ---- searchStrore ----
 import { useSearchStore } from "../../store/SearchStore";
 
-// ---- notes/api ----
+// ---- /api ----
 // import { getNotes } from "../../../notes/api/noteApi";
 
 
-// import type { Note } from "../../../../types/note";
+
 import { useNoteStore } from "../../../notes/store/useNoteStore";
 import { useNoteFilter } from "../../hooks/useNoteFilter";
 
@@ -22,6 +24,10 @@ import { useNoteFilter } from "../../hooks/useNoteFilter";
 // ----react-icons ----
 // import { MdLabel } from "react-icons/md";
 import { MdOutlineLabel } from "react-icons/md";
+import { useLabelStore } from "../../../labels/store/labelStore";
+import { getSearchNotesApi, getUsedColorsApi } from "../../../notes/api/noteApi";
+import type { Note } from "../../../../types/api/note";
+import Pagination from "../../../notes/components/Pagination/Pagination";
 
 
 
@@ -35,55 +41,132 @@ export default function SearchResultsPage () {
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
+    const [usedColors, setUsedColors] = useState<string[]>([]);
 
-    // useNoteStore
+
+    // Store
     const {
-        notes,
+        // notes,
+        pinnedNotes,
         fetchNotes,
+        fetchPinnedNotes,
+
     } = useNoteStore();
 
 
-    useEffect(() => {
-        fetchNotes();
-    }, [])
-
-
-    // useSearchStore
+    // Store
     const { searchText } = useSearchStore();
 
 
-    // const showLabels = searchText.trim() === "" && selectedLabel === null;
-
-
-
-
-    // useNoteFilter hook
+    // Store
     const {
-        uniqueLabels,
-        filteredNotes,
-        uniqueColors,
-    } = useNoteFilter(
-        notes,
-        searchText,
-        selectedLabel,
-        selectedColor,
-    );
+        usedLabels,
+        fetchUsedLabels,
 
+    } = useLabelStore();
+
+
+
+    // hook
+    // const {
+    //     // uniqueLabels,
+    //     // uniqueColors,
+    //     filteredNotes,
+
+    // } = useNoteFilter(
+    //     notes,
+    //     searchText,
+    //     selectedLabel,
+    //     selectedColor,
+
+    // );
 
 
     const [showAllLabels, setShowAllLabels] = useState(false);
-
-    const displayLabels = showAllLabels
-        ? uniqueLabels
-        : uniqueLabels.slice(0, 4);
-
-
-
     const [showAllColors, setShowAllColors] = useState(false);
 
+    const [searchResultNotes, setSearchResultNotes] = useState<Note[]>([]);
+
+
+    const displayLabels = showAllLabels
+        ? usedLabels
+        : usedLabels.slice(0, 4);
+
+
     const displayColors = showAllColors
-        ? uniqueColors
-        : uniqueColors.slice(0, 8);
+        ? usedColors
+        : usedColors.slice(0, 8);
+
+
+
+    useEffect(() => {
+
+        fetchNotes();
+        fetchPinnedNotes();
+        fetchUsedLabels();
+
+
+        const fetchUsedColors = async () => {
+
+            try {
+                const data = await getUsedColorsApi();
+                console.log(data);
+                setUsedColors(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        fetchUsedColors();
+
+    }, []);
+
+
+
+
+    useEffect(() => {
+
+        const searchNotes = async () => {
+
+            if (!searchText && !selectedLabel && !selectedColor) {
+                setSearchResultNotes([]);
+                return;
+            }
+
+            try {
+
+                const data = await getSearchNotesApi(
+                    searchText,
+                    selectedLabel,
+                    selectedColor,
+                    1,
+                    20,
+                );
+
+                setSearchResultNotes(data.results);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        searchNotes();
+
+    }, [searchText, selectedLabel, selectedColor]);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -95,11 +178,14 @@ export default function SearchResultsPage () {
         !selectedLabel && !selectedColor && !searchText ? (
 
             <>
+
                 <div className={styles.container}>
+
                     <div className={styles.top}>
+
                         <p>ラベル</p>
 
-                        {uniqueLabels.length > 4 && (
+                        {usedLabels.length > 4 && (
 
                             <button
                                 onClick={() =>
@@ -118,20 +204,22 @@ export default function SearchResultsPage () {
                     </div>
 
                     <div className={`${styles.content} ${styles.labels}`}>
+
                         {displayLabels.map((label) => (
 
                             <div
-                                key={label}
+                                key={label.id}
                                 className={styles.label}
-                                onClick={() => setSelectedLabel(label)}
+                                onClick={() => setSelectedLabel(label.name)}
                             >
                                 <MdOutlineLabel size={18} />
-                                {/* <MdLabel /> */}
-                                <p>{label}</p>
+
+                                <p>{label.name}</p>
 
                             </div>
 
                         ))}
+
                     </div>
 
 
@@ -141,9 +229,10 @@ export default function SearchResultsPage () {
                 <div className={`${styles.container} ${styles.colorContainer}`}>
 
                     <div className={styles.top}>
+
                         <p>色</p>
 
-                        {uniqueColors.length > 8 && (
+                        {usedColors.length > 8 && (
 
                             <button
                                 onClick={() =>
@@ -162,6 +251,7 @@ export default function SearchResultsPage () {
                     </div>
 
                     <div className={`${styles.content} ${styles.colors}`}>
+
                         {displayColors.map((color) => (
 
                             <div
@@ -184,12 +274,43 @@ export default function SearchResultsPage () {
 
         ) : (
 
-            <NoteList
-                notes={filteredNotes}
-                // setNotes={setNotes}
-                enableSort={false}
+            <>
+                <Pagination
 
-            />
+                    // onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+
+                    onPageSizeChange={ async (size) => {
+
+                        // setPageSize(size);
+
+                        // await fetchNotes(1, size, ordering);
+
+                    }}
+
+
+                />
+
+                <NoteList
+                    // notes={filteredNotes}
+                    notes={searchResultNotes}
+                    pinnedNotes={pinnedNotes}
+                    enableSort={false}
+
+                />
+
+                <Pagination
+
+                    // onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                    onPageSizeChange={ async (size) => {
+
+                        // setPageSize(size);
+
+                        // await fetchNotes(1, size, ordering);
+
+                    }}
+                />
+
+            </>
 
 
         )

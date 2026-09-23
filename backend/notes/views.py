@@ -27,7 +27,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from django.core.files.storage import default_storage
-from django.db.models import F
+from django.db.models import F, Q
 
 from django.db import models
 
@@ -298,6 +298,100 @@ class NoteViewSet(ModelViewSet):
         )
 
         return Response(serializer.data)
+
+
+
+    @action(detail=False, methods=["get"])
+    def search(self, request):
+
+        query = request.query_params.get("q", "")
+        label_name = request.query_params.get("label_name")
+        color = request.query_params.get("color")
+
+
+
+        queryset = Note.objects.filter(
+            user=request.user,
+            is_deleted=False,
+        )
+
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query)
+            )
+
+
+        if label_name:
+            queryset = queryset.filter(
+                labels__name=label_name
+            )
+
+
+        if color:
+            queryset = queryset.filter(
+                color=color
+            )
+
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+
+            serializer = NoteSerializer(
+                page,
+                many=True,
+            )
+
+            return self.get_paginated_response(
+                serializer.data
+            )
+
+
+        serializer = NoteSerializer(
+            queryset,
+            many=True,
+        )
+
+        return Response(serializer.data)
+
+        # return Response(
+        #     NoteSerializer(queryset, many=True).data
+        # )
+
+
+
+    @action(detail=False, methods=["get"])
+    def used_colors(self, request):
+
+        colors = (
+            Note.objects
+            .filter(
+                user=request.user,
+                is_deleted=False,
+            )
+            .order_by()   # このクエリではモデルのデフォルト ordering = ["order"] を解除する。
+            .values_list("color", flat=True)
+            .distinct()
+        )
+
+
+
+
+        # colors = (
+        #     Note.objects
+        #     .filter(
+        #         user=request.user,
+        #         is_deleted=False,
+        #     )
+        #     .values_list("color", flat=True)
+        #     .distinct()
+        # )
+
+        print("COLORS:", list(colors))
+
+        return Response(colors)
 
 
 

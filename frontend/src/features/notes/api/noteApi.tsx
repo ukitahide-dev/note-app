@@ -43,6 +43,7 @@ export const getPinnedNotesApi = async (ordering: string = "pinned_order") => {
 
 
 export const getAllNotesApi = async () => {
+
     const res = await api.get("/notes/", {
         params: {
             page_size: 9999,
@@ -109,6 +110,47 @@ export const getLabelNotesApi = async (
         },
 
     });
+
+    return res.data;
+
+};
+
+
+
+
+// 検索結果に合致したノートを取得する
+export const getSearchNotesApi = async (
+    query: string,
+    labelName: string | null,
+    color: string | null,
+    page: number = 1,
+    pageSize: number = 20,
+
+) => {
+
+    const res = await api.get(
+        "/notes/search/", {
+        params: {
+            q: query,
+            ...(labelName ? { label_name: labelName } : {}),
+            ...(color ? { color } : {}),
+            page,
+            page_size: pageSize,
+        },
+    });
+
+    return res.data;
+
+};
+
+
+
+export const getUsedColorsApi = async () => {
+
+    const res = await api.get(
+        "/notes/used_colors/"
+
+    );
 
     return res.data;
 

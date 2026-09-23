@@ -210,13 +210,16 @@ export default function NoteCard({
         const parts = text.split(regex);
 
         return parts.map((part, index) =>
+
             part.toLowerCase() === searchText.toLowerCase() ? (
                 // markは、HTMLの <mark> タグの標準スタイル。自動で背景黄色が当たる。
                 <mark key={index}>{part}</mark>
             ) : (
                 <span key={index}>{part}</span>
             ),
+
         );
+        
     };
 
 
@@ -397,7 +400,7 @@ export default function NoteCard({
                     onClose={() => setOpenNoteDetailId(null)}
                 />
             )}
-            
+
         </Card>
     );
 }
