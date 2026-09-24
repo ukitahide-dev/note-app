@@ -10,7 +10,7 @@ import NoteList from "../../../notes/components/NoteList/NoteList";
 
 
 // ---- searchStrore ----
-import { useSearchStore } from "../../store/SearchStore";
+// import { useSearchStore } from "../../store/SearchStore";
 
 // ---- /api ----
 // import { getNotes } from "../../../notes/api/noteApi";
@@ -18,15 +18,15 @@ import { useSearchStore } from "../../store/SearchStore";
 
 
 import { useNoteStore } from "../../../notes/store/useNoteStore";
-import { useNoteFilter } from "../../hooks/useNoteFilter";
+// import { useNoteFilter } from "../../hooks/useNoteFilter";
 
 
 // ----react-icons ----
 // import { MdLabel } from "react-icons/md";
 import { MdOutlineLabel } from "react-icons/md";
 import { useLabelStore } from "../../../labels/store/labelStore";
-import { getSearchNotesApi, getUsedColorsApi } from "../../../notes/api/noteApi";
-import type { Note } from "../../../../types/api/note";
+import { getUsedColorsApi } from "../../../notes/api/noteApi";
+// import type { Note } from "../../../../types/api/note";
 import Pagination from "../../../notes/components/Pagination/Pagination";
 
 
@@ -37,9 +37,9 @@ import Pagination from "../../../notes/components/Pagination/Pagination";
 export default function SearchResultsPage () {
 
 
-    const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
+    // const [selectedLabel, setSelectedLabel] = useState<string | null >(null);
 
-    const [selectedColor, setSelectedColor] = useState<string | null>(null);
+    // const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
     const [usedColors, setUsedColors] = useState<string[]>([]);
 
@@ -47,9 +47,20 @@ export default function SearchResultsPage () {
     // Store
     const {
         // notes,
+        // fetchNotes,
+
         pinnedNotes,
-        fetchNotes,
         fetchPinnedNotes,
+        searchNotes,
+        searchResultNotes,
+
+        pageSize,
+        setPageSize,
+
+        ordering,
+
+        searchParams,
+        setSearchParams,
 
     } = useNoteStore();
 
@@ -85,7 +96,7 @@ export default function SearchResultsPage () {
     const [showAllLabels, setShowAllLabels] = useState(false);
     const [showAllColors, setShowAllColors] = useState(false);
 
-    const [searchResultNotes, setSearchResultNotes] = useState<Note[]>([]);
+    // const [searchResultNotes, setSearchResultNotes] = useState<Note[]>([]);
 
 
     const displayLabels = showAllLabels
@@ -101,7 +112,7 @@ export default function SearchResultsPage () {
 
     useEffect(() => {
 
-        fetchNotes();
+        // fetchNotes();
         fetchPinnedNotes();
         fetchUsedLabels();
 
@@ -125,39 +136,62 @@ export default function SearchResultsPage () {
     }, []);
 
 
-
-
     useEffect(() => {
 
-        const searchNotes = async () => {
+        if (!searchText && !searchParams.labelName && !searchParams.color) {
+            return;
+        }
 
-            if (!searchText && !selectedLabel && !selectedColor) {
-                setSearchResultNotes([]);
-                return;
-            }
+        searchNotes(
+            searchParams.query,
+            // searchText,
+            searchParams.labelName,
+            searchParams.color,
+            // selectedLabel,
+            // selectedColor,
 
-            try {
+        );
 
-                const data = await getSearchNotesApi(
-                    searchText,
-                    selectedLabel,
-                    selectedColor,
-                    1,
-                    20,
-                );
+    }, [
+        searchParams.query,
+        // searchText,
+        searchParams.labelName,
+        searchParams.color,
+        // selectedLabel,
+        // selectedColor,
+    ]);
 
-                setSearchResultNotes(data.results);
+    // useEffect(() => {
 
-            } catch (error) {
+    //     const searchNotes = async () => {
 
-                console.error(error);
+    //         if (!searchText && !selectedLabel && !selectedColor) {
+    //             setSearchResultNotes([]);
+    //             return;
+    //         }
 
-            }
-        };
+    //         try {
 
-        searchNotes();
+    //             const data = await getSearchNotesApi(
+    //                 searchText,
+    //                 selectedLabel,
+    //                 selectedColor,
+    //                 1,
+    //                 20,
+    //             );
 
-    }, [searchText, selectedLabel, selectedColor]);
+    //             setSearchResultNotes(data.results);
+
+    //         } catch (error) {
+
+    //             console.error(error);
+
+    //         }
+    //     };
+
+    //     searchNotes();
+
+    // }, [searchText, selectedLabel, selectedColor]);
 
 
 
@@ -175,7 +209,7 @@ export default function SearchResultsPage () {
     return (
 
 
-        !selectedLabel && !selectedColor && !searchText ? (
+        !searchParams.labelName && !searchParams.color && !searchParams.query ? (
 
             <>
 
@@ -210,7 +244,13 @@ export default function SearchResultsPage () {
                             <div
                                 key={label.id}
                                 className={styles.label}
-                                onClick={() => setSelectedLabel(label.name)}
+                                onClick={() => {
+                                    setSearchParams({
+                                        ...searchParams,
+                                        labelName: label.name,
+                                    })
+                                }}
+                                // onClick={() => setSelectedLabel(label.name)}
                             >
                                 <MdOutlineLabel size={18} />
 
@@ -258,7 +298,13 @@ export default function SearchResultsPage () {
                                 key={color}
                                 className={styles.color}
                                 style={{backgroundColor: color}}
-                                onClick={() => setSelectedColor(color)}
+                                onClick={() => {
+                                    setSearchParams({
+                                        ...searchParams,
+                                        color: color,
+                                    })
+                                }}
+                                // onClick={() => setSelectedColor(color)}
                             >
 
                             </div>
@@ -275,15 +321,34 @@ export default function SearchResultsPage () {
         ) : (
 
             <>
+
                 <Pagination
 
-                    // onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                    onPageChange={(page) => searchNotes(
+                        searchText,
+                        searchParams.labelName,
+                        searchParams.color,
+                        // selectedLabel,
+                        // selectedColor,
+                        page,
+                        pageSize,
+                        ordering,
+                    )}
 
                     onPageSizeChange={ async (size) => {
 
-                        // setPageSize(size);
+                        setPageSize(size);
 
-                        // await fetchNotes(1, size, ordering);
+                        await searchNotes(
+                            searchText,
+                            searchParams.labelName,
+                            searchParams.color,
+                            // selectedLabel,
+                            // selectedColor,
+                            1,
+                            pageSize,
+                            ordering,
+                        );
 
                     }}
 
@@ -300,14 +365,35 @@ export default function SearchResultsPage () {
 
                 <Pagination
 
-                    // onPageChange={(page) => fetchNotes(page, pageSize, ordering)}
+                    onPageChange={(page) => searchNotes(
+                            searchText,
+                            searchParams.labelName,
+                            searchParams.color,
+                            // selectedLabel,
+                            // selectedColor,
+                            page,
+                            pageSize,
+                            ordering,
+                        )}
+
                     onPageSizeChange={ async (size) => {
 
-                        // setPageSize(size);
+                        setPageSize(size);
 
-                        // await fetchNotes(1, size, ordering);
+                        await searchNotes(
+                            searchText,
+                            searchParams.labelName,
+                            searchParams.color,
+                            // selectedLabel,
+                            // selectedColor,
+                            1,
+                            size,
+                            ordering,
+                        );
 
                     }}
+
+
                 />
 
             </>

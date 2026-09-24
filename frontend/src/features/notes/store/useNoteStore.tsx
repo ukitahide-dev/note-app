@@ -10,6 +10,7 @@ import {
     getLabelNotesApi,
     getNotesApi,
     getPinnedNotesApi,
+    getSearchNotesApi,
     getTrashNotesApi,
     incrementNoteViewApi,
     moveToTrashApi,
@@ -41,15 +42,34 @@ type DeletedNote = {
 };
 
 
-type NoteStore = {
-    notes: Note[];
 
+type SearchParams = {
+    query: string;
+    labelName: string | null;
+    color: string | null;
+};
+
+
+
+
+type NoteStore = {
+
+    // 通常ノート、ピン止めノート、検索結果ノート、これらはバックエンドでデータ取得を分けた。
+    notes: Note[];
     pinnedNotes: Note[];
+    searchResultNotes: Note[];
 
     currentPage: number;
     count: number;
     next: string | null;
     previous: string | null;
+
+
+    searchParams: SearchParams;
+
+
+    setSearchParams: (params: SearchParams) => void;
+
 
     pageSize: number;
     setPageSize: (size: number) => void;
@@ -68,6 +88,10 @@ type NoteStore = {
 
     hideUndo: () => void;
 
+    refreshSearchResults: (
+
+    ) => Promise<void>;
+
     fetchNotes: (
         page?: number,
         pageSize?: number,
@@ -78,18 +102,33 @@ type NoteStore = {
 
     fetchPinnedNotes: (ordering?: string) => Promise<void>;
 
+
+    searchNotes: (
+        query: string,
+        labelName: string | null,
+        color: string | null,
+
+        page?: number,
+        pageSize?: number,
+        ordering?: string,
+
+    ) => Promise<void>;
+
     fetchAllNotes: () => Promise<void>;
 
     fetchTrashNotes: (
         page?: number,
         pageSize?: number,
         ordering?: string,
+
     ) => Promise<void>;
+
 
     fetchFavoriteNotes: (
         page?: number,
         pageSize?: number,
         ordering?: string,
+
     ) => Promise<void>;
 
 
@@ -175,6 +214,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     pinnedNotes: [],
 
+    searchResultNotes: [],
+
     currentPage: 1,
     count: 0,
     next: null,
@@ -184,6 +225,23 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     ordering: "order",
+
+
+    searchParams: {
+        query: "",
+        labelName: null,
+        color: null,
+    },
+
+
+    setSearchParams: (params: SearchParams) => {
+
+        set({
+            searchParams: params,
+        });
+
+    },
+
 
     pinnedOrdering: "pinned_order",
 
@@ -198,9 +256,44 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     isFetchtingNotes: false,
 
 
+
+    refreshSearchResults: async () => {
+
+        const {
+            searchParams,
+            currentPage,
+            pageSize,
+            ordering,
+        } = get();
+
+        const {
+            query,
+            labelName,
+            color,
+        } = searchParams;
+
+
+        if (!query && !labelName && !color) {
+            return;
+        }
+
+
+        await get().searchNotes(
+            query,
+            labelName,
+            color,
+            currentPage,
+            pageSize,
+            ordering,
+        );
+    },
+
+
+
+
     fetchNotes: async (
-        page = 1,  // pageが渡されなかったら1を使う。
-        pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
+        page = 1,    // pageが渡されなかったら1を使う。
+        pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
 
         ordering = "order",
 
@@ -260,6 +353,44 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             console.error(error);
 
         }
+    },
+
+
+
+    // 検索結果に合致するノートを取得する
+    searchNotes: async (
+        query,
+        labelName,
+        color,
+        page = 1,
+        pageSize = get().pageSize,   // pageSizeが渡されなかったら、get().pageSizeを使う。
+
+        ordering = "order",
+
+    ) => {
+
+        const data = await getSearchNotesApi(
+            query,
+            labelName,
+            color,
+            page,
+            pageSize,
+            ordering,
+        );
+
+        set({
+            searchResultNotes: data.results,
+            searchParams: {
+                query,
+                labelName,
+                color,
+            },
+            currentPage: page,
+            count: data.count,
+            next: data.next,
+            previous: data.previous,
+        });
+
     },
 
 
@@ -339,7 +470,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         page = 1, // pageが渡されなかったら1を使う。
         pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
         ordering = "-created_at",
+
     ) => {
+
         set({
             isFetchtingNotes: true,
         });
@@ -534,6 +667,8 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 ),
 
             }));
+
+            await get().refreshSearchResults();
 
 
 
@@ -822,6 +957,10 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                     note.id === id ? updatedNote : note,
                 ),
 
+                searchResultNotes: state.searchResultNotes.map(note =>
+                    note.id === id ? updatedNote : note,
+                ),
+
             }));
 
         } catch (error) {
@@ -961,6 +1100,24 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 ),
 
             }));
+
+
+            // const { searchParams } = get();
+            await get().refreshSearchResults();
+            //  if (
+            //     searchParams.query ||
+            //     searchParams.labelName ||
+            //     searchParams.color
+            // ) {
+            //     await get().searchNotes(
+            //         searchParams.query,
+            //         searchParams.labelName,
+            //         searchParams.color,
+            //         get().currentPage,
+            //         get().pageSize,
+            //         get().ordering,
+            //     );
+            // }
 
 
             await useLabelStore.getState().fetchUsedLabels();
@@ -1219,6 +1376,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 ),
 
                 pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === noteId
+                        ? { ...note, view_count: data.view_count }
+                        : note,
+                ),
+
+                searchResultNotes: state.searchResultNotes.map(note =>
                     note.id === noteId
                         ? { ...note, view_count: data.view_count }
                         : note,

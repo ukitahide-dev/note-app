@@ -7,7 +7,7 @@ import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 import cardStyles from "./NoteCard.module.css";
-import { useSearchStore } from "../../../search/store/SearchStore";
+// import { useSearchStore } from "../../../search/store/SearchStore";
 import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
@@ -69,7 +69,7 @@ export default function NoteCard({
 
 
     // store
-    const { searchText } = useSearchStore();
+    // const { searchText } = useSearchStore();
 
 
     // hooks
@@ -94,7 +94,14 @@ export default function NoteCard({
 
 
     // Store
-    const { createNote, moveToTrash, toggleFavorite, togglePin, fetchNotes } =
+    const {
+        createNote,
+        moveToTrash,
+        toggleFavorite,
+        togglePin,
+        fetchNotes,
+        searchParams,
+    } =
         useNoteStore();
 
 
@@ -196,11 +203,11 @@ export default function NoteCard({
 
     const highlightText = (text: string) => {
 
-        if (!searchText.trim()) {
+        if (!searchParams.query.trim()) {
             return text;
         }
 
-        const escapedSearchText = searchText.replace(
+        const escapedSearchText = searchParams.query.replace(
             /[.*+?^${}()|[\]\\]/g,
             "\\$&",
         );
@@ -211,7 +218,7 @@ export default function NoteCard({
 
         return parts.map((part, index) =>
 
-            part.toLowerCase() === searchText.toLowerCase() ? (
+            part.toLowerCase() === searchParams.query.toLowerCase() ? (
                 // markは、HTMLの <mark> タグの標準スタイル。自動で背景黄色が当たる。
                 <mark key={index}>{part}</mark>
             ) : (
@@ -219,7 +226,7 @@ export default function NoteCard({
             ),
 
         );
-        
+
     };
 
 

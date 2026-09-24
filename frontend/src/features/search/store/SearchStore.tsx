@@ -1,32 +1,35 @@
 
-
-import { create } from "zustand";
-
-type SearchStore = {
-    searchText: string;
-
-    setSearchText: (
-        text: string
-    ) => void;
-};
+// NoteStoreに検索条件をまとめてsearchParamsで管理することで、不要になった。
 
 
 
-export const useSearchStore = create<SearchStore>((set) => ({
+// import { create } from "zustand";
 
-    searchText: "",
+// type SearchStore = {
+//     searchText: string;
 
-
-    setSearchText: (text) =>
-
-        set({
-            searchText: text
-        }),
-
+//     setSearchText: (
+//         text: string
+//     ) => void;
+// };
 
 
 
+// export const useSearchStore = create<SearchStore>((set) => ({
+
+//     searchText: "",
+
+
+//     setSearchText: (text) =>
+
+//         set({
+//             searchText: text
+//         }),
 
 
 
-    }));
+
+
+
+
+//     }));

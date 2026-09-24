@@ -337,6 +337,7 @@ class NoteViewSet(ModelViewSet):
 
         page = self.paginate_queryset(queryset)
 
+
         if page is not None:
 
             serializer = NoteSerializer(

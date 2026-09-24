@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 
 // ---- store ----
-import { useSearchStore } from "../../../features/search/store/SearchStore";
+// import { useSearchStore } from "../../../features/search/store/SearchStore";
 import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
 
 
@@ -65,11 +65,11 @@ export default function Header({
 
 
     // Store
-    const {
-        searchText,
-        setSearchText,
+    // const {
+    //     searchText,
+    //     setSearchText,
 
-    } = useSearchStore();
+    // } = useSearchStore();
 
 
 
@@ -89,6 +89,9 @@ export default function Header({
         notes,
         updateSelectedNoteColor,
         updateSelectedNotePin,
+
+        searchParams,
+        setSearchParams,
 
     } = useNoteStore();
 
@@ -315,8 +318,15 @@ export default function Header({
                     className={styles.search}
                     type="text"
                     placeholder="検索..."
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
+                    // value={searchText}
+                    value={searchParams.query}
+                    // onChange={(e) => setSearchText(e.target.value)}
+                    onChange={(e) => {
+                        setSearchParams({
+                            ...searchParams,
+                            query: e.target.value,
+                        })
+                    }}
                     onFocus={() => navigate("/search")}
                 />
 

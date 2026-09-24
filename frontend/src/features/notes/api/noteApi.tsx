@@ -125,6 +125,7 @@ export const getSearchNotesApi = async (
     color: string | null,
     page: number = 1,
     pageSize: number = 20,
+    ordering: string = "order",
 
 ) => {
 
@@ -136,6 +137,7 @@ export const getSearchNotesApi = async (
             ...(color ? { color } : {}),
             page,
             page_size: pageSize,
+            ordering,
         },
     });
 
