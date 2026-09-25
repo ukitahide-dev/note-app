@@ -318,9 +318,7 @@ export default function Header({
                     className={styles.search}
                     type="text"
                     placeholder="検索..."
-                    // value={searchText}
                     value={searchParams.query}
-                    // onChange={(e) => setSearchText(e.target.value)}
                     onChange={(e) => {
                         setSearchParams({
                             ...searchParams,

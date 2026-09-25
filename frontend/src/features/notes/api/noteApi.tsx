@@ -347,8 +347,11 @@ export const getNoteHistoryApi = async (id: number): Promise<History[]> => {
     return res.data;
 };
 
+
+
 // ノートに画像を追加する
 export const uploadNoteImageApi = async (noteId: number, image: File) => {
+
     const formData = new FormData();
 
     formData.append("image", image); // 左のimageは、NoteImageSerializerのimageフィールドのこと。でも、そのSerializerはNoteImageモデルのimageカラムと対応しているので、実質的には「NoteImageモデルのimageカラム」と考えてOK。
@@ -360,6 +363,8 @@ export const uploadNoteImageApi = async (noteId: number, image: File) => {
     );
 
     return res.data;
+
+    
 };
 
 

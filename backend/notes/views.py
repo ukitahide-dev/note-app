@@ -334,6 +334,7 @@ class NoteViewSet(ModelViewSet):
                 color=color
             )
 
+        queryset = self.filter_queryset(queryset)
 
         page = self.paginate_queryset(queryset)
 

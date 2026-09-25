@@ -5,7 +5,9 @@ import type { Note } from "../../../types/api/note";
 
 
 // ノートをラベルと検索ワードでフィルタリングするhook
-// 検索機能をバックエンドに書くことで、不要になった。
+// 検索機能をバックエンドに書くことで、このファイル不要になった。
+
+
 
 
 export function useNoteFilter(

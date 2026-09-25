@@ -68,8 +68,7 @@ export default function NoteCard({
     const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-    // store
-    // const { searchText } = useSearchStore();
+
 
 
     // hooks
@@ -99,8 +98,10 @@ export default function NoteCard({
         moveToTrash,
         toggleFavorite,
         togglePin,
-        fetchNotes,
+        // fetchNotes,
         searchParams,
+
+        uploadNoteImage,
     } =
         useNoteStore();
 
@@ -236,22 +237,30 @@ export default function NoteCard({
 
     ) => {
 
-        const file = e.target.files?.[0]; // e.target.files は、選択されたファイル一覧。
+        const file = e.target.files?.[0];
 
         if (!file) return;
 
-        try {
-            const image = await uploadNoteImageApi(note.id, file);
-            console.log(image);
-            fetchNotes();
+        await uploadNoteImage(note.id, file);
 
-        } catch (error) {
 
-            console.error(error);
+        // const file = e.target.files?.[0];   // e.target.files は、選択されたファイル一覧。
 
-        }
+        // if (!file) return;
 
-        // console.log(file);
+        // try {
+
+        //     await uploadNoteImageApi(note.id, file);
+
+        //     fetchNotes();
+
+        // } catch (error) {
+
+        //     console.error(error);
+
+        // }
+
+
     };
 
 

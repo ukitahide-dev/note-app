@@ -24,6 +24,7 @@ import {
     updateNoteLabelsApi,
     updateNotePinnedApi,
     updateNoteViewTimeApi,
+    uploadNoteImageApi,
 } from "../api/noteApi";
 
 
@@ -189,6 +190,9 @@ type NoteStore = {
         labelId: number,
         mode: "add" | "remove",
     ) => Promise<void>;
+
+
+    uploadNoteImage: (noteId: number, file: File) => Promise<void>;
 
     deleteNoteImage: (noteId: number, imageId: number) => Promise<void>;
 
@@ -362,9 +366,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         query,
         labelName,
         color,
+
         page = 1,
         pageSize = get().pageSize,   // pageSizeが渡されなかったら、get().pageSizeを使う。
-
         ordering = "order",
 
     ) => {
@@ -1200,6 +1204,60 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     },
 
 
+
+
+    uploadNoteImage: async (
+        noteId: number,
+        file: File,
+
+    ) => {
+
+        try {
+
+            const uploadedImage = await uploadNoteImageApi(noteId, file);
+
+            set(state => ({
+                notes: state.notes.map(note =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: [...note.images, uploadedImage]
+                        }
+                        : note
+
+                ),
+
+                pinnedNotes: state.pinnedNotes.map(note =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: [...note.images, uploadedImage]
+                        }
+                        : note
+                ),
+
+                searchResultNotes: state.searchResultNotes.map(note =>
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: [...note.images, uploadedImage]
+                        }
+                        : note
+
+                ),
+
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+
+    },
+
+
     // 各ノートが所持している画像を削除する
     deleteNoteImage: async (
         noteId: number,
@@ -1226,6 +1284,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 ),
 
                 pinnedNotes: state.pinnedNotes.map(note =>
+
+                    note.id === noteId
+                        ? {
+                            ...note,
+                            images: note.images.filter(
+                                image => image.id !== imageId
+                            ),
+                        }
+                        : note,
+
+                ),
+
+                searchResultNotes: state.searchResultNotes.map(note =>
 
                     note.id === noteId
                         ? {
