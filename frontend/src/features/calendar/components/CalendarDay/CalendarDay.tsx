@@ -2,7 +2,10 @@
 
 import styles from "./CalendarDay.module.css";
 
+
+
 type Props = {
+
     day: number;
     count: number;
     isToday: boolean;
@@ -12,8 +15,12 @@ type Props = {
     ) => void;
 
     onMouseLeave: () => void;  // 引数なしで呼べて、戻り値はない関数という意味。
+
 };
 
+
+
+// 親: Calendar.tsx,
 
 export function CalendarDay({
     day,

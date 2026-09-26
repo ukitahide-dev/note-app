@@ -6,6 +6,8 @@ import {
     deleteNoteImageApi,
     emptyTrashApi,
     getAllNotesApi,
+    getCalendarDayNotesApi,
+    getDailyNoteCountsApi,
     getFavoriteNotesApi,
     getLabelNotesApi,
     getNotesApi,
@@ -35,6 +37,7 @@ import { useLabelStore } from "../../labels/store/labelStore";
 // import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
 import axios from "axios";
+import type { DailyNoteCounts } from "../../../types/api/calendar";
 
 
 type DeletedNote = {
@@ -59,6 +62,10 @@ type NoteStore = {
     notes: Note[];
     pinnedNotes: Note[];
     searchResultNotes: Note[];
+
+    dailyNoteCounts: DailyNoteCounts[];   // 日ごとのノート投稿数
+    calendarDayNotes: Note[];
+    // calendarDayNotes: Record<string, Note[]>;   // その日に投稿したノート。文字列(日付)をキーにして、Note[] を保存するオブジェクト。日付のノート一覧は「同じ日を何度もホバーする」という明確な再利用があるので、キャッシュを作る設計にした。
 
     currentPage: number;
     count: number;
@@ -143,6 +150,15 @@ type NoteStore = {
     ) => Promise<void>;
 
 
+    fetchDailyNoteCounts: (
+        year: number,
+        month: number,
+    ) => Promise<void>;
+
+    fetchCalendarDayNotes: (
+        date: string,
+
+    ) => Promise<Note[]>;
 
 
     isFetchtingNotes: boolean;
@@ -219,6 +235,11 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     pinnedNotes: [],
 
     searchResultNotes: [],
+
+    calendarDayNotes: [],
+    // calendarDayNotes: {},
+
+    dailyNoteCounts: [],
 
     currentPage: 1,
     count: 0,
@@ -381,6 +402,9 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             pageSize,
             ordering,
         );
+
+        console.log("searchResultNotes:", data);
+        // console.log(`searchResultNotes: ${data}`)
 
         set({
             searchResultNotes: data.results,
@@ -585,6 +609,63 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             set({ isFetchtingNotes: false });
 
         }
+    },
+
+
+
+    fetchDailyNoteCounts: async (
+        year: number,
+        month: number,
+
+    ) => {
+
+        const data = await getDailyNoteCountsApi(
+            year,
+            month,
+        );
+
+        set({
+            dailyNoteCounts: data,
+        });
+
+    },
+
+
+
+    // その日付に投稿されたノートを取得する
+    fetchCalendarDayNotes: async (
+        date: string,
+
+    ) => {
+
+
+
+        // const cachedNotes = get().calendarDayNotes[date];   // 日付のノート一覧は「同じ日を何度もホバーする」という明確な再利用があるので、キャッシュを作る。
+
+        // if (cachedNotes) {
+        //     return cachedNotes;
+        // };
+
+
+        const data = await getCalendarDayNotesApi(date);
+
+        console.log(" getCalendarDayNotesApiが実行された");
+
+        // set(state => ({
+
+        //     calendarDayNotes: {
+        //         ...state.calendarDayNotes,
+        //         [date]: data,
+        //     },
+
+        // }));
+
+        set({
+            calendarDayNotes: data,
+        });
+
+        return data;
+
     },
 
 

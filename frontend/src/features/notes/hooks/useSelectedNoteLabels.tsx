@@ -82,7 +82,7 @@ export function useSelectedNoteLabels(
 
     });
 
-    console.log(labelStates);   // ex) [{id: 20, state: 'unchecked'}, {id: 2, state: 'checked'}]
+    // console.log(labelStates);   // ex) [{id: 20, state: 'unchecked'}, {id: 2, state: 'checked'}]
 
 
 
@@ -113,7 +113,7 @@ export function useSelectedNoteLabels(
         selectedNotes,
         labelStates,
         handleSelectLabel,
-        
+
     }
 
 }

@@ -57,7 +57,7 @@ export default function NoteGrid({
         <div className={styles.notesContainer}>
 
             {notes.map((note) => (
-                
+
                 <CardComponent
                     key={note.id}
                     note={note}

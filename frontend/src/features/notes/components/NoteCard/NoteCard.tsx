@@ -68,7 +68,7 @@ export default function NoteCard({
     const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-
+    console.log("NoteCard:", note.id, note.images);
 
 
     // hooks
@@ -244,22 +244,6 @@ export default function NoteCard({
         await uploadNoteImage(note.id, file);
 
 
-        // const file = e.target.files?.[0];   // e.target.files は、選択されたファイル一覧。
-
-        // if (!file) return;
-
-        // try {
-
-        //     await uploadNoteImageApi(note.id, file);
-
-        //     fetchNotes();
-
-        // } catch (error) {
-
-        //     console.error(error);
-
-        // }
-
 
     };
 
@@ -307,6 +291,9 @@ export default function NoteCard({
                         className={cardStyles.image}
                         src={image.image}
                         alt=""
+                        onError={() => {
+                            console.log("画像読み込み失敗:", image.image);
+                        }}
                     />
                 ))}
             </div>

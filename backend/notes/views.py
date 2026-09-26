@@ -27,7 +27,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from django.core.files.storage import default_storage
-from django.db.models import F, Q
+from django.db.models import F, Q, Count
 
 from django.db import models
 
@@ -137,28 +137,6 @@ class NoteViewSet(ModelViewSet):
             queryset = queryset.filter(
                 is_favorite=False
             )
-
-
-
-
-        # if is_deleted == "true":
-        #     queryset = queryset.filter(
-        #         is_deleted=True
-        #     )
-        # else:
-        #     queryset = queryset.filter(
-        #         is_deleted=False,
-        #         is_pinned=False,
-        #     )
-
-
-
-        # if is_favorite == "true":
-        #     queryset = queryset.filter(is_favorite=True)
-        # elif is_favorite == "false":
-        #     queryset = queryset.filter(is_favorite=False)
-
-
 
 
         return queryset   # DRFに候補データを渡す。
@@ -341,26 +319,92 @@ class NoteViewSet(ModelViewSet):
 
         if page is not None:
 
-            serializer = NoteSerializer(
+            serializer = self.get_serializer(
                 page,
                 many=True,
             )
+
+            # serializer = NoteSerializer(  # これだと、画像のURL壊れて、画像表示できなくなる。
+            #     page,
+            #     many=True,
+            # )
 
             return self.get_paginated_response(
                 serializer.data
             )
 
 
-        serializer = NoteSerializer(
+        serializer = self.get_serializer(
             queryset,
             many=True,
         )
+
+
+        # serializer = NoteSerializer(  # これだと、画像のURL壊れて、画像表示できなくなる。
+        #     queryset,
+        #     many=True,
+        # )
 
         return Response(serializer.data)
 
         # return Response(
         #     NoteSerializer(queryset, many=True).data
         # )
+
+
+
+    # 指定年月の、ノートの投稿数を日ごとに集計して取得する。ex) 2026年9月について、日ごとの投稿数を全部ください。
+    @action(detail=False, methods=["get"])
+    def daily_note_counts(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        queryset = Note.objects.filter(
+            user=request.user,
+            is_deleted=False,
+        )
+
+        queryset = queryset.filter(
+            created_at__year=year,
+            created_at__month=month,
+        )
+
+
+        result = (
+            queryset
+            .values("created_at__day")
+            .annotate(count=Count("id"))
+            .order_by("created_at__day")
+        )
+
+
+        return Response(result)
+
+
+
+    #
+    @action(
+        detail=False,
+        methods=["get"],
+    )
+    def calendar_day_notes(self, request):
+
+        target_date = request.query_params.get("date")
+
+        queryset = Note.objects.filter(
+            user=request.user,
+            is_deleted=False,
+            created_at__date=target_date,
+        ).order_by("created_at")
+
+
+        serializer = self.get_serializer(
+            queryset,
+            many=True,
+        )
+
+        return Response(serializer.data)
 
 
 

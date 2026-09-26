@@ -1,4 +1,5 @@
 import api from "../../../shared/api/axios";
+import type { DailyNoteCounts } from "../../../types/api/calendar";
 import type { History } from "../../../types/api/note";
 
 
@@ -144,6 +145,49 @@ export const getSearchNotesApi = async (
     return res.data;
 
 };
+
+
+
+// 日ごとのノート投稿数を取得する
+export const getDailyNoteCountsApi = async (
+        year: number,
+        month: number,
+
+    ): Promise<DailyNoteCounts[]> => {
+
+        const res = await api.get(
+            "/notes/daily_note_counts/",
+            {
+                params: {
+                    year,
+                    month,
+                },
+            },
+        );
+
+        return res.data;
+    };
+
+
+
+// その日に投稿されたノートを取得する
+export const getCalendarDayNotesApi = async (
+        date: string,
+
+    ) => {
+
+        const res = await api.get(
+            "/notes/calendar_day_notes/",
+            {
+                params: {
+                    date,
+                },
+            },
+        );
+
+        return res.data;
+    };
+
 
 
 
@@ -364,7 +408,7 @@ export const uploadNoteImageApi = async (noteId: number, image: File) => {
 
     return res.data;
 
-    
+
 };
 
 
