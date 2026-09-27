@@ -285,6 +285,7 @@ class NoteViewSet(ModelViewSet):
         query = request.query_params.get("q", "")
         label_name = request.query_params.get("label_name")
         color = request.query_params.get("color")
+        month = request.query_params.get("month")
 
 
 
@@ -311,6 +312,16 @@ class NoteViewSet(ModelViewSet):
             queryset = queryset.filter(
                 color=color
             )
+
+
+        if month:
+            year, month_number = month.split("-")
+
+            queryset = queryset.filter(
+                created_at__year=year,
+                created_at__month=month_number,
+            )
+
 
         queryset = self.filter_queryset(queryset)
 

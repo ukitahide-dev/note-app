@@ -117,7 +117,12 @@ export default function SearchResultsPage () {
 
     useEffect(() => {
 
-        if (!searchParams.query && !searchParams.labelName && !searchParams.color) {
+        if (
+            !searchParams.query &&
+            !searchParams.labelName &&
+            !searchParams.color &&
+            !searchParams.month
+        ) {
             return;
         }
 
@@ -125,6 +130,7 @@ export default function SearchResultsPage () {
             searchParams.query,
             searchParams.labelName,
             searchParams.color,
+            searchParams.month,
 
             currentPage,
             pageSize,
@@ -137,6 +143,7 @@ export default function SearchResultsPage () {
         searchParams.query,
         searchParams.labelName,
         searchParams.color,
+        searchParams.month,
         ordering,
     ]);
 
@@ -153,7 +160,12 @@ export default function SearchResultsPage () {
     return (
 
 
-        !searchParams.labelName && !searchParams.color && !searchParams.query ? (
+        !searchParams.labelName &&
+        !searchParams.color &&
+        !searchParams.query &&
+        !searchParams.month ?
+
+        (
 
             <>
 
@@ -273,6 +285,7 @@ export default function SearchResultsPage () {
 
                         searchParams.labelName,
                         searchParams.color,
+                        searchParams.month,
 
                         page,
                         pageSize,
@@ -288,6 +301,7 @@ export default function SearchResultsPage () {
 
                             searchParams.labelName,
                             searchParams.color,
+                            searchParams.month,
 
                             1,
                             pageSize,
@@ -314,6 +328,7 @@ export default function SearchResultsPage () {
 
                             searchParams.labelName,
                             searchParams.color,
+                            searchParams.month,
 
                             page,
                             pageSize,
@@ -328,6 +343,7 @@ export default function SearchResultsPage () {
                             searchParams.query,
                             searchParams.labelName,
                             searchParams.color,
+                            searchParams.month,
 
                             1,
                             size,

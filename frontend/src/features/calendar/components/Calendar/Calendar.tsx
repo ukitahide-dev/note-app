@@ -17,14 +17,14 @@ import {
 import { CalendarDay } from "../CalendarDay/CalendarDay";
 // import { countNotesByDay } from "../../utils/calendarNoteUtils";
 
-
+import { useNavigate } from "react-router-dom";
 
 
 // 親: CalendarPage.tsx,
 
 export default function Calendar() {
 
-
+    const navigate = useNavigate();
     // store
     // const { notes, fetchAllNotes } = useNoteStore();
 
@@ -52,11 +52,15 @@ export default function Calendar() {
     const month = currentDate.getMonth() + 1;
 
 
+    // Store
     const {
         dailyNoteCounts,
         fetchDailyNoteCounts,
         // calendarDayNotes,
         fetchCalendarDayNotes,
+
+        searchParams,
+        setSearchParams,
 
     } = useNoteStore();
 
@@ -110,6 +114,8 @@ export default function Calendar() {
     dailyNoteCounts.forEach((item) => {
         noteCountByDay[item.created_at__day] = item.count;
     });
+
+    // console.log(noteCountByDay);
 
 
 
@@ -168,6 +174,19 @@ export default function Calendar() {
                     onClick={() => setCurrentDate(new Date(year, month, 1))}
                 >
                     →
+                </button>
+
+                <button
+                    onClick={() => {
+                        setSearchParams({
+                            ...searchParams,
+                            month: `${year}-${String(month).padStart(2, "0")}`,
+                        });
+
+                        navigate("/search");
+                    }}
+                >
+                    この月のノートを見る
                 </button>
 
             </div>
@@ -260,27 +279,9 @@ export default function Calendar() {
 
                             </div>
                         ))}
-                        
+
                     </div>
 
-                    {/* <h3>
-                        {year}年{month}月{tooltipDay}日のノート
-                    </h3>
-
-                    {tooltip.notes.map((note) => (
-
-                        <div
-                            key={note.id}
-                            onClick={() => {
-                                setSelectedNote(note);
-                                hideTooltip();
-                                setTooltipDay(null);
-                            }}
-                        >
-                            {note.title}
-                        </div>
-
-                    ))} */}
 
                 </div>
 

@@ -124,6 +124,8 @@ export const getSearchNotesApi = async (
     query: string,
     labelName: string | null,
     color: string | null,
+    month: string | null,
+
     page: number = 1,
     pageSize: number = 20,
     ordering: string = "order",
@@ -136,6 +138,7 @@ export const getSearchNotesApi = async (
             q: query,
             ...(labelName ? { label_name: labelName } : {}),
             ...(color ? { color } : {}),
+            ...(month ? { month } : {}),
             page,
             page_size: pageSize,
             ordering,

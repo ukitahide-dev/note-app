@@ -51,6 +51,7 @@ type SearchParams = {
     query: string;
     labelName: string | null;
     color: string | null;
+    month: string | null;
 };
 
 
@@ -115,6 +116,7 @@ type NoteStore = {
         query: string,
         labelName: string | null,
         color: string | null,
+        month: string | null,
 
         page?: number,
         pageSize?: number,
@@ -387,6 +389,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         query,
         labelName,
         color,
+        month,
 
         page = 1,
         pageSize = get().pageSize,   // pageSizeが渡されなかったら、get().pageSizeを使う。
@@ -398,12 +401,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             query,
             labelName,
             color,
+            month,
+
             page,
             pageSize,
             ordering,
         );
 
-        console.log("searchResultNotes:", data);
+        // console.log("searchResultNotes:", data);
         // console.log(`searchResultNotes: ${data}`)
 
         set({
@@ -412,6 +417,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 query,
                 labelName,
                 color,
+                month,
             },
             currentPage: page,
             count: data.count,
