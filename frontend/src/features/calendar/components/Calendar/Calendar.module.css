@@ -19,7 +19,7 @@
     font-size: 28px;
 }
 
-.header button {
+/* .header button {
     width: 40px;
     height: 40px;
     border: none;
@@ -31,7 +31,78 @@
 
 .header button:hover {
     background: #e5e7eb;
+} */
+
+
+.header > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #374151;
+
+    cursor: pointer;
+    font-size: 20px;
+
+    transition:
+        background-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
 }
+
+.header button:hover {
+    background: #f8fafc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.header button:active {
+    transform: scale(0.96);
+}
+
+
+
+.monthSearchButton {
+    display: block;
+    width: 100%;
+    margin-bottom: 24px;
+
+    padding: 11px 16px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #f8fafc;
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+.monthSearchButton:hover {
+    background: #f1f5f9;
+    border-color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.monthSearchButton:active {
+    transform: translateY(1px);
+}
+
 
 .weekdays,
 .days {

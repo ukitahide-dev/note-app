@@ -2,7 +2,14 @@
     display: flex;
     align-items: center;
     gap: 4px;
+
+    /* Flexの子要素は、デフォルトで、min-width: auto;になっている。つまり、「中身がこれだけ必要だから、そこまでは縮みたくない」。つまり、親が200pxしかなくても、子の中身がそれより大きいと、子が親からはみ出してしまう。「最低幅を0pxとしていい」＝ 実質的に最低幅の制限を外す。 .label の中身が長くても、.label 自身が親の .labels の幅に合わせて縮められるようにする。*/
+    min-width: 0;
+
+
+    max-width: 120px;
     padding: 4px 8px;
+    /* background-color: blanchedalmond; */
     border-radius: 12px;
     background: #eee;
     font-size: 12px;
@@ -10,6 +17,16 @@
 
 }
 
+
+.labelName {
+
+    /* 自分に対する自分の中身の話。 自分（.labelName）の箱からはみ出した中身は隠す。*/
+    overflow: hidden;
+
+    /* 文字が自分の箱に入りきらなかったとき、....で表す。 */
+    text-overflow: ellipsis;
+    white-space: nowrap;   /* 改行しない */
+}
 
 .removeLabel {
     display: none;

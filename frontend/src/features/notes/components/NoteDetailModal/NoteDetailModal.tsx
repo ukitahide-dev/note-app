@@ -66,6 +66,9 @@ export default function NoteDetailModal({
 
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
+    const titleRef = useRef<HTMLTextAreaElement>(null);
+    const contentRef = useRef<HTMLTextAreaElement>(null);
+
 
 
     const sensors = useSensors(
@@ -210,8 +213,22 @@ export default function NoteDetailModal({
 
 
 
+    // モーダルが最初に表示されたときにも、textareaの高さを内容に合わせる。
+    useEffect(() => {
 
+        if (titleRef.current) {
+            titleRef.current.style.height = "auto";   // auto にする理由は、「前回設定した高さを一度消してから、今の文章に必要な高さを測り直すため」。
+            titleRef.current.style.height =
+                `${titleRef.current.scrollHeight}px`;   // 中身を全部表示するのに必要な高さを調べて、その高さをtextarea自身の高さに設定する。titleRef.current.scrollHeight: この textarea の中身を全部表示するには、何pxの高さが必要かを表す。
+        }
 
+        if (contentRef.current) {
+            contentRef.current.style.height = "auto";
+            contentRef.current.style.height =
+                `${contentRef.current.scrollHeight}px`;
+        }
+
+    }, []);
 
 
 
@@ -235,77 +252,108 @@ export default function NoteDetailModal({
                 onClick={(e) => e.stopPropagation()}
             >
 
-                <DndContext
-                    onDragEnd={handleDragEnd}
-                    sensors={sensors}
+                <div
+                    className={styles.main}
                 >
 
-                    <SortableContext
-                        items={note.images.map((image) => image.id)}
-                        strategy={rectSortingStrategy}
+                    <DndContext
+                        onDragEnd={handleDragEnd}
+                        sensors={sensors}
                     >
 
-                        <div className={styles.largeImages}>
+                        <SortableContext
+                            items={note.images.map((image) => image.id)}
+                            strategy={rectSortingStrategy}
+                        >
 
-                            <ImageList
-                                images={largeImages}
-                                isLarge={true}
-                                noteId={note.id}
-                                onDeleteImage={(imageId) => {
-                                    deleteNoteImage(note.id, imageId);
-                                }}
-                                onSelectImage={handleSelectImage}
-                            />
+                            <div className={styles.largeImages}>
 
-                        </div>
+                                <ImageList
+                                    images={largeImages}
+                                    isLarge={true}
+                                    noteId={note.id}
+                                    onDeleteImage={(imageId) => {
+                                        deleteNoteImage(note.id, imageId);
+                                    }}
+                                    onSelectImage={handleSelectImage}
+                                />
 
-                        <div className={styles.images}>
+                            </div>
 
-                            <ImageList
-                                images={normalImages}
-                                isLarge={false}
-                                noteId={note.id}
-                                onDeleteImage={(imageId: number) => {
-                                    deleteNoteImage(note.id, imageId);
-                                }}
-                                onSelectImage={handleSelectImage}
-                            />
+                            <div className={styles.images}>
 
-                        </div>
+                                <ImageList
+                                    images={normalImages}
+                                    isLarge={false}
+                                    noteId={note.id}
+                                    onDeleteImage={(imageId: number) => {
+                                        deleteNoteImage(note.id, imageId);
+                                    }}
+                                    onSelectImage={handleSelectImage}
+                                />
 
-                    </SortableContext>
+                            </div>
 
-                </DndContext>
+                        </SortableContext>
 
-                <input
-                    className={styles.titleInput}
-                    style={{ backgroundColor: tempColor }}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
+                    </DndContext>
 
-                <textarea
-                    className={styles.contentInput}
-                    style={{ backgroundColor: tempColor }}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
+                    <div
+                        className={styles.content}
+                    >
 
-                {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
-                <div className={styles.labels}>
-                    {note.labels.map((label) => (
-                        <LabelItem
-                            label={label}
-                            onRemoveLabel={(labelId: number) =>
-                                handleRemoveNoteLabel(labelId)
-                            }
+                        <textarea
+                            ref={titleRef}
+                            className={styles.titleInput}
+                            style={{ backgroundColor: tempColor }}
+                            value={title}
+                            onChange={(e) => {  // 文字入力中の高さ調整
+                                setTitle(e.target.value);
+
+                                e.target.style.height = "auto";
+                                e.target.style.height = `${e.target.scrollHeight}px`;
+                            }}
+                            // onChange={(e) => setTitle(e.target.value)}
                         />
-                    ))}
+
+                        <textarea
+                            ref={contentRef}
+                            className={styles.contentInput}
+                            style={{ backgroundColor: tempColor }}
+                            value={content}
+                            onChange={(e) => {
+                                setContent(e.target.value);
+
+                                e.target.style.height = "auto";
+                                e.target.style.height = `${e.target.scrollHeight}px`;
+                            }}
+                            // onChange={(e) => setContent(e.target.value)}
+                        />
+
+                    </div>
+
+
+
+                    {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
+                    <div className={styles.labels}>
+                        {note.labels.map((label) => (
+                            <LabelItem
+                                label={label}
+                                onRemoveLabel={(labelId: number) =>
+                                    handleRemoveNoteLabel(labelId)
+                                }
+                            />
+                        ))}
+                    </div>
+
                 </div>
+
 
                 {/* ボタン表示もNoteCardと被っている */}
                 <div className={styles.bottom}>
+
                     <button
+                        className={styles.colorButton}
                         onClick={(e) => {
                             e.stopPropagation();
                             setPanelType("color");
@@ -324,9 +372,10 @@ export default function NoteDetailModal({
                         ⋮
                     </button>
 
-                    <button className={styles.button} onClick={handleClose}>
+                    <button className={styles.closeButton} onClick={handleClose}>
                         閉じる
                     </button>
+
                 </div>
 
 
@@ -384,7 +433,7 @@ export default function NoteDetailModal({
                 onClose={() => setSelectedImageIndex(null)}
                 onNext={handleNextImage}
                 onPrev={handlePrevImage}
-                
+
             />
 
 

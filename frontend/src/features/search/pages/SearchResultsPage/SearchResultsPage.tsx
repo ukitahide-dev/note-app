@@ -277,6 +277,18 @@ export default function SearchResultsPage () {
         ) : (
 
             <>
+                {searchParams.month && (() => {
+                    const [year, month] = searchParams.month.split("-");
+
+                    return (
+                        <div className={styles.searchHeader}>
+                            <h2 className={styles.searchTitle}>
+                                {year}年{Number(month)}月のノート
+                            </h2>
+                        </div>
+                    );
+
+                })()}
 
                 <Pagination
 

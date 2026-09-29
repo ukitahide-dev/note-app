@@ -44,6 +44,7 @@ export const useLabelStore = create<LabelStore>((set) => ({
 
     usedLabels: [],
 
+
     // ラベル一覧取得
     fetchLabels: async () => {
 
@@ -58,6 +59,7 @@ export const useLabelStore = create<LabelStore>((set) => ({
             console.error(error);
         }
     },
+
 
     // ラベル作成
     handleCreateLabel: async (
@@ -132,13 +134,13 @@ export const useLabelStore = create<LabelStore>((set) => ({
         } catch (error) {
 
             console.error(error);
-            
+
         }
     },
 
 
 
-    // ノートに使われているラベルだけを取得する
+    // ノートに使われているラベルだけを取得する。サイドバー表示用。これで、あるラベルがどのノートにも使われなくなった瞬間に、サイドバーからそのラベルが消える。
     fetchUsedLabels: async (
 
     ) => {

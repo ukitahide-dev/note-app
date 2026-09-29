@@ -31,7 +31,7 @@ export default function LabelItem({
 
             <div key={label.id} className={styles.label}>
 
-                <span>{label.name}</span>
+                <span className={styles.labelName}>{label.name}</span>
 
                 <button
                     className={styles.removeLabel}
@@ -45,5 +45,5 @@ export default function LabelItem({
 
             </div>
         );
-        
+
     }

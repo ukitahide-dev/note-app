@@ -255,11 +255,68 @@ export default function NoteCard({
     return (
 
         <Card
+            className={cardStyles.noteCard}
             style={{ backgroundColor: displayColor }}
             onClick={() => setOpenNoteDetailId(note.id)}
             ref={cardRef}
         >
 
+            <div className={cardStyles.cardHeader}>
+
+                <button
+                    className={cardStyles.headerButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(note.id);
+                    }}
+                >
+                    ✅
+                </button>
+
+                <div
+                    {...dragHandleProps}
+                    className={cardStyles.dragArea}
+                />
+
+                <button
+                    className={cardStyles.headerButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        togglePin(note.id, note.is_pinned);
+                    }}
+                >
+                    {note.is_pinned ? "📌" : "📍"}
+                </button>
+
+            </div>
+
+            {/* <div
+                {...dragHandleProps}
+                className={cardStyles.cardHeader}
+            >
+
+                <button
+                    className={cardStyles.headerButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleSelect(note.id);
+                    }}
+                >
+                    ✅
+                </button>
+
+                <button
+                    className={cardStyles.headerButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        togglePin(note.id, note.is_pinned);
+                    }}
+                >
+                    {note.is_pinned ? "📌" : "📍"}
+                </button>
+
+            </div> */}
+{/*
             <button
                 onClick={(e) => {
                     e.stopPropagation();
@@ -271,9 +328,9 @@ export default function NoteCard({
 
             <div {...dragHandleProps} className={cardStyles.dragHandle}>
                 ☰
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -282,10 +339,11 @@ export default function NoteCard({
                 >
                     {note.is_pinned ? "📌" : "📍"}
                 </button>
-            </div>
+            </div> */}
 
             <div className={cardStyles.images}>
-                {note.images.map((image) => (
+
+                {note.images.slice(0, 6).map((image) => (
                     <img
                         key={image.id}
                         className={cardStyles.image}
@@ -296,6 +354,17 @@ export default function NoteCard({
                         }}
                     />
                 ))}
+                {/* {note.images.map((image) => (
+                    <img
+                        key={image.id}
+                        className={cardStyles.image}
+                        src={image.image}
+                        alt=""
+                        onError={() => {
+                            console.log("画像読み込み失敗:", image.image);
+                        }}
+                    />
+                ))} */}
             </div>
 
 
@@ -314,42 +383,50 @@ export default function NoteCard({
 
             <div className={cardStyles.labels}>
 
-                {note.labels.map((label) => (
+                {note.labels.slice(0, 2).map((label) => (
                     <LabelItem
                         key={label.id}
                         label={label}
                         onRemoveLabel={handleRemoveNoteLabel}
-                        // onRemoveLabel={(labelId) => handleRemoveLabel(labelId)}
                     />
                 ))}
+
+                {note.labels.length > 2 && (
+                    <span className={cardStyles.moreLabels}>
+                        他{note.labels.length - 2}件
+                    </span>
+                )}
 
             </div>
 
 
+
             <div className={cardStyles.buttons}>
 
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
-                        setOpenMenuId(null);
-                        setOpenColorId((prev) =>
-                            prev === note.id ? null : note.id,
-                        );
-                    }}
-                >
-                    🎨
-                </button>
+                <div className={cardStyles.leftButtons}>
 
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(note.id, note.is_favorite);
-                    }}
-                >
-                    {note.is_favorite ? "❤️" : "🤍"}
-                </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
+                            setOpenMenuId(null);
+                            setOpenColorId((prev) =>
+                                prev === note.id ? null : note.id,
+                            );
+                        }}
+                    >
+                        🎨
+                    </button>
 
-                <>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(note.id, note.is_favorite);
+                        }}
+                    >
+                        {note.is_favorite ? "❤️" : "🤍"}
+                    </button>
+
+
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -360,8 +437,9 @@ export default function NoteCard({
                     </button>
 
                     <span>👀 {note.view_count}</span>
+                    
 
-                    <span>合計滞在時間: {note.total_view_seconds}秒</span>
+                    <span>🕑 {note.total_view_seconds}秒</span>
 
                     <input
                         onClick={(e) => e.stopPropagation()}
@@ -370,7 +448,10 @@ export default function NoteCard({
                         hidden
                         onChange={handleImageChange}
                     />
-                </>
+
+                </div>
+
+
 
                 <button
                     className={cardStyles.menuButton}
@@ -385,6 +466,7 @@ export default function NoteCard({
                 >
                     ⋮
                 </button>
+
             </div>
 
             {openMenuId === note.id && panel}

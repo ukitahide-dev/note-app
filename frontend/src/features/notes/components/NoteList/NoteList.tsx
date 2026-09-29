@@ -17,7 +17,7 @@ import type { Note } from "../../../../types/api/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import SortSelect from "../SortSelect/SortSelect";
 
-
+import styles from "./NoteList.module.css";
 
 type Props = {
     notes: Note[];
@@ -45,6 +45,8 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
     const [panelType, setPanelType] = useState<"label" | "history" | null>(
         null,
     );
+
+    const [isPinnedOpen, setIsPinnedOpen] = useState(true);
 
 
     const {
@@ -127,48 +129,119 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
 
             {/* 📌 固定済みノート */}
             {pinnedNotes.length > 0 && (
-                <>
-                    <h3>📌 固定済み</h3>
 
-                    <SortSelect
-                        ordering={pinnedOrdering}
-                        onPageOrderChange={setPinnedOrdering}
-                        manualOrderValue="pinned_order"
-                    />
+                <section
+                    className={`${styles.pinnedSection} ${
+                        isPinnedOpen ? styles.pinnedOpen : styles.pinnedClosed
+                    }`}
+                >
 
-                    {canSortPinnedNotes ? (
-                        // 固定済みが「手動順」のときだけD&Dを有効にする
-                        <DndContext
-                            collisionDetection={closestCenter}
-                            onDragEnd={handlePinnedDragEnd}
-                        >
+                    <button
+                        className={styles.pinnedHeader}
+                        onClick={() => setIsPinnedOpen((prev) => !prev)}
+                    >
 
-                            <SortableContext
-                                items={pinnedNotes.map((note) => note.id)}
-                                strategy={rectSortingStrategy}
-                            >
+                        <span className={styles.pinnedTitle}>
 
-                                <NoteGrid
-                                    {...noteGridProps}
-                                    enableSort={true}
-                                    notes={pinnedNotes}
-                                />
+                            📌 固定済み
+                            <span className={styles.pinnedCount}>
+                                {pinnedNotes.length}件
+                            </span>
 
-                            </SortableContext>
+                        </span>
 
-                        </DndContext>
+                        <span className={styles.pinnedArrow}>
+                            {isPinnedOpen ? "▲" : "▼"}
+                        </span>
 
-                    ) : (
-                        // 固定済みが「手動順」以外なら通常表示
-                        <NoteGrid
-                            {...noteGridProps}
-                            enableSort={false}
-                            notes={pinnedNotes}
+                    </button>
+
+
+                    {isPinnedOpen && (
+
+                    <div className={styles.pinnedContent}>
+
+                        <SortSelect
+                            ordering={pinnedOrdering}
+                            onPageOrderChange={setPinnedOrdering}
+                            manualOrderValue="pinned_order"
                         />
+
+                        {canSortPinnedNotes ? (
+
+                            <DndContext
+                                collisionDetection={closestCenter}
+                                onDragEnd={handlePinnedDragEnd}
+                            >
+                                <SortableContext
+                                    items={pinnedNotes.map((note) => note.id)}
+                                    strategy={rectSortingStrategy}
+                                >
+                                    <NoteGrid
+                                        {...noteGridProps}
+                                        enableSort={true}
+                                        notes={pinnedNotes}
+                                    />
+                                </SortableContext>
+                            </DndContext>
+
+                        ) : (
+
+                            <NoteGrid
+                                {...noteGridProps}
+                                enableSort={false}
+                                notes={pinnedNotes}
+                            />
+
+                        )}
+
+                    </div>
+
                     )}
+                </section>
+
+                // <>
+                //     <h3>📌 固定済み</h3>
+
+                //     <SortSelect
+                //         ordering={pinnedOrdering}
+                //         onPageOrderChange={setPinnedOrdering}
+                //         manualOrderValue="pinned_order"
+                //     />
+
+                //     {canSortPinnedNotes ? (
+                //         // 固定済みが「手動順」のときだけD&Dを有効にする
+                //         <DndContext
+                //             collisionDetection={closestCenter}
+                //             onDragEnd={handlePinnedDragEnd}
+                //         >
+
+                //             <SortableContext
+                //                 items={pinnedNotes.map((note) => note.id)}
+                //                 strategy={rectSortingStrategy}
+                //             >
+
+                //                 <NoteGrid
+                //                     {...noteGridProps}
+                //                     enableSort={true}
+                //                     notes={pinnedNotes}
+                //                 />
+
+                //             </SortableContext>
+
+                //         </DndContext>
+
+                //     ) : (
+                //         // 固定済みが「手動順」以外なら通常表示
+                //         <NoteGrid
+                //             {...noteGridProps}
+                //             enableSort={false}
+                //             notes={pinnedNotes}
+                //         />
+                //     )}
 
 
-                </>
+                // </>
             )}
 
             <h3>その他</h3>

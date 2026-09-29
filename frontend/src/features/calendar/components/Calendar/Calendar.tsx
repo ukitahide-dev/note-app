@@ -176,20 +176,23 @@ export default function Calendar() {
                     →
                 </button>
 
-                <button
-                    onClick={() => {
-                        setSearchParams({
-                            ...searchParams,
-                            month: `${year}-${String(month).padStart(2, "0")}`,
-                        });
 
-                        navigate("/search");
-                    }}
-                >
-                    この月のノートを見る
-                </button>
 
             </div>
+
+            <button
+                className={styles.monthSearchButton}
+                onClick={() => {
+                    setSearchParams({
+                        ...searchParams,
+                        month: `${year}-${String(month).padStart(2, "0")}`,
+                    });
+
+                    navigate("/search");
+                }}
+            >
+                この月のノートを見る
+            </button>
 
             <div className={styles.weekdays}>
 

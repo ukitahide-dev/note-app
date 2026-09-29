@@ -258,6 +258,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         query: "",
         labelName: null,
         color: null,
+        month: null,
     },
 
 
@@ -291,16 +292,19 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             currentPage,
             pageSize,
             ordering,
+
         } = get();
 
         const {
             query,
             labelName,
             color,
+            month,
+
         } = searchParams;
 
 
-        if (!query && !labelName && !color) {
+        if (!query && !labelName && !color && !month) {
             return;
         }
 
@@ -309,6 +313,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             query,
             labelName,
             color,
+            month,
             currentPage,
             pageSize,
             ordering,
@@ -1193,8 +1198,12 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             }));
 
 
-            // const { searchParams } = get();
             await get().refreshSearchResults();
+
+            await useLabelStore.getState().fetchUsedLabels();
+
+            // const { searchParams } = get();
+
             //  if (
             //     searchParams.query ||
             //     searchParams.labelName ||
@@ -1211,7 +1220,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             // }
 
 
-            await useLabelStore.getState().fetchUsedLabels();
+
 
 
         } catch (error) {

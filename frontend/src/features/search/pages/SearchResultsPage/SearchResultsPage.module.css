@@ -62,3 +62,21 @@
     cursor: pointer;
 
 }
+
+
+
+
+.searchHeader {
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto 24px;
+    padding: 0 4px;
+}
+
+.searchTitle {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.02em;
+}

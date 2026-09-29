@@ -1,9 +1,73 @@
-.dragHandle {
-    cursor: grab;
-    font-size: 18px;
-    user-select: none;
-    margin-bottom: 8px;
+.noteCard {
+    width: 250px;
+    height: 450px;
+    /* overflow: hidden; */  /* これ付けたら、ノートカードのメニューが、下に隠れてしまう*/
+    flex-shrink: 0;
 }
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* background-color: blueviolet; */
+    padding: 8px 10px;
+}
+
+.dragArea {
+    flex: 1;
+    height: 32px;
+    cursor: grab;
+}
+
+.dragArea:active {
+    cursor: grabbing;
+}
+
+.headerButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.headerButton:hover {
+    background: #f1f3f4;
+}
+
+.chars > .title {
+    font-size: 18px;
+    font-weight: 450;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
+}
+
+.chars > .content {
+    font-size: 14px;
+    margin-top: 10px;
+    line-height: 1.8;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
+}
+
+
 
 
 /* .card {
@@ -25,18 +89,14 @@
     align-items: center;
     flex-wrap: wrap;
 
-
-
+    max-height: 180px;
+    overflow: hidden;
 }
-
 
 .images > .image {
     width: calc((100% - 4px) / 3);
     aspect-ratio: 1;
-    /* width: calc(100% / 3); */
-    /* border-radius: 4%; */
-
-
+    object-fit: cover;
 }
 
 
@@ -46,87 +106,91 @@
 }
 
 
-.chars > .title {
-    font-size: 18px;
-    font-weight: 450;
-
-}
-
-
-.chars > .content {
-    font-size: 14px;
-    margin-top: 10px;
-    line-height: 1.8;
-}
 
 
 
+/*
 .labels {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     padding: 6px 10px;
     margin-top: 8px;
-}
-
-
-/* .label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 8px;
-    border-radius: 12px;
-    background: #eee;
-    font-size: 12px;
-    cursor: pointer;
-
-}
-
-
-.removeLabel {
-    display: none;
-    border: none;
-    background: transparent;
-    font-size: 12px;
-}
-
-
-.label:hover .removeLabel {
-    display: block;
 } */
 
+
+.labels {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+    margin-top: 8px;
+
+    /* 「最低幅を0pxとしていい」＝ 実質的に最低幅の制限を外す .labels がカードより横に広がるのを防ぐため。*/
+    min-width: 0;
+
+    /* .labels の箱から、.labels の中身がはみ出したら隠す */
+    overflow: hidden;
+}
+
+.moreLabels {
+    flex-shrink: 0;   /* 横幅が足りなくなっても、この要素を縮めない */
+
+    padding: 4px 8px;
+    border-radius: 12px;
+
+    background: #f1f3f4;
+    color: #666;
+
+    font-size: 12px;
+}
 
 
 
 .buttons {
     display: flex;
-    gap: 8px;
     align-items: center;
     padding: 8px 10px;
-    /* justify-content: space-between; */
+    min-width: 0;
+}
 
+.leftButtons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    /* background-color: pink; */
+    min-width: 0;
+
+    overflow: hidden;
+
+    flex: 1;
+}
+
+
+.leftButtons button {
+    flex-shrink: 0;
+
+}
+
+
+.leftButtons span {
+    white-space: nowrap;
+
+    flex-shrink: 0;
 }
 
 
 .menuButton {
     margin-left: auto;
+    flex-shrink: 0;
+
+    width: 32px;
+    height: 32px;
 }
-
-
-/* .menuButton {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 22px;
-    padding: 4px 8px;
-    border-radius: 50%;
-} */
-
 
 .menuButton:hover {
     background: #f1f3f4;
-    border-radius: 100%;
+    border-radius: 50%;
 }

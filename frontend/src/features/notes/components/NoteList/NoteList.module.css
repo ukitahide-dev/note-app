@@ -1,6 +1,72 @@
-.notesContainer {
-    margin-top: 32px;
+.pinnedSection {
+    width: 100%;
+    margin-bottom: 46px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    transition:
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.pinnedSection:hover {
+    border-color: #d1d5db;
+}
+
+.pinnedHeader {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 14px 18px;
+
+    border: none;
+    background: transparent;
+
+    color: #333;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-align: left;
+}
+
+.pinnedHeader:hover {
+    background: #f8fafc;
+}
+
+.pinnedTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pinnedCount {
+    padding: 3px 9px;
+
+    border-radius: 999px;
+
+    background: #f1f5f9;
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pinnedArrow {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.pinnedContent {
+    padding: 0 18px 20px;
+    border-top: 1px solid #f0f0f0;
 }
