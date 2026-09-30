@@ -40,7 +40,22 @@ export default function FavoriteNotesPage() {
         setPageSize,
 
 
+        setCurrentView,
+
+
     } = useNoteStore();
+
+
+
+    useEffect(() => {
+
+        setCurrentView("favorite");
+
+        // return () => {
+        //     setCurrentView("notes");
+        // };
+
+    }, []);
 
 
     useEffect(() => {

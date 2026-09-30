@@ -32,7 +32,26 @@ export default function LabelNotesPage() {
 
         setPageSize,
 
+        setCurrentView,
+
+        setCurrentLabelName,
+
     } = useNoteStore();
+
+
+
+    useEffect(() => {
+        setCurrentView("label");
+        setCurrentLabelName(labelName!);
+
+        return () => {
+            setCurrentView("notes");
+            setCurrentLabelName(null);
+        };
+
+    }, [labelName]);
+
+
 
 
     useEffect(() => {
@@ -40,7 +59,7 @@ export default function LabelNotesPage() {
         if (!labelName) return;
 
         fetchLabelNotes(labelName);
-        
+
     }, [labelName, ordering]);
 
 

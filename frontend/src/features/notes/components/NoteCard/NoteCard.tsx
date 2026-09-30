@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 
-import { uploadNoteImageApi } from "../../api/noteApi";
+
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 import cardStyles from "./NoteCard.module.css";
-// import { useSearchStore } from "../../../search/store/SearchStore";
+
 import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
@@ -19,6 +19,7 @@ import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 import LabelItem from "../LabelItem/LabelItem";
+import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
 
 type Props = {
     note: Note;
@@ -68,7 +69,7 @@ export default function NoteCard({
     const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-    console.log("NoteCard:", note.id, note.images);
+    // console.log("NoteCard:", note.id, note.images);
 
 
     // hooks
@@ -87,7 +88,7 @@ export default function NoteCard({
     const {
         selectedNoteIds,
         toggleSelect,
-        previewColor, // 複数のNoteCard色変更用
+        previewColor,  // 複数のNoteCard色変更用
 
     } = useNoteSelectionStore();
 
@@ -98,7 +99,7 @@ export default function NoteCard({
         moveToTrash,
         toggleFavorite,
         togglePin,
-        // fetchNotes,
+
         searchParams,
 
         uploadNoteImage,
@@ -111,6 +112,8 @@ export default function NoteCard({
         selectedNoteIds.includes(note.id) && previewColor
             ? previewColor
             : tempColor;
+
+    const selected = selectedNoteIds.includes(note.id);
 
     let panel;
 
@@ -255,91 +258,76 @@ export default function NoteCard({
     return (
 
         <Card
+            ref={cardRef}
             className={cardStyles.noteCard}
             style={{ backgroundColor: displayColor }}
             onClick={() => setOpenNoteDetailId(note.id)}
-            ref={cardRef}
         >
 
             <div className={cardStyles.cardHeader}>
 
-                <button
-                    className={cardStyles.headerButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSelect(note.id);
-                    }}
+                <Tooltip
+                    text={selected ? "ノートの選択を解除" : "ノートを選択"}
                 >
-                    ✅
-                </button>
+
+                    <button
+                        className={`${cardStyles.selectButton}
+                                ${cardStyles.headerButton}
+                                ${ selected ? cardStyles.selected : ""
+                        }`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSelect(note.id);
+                        }}
+                    >
+
+                        {selected ? "✓" : "○"}
+
+                    </button>
+{/*
+                    <button
+                        className={cardStyles.headerButton}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSelect(note.id);
+                        }}
+                    >
+                        ✅
+                    </button> */}
+
+                </Tooltip>
 
                 <div
                     {...dragHandleProps}
                     className={cardStyles.dragArea}
                 />
 
-                <button
-                    className={cardStyles.headerButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        togglePin(note.id, note.is_pinned);
-                    }}
+                <Tooltip
+                    text={note.is_pinned ? "ピン留めを外す" : "ピン留めする"}
                 >
-                    {note.is_pinned ? "📌" : "📍"}
-                </button>
+
+                    <button
+                        className={`${cardStyles.headerButton}`}
+
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            togglePin(note.id, note.is_pinned);
+                        }}
+
+                    >
+
+                        {note.is_pinned ? "📌" : "📍"}
+
+                        {/* <span className={cardStyles.tooltip}>
+                            {note.is_pinned ? "ピンを外す" : "ピン留めする"}
+                        </span> */}
+
+                    </button>
+
+                </Tooltip>
 
             </div>
 
-            {/* <div
-                {...dragHandleProps}
-                className={cardStyles.cardHeader}
-            >
-
-                <button
-                    className={cardStyles.headerButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSelect(note.id);
-                    }}
-                >
-                    ✅
-                </button>
-
-                <button
-                    className={cardStyles.headerButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        togglePin(note.id, note.is_pinned);
-                    }}
-                >
-                    {note.is_pinned ? "📌" : "📍"}
-                </button>
-
-            </div> */}
-{/*
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    toggleSelect(note.id);
-                }}
-            >
-                ✅
-            </button>
-
-            <div {...dragHandleProps} className={cardStyles.dragHandle}>
-                ☰
-            </div> */}
-
-            {/* <div>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        togglePin(note.id, note.is_pinned);
-                    }}
-                >
-                    {note.is_pinned ? "📌" : "📍"}
-                </button>
-            </div> */}
 
             <div className={cardStyles.images}>
 
@@ -354,17 +342,7 @@ export default function NoteCard({
                         }}
                     />
                 ))}
-                {/* {note.images.map((image) => (
-                    <img
-                        key={image.id}
-                        className={cardStyles.image}
-                        src={image.image}
-                        alt=""
-                        onError={() => {
-                            console.log("画像読み込み失敗:", image.image);
-                        }}
-                    />
-                ))} */}
+
             </div>
 
 
@@ -405,41 +383,68 @@ export default function NoteCard({
 
                 <div className={cardStyles.leftButtons}>
 
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
-                            setOpenMenuId(null);
-                            setOpenColorId((prev) =>
-                                prev === note.id ? null : note.id,
-                            );
-                        }}
+                    <Tooltip
+                        text="色を変更"
                     >
-                        🎨
-                    </button>
 
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFavorite(note.id, note.is_favorite);
-                        }}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
+                                setOpenMenuId(null);
+                                setOpenColorId((prev) =>
+                                    prev === note.id ? null : note.id,
+                                );
+                            }}
+                        >
+                            🎨
+                        </button>
+
+                    </Tooltip>
+
+                    <Tooltip
+                        text={note.is_favorite ? "お気に入りを解除" : "お気に入りに登録"}
                     >
-                        {note.is_favorite ? "❤️" : "🤍"}
-                    </button>
 
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(note.id, note.is_favorite);
+                            }}
+                        >
+                            {note.is_favorite ? "❤️" : "🤍"}
 
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            fileInputRef.current?.click();
-                        }}
+                        </button>
+
+                    </Tooltip>
+
+                    <Tooltip text="画像を追加">
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                fileInputRef.current?.click();
+                            }}
+                        >
+                            📷
+                        </button>
+
+                    </Tooltip>
+
+                    <Tooltip
+                        text="閲覧数"
                     >
-                        📷
-                    </button>
 
-                    <span>👀 {note.view_count}</span>
-                    
+                        <span>👀 {note.view_count}</span>
 
-                    <span>🕑 {note.total_view_seconds}秒</span>
+                    </Tooltip>
+
+                    <Tooltip
+                        text="閲覧時間"
+                    >
+
+                        <span>🕑 {note.total_view_seconds}秒</span>
+
+                    </Tooltip>
 
                     <input
                         onClick={(e) => e.stopPropagation()}
@@ -451,21 +456,25 @@ export default function NoteCard({
 
                 </div>
 
-
-
-                <button
-                    className={cardStyles.menuButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenColorId(null);
-                        setPanelType(null);
-                        setOpenMenuId((prev) =>
-                            prev === note.id ? null : note.id,
-                        );
-                    }}
+                <Tooltip
+                    text="その他"
                 >
-                    ⋮
-                </button>
+
+                    <button
+                        className={cardStyles.menuButton}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenColorId(null);
+                            setPanelType(null);
+                            setOpenMenuId((prev) =>
+                                prev === note.id ? null : note.id,
+                            );
+                        }}
+                    >
+                        ⋮
+                    </button>
+
+                </Tooltip>
 
             </div>
 

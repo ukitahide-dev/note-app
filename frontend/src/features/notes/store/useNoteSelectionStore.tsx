@@ -55,9 +55,11 @@ export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
             selectedNoteIds:
 
                 state.selectedNoteIds.includes(id)
+
                     ? state.selectedNoteIds.filter(
                         (noteId) => noteId !== id
                     )
+                    
                     : [
 
                         id,

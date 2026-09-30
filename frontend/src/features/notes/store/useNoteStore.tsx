@@ -73,6 +73,18 @@ type NoteStore = {
     next: string | null;
     previous: string | null;
 
+    currentView: "notes" | "favorite" | "label";
+
+    setCurrentView: (
+        view: "notes" |
+        "favorite" |
+        "label"
+
+    ) => void;
+
+    currentLabelName: string | null;
+    setCurrentLabelName: (labelName: string | null) => void;
+
 
     searchParams: SearchParams;
 
@@ -253,6 +265,22 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     ordering: "order",
 
+    currentView: "notes",
+
+    setCurrentView: (view) => {
+        set({
+            currentView: view,
+        });
+    },
+
+    currentLabelName: null,
+
+    setCurrentLabelName: (labelName) => {
+        set({
+            currentLabelName: labelName
+        });
+    },
+
 
     searchParams: {
         query: "",
@@ -424,6 +452,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
                 color,
                 month,
             },
+
             currentPage: page,
             count: data.count,
             next: data.next,
@@ -454,6 +483,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
             // get().setError(error);
             useErrorStore.getState().setError(error);
             console.error(error);
+
         } finally {
             set({
                 isFetchtingNotes: false,
@@ -553,6 +583,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         set({
             isFetchtingNotes: true,
         });
+
 
         try {
             // const data = await getNotesApi(page, pageSize, ordering);
@@ -1039,6 +1070,14 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
     // お気に入りを切り替える
     toggleFavorite: async (id: number, is_favorite: boolean) => {
 
+        const {
+            currentPage,
+            pageSize,
+            ordering,
+            currentView,
+
+        } = get();
+
         try {
 
             const updatedNote = await updateNoteFavoriteApi(id, !is_favorite);
@@ -1059,6 +1098,20 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
             }));
 
+
+            // お気に入りページにいるときは、お気に入りトグルしたら、お気に入りノートを再取得する。お気に入りを解除したときに、そのノートが瞬時にお気に入り一覧から消えるようにするため。
+            if (currentView === "favorite") {
+
+                await get().fetchFavoriteNotes(
+                    currentPage,
+                    pageSize,
+                    ordering,
+                );
+
+            }
+
+            // await get().fetchFavoriteNotes(currentPage, pageSize, ordering,);
+
         } catch (error) {
 
             throw error; // 捕まえたエラーを、もう一度外側へ投げる。
@@ -1069,16 +1122,58 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     // ピンのつけ外し
-    togglePin: async (id: number, is_pinned: boolean) => {
+    togglePin: async (
+        noteId: number,
+        is_pinned: boolean,
+
+    ) => {
+
+        const {
+            // searchParams,
+            currentPage,
+            pageSize,
+            ordering,
+            pinnedOrdering,
+
+            currentView,
+            currentLabelName,
+
+        } = get();
+
+        
 
         try {
 
-            const updatedNote = await updateNotePinnedApi(id, !is_pinned);
+            // const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
+            const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
+
+            await get().fetchPinnedNotes(pinnedOrdering);
+
+
+            if (currentView === "notes") {
+
+                await get().fetchNotes(currentPage, pageSize, ordering,);
+
+            };
+
+
+            if (currentView === "label" && currentLabelName) {
+
+                await get().fetchLabelNotes(currentLabelName, currentPage, pageSize, ordering,);
+
+            };
+
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
-                    note.id === id ? updatedNote : note,
+                    note.id === noteId ? updatedNote : note,
                 ),
+
+                pinnedNotes: state.pinnedNotes.map((note) =>
+                    note.id === noteId ? updatedNote : note,
+                ),
+
             }));
 
         } catch (error) {
@@ -1088,12 +1183,15 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
         }
     },
 
+
+
     // 選択中のノートのピンを切り替える
     updateSelectedNotePin: async (
         noteIds: number[],
         mode: "add" | "remove",
 
     ) => {
+
         const notes = get().notes;
         const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
 

@@ -43,6 +43,7 @@ export default function NotesPage() {
         pageSize,
         setPageSize,
 
+        setCurrentView,
 
     } = useNoteStore();
 
@@ -53,6 +54,12 @@ export default function NotesPage() {
     } = useErrorStore();
 
 
+
+    useEffect(() => {
+
+        setCurrentView("notes");
+
+    }, []);
 
 
 
