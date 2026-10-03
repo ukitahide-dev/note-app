@@ -6,9 +6,25 @@ import NoteCard from "../NoteCard/NoteCard";
 
 // ---- types ----
 import type { Note } from "../../../../types/api/note";
+import type { NoteContext } from "../../../../types/ui/noteContext";
+
+
 
 type Props = {
     note: Note;
+    context: NoteContext;
+
+    openColor: {
+        noteId: number;
+        context: NoteContext;
+    } | null;
+
+    setOpenColor: React.Dispatch<
+        React.SetStateAction<{
+            noteId: number;
+            context: NoteContext;
+        } | null>
+    >;
 
     openMenuId: number | null;
 
@@ -17,18 +33,16 @@ type Props = {
 
     setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    openNoteDetailId: number | null;
-    setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
+    // openNoteDetailId: number | null;
+    // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    // onToggleFavorite: (
-    //     id: number,
-    //     is_favorite: boolean,
-    // ) => Promise<void>;
+    selectedNote: Note | null;
 
-    // onTogglePin: (
-    //     id: number,
-    //     is_pinned: boolean,
-    // ) => Promise<void>;
+    setSelectedNote: React.Dispatch<
+        React.SetStateAction<Note | null>
+    >;
+
+
 
     panelType: "label" | "history" | null;
 
@@ -41,13 +55,18 @@ type Props = {
 
 export default function SortableNoteCard({
     note,
+    context,
+    openColor,
+    setOpenColor,
 
     openMenuId,
     setOpenMenuId,
     openColorId,
     setOpenColorId,
-    openNoteDetailId,
-    setOpenNoteDetailId,
+    // openNoteDetailId,
+    // setOpenNoteDetailId,
+    selectedNote,
+    setSelectedNote,
 
     // onToggleFavorite,
     // onTogglePin,
@@ -82,21 +101,27 @@ export default function SortableNoteCard({
     };
 
     return (
+
         <div ref={setNodeRef} style={style}>
+
             <NoteCard
                 note={note}
+                context={context}
+                openColor={openColor}
+                setOpenColor={setOpenColor}
                 openMenuId={openMenuId}
                 setOpenMenuId={setOpenMenuId}
                 openColorId={openColorId}
                 setOpenColorId={setOpenColorId}
-                openNoteDetailId={openNoteDetailId}
-                setOpenNoteDetailId={setOpenNoteDetailId}
+                // openNoteDetailId={openNoteDetailId}
+                // setOpenNoteDetailId={setOpenNoteDetailId}
+                selectedNote={selectedNote}
+                setSelectedNote={setSelectedNote}
                 dragHandleProps={{
                     ...attributes,
                     ...listeners,
                 }}
-                // onToggleFavorite={onToggleFavorite}
-                // onTogglePin={onTogglePin}
+
                 panelType={panelType}
                 setPanelType={setPanelType}
             />

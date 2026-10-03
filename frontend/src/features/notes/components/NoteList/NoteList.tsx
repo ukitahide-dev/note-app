@@ -14,16 +14,32 @@ import NoteGrid from "../NoteGrid/NoteGrid";
 
 // ---- types ----
 import type { Note } from "../../../../types/api/note";
+import type { NoteContext } from "../../../../types/ui/noteContext";
+
 import { useNoteStore } from "../../store/useNoteStore";
 import SortSelect from "../SortSelect/SortSelect";
 
 import styles from "./NoteList.module.css";
+import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
+
+
+
+//  NoteList が、「自分は通常ページなのか？」「検索ページなのか？」「お気に入りページなのか？」を知れる。
+// type NoteContext =
+//     | "notes"
+//     | "search"
+//     | "label"
+//     | "favorite";
+
 
 type Props = {
     notes: Note[];
     pinnedNotes: Note[];
 
     enableSort: boolean;
+
+    context: NoteContext;
+
 };
 
 
@@ -34,13 +50,28 @@ type Props = {
 
 // 親: NotesPage.tsx、LabelNotesPage.tsx、FavoriteNotesPage.tsx、SearchResultsPage.tsx
 
-export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
+export default function NoteList({
+    notes,
+    pinnedNotes,
+    enableSort,
+    context,
 
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null); // 今どのノートのメニューが開いているかを表す。SortableNoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
+}: Props) {
+
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);   // 今どのノートのメニューが開いているかを表す。NoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
     const [openColorId, setOpenColorId] = useState<number | null>(null);
-    const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(
-        null,
-    );
+    // const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(
+    //     null,
+    // );
+
+    const [openColor, setOpenColor] = useState<{
+        noteId: number;
+        context: NoteContext;
+    } | null>(null);
+
+
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
 
     const [panelType, setPanelType] = useState<"label" | "history" | null>(
         null,
@@ -67,8 +98,13 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
         setOpenMenuId,
         openColorId,
         setOpenColorId,
-        openNoteDetailId,
-        setOpenNoteDetailId,
+
+        openColor,
+        setOpenColor,
+        // openNoteDetailId,
+        // setOpenNoteDetailId,
+        selectedNote,
+        setSelectedNote,
         panelType,
         setPanelType,
 
@@ -181,6 +217,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                                         {...noteGridProps}
                                         enableSort={true}
                                         notes={pinnedNotes}
+                                        context="pinned"
                                     />
                                 </SortableContext>
                             </DndContext>
@@ -191,6 +228,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                                 {...noteGridProps}
                                 enableSort={false}
                                 notes={pinnedNotes}
+                                context="pinned"
                             />
 
                         )}
@@ -200,48 +238,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                     )}
                 </section>
 
-                // <>
-                //     <h3>📌 固定済み</h3>
 
-                //     <SortSelect
-                //         ordering={pinnedOrdering}
-                //         onPageOrderChange={setPinnedOrdering}
-                //         manualOrderValue="pinned_order"
-                //     />
-
-                //     {canSortPinnedNotes ? (
-                //         // 固定済みが「手動順」のときだけD&Dを有効にする
-                //         <DndContext
-                //             collisionDetection={closestCenter}
-                //             onDragEnd={handlePinnedDragEnd}
-                //         >
-
-                //             <SortableContext
-                //                 items={pinnedNotes.map((note) => note.id)}
-                //                 strategy={rectSortingStrategy}
-                //             >
-
-                //                 <NoteGrid
-                //                     {...noteGridProps}
-                //                     enableSort={true}
-                //                     notes={pinnedNotes}
-                //                 />
-
-                //             </SortableContext>
-
-                //         </DndContext>
-
-                //     ) : (
-                //         // 固定済みが「手動順」以外なら通常表示
-                //         <NoteGrid
-                //             {...noteGridProps}
-                //             enableSort={false}
-                //             notes={pinnedNotes}
-                //         />
-                //     )}
-
-
-                // </>
             )}
 
             <h3>その他</h3>
@@ -269,6 +266,7 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                             {...noteGridProps}
                             enableSort={true}
                             notes={notes}
+                            context={context}
                         />
 
                     </SortableContext>
@@ -282,8 +280,16 @@ export default function NoteList({ notes, pinnedNotes, enableSort }: Props) {
                     {...noteGridProps}
                     enableSort={false}
                     notes={notes}
+                    context={context}
                 />
 
+            )}
+
+            {selectedNote && (
+                <NoteDetailModal
+                    note={selectedNote}
+                    onClose={() => setSelectedNote(null)}
+                />
             )}
 
         </>

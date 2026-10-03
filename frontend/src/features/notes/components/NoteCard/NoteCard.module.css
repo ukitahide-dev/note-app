@@ -69,35 +69,6 @@
     color: white;
     border-color: #555;
 }
-/* .togglePinButton {
-    position: relative;
-}
-
-
-.tooltip {
-
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-
-    padding: 6px 10px;
-    border-radius: 4px;
-    background: #333;
-    color: white;
-    font-size: 12px;
-    white-space: nowrap;
-
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.15s;
-}
-
-
-.togglePinButton:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-} */
 
 
 
@@ -127,17 +98,6 @@
 
 
 
-/* .card {
-    width: 250px;
-    flex-shrink: 0;
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-    word-break: break-word;
-    position: relative;
-    background-color: pink;
-} */
 
 
 .images {
@@ -166,14 +126,6 @@
 
 
 
-/*
-.labels {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 6px 10px;
-    margin-top: 8px;
-} */
 
 
 .labels {
@@ -211,19 +163,21 @@
     align-items: center;
     padding: 8px 10px;
     min-width: 0;
+
 }
 
 .leftButtons {
     display: flex;
     align-items: center;
     gap: 6px;
-
-    /* background-color: pink; */
     min-width: 0;
 
-    /* overflow: hidden; */
+    background-color: pink;
 
     flex: 1;
+
+    /* これつけると、Tooltipが表示されなくなる */
+    /* overflow: hidden; */
 }
 
 
@@ -235,7 +189,7 @@
 
 .leftButtons span {
     white-space: nowrap;
-
+    text-overflow: ellipsis;
     flex-shrink: 0;
 }
 

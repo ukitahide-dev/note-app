@@ -123,6 +123,7 @@ export default function NotesPage() {
                         notes={notes}
                         pinnedNotes={pinnedNotes}
                         enableSort={true}
+                        context="notes"
 
                     />
 

@@ -1,17 +1,16 @@
-// FavoritesPage.tsx
+
 
 import { useEffect } from "react";
-// import { getNotesApi } from "../../api/noteApi";
+
 
 import NoteList from "../../components/NoteList/NoteList";
 
 
 // ---- types ----
-// import type { Note } from "../../../../types/note";
-// import { useNodeRef } from "@dnd-kit/utilities";
+
 import { useNoteStore } from "../../store/useNoteStore";
 import Pagination from "../../components/Pagination/Pagination";
-// import SortSelect from "../../components/SortSelect/SortSelect";
+
 import NoteForm from "../../components/NoteForm/NoteForm";
 import NoteListSkeleton from "../../components/NoteListSkeleton/NoteListSkeleton";
 
@@ -117,6 +116,7 @@ export default function FavoriteNotesPage() {
                         notes={notes}
                         pinnedNotes={pinnedNotes}
                         enableSort={false}
+                        context="favorite"
 
                     />
 

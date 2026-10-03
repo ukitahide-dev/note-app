@@ -330,6 +330,7 @@ export default function SearchResultsPage () {
                     notes={searchResultNotes}
                     pinnedNotes={pinnedNotes}
                     enableSort={false}
+                    context="search"
 
                 />
 

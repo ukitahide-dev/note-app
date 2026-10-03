@@ -107,6 +107,7 @@ export default function LabelNotesPage() {
                         notes={notes}
                         pinnedNotes={pinnedNotes}
                         enableSort={false}
+                        context="label"
                     />
 
                 )}

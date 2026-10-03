@@ -20,9 +20,23 @@ import { useNoteColor } from "../../hooks/useNoteColor";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 import LabelItem from "../LabelItem/LabelItem";
 import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
+import type { NoteContext } from "../../../../types/ui/noteContext";
 
 type Props = {
     note: Note;
+    context: NoteContext;
+
+    openColor: {
+        noteId: number;
+        context: NoteContext;
+    } | null;
+
+    setOpenColor: React.Dispatch<
+        React.SetStateAction<{
+            noteId: number;
+            context: NoteContext;
+        } | null>
+    >;
 
     openMenuId: number | null;
 
@@ -31,8 +45,14 @@ type Props = {
 
     setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    openNoteDetailId: number | null;
-    setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
+    // openNoteDetailId: number | null;
+    // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
+
+    selectedNote: Note | null;
+
+    setSelectedNote: React.Dispatch<
+        React.SetStateAction<Note | null>
+    >;
 
     dragHandleProps?: any;
 
@@ -45,14 +65,20 @@ type Props = {
 
 export default function NoteCard({
     note,
+    context,
+
+    openColor,
+    setOpenColor,
 
     openMenuId,
     setOpenMenuId,
     openColorId,
     setOpenColorId,
 
-    openNoteDetailId,
-    setOpenNoteDetailId,
+    // openNoteDetailId,
+    // setOpenNoteDetailId,
+    selectedNote,
+    setSelectedNote,
 
     dragHandleProps,
     panelType,
@@ -173,15 +199,24 @@ export default function NoteCard({
             ) {
 
                 setOpenMenuId(null);
-                setOpenColorId(null);
+                // setOpenColorId(null);
+
 
                 setPanelType(null);
 
-                if (note.id === openColorId) {
+                if (note.id === openColor?.noteId) {
                     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
                     console.log("保存するのはこのカード");
                     saveColor();
                 }
+
+                setOpenColor(null);
+
+                // if (note.id === openColorId) {
+                //     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
+                //     console.log("保存するのはこのカード");
+                //     saveColor();
+                // }
 
             }
         };
@@ -197,6 +232,7 @@ export default function NoteCard({
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
+
 
     }, [note.id, tempColor]); // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
 
@@ -261,7 +297,8 @@ export default function NoteCard({
             ref={cardRef}
             className={cardStyles.noteCard}
             style={{ backgroundColor: displayColor }}
-            onClick={() => setOpenNoteDetailId(note.id)}
+            // onClick={() => setOpenNoteDetailId(note.id)}
+            onClick={() => setSelectedNote(note)}
         >
 
             <div className={cardStyles.cardHeader}>
@@ -284,16 +321,7 @@ export default function NoteCard({
                         {selected ? "✓" : "○"}
 
                     </button>
-{/*
-                    <button
-                        className={cardStyles.headerButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            toggleSelect(note.id);
-                        }}
-                    >
-                        ✅
-                    </button> */}
+
 
                 </Tooltip>
 
@@ -389,17 +417,22 @@ export default function NoteCard({
 
                         <button
                             onClick={(e) => {
-                                e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
+                                e.stopPropagation();   // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
                                 setOpenMenuId(null);
-                                setOpenColorId((prev) =>
-                                    prev === note.id ? null : note.id,
-                                );
+                                // setOpenColorId((prev) =>
+                                //     prev === note.id ? null : note.id,
+                                // );
+                                setOpenColor({
+                                    noteId: note.id,
+                                    context: context,
+                                });
                             }}
                         >
                             🎨
                         </button>
 
                     </Tooltip>
+
 
                     <Tooltip
                         text={note.is_favorite ? "お気に入りを解除" : "お気に入りに登録"}
@@ -481,19 +514,32 @@ export default function NoteCard({
             {openMenuId === note.id && panel}
 
             {/* 背景色 */}
-            {openColorId === note.id && (
+            {openColor?.noteId === note.id &&
+                openColor?.context === context && (
+
+                    <ColorPalette
+                        onSelectColor={handleSelectColor}
+                        paletteRef={paletteRef}
+                    />
+
+                )
+
+            }
+            {/* {openColorId === note.id && (
                 <ColorPalette
                     onSelectColor={handleSelectColor}
                     paletteRef={paletteRef}
                 />
-            )}
+            )} */}
 
-            {openNoteDetailId === note.id && (
+
+
+            {/* {openNoteDetailId === note.id && (
                 <NoteDetailModal
                     note={note}
                     onClose={() => setOpenNoteDetailId(null)}
                 />
-            )}
+            )} */}
 
         </Card>
     );

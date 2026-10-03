@@ -6,6 +6,7 @@ import styles from "./Sidebar.module.css";
 import { useLabelStore } from "../../../features/labels/store/labelStore";
 import { useEffect, useState } from "react";
 import LabelEditModal from "./LabelEditModal/LabelEditModal";
+import Tooltip from "../Tooltip/Tooltip";
 
 
 
@@ -26,6 +27,7 @@ type Props = {
 
 export default function Sidebar({ isOpen }: Props) {
 
+    // Store
     const { usedLabels,
             fetchUsedLabels,
 
@@ -51,6 +53,7 @@ export default function Sidebar({ isOpen }: Props) {
     return (
 
         <>
+
         <aside
             className={
                 isOpen
@@ -59,33 +62,64 @@ export default function Sidebar({ isOpen }: Props) {
             }
         >
 
-            <div className={styles.item} onClick={() => navigate("/notes")}>
-                📝
+            <div
+                className={styles.item}
+                onClick={() => navigate("/notes")}
+            >
 
-                {isOpen && (
-                    <span>ノート</span>
-                )}
+                <Tooltip
+                    text="ノート一覧"
+                >
+
+                    <span>📝</span>
+
+                    {isOpen && (
+                        <span>ノート</span>
+                    )}
+
+                </Tooltip>
+
             </div>
+
 
             <div
                 className={styles.item}
                 onClick={() => navigate("/notes/favorites")}
             >
-                ❤️
-                {isOpen && (
-                    <span>お気に入り</span>
-                )}
+
+                <Tooltip
+                    text="お気に入り一覧"
+
+                >
+
+                    <span>❤️</span>
+
+                    {isOpen && (
+                        <span>お気に入り</span>
+                    )}
+
+                </Tooltip>
+
             </div>
+
 
             <div
                 className={styles.item}
                 onClick={() => navigate("/calendar")}
-                // onClick={() => navigate("/notes/favorites")}
+
             >
-                📅
-                {isOpen && (
-                    <span>カレンダー</span>
-                )}
+                <Tooltip
+                    text="カレンダー"
+                >
+
+                    <span>📅</span>
+
+                    {isOpen && (
+                        <span>カレンダー</span>
+                    )}
+
+                </Tooltip>
+
             </div>
 
 
@@ -96,9 +130,40 @@ export default function Sidebar({ isOpen }: Props) {
                      onClick={() => navigate(`/labels/${label.name}`)}
                 >
 
-                    {isOpen && (
-                        <span>{label.name}</span>
-                    )}
+                    {/* <Tooltip
+                        text={label.name}
+                    >
+
+                        <span className={styles.labelIcon}>🏷️</span>
+
+                        {isOpen && (
+                            <span
+                                className={styles.labelName}
+                            >
+                                {label.name}
+                            </span>
+                        )}
+
+                    </Tooltip> */}
+
+                    <Tooltip
+                        text={label.name}
+                        fullWidth
+                    >
+
+                        <div className={styles.labelContent}>
+
+                            <span className={styles.labelIcon}>🏷️</span>
+
+                            {isOpen && (
+                                <span className={styles.labelName}>
+                                    {label.name}
+                                </span>
+                            )}
+
+                        </div>
+
+                    </Tooltip>
 
                 </div>
 
@@ -110,6 +175,7 @@ export default function Sidebar({ isOpen }: Props) {
                 className={styles.item}
                 onClick={() => setIsModalOpen(true)}
             >
+
                 {isOpen && (
                     <span>ラベルの編集</span>
                 )}
@@ -122,11 +188,18 @@ export default function Sidebar({ isOpen }: Props) {
                 className={styles.item}
                 onClick={() => navigate("/notes/trash")}
             >
-                🗑
 
-                {isOpen && (
-                    <span>ゴミ箱</span>
-                )}
+                <Tooltip
+                    text="ゴミ箱"
+                >
+                    🗑
+
+                    {isOpen && (
+                        <span>ゴミ箱</span>
+                    )}
+
+                </Tooltip>
+
             </div>
 
         </aside>

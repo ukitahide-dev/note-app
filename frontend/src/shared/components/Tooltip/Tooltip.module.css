@@ -1,14 +1,28 @@
 .wrapper {
     position: relative;
+
+    /* .wrapperの中身の大きさに合わせて横幅を持つ。アイコンと、何秒とかの文字分。 中身が多くなると、横幅が長くなる。*/
     display: inline-flex;
+
 }
+
+
+/* Sidebar からTooltipを開いたときは、widthを100%にしたい。 */
+.fullWidth {
+    display: flex;
+
+    /* 親の幅いっぱいまで自分の幅にする */
+    width: 100%;
+    min-width: 0;
+}
+
 
 
 .tooltip {
     position: absolute;
     top: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0%;
+    /* transform: translateX(-10%); */
 
     padding: 6px 10px;
     border-radius: 4px;
