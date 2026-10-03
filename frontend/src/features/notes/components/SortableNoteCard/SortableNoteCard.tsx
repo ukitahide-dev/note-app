@@ -26,12 +26,23 @@ type Props = {
         } | null>
     >;
 
-    openMenuId: number | null;
+    // openMenuId: number | null;
+    // setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    openColorId: number | null;
-    setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
+    openMenu: {
+        noteId: number;
+        context: NoteContext;
+    } | null;
 
-    setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
+    setOpenMenu: React.Dispatch<
+        React.SetStateAction<{
+            noteId: number;
+            context: NoteContext;
+        } | null>
+    >;
+    // openColorId: number | null;
+    // setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
+
 
     // openNoteDetailId: number | null;
     // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
@@ -59,10 +70,12 @@ export default function SortableNoteCard({
     openColor,
     setOpenColor,
 
-    openMenuId,
-    setOpenMenuId,
-    openColorId,
-    setOpenColorId,
+    // openMenuId,
+    // setOpenMenuId,
+    openMenu,
+    setOpenMenu,
+    // openColorId,
+    // setOpenColorId,
     // openNoteDetailId,
     // setOpenNoteDetailId,
     selectedNote,
@@ -109,10 +122,12 @@ export default function SortableNoteCard({
                 context={context}
                 openColor={openColor}
                 setOpenColor={setOpenColor}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                openColorId={openColorId}
-                setOpenColorId={setOpenColorId}
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
+                // openMenuId={openMenuId}
+                // setOpenMenuId={setOpenMenuId}
+                // openColorId={openColorId}
+                // setOpenColorId={setOpenColorId}
                 // openNoteDetailId={openNoteDetailId}
                 // setOpenNoteDetailId={setOpenNoteDetailId}
                 selectedNote={selectedNote}

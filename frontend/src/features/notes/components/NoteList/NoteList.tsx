@@ -58,13 +58,18 @@ export default function NoteList({
 
 }: Props) {
 
-    const [openMenuId, setOpenMenuId] = useState<number | null>(null);   // 今どのノートのメニューが開いているかを表す。NoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
-    const [openColorId, setOpenColorId] = useState<number | null>(null);
+    // const [openMenuId, setOpenMenuId] = useState<number | null>(null);   // 今どのノートのメニューが開いているかを表す。NoteCardの親(NoteList)で定義することで、各ノートカード全体で共有できるようになる。ex) openMenuId = 1という状態を全カードで共有できる。
+    // const [openColorId, setOpenColorId] = useState<number | null>(null);
     // const [openNoteDetailId, setOpenNoteDetailId] = useState<number | null>(
     //     null,
     // );
 
     const [openColor, setOpenColor] = useState<{
+        noteId: number;
+        context: NoteContext;
+    } | null>(null);
+
+    const [openMenu, setOpenMenu] = useState<{
         noteId: number;
         context: NoteContext;
     } | null>(null);
@@ -94,10 +99,12 @@ export default function NoteList({
 
 
     const noteGridProps = {
-        openMenuId, // 省略記法: 本当は、openMenuId: openMenuId
-        setOpenMenuId,
-        openColorId,
-        setOpenColorId,
+        // openMenuId, // 省略記法: 本当は、openMenuId: openMenuId
+        // setOpenMenuId,
+        openMenu,
+        setOpenMenu,
+        // openColorId,
+        // setOpenColorId,
 
         openColor,
         setOpenColor,

@@ -16,7 +16,20 @@ type Props = {
 
     context: NoteContext;
 
-    openMenuId: number | null;
+    // openMenuId: number | null;
+    // setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
+
+    openMenu: {
+        noteId: number;
+        context: NoteContext;
+    } | null;
+
+    setOpenMenu: React.Dispatch<
+        React.SetStateAction<{
+            noteId: number;
+            context: NoteContext;
+        } | null>
+    >;
 
     openColor: {
         noteId: number;
@@ -30,10 +43,9 @@ type Props = {
         } | null>
     >;
 
-    openColorId: number | null;
-    setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
+    // openColorId: number | null;
+    // setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
     // openNoteDetailId: number | null;
     // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
@@ -64,10 +76,12 @@ export default function NoteGrid({
     openColor,
     setOpenColor,
 
-    openMenuId,
-    setOpenMenuId,
-    openColorId,
-    setOpenColorId,
+    // openMenuId,
+    // setOpenMenuId,
+    openMenu,
+    setOpenMenu,
+    // openColorId,
+    // setOpenColorId,
 
     selectedNote,
     setSelectedNote,
@@ -95,10 +109,12 @@ export default function NoteGrid({
                     context={context}
                     openColor={openColor}
                     setOpenColor={setOpenColor}
-                    openMenuId={openMenuId}
-                    setOpenMenuId={setOpenMenuId}
-                    openColorId={openColorId}
-                    setOpenColorId={setOpenColorId}
+                    // openMenuId={openMenuId}
+                    // setOpenMenuId={setOpenMenuId}
+                    openMenu={openMenu}
+                    setOpenMenu={setOpenMenu}
+                    // openColorId={openColorId}
+                    // setOpenColorId={setOpenColorId}
                     // openNoteDetailId={openNoteDetailId}
                     // setOpenNoteDetailId={setOpenNoteDetailId}
                     selectedNote={selectedNote}

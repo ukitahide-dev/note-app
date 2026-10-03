@@ -8,7 +8,7 @@ import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 import cardStyles from "./NoteCard.module.css";
 
-import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
+// import NoteDetailModal from "../NoteDetailModal/NoteDetailModal";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 // ---- types ----
@@ -38,12 +38,24 @@ type Props = {
         } | null>
     >;
 
-    openMenuId: number | null;
+    // openMenuId: number | null;
+    // setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    openColorId: number | null;
-    setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
+    openMenu: {
+        noteId: number;
+        context: NoteContext;
+    } | null;
 
-    setOpenMenuId: React.Dispatch<React.SetStateAction<number | null>>;
+    setOpenMenu: React.Dispatch<
+        React.SetStateAction<{
+            noteId: number;
+            context: NoteContext;
+        } | null>
+    >;
+
+    // openColorId: number | null;
+    // setOpenColorId: React.Dispatch<React.SetStateAction<number | null>>;
+
 
     // openNoteDetailId: number | null;
     // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
@@ -70,14 +82,17 @@ export default function NoteCard({
     openColor,
     setOpenColor,
 
-    openMenuId,
-    setOpenMenuId,
-    openColorId,
-    setOpenColorId,
+    openMenu,
+    setOpenMenu,
+
+    // openMenuId,
+    // setOpenMenuId,
+    // openColorId,
+    // setOpenColorId,
 
     // openNoteDetailId,
     // setOpenNoteDetailId,
-    selectedNote,
+    // selectedNote,
     setSelectedNote,
 
     dragHandleProps,
@@ -86,6 +101,7 @@ export default function NoteCard({
 
 
 }: Props) {
+
     // const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
 
     const cardRef = useRef<HTMLDivElement | null>(null);
@@ -141,6 +157,7 @@ export default function NoteCard({
 
     const selected = selectedNoteIds.includes(note.id);
 
+
     let panel;
 
     if (panelType === "label") {
@@ -157,14 +174,15 @@ export default function NoteCard({
                 note={note}
                 onClose={() => {
                     setPanelType(null);
-                    setOpenMenuId(null);
+                    setOpenMenu(null);
+                    // setOpenMenuId(null);
                 }}
             />
         );
     } else {
         panel = (
             <NoteMenu
-                menuRef={menuRef} // menuRefという名前で、{}の中のmenuRefを渡すという意味
+                menuRef={menuRef}  // menuRefという名前で、{}の中のmenuRefを渡すという意味
                 onOpenLabel={() => setPanelType("label")}
                 onOpenHistory={() => setPanelType("history")}
                 onMoveToTrash={() => moveToTrash(note.id)}
@@ -198,11 +216,11 @@ export default function NoteCard({
                     !paletteRef.current.contains(event.target as Node))
             ) {
 
-                setOpenMenuId(null);
+                // setOpenMenuId(null);
                 // setOpenColorId(null);
 
 
-                setPanelType(null);
+
 
                 if (note.id === openColor?.noteId) {
                     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
@@ -211,6 +229,8 @@ export default function NoteCard({
                 }
 
                 setOpenColor(null);
+                setOpenMenu(null);
+                setPanelType(null);
 
                 // if (note.id === openColorId) {
                 //     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
@@ -418,7 +438,8 @@ export default function NoteCard({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();   // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
-                                setOpenMenuId(null);
+                                // setOpenMenuId(null);
+                                setOpenMenu(null);
                                 // setOpenColorId((prev) =>
                                 //     prev === note.id ? null : note.id,
                                 // );
@@ -497,11 +518,21 @@ export default function NoteCard({
                         className={cardStyles.menuButton}
                         onClick={(e) => {
                             e.stopPropagation();
-                            setOpenColorId(null);
+                            setOpenColor(null);
+                            // setOpenColorId(null);
                             setPanelType(null);
-                            setOpenMenuId((prev) =>
-                                prev === note.id ? null : note.id,
+                            setOpenMenu((prev) =>
+                                prev?.noteId === note.id &&
+                                prev?.context === context
+                                    ? null
+                                    : {
+                                        noteId: note.id,
+                                        context: context,
+                                    }
                             );
+                            // setOpenMenuId((prev) =>
+                            //     prev === note.id ? null : note.id,
+                            // );
                         }}
                     >
                         ⋮
@@ -511,7 +542,12 @@ export default function NoteCard({
 
             </div>
 
-            {openMenuId === note.id && panel}
+            {openMenu?.noteId === note.id &&
+                openMenu?.context === context && (
+                    panel
+                )
+            }
+            {/* {openMenuId === note.id && panel} */}
 
             {/* 背景色 */}
             {openColor?.noteId === note.id &&
