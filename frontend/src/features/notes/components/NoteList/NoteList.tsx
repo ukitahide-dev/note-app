@@ -216,6 +216,7 @@ export default function NoteList({
                                 collisionDetection={closestCenter}
                                 onDragEnd={handlePinnedDragEnd}
                             >
+                                
                                 <SortableContext
                                     items={pinnedNotes.map((note) => note.id)}
                                     strategy={rectSortingStrategy}

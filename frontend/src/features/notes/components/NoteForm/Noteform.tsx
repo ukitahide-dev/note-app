@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-// import { createNote as createNoteApi } from "../../api/noteApi";
+
 
 
 //  ---- css ----
@@ -7,12 +7,12 @@ import styles from "./NoteForm.module.css";
 import NoteFormMenu from "./NoteFormMenu/NoteFormMenu";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
-// import { useLabelStore } from "../../../labels/store/labelStore";
+
 
 
 
 // ---- types ----
-// import type { Note } from "../../../../types/note";
+
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteFormLabels } from "../../hooks/useNoteFormLabels";
 
@@ -59,13 +59,9 @@ export default function NoteForm({
     const [isSubmiting, setIsSubmiting] = useState(false);
 
 
-    // const [fieldErrors, setFieldErrors] = useState<{
-    //     title?: string[],
-    //     content?: string[],
-    // }>({});
 
 
-
+    // hook
     const {
         selectedLabels,
         selectedLabelNames,
@@ -83,7 +79,7 @@ export default function NoteForm({
     const formRef = useRef<HTMLFormElement | null>(null);
 
 
-    // eStore
+    // Store
     const {
         createNote,
     } = useNoteStore();
@@ -101,14 +97,9 @@ export default function NoteForm({
 
         const errors: FieldErrors = {};
 
-        // const errors: {
-        //     title?: string[],
-        //     content?: string[],
-        // } = {};
-
 
         if (!title.trim()) {
-            errors.title = ["タイトルを入力してください!!!!!!888"];
+            errors.title = ["タイトルを入力してください。"];
         }
 
 
@@ -136,40 +127,37 @@ export default function NoteForm({
 
         setIsSubmiting(true);
 
-        setTitle("");
-        setContent("");
-        setIsExpanded(false);
-
-
-        setActivePanel(null);
-        setTempColor("#ffffff");
-
-        setFieldErrors({});
-
 
         const clientErrors = validateNoteForm(title, content);
 
-
-        // フロント側で、不正な入力を見つけて、api通信することなく、ここで処理を終わらせる。フロントで完結させる。
-        if (Object.keys(clientErrors).length > 0) {
-
+        if (Object.keys(clientErrors).length > 0) {    // フロント側で、不正な入力を見つけて、api通信することなく、ここで処理を終わらせる。フロントで完結させる。
             setFieldErrors(clientErrors);
+            setIsSubmiting(false);
 
-            return;
-
+            return;  // ここで処理が終わると、finallyは実行されない。
         }
 
+        // setIsSubmiting(true);
+
+        // setTitle("");
+        // setContent("");
+        // setIsExpanded(false);
+        // setActivePanel(null);
+        // setTempColor("#ffffff");
+        // setFieldErrors({});
 
 
         try {
 
-
-
             await createNote(title, content, selectedLabels, tempColor);
 
-            // alert("投稿成功");
-
-
+            // 投稿成功したらリセット
+            setTitle("");
+            setContent("");
+            setIsExpanded(false);
+            setActivePanel(null);
+            setTempColor("#ffffff");
+            setFieldErrors({});
 
         } catch (error) {
 
@@ -188,11 +176,10 @@ export default function NoteForm({
 
                 }
 
-
             }
 
 
-        } finally {
+        } finally {   // 成功しても失敗しても、最後に必ず実行したい処理。
 
             setIsSubmiting(false);
 
@@ -206,6 +193,7 @@ export default function NoteForm({
 
     const handleContentChange = (
         e: React.ChangeEvent<HTMLTextAreaElement>  // eはtextareaで発生したchangeイベントであるという型定義。
+
     ) => {
 
         setContent(e.target.value);
