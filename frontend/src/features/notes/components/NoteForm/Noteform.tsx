@@ -82,6 +82,7 @@ export default function NoteForm({
     // Store
     const {
         createNote,
+
     } = useNoteStore();
 
 
@@ -92,7 +93,6 @@ export default function NoteForm({
         content: string,
 
     ): FieldErrors => {
-
 
 
         const errors: FieldErrors = {};
@@ -137,14 +137,7 @@ export default function NoteForm({
             return;  // ここで処理が終わると、finallyは実行されない。
         }
 
-        // setIsSubmiting(true);
 
-        // setTitle("");
-        // setContent("");
-        // setIsExpanded(false);
-        // setActivePanel(null);
-        // setTempColor("#ffffff");
-        // setFieldErrors({});
 
 
         try {

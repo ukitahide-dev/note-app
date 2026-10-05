@@ -12,10 +12,6 @@ import LabelPanelItem from "./LabelPanelItem/LabelPanelItem";
 // ---- type ----
 import type { LabelState } from "../../../../../types/ui/label";
 
-// type LabelState = {
-//     id: number;
-//     state: "checked" | "unchecked" | "indeterminate";
-// };
 
 
 type Props = {

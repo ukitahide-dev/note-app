@@ -57,6 +57,7 @@ export default function ColorPalette({
         <div
             ref={paletteRef}
             className={styles.palette}
+            data-testid="color-palette"  // テストからこのHTML要素を見つけるための目印。testファイルで、screen.getByTestId("color-palette")で、このDOM要素を取得できる。
             onClick={(e) => e.stopPropagation()}
         >
 
@@ -70,7 +71,7 @@ export default function ColorPalette({
                     }}
 
                     onClick={(e) => {
-                            // console.log("選択した色", color);
+
                             e.stopPropagation();
                             onSelectColor(color);
                         }

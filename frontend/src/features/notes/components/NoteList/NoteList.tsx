@@ -75,7 +75,7 @@ export default function NoteList({
     } | null>(null);
 
 
-    const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null);   // ノート詳細を開く用途
 
 
     const [panelType, setPanelType] = useState<"label" | "history" | null>(
@@ -216,7 +216,7 @@ export default function NoteList({
                                 collisionDetection={closestCenter}
                                 onDragEnd={handlePinnedDragEnd}
                             >
-                                
+
                                 <SortableContext
                                     items={pinnedNotes.map((note) => note.id)}
                                     strategy={rectSortingStrategy}
