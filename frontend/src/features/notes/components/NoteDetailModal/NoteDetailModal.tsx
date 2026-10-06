@@ -37,6 +37,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 import ImageViewer from "../ImageViewer/ImageViewer";
+import { NoteLabels } from "../NoteLabels/NoteLabels";
 
 
 type Props = {
@@ -313,7 +314,7 @@ export default function NoteDetailModal({
                                 e.target.style.height = "auto";
                                 e.target.style.height = `${e.target.scrollHeight}px`;
                             }}
-                            // onChange={(e) => setTitle(e.target.value)}
+
                         />
 
                         <textarea
@@ -327,15 +328,27 @@ export default function NoteDetailModal({
                                 e.target.style.height = "auto";
                                 e.target.style.height = `${e.target.scrollHeight}px`;
                             }}
-                            // onChange={(e) => setContent(e.target.value)}
+
+                        />
+
+                    </div>
+
+                    <div className={styles.labels}>
+
+                        <NoteLabels
+                            labels={note.labels}
+                            onRemoveLabel={handleRemoveNoteLabel}
                         />
 
                     </div>
 
 
-
+                    {/* <NoteLabels
+                        labels={note.labels}
+                        onRemoveLabel={handleRemoveNoteLabel}
+                    /> */}
                     {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
-                    <div className={styles.labels}>
+                    {/* <div className={styles.labels}>
                         {note.labels.map((label) => (
                             <LabelItem
                                 label={label}
@@ -344,7 +357,7 @@ export default function NoteDetailModal({
                                 }
                             />
                         ))}
-                    </div>
+                    </div> */}
 
                 </div>
 

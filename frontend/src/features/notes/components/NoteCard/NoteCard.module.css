@@ -157,7 +157,7 @@
 
 
 
-/* ---- .buttons ----- */
+/* ---- .buttons -----
 .buttons {
     display: flex;
     align-items: center;
@@ -174,14 +174,14 @@
 
     background-color: pink;
 
-    flex: 1;
+    flex: 1; */
 
     /* これつけると、Tooltipが表示されなくなる */
     /* overflow: hidden; */
-}
+/* } */
 
 
-.leftButtons button {
+/* .leftButtons button {
     flex-shrink: 0;
 
 }
@@ -205,4 +205,4 @@
 .menuButton:hover {
     background: #f1f3f4;
     border-radius: 50%;
-}
+} */

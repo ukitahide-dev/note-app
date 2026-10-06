@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Card from "../../../../shared/ui/Card/Card";
 
 
-// import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
-// import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
+
 import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 
 import cardStyles from "./NoteCard.module.css";
@@ -16,13 +15,15 @@ import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
 
 import { useNoteColor } from "../../hooks/useNoteColor";
-// import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
+
 import LabelItem from "../LabelItem/LabelItem";
 import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
 import { useClickOutside } from "../../hooks/useClickOutside";
 import NoteCardActions from "../NoteCardActions/NoteCardActions";
+import { NoteLabels } from "../NoteLabels/NoteLabels";
+
 
 
 
@@ -341,8 +342,27 @@ export default function NoteCard({
 
             </div>
 
-
             <div className={cardStyles.labels}>
+
+                <NoteLabels
+                    labels={note.labels.slice(0, 2)}
+                    onRemoveLabel={handleRemoveNoteLabel}
+                />
+
+                {note.labels.length > 2 && (
+                    <span className={cardStyles.moreLabels}>
+                        他{note.labels.length - 2}件
+                    </span>
+                )}
+
+            </div>
+
+            {/* <NoteLabels
+                labels={note.labels.slice(0, 2)}
+                onRemoveLabel={handleRemoveNoteLabel}
+            /> */}
+
+            {/* <div className={cardStyles.labels}>
 
                 {note.labels.slice(0, 2).map((label) => (
                     <LabelItem
@@ -358,7 +378,7 @@ export default function NoteCard({
                     </span>
                 )}
 
-            </div>
+            </div> */}
 
 
             <NoteCardActions
@@ -370,9 +390,7 @@ export default function NoteCard({
                         context: context,
                     });
                 }}
-                // onToggleFavorite={() => toggleFavorite(note.id, note.is_favorite)}
-                // onToggleFavorite={toggleFavorite(note.id, note.is_favorite)}  // ダメ toggleFavoriteを実行してしまっている
-                // onToggleFavorite={toggleFavorite}  //  ダメ 引数が必要な関数を、引数なしでそのまま渡している
+                onToggleFavorite={() => toggleFavorite(note.id, note.is_favorite)}
                 onOpenImage={() => fileInputRef.current?.click()}
                 onOpenMenu={() => {
                     setOpenColor(null);
@@ -391,114 +409,7 @@ export default function NoteCard({
                 onImageChange={handleImageChange}
             />
 
-            {/* <div className={cardStyles.buttons}>
 
-                <div className={cardStyles.leftButtons}>
-
-                    <Tooltip
-                        text="色を変更"
-                    >
-
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();   // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
-                                setOpenMenu(null);
-                                setOpenColor({
-                                    noteId: note.id,
-                                    context: context,
-                                });
-                            }}
-                        >
-                            🎨
-                        </button>
-
-                    </Tooltip>
-
-
-                    <Tooltip
-                        text={note.is_favorite ? "お気に入りを解除" : "お気に入りに登録"}
-                    >
-
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                toggleFavorite(note.id, note.is_favorite);
-                            }}
-                        >
-                            {note.is_favorite ? "❤️" : "🤍"}
-
-                        </button>
-
-                    </Tooltip>
-
-                    <Tooltip text="画像を追加">
-
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                fileInputRef.current?.click();
-                            }}
-                        >
-                            📷
-                        </button>
-
-                    </Tooltip>
-
-                    <Tooltip
-                        text="閲覧数"
-                    >
-
-                        <span>👀 {note.view_count}</span>
-
-                    </Tooltip>
-
-                    <Tooltip
-                        text="閲覧時間"
-                    >
-
-                        <span>🕑 {note.total_view_seconds}秒</span>
-
-                    </Tooltip>
-
-                    <input
-                        onClick={(e) => e.stopPropagation()}
-                        ref={fileInputRef}
-                        type="file"
-                        hidden
-                        onChange={handleImageChange}
-                    />
-
-                </div>
-
-                <Tooltip
-                    text="その他"
-                >
-
-                    <button
-                        className={cardStyles.menuButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-
-                            setOpenColor(null);
-                            setPanelType(null);
-                            setOpenMenu((prev) =>
-                                prev?.noteId === note.id &&
-                                prev?.context === context
-                                    ? null
-                                    : {
-                                        noteId: note.id,
-                                        context: context,
-                                    }
-                            );
-
-                        }}
-                    >
-                        ⋮
-                    </button>
-
-                </Tooltip>
-
-            </div> */}
 
             {openMenu?.noteId === note.id &&
                 openMenu?.context === context && (
