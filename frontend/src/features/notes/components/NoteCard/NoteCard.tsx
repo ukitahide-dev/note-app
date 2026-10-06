@@ -21,6 +21,7 @@ import LabelItem from "../LabelItem/LabelItem";
 import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 
 
@@ -101,10 +102,8 @@ export default function NoteCard({
     const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-    // console.log("NoteCard:", note.id, note.images);
 
-
-    // hooks
+    // hook
     const {
         labelStates,
         handleSelectLabel,
@@ -117,7 +116,7 @@ export default function NoteCard({
     );
 
 
-    // hooks
+    // hook
     const {
         tempColor,
         handleSelectColor,
@@ -156,6 +155,16 @@ export default function NoteCard({
             : tempColor;
 
     const selected = selectedNoteIds.includes(note.id);
+
+
+    const isColorOpen =
+        openColor?.noteId === note.id &&
+        openColor?.context === context;
+
+        
+    const isMenuOpen =
+        openMenu?.noteId === note.id &&
+        openMenu?.context === context;
 
 
     // NoteCardPanelに切り出した
@@ -198,58 +207,90 @@ export default function NoteCard({
     //     );
     // }
 
+    useClickOutside(
+        [
+            cardRef,
+            menuRef,
+            labelPanelRef,
+            paletteRef,
+        ],
+        () => {
 
+            console.log("outside click");
+            console.log("note.id:", note.id);
+            console.log("openColor:", openColor);
 
+            if (isColorOpen) {
 
-    useEffect(() => {
-
-        const handleClickOutside = (event: MouseEvent) => {
-
-            if (
-                cardRef.current &&
-                !cardRef.current.contains(event.target as Node) &&  // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
-                (!menuRef.current ||
-                    !menuRef.current.contains(event.target as Node)) &&
-                (!labelPanelRef.current ||
-                    !labelPanelRef.current.contains(event.target as Node)) &&
-                (!paletteRef.current ||
-                    !paletteRef.current.contains(event.target as Node))
-            ) {
-
-
-                if (note.id === openColor?.noteId) {
-                    // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
-                    console.log("保存するのはこのカード");
-                    saveColor();
-                }
-
+                saveColor();
                 setOpenColor(null);
+            }
+
+            if (isMenuOpen) {
+                console.log("outside click");
+                console.log("note.id:", note.id);
+                console.log("openMenu:", openMenu);
                 setOpenMenu(null);
                 setPanelType(null);
-
-                // if (note.id === openColorId) {
-                //     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
-                //     console.log("保存するのはこのカード");
-                //     saveColor();
-                // }
-
             }
-        };
 
-        // 画面のどこかがクリックされたら handleClickOutside を実行する。
-        document.addEventListener(
-            "click",
-            // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
-            handleClickOutside,
-        );
+            // setOpenColor(null);
+            // setOpenMenu(null);
+            // setPanelType(null);
+        },
+        isColorOpen || isMenuOpen
 
-        // このNoteCardが不要になったら、documentに登録した監視を解除する
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
+    );
+
+    // useEffect(() => {
+
+    //     const handleClickOutside = (event: MouseEvent) => {
+
+    //         if (
+    //             cardRef.current &&
+    //             !cardRef.current.contains(event.target as Node) &&  // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
+    //             (!menuRef.current ||
+    //                 !menuRef.current.contains(event.target as Node)) &&
+    //             (!labelPanelRef.current ||
+    //                 !labelPanelRef.current.contains(event.target as Node)) &&
+    //             (!paletteRef.current ||
+    //                 !paletteRef.current.contains(event.target as Node))
+    //         ) {
 
 
-    }, [note.id, tempColor]); // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
+    //             if (note.id === openColor?.noteId) {
+    //                 // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
+    //                 console.log("保存するのはこのカード");
+    //                 saveColor();
+    //             }
+
+    //             setOpenColor(null);
+    //             setOpenMenu(null);
+    //             setPanelType(null);
+
+    //             // if (note.id === openColorId) {
+    //             //     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
+    //             //     console.log("保存するのはこのカード");
+    //             //     saveColor();
+    //             // }
+
+    //         }
+    //     };
+
+    //     // 画面のどこかがクリックされたら handleClickOutside を実行する。
+    //     document.addEventListener(
+    //         "click",
+    //         // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
+    //         handleClickOutside,
+    //     );
+
+    //     // このNoteCardが不要になったら、documentに登録した監視を解除する
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+
+
+    // }, [note.id, tempColor]); // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
 
     // tempColor, openColorId
     // tempColor, openColorId, saveColor
