@@ -1,0 +1,49 @@
+/* ---- .buttons ----- */
+.buttons {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    min-width: 0;
+
+}
+
+.leftButtons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+
+    background-color: pink;
+
+    flex: 1;
+
+    /* これつけると、Tooltipが表示されなくなる */
+    /* overflow: hidden; */
+}
+
+
+.leftButtons button {
+    flex-shrink: 0;
+
+}
+
+
+.leftButtons span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+
+.menuButton {
+    margin-left: auto;
+    flex-shrink: 0;
+
+    width: 32px;
+    height: 32px;
+}
+
+.menuButton:hover {
+    background: #f1f3f4;
+    border-radius: 50%;
+}

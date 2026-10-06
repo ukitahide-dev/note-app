@@ -22,6 +22,7 @@ import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import NoteCardActions from "../NoteCardActions/NoteCardActions";
 
 
 
@@ -93,8 +94,6 @@ export default function NoteCard({
 
 }: Props) {
 
-    // const [tempColor, setTempColor] = useState(note.color);  // NoteCard単体の色変更用。useState(note.color)は「初回マウント時」にしか実行されない。
-
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
@@ -161,59 +160,15 @@ export default function NoteCard({
         openColor?.noteId === note.id &&
         openColor?.context === context;
 
-        
+
     const isMenuOpen =
         openMenu?.noteId === note.id &&
         openMenu?.context === context;
 
 
-    // NoteCardPanelに切り出した
-    // let panel;
-
-    // if (panelType === "label") {
-    //     panel = (
-    //         <LabelPanel
-    //             labelPanelRef={labelPanelRef}
-    //             labelStates={labelStates}
-    //             onSelectLabel={handleSelectLabel}
-    //         />
-    //     );
-    // } else if (panelType === "history") {
-    //     panel = (
-    //         <HistoryPanel
-    //             note={note}
-    //             onClose={() => {
-    //                 setPanelType(null);
-    //                 setOpenMenu(null);
-    //             }}
-    //         />
-    //     );
-    // } else {
-    //     panel = (
-    //         <NoteMenu
-    //             menuRef={menuRef}   // menuRefという名前で、{}の中のmenuRefを渡すという意味
-    //             onOpenLabel={() => setPanelType("label")}
-    //             onOpenHistory={() => setPanelType("history")}
-    //             onMoveToTrash={() => moveToTrash(note.id)}
-    //             onDuplicateNote={() =>
-    //                 createNote(
-    //                     note.title,
-    //                     note.content,
-    //                     note.labels.map((label) => label.id),
-    //                     note.color,
-    //                 )
-    //             }
-    //         />
-    //     );
-    // }
-
+    // hook
     useClickOutside(
-        [
-            cardRef,
-            menuRef,
-            labelPanelRef,
-            paletteRef,
-        ],
+        [cardRef, menuRef, labelPanelRef, paletteRef,],
         () => {
 
             console.log("outside click");
@@ -221,6 +176,9 @@ export default function NoteCard({
             console.log("openColor:", openColor);
 
             if (isColorOpen) {
+                console.log("outside click");
+                console.log("note.id:", note.id);
+                console.log("openColor:", openColor);
 
                 saveColor();
                 setOpenColor(null);
@@ -234,67 +192,12 @@ export default function NoteCard({
                 setPanelType(null);
             }
 
-            // setOpenColor(null);
-            // setOpenMenu(null);
-            // setPanelType(null);
         },
         isColorOpen || isMenuOpen
 
     );
 
-    // useEffect(() => {
 
-    //     const handleClickOutside = (event: MouseEvent) => {
-
-    //         if (
-    //             cardRef.current &&
-    //             !cardRef.current.contains(event.target as Node) &&  // event.targetは実際にクリックされた要素。ex) <button>ラベル追加</button>
-    //             (!menuRef.current ||
-    //                 !menuRef.current.contains(event.target as Node)) &&
-    //             (!labelPanelRef.current ||
-    //                 !labelPanelRef.current.contains(event.target as Node)) &&
-    //             (!paletteRef.current ||
-    //                 !paletteRef.current.contains(event.target as Node))
-    //         ) {
-
-
-    //             if (note.id === openColor?.noteId) {
-    //                 // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
-    //                 console.log("保存するのはこのカード");
-    //                 saveColor();
-    //             }
-
-    //             setOpenColor(null);
-    //             setOpenMenu(null);
-    //             setPanelType(null);
-
-    //             // if (note.id === openColorId) {
-    //             //     // この条件必要。これ書かないと、saveColorが全ノートカードに対して実行されるし、保存処理もバグる。
-    //             //     console.log("保存するのはこのカード");
-    //             //     saveColor();
-    //             // }
-
-    //         }
-    //     };
-
-    //     // 画面のどこかがクリックされたら handleClickOutside を実行する。
-    //     document.addEventListener(
-    //         "click",
-    //         // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
-    //         handleClickOutside,
-    //     );
-
-    //     // このNoteCardが不要になったら、documentに登録した監視を解除する
-    //     return () => {
-    //         document.removeEventListener("click", handleClickOutside);
-    //     };
-
-
-    // }, [note.id, tempColor]); // 基本的にuseEffect内で使っている値は、全部依存配列に書く。だから、note.idも書く。tempColorを書かないと、NoteCardが最初にマウントされたときのtempColorのまま、外クリック時にsaveColor();が実行されてしまう。
-
-    // tempColor, openColorId
-    // tempColor, openColorId, saveColor
-    // note.id, tempColor,  useNoteColorにロジック移すと、依存配列こう書かないとバグるようになった。
 
 
     const highlightText = (text: string) => {
@@ -458,8 +361,37 @@ export default function NoteCard({
             </div>
 
 
+            <NoteCardActions
+                note={note}
+                onOpenColor={() => {
+                    setOpenMenu(null);
+                    setOpenColor({
+                        noteId: note.id,
+                        context: context,
+                    });
+                }}
+                // onToggleFavorite={() => toggleFavorite(note.id, note.is_favorite)}
+                // onToggleFavorite={toggleFavorite(note.id, note.is_favorite)}  // ダメ toggleFavoriteを実行してしまっている
+                // onToggleFavorite={toggleFavorite}  //  ダメ 引数が必要な関数を、引数なしでそのまま渡している
+                onOpenImage={() => fileInputRef.current?.click()}
+                onOpenMenu={() => {
+                    setOpenColor(null);
+                    setPanelType(null);
+                    setOpenMenu((prev) =>
+                        prev?.noteId === note.id &&
+                        prev?.context === context
+                            ? null
+                            : {
+                                noteId: note.id,
+                                context: context,
+                            }
+                    );
+                }}
+                fileInputRef={fileInputRef}
+                onImageChange={handleImageChange}
+            />
 
-            <div className={cardStyles.buttons}>
+            {/* <div className={cardStyles.buttons}>
 
                 <div className={cardStyles.leftButtons}>
 
@@ -566,7 +498,7 @@ export default function NoteCard({
 
                 </Tooltip>
 
-            </div>
+            </div> */}
 
             {openMenu?.noteId === note.id &&
                 openMenu?.context === context && (
@@ -578,9 +510,7 @@ export default function NoteCard({
                     menuRef={menuRef}
                     labelStates={labelStates}
                     onSelectLabel={handleSelectLabel}
-                    onCloseHistory={() => {
-                        setOpenMenu(null);
-                    }}
+                    onCloseHistory={() => setOpenMenu(null)}
                     onOpenLabel={() => setPanelType("label")}
                     onOpenHistory={() => setPanelType("history")}
                     onMoveToTrash={() => moveToTrash(note.id)}
@@ -597,35 +527,6 @@ export default function NoteCard({
                 )
             }
 
-            {/* <NoteCardPanel
-                panelType={panelType}
-                note={note}
-                labelPanelRef={labelPanelRef}
-                menuRef={menuRef}
-                labelStates={labelStates}
-                onSelectLabel={handleSelectLabel}
-                onCloseHistory={() => {
-                    setPanelType(null);
-                    setOpenMenu(null);
-                }}
-                onOpenLabel={() => setPanelType("label")}
-                onOpenHistory={() => setPanelType("history")}
-                onMoveToTrash={() => moveToTrash(note.id)}
-                onDuplicateNote={() =>
-                    createNote(
-                        note.title,
-                        note.content,
-                        note.labels.map((label) => label.id),
-                        note.color,
-                    )
-                }
-            /> */}
-
-            {/* {openMenu?.noteId === note.id &&
-                openMenu?.context === context && (
-                    panel
-                )
-            } */}
 
             {/* 背景色 */}
             {openColor?.noteId === note.id &&
@@ -635,12 +536,11 @@ export default function NoteCard({
                         onSelectColor={handleSelectColor}
                         paletteRef={paletteRef}
                     />
-
                 )
-
             }
 
 
         </Card>
+
     );
 }
