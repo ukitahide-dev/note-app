@@ -16,7 +16,7 @@ type Props = {
 
 
 
-// 親: NoteCard, 
+// 親: NoteLabels,
 // 各ノートが所持しているラベルを表示するUI
 
 export default function LabelItem({

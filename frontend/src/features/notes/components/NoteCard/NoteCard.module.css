@@ -5,7 +5,7 @@
     flex-shrink: 0;
 }
 
-.cardHeader {
+/* .cardHeader {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -68,7 +68,7 @@
     background: #555;
     color: white;
     border-color: #555;
-}
+} */
 
 
 

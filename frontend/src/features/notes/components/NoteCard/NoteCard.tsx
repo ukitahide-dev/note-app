@@ -23,6 +23,7 @@ import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
 import { useClickOutside } from "../../hooks/useClickOutside";
 import NoteCardActions from "../NoteCardActions/NoteCardActions";
 import { NoteLabels } from "../NoteLabels/NoteLabels";
+import NoteCardHeader from "../NoteCardHeader/NoteCardHeader";
 
 
 
@@ -154,6 +155,7 @@ export default function NoteCard({
             ? previewColor
             : tempColor;
 
+    
     const selected = selectedNoteIds.includes(note.id);
 
 
@@ -261,7 +263,15 @@ export default function NoteCard({
             onClick={() => setSelectedNote(note)}
         >
 
-            <div className={cardStyles.cardHeader}>
+            <NoteCardHeader
+                note={note}
+                selected={selected}
+                onToggleSelect={() => toggleSelect(note.id)}
+                onTogglePin={() => togglePin(note.id, note.is_pinned)}
+                dragHandleProps={dragHandleProps}
+
+            />
+            {/* <div className={cardStyles.cardHeader}>
 
                 <Tooltip
                     text={selected ? "ノートの選択を解除" : "ノートを選択"}
@@ -310,7 +320,7 @@ export default function NoteCard({
 
                 </Tooltip>
 
-            </div>
+            </div> */}
 
 
             <div className={cardStyles.images}>
@@ -342,6 +352,7 @@ export default function NoteCard({
 
             </div>
 
+
             <div className={cardStyles.labels}>
 
                 <NoteLabels
@@ -357,28 +368,6 @@ export default function NoteCard({
 
             </div>
 
-            {/* <NoteLabels
-                labels={note.labels.slice(0, 2)}
-                onRemoveLabel={handleRemoveNoteLabel}
-            /> */}
-
-            {/* <div className={cardStyles.labels}>
-
-                {note.labels.slice(0, 2).map((label) => (
-                    <LabelItem
-                        key={label.id}
-                        label={label}
-                        onRemoveLabel={handleRemoveNoteLabel}
-                    />
-                ))}
-
-                {note.labels.length > 2 && (
-                    <span className={cardStyles.moreLabels}>
-                        他{note.labels.length - 2}件
-                    </span>
-                )}
-
-            </div> */}
 
 
             <NoteCardActions

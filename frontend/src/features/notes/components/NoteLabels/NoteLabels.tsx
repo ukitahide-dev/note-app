@@ -8,11 +8,13 @@ import type { Note } from "../../../../types/api/note";
 
 
 type Props = {
-    labels:  Note["labels"];
+    labels:  Note["labels"];   // Note の中にある labels プロパティと同じ型を使うという意味。Indexed Access Type（インデックスアクセス型）。
     onRemoveLabel: (labelId: number) => void;
 
 }
 
+
+// 親：NoteCard, NoteDetailModal,
 
 
 export function NoteLabels({

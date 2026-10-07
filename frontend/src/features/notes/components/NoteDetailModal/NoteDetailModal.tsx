@@ -48,7 +48,7 @@ type Props = {
 
 
 
-// 親: NoteCard.tsx
+// 親: NoteCard,
 
 export default function NoteDetailModal({
     note,
@@ -243,7 +243,6 @@ export default function NoteDetailModal({
 
         <div
             className={styles.overlay}
-
             onClick={handleClose}
         >
 
@@ -342,22 +341,6 @@ export default function NoteDetailModal({
 
                     </div>
 
-
-                    {/* <NoteLabels
-                        labels={note.labels}
-                        onRemoveLabel={handleRemoveNoteLabel}
-                    /> */}
-                    {/* ノートが所持しているラベル名表示 NoteCardと被っている*/}
-                    {/* <div className={styles.labels}>
-                        {note.labels.map((label) => (
-                            <LabelItem
-                                label={label}
-                                onRemoveLabel={(labelId: number) =>
-                                    handleRemoveNoteLabel(labelId)
-                                }
-                            />
-                        ))}
-                    </div> */}
 
                 </div>
 
