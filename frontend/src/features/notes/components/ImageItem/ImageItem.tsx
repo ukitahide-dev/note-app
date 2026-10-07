@@ -13,9 +13,11 @@ import type { NoteImage } from "../../../../types/api/note";
 type Props = {
     image: NoteImage;
     isLarge: boolean;
-    onDeleteImage: () => void;
+    onDeleteImage: (imageId: number) => void;
+    onSelectImage: (imageId: number) => void;
+    // onDeleteImage: () => void;
 
-    onSelectImage: () => void;
+    // onSelectImage: () => void;
 
 };
 
@@ -73,7 +75,8 @@ export default function ImageItem({
             <img
                 src={image.image}
                 className={imageClass}
-                onClick={onSelectImage}
+                onClick={() => onSelectImage(image.id)}
+                // onClick={onSelectImage(image.id)}
 
                 {...attributes}
                 {...listeners}
@@ -83,7 +86,7 @@ export default function ImageItem({
                 className={styles.deleteButton}
                 onClick={(e) => {
                     e.stopPropagation();
-                    onDeleteImage();
+                    onDeleteImage(image.id);
                 }}
             >
                 🗑️

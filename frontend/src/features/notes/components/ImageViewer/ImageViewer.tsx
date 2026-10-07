@@ -64,7 +64,7 @@ export default function ImageViewer({
                         e.stopPropagation();
                         onPrev();
                     }}
-                    // onClick={onPrev}
+
                 >
                     ←
                 </button>
@@ -89,7 +89,7 @@ export default function ImageViewer({
                         e.stopPropagation();
                         onNext();
                     }}
-                    // onClick={onNext}
+                    
                 >
                     →
                 </button>

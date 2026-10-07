@@ -3,13 +3,20 @@ import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
 import type { Note } from "../../../../types/api/note";
 import styles from "./NoteCardHeader.module.css";
 
+
 type Props = {
     note: Note;
     selected: boolean;
-    onToggleSelect: () => void;
+    onToggleSelect: () => void;   // void: このコンポーネントは、関数の戻り値を使わないという意味。
     onTogglePin: () => void;
     dragHandleProps?: any;
+
 };
+
+
+
+// 親: NoteCard,
+
 
 export default function ({
     note,
@@ -32,7 +39,7 @@ export default function ({
                                 ${selected ? styles.selected : ""}`}
                     onClick={(e) => {
                         e.stopPropagation();
-                        onToggleSelect();
+                        onToggleSelect();   // 親が「何をするか」を準備して、子は「クリックされたらそれを実行する」だけ。
                     }}
                 >
                     {selected ? "✓" : "○"}

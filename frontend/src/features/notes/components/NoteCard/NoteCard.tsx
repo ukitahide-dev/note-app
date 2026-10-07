@@ -155,7 +155,7 @@ export default function NoteCard({
             ? previewColor
             : tempColor;
 
-    
+
     const selected = selectedNoteIds.includes(note.id);
 
 
@@ -174,29 +174,29 @@ export default function NoteCard({
         [cardRef, menuRef, labelPanelRef, paletteRef,],
         () => {
 
-            console.log("outside click");
-            console.log("note.id:", note.id);
-            console.log("openColor:", openColor);
+            // console.log("outside click");
+            // console.log("note.id:", note.id);
+            // console.log("openColor:", openColor);
 
             if (isColorOpen) {
-                console.log("outside click");
-                console.log("note.id:", note.id);
-                console.log("openColor:", openColor);
+                // console.log("outside click");
+                // console.log("note.id:", note.id);
+                // console.log("openColor:", openColor);
 
                 saveColor();
                 setOpenColor(null);
             }
 
             if (isMenuOpen) {
-                console.log("outside click");
-                console.log("note.id:", note.id);
-                console.log("openMenu:", openMenu);
+                // console.log("outside click");
+                // console.log("note.id:", note.id);
+                // console.log("openMenu:", openMenu);
                 setOpenMenu(null);
                 setPanelType(null);
             }
 
         },
-        isColorOpen || isMenuOpen
+        isColorOpen || isMenuOpen    // この条件が肝。これがないと、全ノートカードで、無条件にドキュメント監視イベントが登録され、あるノートの外側クリックをすると、全ノートの外側クリックが発火し、バグる。
 
     );
 
@@ -271,56 +271,7 @@ export default function NoteCard({
                 dragHandleProps={dragHandleProps}
 
             />
-            {/* <div className={cardStyles.cardHeader}>
 
-                <Tooltip
-                    text={selected ? "ノートの選択を解除" : "ノートを選択"}
-                >
-
-                    <button
-                        className={`${cardStyles.selectButton}
-                                ${cardStyles.headerButton}
-                                ${ selected ? cardStyles.selected : ""
-                        }`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            toggleSelect(note.id);
-                        }}
-                    >
-
-                        {selected ? "✓" : "○"}
-
-                    </button>
-
-
-                </Tooltip>
-
-                <div
-                    {...dragHandleProps}
-                    className={cardStyles.dragArea}
-                />
-
-                <Tooltip
-                    text={note.is_pinned ? "ピン留めを外す" : "ピン留めする"}
-                >
-
-                    <button
-                        className={`${cardStyles.headerButton}`}
-
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            togglePin(note.id, note.is_pinned);
-                        }}
-
-                    >
-
-                        {note.is_pinned ? "📌" : "📍"}
-
-                    </button>
-
-                </Tooltip>
-
-            </div> */}
 
 
             <div className={cardStyles.images}>

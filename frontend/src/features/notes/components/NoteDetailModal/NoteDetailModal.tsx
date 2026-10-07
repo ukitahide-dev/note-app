@@ -5,7 +5,7 @@ import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
 import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
 import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
 import { ImageList } from "../ImageList/ImageList";
-import LabelItem from "../LabelItem/LabelItem";
+
 
 // ---- css ----
 import styles from "./NoteDetailModal.module.css";
@@ -38,6 +38,8 @@ import {
 import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 import ImageViewer from "../ImageViewer/ImageViewer";
 import { NoteLabels } from "../NoteLabels/NoteLabels";
+import NoteDetailModalActions from "./NoteDetailModalActions/NoteDetailModalActions";
+import NoteDetailModalImages from "./NoteDetailModalImages/NoteDetailModalImages";
 
 
 type Props = {
@@ -72,13 +74,13 @@ export default function NoteDetailModal({
 
 
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 8,     // 8px以上動かしたら「ドラッグ」と判断する。
-            },
-        }),
-    );
+    // const sensors = useSensors(
+    //     useSensor(PointerSensor, {
+    //         activationConstraint: {
+    //             distance: 8,     // 8px以上動かしたら「ドラッグ」と判断する。
+    //         },
+    //     }),
+    // );
 
 
 
@@ -115,12 +117,12 @@ export default function NoteDetailModal({
     } = useNoteStore();
 
 
-    // utils
-    const {
-        largeImages,
-        normalImages,
+    // // utils
+    // const {
+    //     largeImages,
+    //     normalImages,
 
-    } = splitImages(note.images);
+    // } = splitImages(note.images);
 
 
     // useRefの理由: 値を保存しておきたいけど、その値が変わったことで再レンダリングする必要はないから。
@@ -184,6 +186,7 @@ export default function NoteDetailModal({
         if (selectedImageIndex >= note.images.length - 1) return;
 
         setSelectedImageIndex(selectedImageIndex + 1);
+
     };
 
 
@@ -256,7 +259,15 @@ export default function NoteDetailModal({
                     className={styles.main}
                 >
 
-                    <DndContext
+                    <NoteDetailModalImages
+                        note={note}
+                        onDeleteImage={(imageId: number) => {
+                            deleteNoteImage(note.id, imageId);
+                        }}
+                        onSelectImage={handleSelectImage}
+                    />
+
+                    {/* <DndContext
                         onDragEnd={handleDragEnd}
                         sensors={sensors}
                     >
@@ -296,7 +307,8 @@ export default function NoteDetailModal({
 
                         </SortableContext>
 
-                    </DndContext>
+                    </DndContext> */}
+
 
                     <div
                         className={styles.content}
@@ -344,8 +356,12 @@ export default function NoteDetailModal({
 
                 </div>
 
-
-                {/* ボタン表示もNoteCardと被っている */}
+                <NoteDetailModalActions
+                    onOpenColor={() => setPanelType("color")}
+                    onOpenMenu={() => setPanelType("menu")}
+                    onClose={handleClose}
+                />
+{/*
                 <div className={styles.bottom}>
 
                     <button
@@ -372,7 +388,7 @@ export default function NoteDetailModal({
                         閉じる
                     </button>
 
-                </div>
+                </div> */}
 
 
                 {panelType === "color" && (

@@ -47,8 +47,10 @@ export function ImageList({
                         key={image.id}
                         image={image}
                         isLarge={isLarge}
-                        onDeleteImage={() => onDeleteImage(image.id)}  // あとで実行する関数を新しく作って渡す
-                        onSelectImage={() => onSelectImage(image.id)}
+                        onDeleteImage={onDeleteImage}
+                        onSelectImage={onSelectImage}
+                        // onDeleteImage={() => onDeleteImage(image.id)}  // あとで実行する関数を新しく作って渡す
+                        // onSelectImage={() => onSelectImage(image.id)}
                         // onDeleteImage={onDeleteImage(image.id)}   // 関数を実行して、その結果を渡す。
                     />
                 ))}
