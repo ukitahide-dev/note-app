@@ -32,7 +32,7 @@ type Props = {
 
 
 
-export default function ({
+export default function NoteDetailModalImages ({
     note,
     onDeleteImage,
     onSelectImage,
@@ -54,9 +54,13 @@ export default function ({
 
 
     // hook
-    const { handleDragEnd } = useSortableNoteImages(
+    const {
+        handleDragEnd,
+
+    } = useSortableNoteImages(
         note.images,
         note.id,
+        
     );
 
 
@@ -112,5 +116,7 @@ export default function ({
             </SortableContext>
 
         </DndContext>
+
     );
+
 }

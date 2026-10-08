@@ -50,7 +50,7 @@ type Props = {
 
 
 
-// 親: NoteCard,
+// 親: NoteList,
 
 export default function NoteDetailModal({
     note,
@@ -97,10 +97,10 @@ export default function NoteDetailModal({
 
 
     // hooks
-    const {
-        handleDragEnd,
+    // const {
+    //     handleDragEnd,
 
-    } = useSortableNoteImages(note.images, note.id)
+    // } = useSortableNoteImages(note.images, note.id)
 
 
     // Store

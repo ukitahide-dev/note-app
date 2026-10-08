@@ -15,13 +15,13 @@ type Props = {
     isLarge: boolean;
     onDeleteImage: (imageId: number) => void;
     onSelectImage: (imageId: number) => void;
-    // onDeleteImage: () => void;
 
-    // onSelectImage: () => void;
 
 };
 
 
+
+// 親: ImageList, 
 
 
 export default function ImageItem({
@@ -66,7 +66,6 @@ export default function ImageItem({
             key={image.id}
             ref={setNodeRef}
             style={style}
-            // className={`${styles.imageWrapper} ${styles.largeImageWrapper}`}
             className={`${styles.imageWrapper} ${wrapperClass}`}
             // {...attributes}
             // {...listeners}
@@ -76,7 +75,6 @@ export default function ImageItem({
                 src={image.image}
                 className={imageClass}
                 onClick={() => onSelectImage(image.id)}
-                // onClick={onSelectImage(image.id)}
 
                 {...attributes}
                 {...listeners}

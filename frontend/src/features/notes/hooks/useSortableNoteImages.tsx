@@ -11,7 +11,7 @@ import { useNoteStore } from "../store/useNoteStore";
 
 
 
-// 呼び出し元: NoteDetailModal, 
+// 呼び出し元: NoteDetailModalImages,
 
 
 export function useSortableNoteImages(
@@ -28,6 +28,8 @@ export function useSortableNoteImages(
 
     // ドラッグが終了すると、実行される。
     const handleDragEnd = async (event: DragEndEvent) => {
+
+        // console.log(images);   // [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
 
         const { active, over } = event;  // active = 掴んだ画像   over = 移動先の画像
 

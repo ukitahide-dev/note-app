@@ -16,8 +16,7 @@ import { useNoteStore } from "../../store/useNoteStore";
 
 import { useNoteColor } from "../../hooks/useNoteColor";
 
-import LabelItem from "../LabelItem/LabelItem";
-import Tooltip from "../../../../shared/components/Tooltip/Tooltip";
+
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
 import { useClickOutside } from "../../hooks/useClickOutside";
@@ -58,8 +57,11 @@ type Props = {
         } | null>
     >;
 
-    setSelectedNote: React.Dispatch<
-        React.SetStateAction<Note | null>
+    // setSelectedNote: React.Dispatch<
+    //     React.SetStateAction<Note | null>
+    // >;
+    setSelectedNoteId: React.Dispatch<
+        React.SetStateAction<number | null>
     >;
 
     dragHandleProps?: any;
@@ -85,8 +87,8 @@ export default function NoteCard({
     openMenu,
     setOpenMenu,
 
-
-    setSelectedNote,
+    setSelectedNoteId,
+    // setSelectedNote,
 
     dragHandleProps,
 
@@ -260,7 +262,8 @@ export default function NoteCard({
             className={cardStyles.noteCard}
             style={{ backgroundColor: displayColor }}
 
-            onClick={() => setSelectedNote(note)}
+            onClick={() => setSelectedNoteId(note.id)}
+            // onClick={() => setSelectedNote(note)}
         >
 
             <NoteCardHeader

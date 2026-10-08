@@ -75,7 +75,12 @@ export default function NoteList({
     } | null>(null);
 
 
-    const [selectedNote, setSelectedNote] = useState<Note | null>(null);   // ノート詳細を開く用途
+    // const [selectedNote, setSelectedNote] = useState<Note | null>(null);      // ノート詳細を開く用途
+    const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);   // ノート詳細を開く用途
+
+    const selectedNote = [...notes, ...pinnedNotes].find(
+        (note) => note.id === selectedNoteId
+    ) ?? null;
 
 
     const [panelType, setPanelType] = useState<"label" | "history" | null>(
@@ -110,8 +115,9 @@ export default function NoteList({
         setOpenColor,
         // openNoteDetailId,
         // setOpenNoteDetailId,
-        selectedNote,
-        setSelectedNote,
+        // selectedNote,
+        // setSelectedNote,
+        setSelectedNoteId,
         panelType,
         setPanelType,
 
@@ -136,13 +142,14 @@ export default function NoteList({
         const newIndex = notes.findIndex((note) => note.id === over.id);
 
         const newNotes = arrayMove(
-            notes, // 並び替え対象の配列
-            oldIndex, // 移動させたい要素の現在位置
-            newIndex, // 移動先位置
+            notes,     // 並び替え対象の配列
+            oldIndex,  // 移動させたい要素の現在位置
+            newIndex,  // 移動先位置
         );
 
         reorderNotes(newNotes);
     };
+
 
 
     const handlePinnedDragEnd = (event: any) => {
@@ -296,7 +303,7 @@ export default function NoteList({
             {selectedNote && (
                 <NoteDetailModal
                     note={selectedNote}
-                    onClose={() => setSelectedNote(null)}
+                    onClose={() => setSelectedNoteId(null)}
                 />
             )}
 

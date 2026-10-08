@@ -50,10 +50,13 @@ type Props = {
     // openNoteDetailId: number | null;
     // setOpenNoteDetailId: React.Dispatch<React.SetStateAction<number | null>>;
 
-    selectedNote: Note | null;
+    // selectedNote: Note | null;
 
-    setSelectedNote: React.Dispatch<
-        React.SetStateAction<Note | null>
+    // setSelectedNote: React.Dispatch<
+    //     React.SetStateAction<Note | null>
+    // >;
+    setSelectedNoteId: React.Dispatch<
+        React.SetStateAction<number | null>
     >;
 
     panelType: "label" | "history" | null;
@@ -83,8 +86,9 @@ export default function NoteGrid({
     // openColorId,
     // setOpenColorId,
 
-    selectedNote,
-    setSelectedNote,
+    // selectedNote,
+    // setSelectedNote,
+    setSelectedNoteId,
     // openNoteDetailId,
     // setOpenNoteDetailId,
     panelType,
@@ -117,8 +121,9 @@ export default function NoteGrid({
                     // setOpenColorId={setOpenColorId}
                     // openNoteDetailId={openNoteDetailId}
                     // setOpenNoteDetailId={setOpenNoteDetailId}
-                    selectedNote={selectedNote}
-                    setSelectedNote={setSelectedNote}
+                    // selectedNote={selectedNote}
+                    setSelectedNoteId={setSelectedNoteId}
+                    // setSelectedNote={setSelectedNote}
                     panelType={panelType}
                     setPanelType={setPanelType}
                 />

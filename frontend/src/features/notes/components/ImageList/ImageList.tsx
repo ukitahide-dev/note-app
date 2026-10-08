@@ -10,7 +10,6 @@ type Props = {
 
     noteId: number;
 
-    // onDeleteImage: (imageId: number) => Promise<void>;
     onDeleteImage: (imageId: number) => void;
 
     onSelectImage: (imageId: number) => void;
@@ -43,6 +42,7 @@ export function ImageList({
 
             <>
                 {images.map((image) => (
+
                     <ImageItem
                         key={image.id}
                         image={image}
@@ -53,7 +53,9 @@ export function ImageList({
                         // onSelectImage={() => onSelectImage(image.id)}
                         // onDeleteImage={onDeleteImage(image.id)}   // 関数を実行して、その結果を渡す。
                     />
+
                 ))}
+
             </>
 
 
