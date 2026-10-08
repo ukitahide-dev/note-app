@@ -18,7 +18,7 @@ type Props = {
 
 
 
-// 呼び出し元: NoteCard.tsx、
+// 呼び出し元: NoteCard,
 
 
 export function useNoteLabels({ note }: Props) {
@@ -60,7 +60,10 @@ export function useNoteLabels({ note }: Props) {
 
 
 
-    const handleSelectLabel = async (labelId: number) => {
+    const handleSelectLabel = async (
+        labelId: number,
+
+    ) => {
 
         try {
 

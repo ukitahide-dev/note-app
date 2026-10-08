@@ -75,12 +75,12 @@ export default function NoteList({
     } | null>(null);
 
 
-    // const [selectedNote, setSelectedNote] = useState<Note | null>(null);      // ノート詳細を開く用途
+    // const [selectedNote, setSelectedNote] = useState<Note | null>(null);      // ノート詳細を開く用途。
     const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);   // ノート詳細を開く用途
 
     const selectedNote = [...notes, ...pinnedNotes].find(
         (note) => note.id === selectedNoteId
-    ) ?? null;
+    ) ?? null;   // ??: Null合体演算子。左側が null または undefined だったら、右側の null を使うという意味。
 
 
     const [panelType, setPanelType] = useState<"label" | "history" | null>(
@@ -105,18 +105,13 @@ export default function NoteList({
 
     const noteGridProps = {
         // openMenuId, // 省略記法: 本当は、openMenuId: openMenuId
-        // setOpenMenuId,
+
         openMenu,
         setOpenMenu,
-        // openColorId,
-        // setOpenColorId,
 
         openColor,
         setOpenColor,
-        // openNoteDetailId,
-        // setOpenNoteDetailId,
-        // selectedNote,
-        // setSelectedNote,
+
         setSelectedNoteId,
         panelType,
         setPanelType,

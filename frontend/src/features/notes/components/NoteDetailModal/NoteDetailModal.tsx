@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
 // ---- component ----
-import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
-import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
-import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
-import { ImageList } from "../ImageList/ImageList";
+// import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
+// import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
+// import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
+// import { ImageList } from "../ImageList/ImageList";
 
 
 // ---- css ----
 import styles from "./NoteDetailModal.module.css";
 
-import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
+// import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 // ---- types ----
@@ -18,28 +18,13 @@ import type { Note } from "../../../../types/api/note";
 import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteColor } from "../../hooks/useNoteColor";
 
-// ---- utils ----
-import { splitImages } from "../../utils/splitImages";
 
-
-import {
-    DndContext,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core";
-
-
-import {
-    SortableContext,
-    rectSortingStrategy,
-
-} from "@dnd-kit/sortable";
-import { useSortableNoteImages } from "../../hooks/useSortableNoteImages";
 import ImageViewer from "../ImageViewer/ImageViewer";
 import { NoteLabels } from "../NoteLabels/NoteLabels";
 import NoteDetailModalActions from "./NoteDetailModalActions/NoteDetailModalActions";
 import NoteDetailModalImages from "./NoteDetailModalImages/NoteDetailModalImages";
+import NoteDetailModalPanel from "./NoteDetailModalPanel/NoteDetailModalPanel";
+
 
 
 type Props = {
@@ -74,16 +59,6 @@ export default function NoteDetailModal({
 
 
 
-    // const sensors = useSensors(
-    //     useSensor(PointerSensor, {
-    //         activationConstraint: {
-    //             distance: 8,     // 8px以上動かしたら「ドラッグ」と判断する。
-    //         },
-    //     }),
-    // );
-
-
-
     // hooks
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
 
@@ -95,12 +70,6 @@ export default function NoteDetailModal({
         },
     );
 
-
-    // hooks
-    // const {
-    //     handleDragEnd,
-
-    // } = useSortableNoteImages(note.images, note.id)
 
 
     // Store
@@ -117,12 +86,7 @@ export default function NoteDetailModal({
     } = useNoteStore();
 
 
-    // // utils
-    // const {
-    //     largeImages,
-    //     normalImages,
 
-    // } = splitImages(note.images);
 
 
     // useRefの理由: 値を保存しておきたいけど、その値が変わったことで再レンダリングする必要はないから。
@@ -356,42 +320,43 @@ export default function NoteDetailModal({
 
                 </div>
 
+
                 <NoteDetailModalActions
                     onOpenColor={() => setPanelType("color")}
                     onOpenMenu={() => setPanelType("menu")}
                     onClose={handleClose}
                 />
-{/*
-                <div className={styles.bottom}>
-
-                    <button
-                        className={styles.colorButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setPanelType("color");
-                        }}
-                    >
-                        🎨
-                    </button>
-
-                    <button
-                        className={styles.menuButton}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setPanelType("menu");
-                        }}
-                    >
-                        ⋮
-                    </button>
-
-                    <button className={styles.closeButton} onClick={handleClose}>
-                        閉じる
-                    </button>
-
-                </div> */}
 
 
-                {panelType === "color" && (
+                <NoteDetailModalPanel
+                    panelType={panelType}
+
+                    onOpenLabel={() => setPanelType("label")}
+                    onOpenHistory={() => setPanelType("history")}
+                    onMoveToTrash={() => moveToTrash(note.id)}
+                    onDuplicateNote={() =>
+                        createNote(
+                            note.title,
+                            note.content,
+                            note.labels.map((label) => label.id),
+                            note.color,
+                        )
+                    }
+
+                    tempColor={tempColor}
+                    onSelectColor={handleSelectColor}
+                    onCloseColor={saveColor}
+
+                    labelStates={labelStates}
+                    onSelectLabel={handleSelectLabel}
+
+                    note={note}
+                    onCloseHistory={() => setPanelType(null)}
+
+                />
+
+
+                {/* {panelType === "color" && (
                     <ColorPalette
                         onSelectColor={handleSelectColor}
                         tempColor={tempColor}
@@ -430,7 +395,7 @@ export default function NoteDetailModal({
                         note={note}
                         onClose={() => setPanelType(null)}
                     />
-                )}
+                )} */}
 
             </div>
 

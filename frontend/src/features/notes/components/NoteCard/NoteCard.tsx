@@ -57,9 +57,7 @@ type Props = {
         } | null>
     >;
 
-    // setSelectedNote: React.Dispatch<
-    //     React.SetStateAction<Note | null>
-    // >;
+    
     setSelectedNoteId: React.Dispatch<
         React.SetStateAction<number | null>
     >;
@@ -88,7 +86,6 @@ export default function NoteCard({
     setOpenMenu,
 
     setSelectedNoteId,
-    // setSelectedNote,
 
     dragHandleProps,
 
