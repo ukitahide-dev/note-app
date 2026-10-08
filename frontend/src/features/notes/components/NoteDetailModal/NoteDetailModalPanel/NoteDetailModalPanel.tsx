@@ -32,6 +32,8 @@ type Props = {
 
 
 
+// 親: NoteDetailModal,
+
 
 export default function NoteDetailModalPanel({
     panelType,
@@ -111,6 +113,9 @@ export default function NoteDetailModalPanel({
 
 
     }
+
+
+    return null;
 
 
 }

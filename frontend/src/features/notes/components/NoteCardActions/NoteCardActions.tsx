@@ -7,7 +7,7 @@ import styles from "./NoteCardActions.module.css";
 
 type Props = {
     note: Note;
-    // selected: boolean;
+    
     onToggleFavorite: () => void;   // 引数なしで、あとから呼び出せる関数をください
     onOpenColor: () => void;
     onOpenImage: () => void;

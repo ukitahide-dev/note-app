@@ -269,6 +269,7 @@ export default function NoteForm({
             {isExpanded && (
 
                 <>
+                
                 <input
                     className={styles.titleInput}
                     style={{ backgroundColor: tempColor }}

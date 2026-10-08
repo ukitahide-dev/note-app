@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-// ---- component ----
-// import NoteMenu from "../SortableNoteCard/NoteMenu/NoteMenu";
-// import LabelPanel from "../SortableNoteCard/LabelPanel/LabelPanel";
-// import { HistoryPanel } from "../HistoryPanel/HistoryPanel";
-// import { ImageList } from "../ImageList/ImageList";
+
 
 
 // ---- css ----
 import styles from "./NoteDetailModal.module.css";
 
-// import ColorPalette from "../../../../shared/ui/ColorPalette/ColorPalette";
 import { useNoteLabels } from "../../hooks/useNoteLabels";
 
 // ---- types ----
@@ -24,6 +19,7 @@ import { NoteLabels } from "../NoteLabels/NoteLabels";
 import NoteDetailModalActions from "./NoteDetailModalActions/NoteDetailModalActions";
 import NoteDetailModalImages from "./NoteDetailModalImages/NoteDetailModalImages";
 import NoteDetailModalPanel from "./NoteDetailModalPanel/NoteDetailModalPanel";
+import NoteDetailModalEditor from "./NoteDetailModalEditor/NoteDetailModalEditor";
 
 
 
@@ -231,50 +227,19 @@ export default function NoteDetailModal({
                         onSelectImage={handleSelectImage}
                     />
 
-                    {/* <DndContext
-                        onDragEnd={handleDragEnd}
-                        sensors={sensors}
-                    >
 
-                        <SortableContext
-                            items={note.images.map((image) => image.id)}
-                            strategy={rectSortingStrategy}
-                        >
-
-                            <div className={styles.largeImages}>
-
-                                <ImageList
-                                    images={largeImages}
-                                    isLarge={true}
-                                    noteId={note.id}
-                                    onDeleteImage={(imageId) => {
-                                        deleteNoteImage(note.id, imageId);
-                                    }}
-                                    onSelectImage={handleSelectImage}
-                                />
-
-                            </div>
-
-                            <div className={styles.images}>
-
-                                <ImageList
-                                    images={normalImages}
-                                    isLarge={false}
-                                    noteId={note.id}
-                                    onDeleteImage={(imageId: number) => {
-                                        deleteNoteImage(note.id, imageId);
-                                    }}
-                                    onSelectImage={handleSelectImage}
-                                />
-
-                            </div>
-
-                        </SortableContext>
-
-                    </DndContext> */}
+                    <NoteDetailModalEditor
+                        title={title}
+                        titleRef={titleRef}
+                        content={content}
+                        contentRef={contentRef}
+                        onChangeTitle={setTitle}
+                        onChangeContent={setContent}
+                        backgroundColor={tempColor}
+                    />
 
 
-                    <div
+                    {/* <div
                         className={styles.content}
                     >
 
@@ -306,7 +271,7 @@ export default function NoteDetailModal({
 
                         />
 
-                    </div>
+                    </div> */}
 
                     <div className={styles.labels}>
 
@@ -354,48 +319,6 @@ export default function NoteDetailModal({
                     onCloseHistory={() => setPanelType(null)}
 
                 />
-
-
-                {/* {panelType === "color" && (
-                    <ColorPalette
-                        onSelectColor={handleSelectColor}
-                        tempColor={tempColor}
-                        onClose={saveColor}
-                    />
-                )}
-
-
-                {panelType === "menu" && (
-                    <NoteMenu
-                        onOpenLabel={() => setPanelType("label")}
-                        onOpenHistory={() => setPanelType("history")}
-                        onMoveToTrash={() => moveToTrash(note.id)}
-                        onDuplicateNote={() =>
-                            createNote(
-                                note.title,
-                                note.content,
-                                note.labels.map((label) => label.id),
-                                note.color,
-                            )
-                        }
-                    />
-                )}
-
-
-                {panelType === "label" && (
-                    <LabelPanel
-                        labelStates={labelStates}
-                        onSelectLabel={handleSelectLabel}
-                    />
-                )}
-
-
-                {panelType === "history" && (
-                    <HistoryPanel
-                        note={note}
-                        onClose={() => setPanelType(null)}
-                    />
-                )} */}
 
             </div>
 
