@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Note } from "../../../types/api/note";
 
 
-
+// 呼び出し元: NoteDetailModal
 
 export function useNoteImageViewer(
     note: Note,

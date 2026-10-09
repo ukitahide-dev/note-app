@@ -21,6 +21,7 @@ import NoteDetailModalImages from "./NoteDetailModalImages/NoteDetailModalImages
 import NoteDetailModalPanel from "./NoteDetailModalPanel/NoteDetailModalPanel";
 import NoteDetailModalEditor from "./NoteDetailModalEditor/NoteDetailModalEditor";
 import { useNoteImageViewer } from "../../hooks/useNoteImageViewer";
+import useNoteDetailSession from "../../hooks/useNoteDetailSession";
 
 
 
@@ -49,7 +50,7 @@ export default function NoteDetailModal({
     >(null);
 
 
-    // const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
 
     // hook
     const {
@@ -68,23 +69,41 @@ export default function NoteDetailModal({
 
 
     // hook
-    const { labelStates, handleSelectLabel, handleRemoveNoteLabel } = useNoteLabels(
-        {
-            note,
-        },
-    );
+    const {
+        labelStates,
+        handleSelectLabel,
+        handleRemoveNoteLabel,
+
+    } = useNoteLabels({
+        note,
+
+    });
+
+
+    // hook
+    const {
+        handleClose,
+
+    } = useNoteDetailSession({
+        note,
+        title,
+        content,
+        tempColor,
+        onClose,
+
+    });
 
 
 
     // Store
     const {
-        updateNote,
-        updateNoteColor,
+        // updateNote,
+        // updateNoteColor,
         createNote,
         moveToTrash,
         deleteNoteImage,
-        incrementNoteView,
-        updateNoteViewTime,
+        // incrementNoteView,
+        // updateNoteViewTime,
 
 
     } = useNoteStore();
@@ -94,94 +113,55 @@ export default function NoteDetailModal({
 
 
     // useRefの理由: 値を保存しておきたいけど、その値が変わったことで再レンダリングする必要はないから。
-    const closed = useRef(false);   // { current: false }
+    // const closed = useRef(false);   // { current: false }
 
-    const viewed = useRef(false);   // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
-    const startTime = useRef(0);    // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
-
-
-
-    const handleClose = async () => {
-
-        if (closed.current) {   // モーダルを閉じる処理を、1回だけ実行するためのストッパー。APIを複数回呼ぶ可能性を消している。
-            return;
-        }
-
-        closed.current = true;
-
-        const seconds = Math.floor((Date.now() - startTime.current) / 1000);
-
-        await updateNoteViewTime(note.id, seconds);
-
-
-        if (title !== note.title || content !== note.content) {
-            await updateNote(note.id, title, content);
-        }
-
-        if (tempColor !== note.color) {
-            await updateNoteColor(note.id, tempColor);
-            // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
-        }
-
-        onClose(); // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
-
-    };
+    // const viewed = useRef(false);   // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
+    // const startTime = useRef(0);    // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
 
 
 
+    // const handleClose = async () => {
+
+    //     if (closed.current) {   // モーダルを閉じる処理を、1回だけ実行するためのストッパー。APIを複数回呼ぶ可能性を消している。
+    //         return;
+    //     }
+
+    //     closed.current = true;
+
+    //     const seconds = Math.floor((Date.now() - startTime.current) / 1000);
+
+    //     await updateNoteViewTime(note.id, seconds);
 
 
-    // const handleSelectImage = (
-    //     imageId: number,
+    //     if (title !== note.title || content !== note.content) {
+    //         await updateNote(note.id, title, content);
+    //     }
 
-    // ) => {
+    //     if (tempColor !== note.color) {
+    //         await updateNoteColor(note.id, tempColor);
+    //         // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
+    //     }
 
-    //     const index = note.images.findIndex((image) => image.id === imageId);
-
-    //     if (index === -1) return;
-
-
-    //     setSelectedImageIndex(index);
-
+    //     onClose(); // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
 
     // };
 
 
 
-    // const handleNextImage = () => {
 
-    //     if (selectedImageIndex === null) return;
-    //     if (selectedImageIndex >= note.images.length - 1) return;
+    // useEffect(() => {
 
-    //     setSelectedImageIndex(selectedImageIndex + 1);
+    //     if (viewed.current) {   // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
+    //         return;
+    //     }
 
-    // };
+    //     startTime.current = Date.now();
 
+    //     viewed.current = true;
 
-    // const handlePrevImage = () => {
+    //     incrementNoteView(note.id);
 
-    //     if (selectedImageIndex === null) return;
-    //     if (selectedImageIndex <= 0) return;
-
-    //     setSelectedImageIndex(selectedImageIndex - 1);
-    // };
-
-
-
-
-    useEffect(() => {
-
-        if (viewed.current) {   // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
-            return;
-        }
-
-        startTime.current = Date.now();
-
-        viewed.current = true;
-
-        incrementNoteView(note.id);
-
-    }, [note.id]);   // note.id が変わったときに、この処理を実行する
+    // }, [note.id]);   // note.id が変わったときに、この処理を実行する
 
 
 
@@ -284,7 +264,6 @@ export default function NoteDetailModal({
                 images={note.images}
                 currentIndex={selectedImageIndex}
                 onClose={handleCloseImageViewer}
-                // onClose={() => setSelectedImageIndex(null)}
                 onNext={handleNextImage}
                 onPrev={handlePrevImage}
 
