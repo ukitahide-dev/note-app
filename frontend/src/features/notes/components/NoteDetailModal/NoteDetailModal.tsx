@@ -20,6 +20,7 @@ import NoteDetailModalActions from "./NoteDetailModalActions/NoteDetailModalActi
 import NoteDetailModalImages from "./NoteDetailModalImages/NoteDetailModalImages";
 import NoteDetailModalPanel from "./NoteDetailModalPanel/NoteDetailModalPanel";
 import NoteDetailModalEditor from "./NoteDetailModalEditor/NoteDetailModalEditor";
+import { useNoteImageViewer } from "../../hooks/useNoteImageViewer";
 
 
 
@@ -48,18 +49,25 @@ export default function NoteDetailModal({
     >(null);
 
 
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+    // const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-    // const titleRef = useRef<HTMLTextAreaElement>(null);
-    // const contentRef = useRef<HTMLTextAreaElement>(null);
+    // hook
+    const {
+        selectedImageIndex,
+        handleSelectImage,
+        handleNextImage,
+        handlePrevImage,
+        handleCloseImageViewer,
+
+    } = useNoteImageViewer(note);
 
 
 
-    // hooks
+    // hook
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
 
 
-    // hooks
+    // hook
     const { labelStates, handleSelectLabel, handleRemoveNoteLabel } = useNoteLabels(
         {
             note,
@@ -123,40 +131,40 @@ export default function NoteDetailModal({
 
 
 
-    const handleSelectImage = (
-        imageId: number,
+    // const handleSelectImage = (
+    //     imageId: number,
 
-    ) => {
+    // ) => {
 
-        const index = note.images.findIndex((image) => image.id === imageId);
+    //     const index = note.images.findIndex((image) => image.id === imageId);
 
-        if (index === -1) return;
-
-
-        setSelectedImageIndex(index);
+    //     if (index === -1) return;
 
 
-    };
+    //     setSelectedImageIndex(index);
+
+
+    // };
 
 
 
-    const handleNextImage = () => {
+    // const handleNextImage = () => {
 
-        if (selectedImageIndex === null) return;
-        if (selectedImageIndex >= note.images.length - 1) return;
+    //     if (selectedImageIndex === null) return;
+    //     if (selectedImageIndex >= note.images.length - 1) return;
 
-        setSelectedImageIndex(selectedImageIndex + 1);
+    //     setSelectedImageIndex(selectedImageIndex + 1);
 
-    };
+    // };
 
 
-    const handlePrevImage = () => {
+    // const handlePrevImage = () => {
 
-        if (selectedImageIndex === null) return;
-        if (selectedImageIndex <= 0) return;
+    //     if (selectedImageIndex === null) return;
+    //     if (selectedImageIndex <= 0) return;
 
-        setSelectedImageIndex(selectedImageIndex - 1);
-    };
+    //     setSelectedImageIndex(selectedImageIndex - 1);
+    // };
 
 
 
@@ -174,25 +182,6 @@ export default function NoteDetailModal({
         incrementNoteView(note.id);
 
     }, [note.id]);   // note.id が変わったときに、この処理を実行する
-
-
-
-    // // モーダルが最初に表示されたときにも、textareaの高さを内容に合わせる。
-    // useEffect(() => {
-
-    //     if (titleRef.current) {
-    //         titleRef.current.style.height = "auto";   // auto にする理由は、「前回設定した高さを一度消してから、今の文章に必要な高さを測り直すため」。
-    //         titleRef.current.style.height =
-    //             `${titleRef.current.scrollHeight}px`;   // 中身を全部表示するのに必要な高さを調べて、その高さをtextarea自身の高さに設定する。titleRef.current.scrollHeight: この textarea の中身を全部表示するには、何pxの高さが必要かを表す。
-    //     }
-
-    //     if (contentRef.current) {
-    //         contentRef.current.style.height = "auto";
-    //         contentRef.current.style.height =
-    //             `${contentRef.current.scrollHeight}px`;
-    //     }
-
-    // }, []);
 
 
 
@@ -230,9 +219,7 @@ export default function NoteDetailModal({
 
                     <NoteDetailModalEditor
                         title={title}
-                        // titleRef={titleRef}
                         content={content}
-                        // contentRef={contentRef}
                         onChangeTitle={setTitle}
                         onChangeContent={setContent}
                         backgroundColor={tempColor}
@@ -296,7 +283,8 @@ export default function NoteDetailModal({
             <ImageViewer
                 images={note.images}
                 currentIndex={selectedImageIndex}
-                onClose={() => setSelectedImageIndex(null)}
+                onClose={handleCloseImageViewer}
+                // onClose={() => setSelectedImageIndex(null)}
                 onNext={handleNextImage}
                 onPrev={handlePrevImage}
 

@@ -9,13 +9,10 @@ import styles from "./ImageViewer.module.css";
 
 type Props = {
     images: NoteImage[];
-
     currentIndex: number;
-
-    onClose: () => void;
-
     onNext: () => void;
     onPrev: () => void;
+    onClose: () => void;
 
 };
 
@@ -28,9 +25,9 @@ type Props = {
 export default function ImageViewer({
     images,
     currentIndex,
-    onClose,
     onNext,
     onPrev,
+    onClose,
 
 }: Props) {
 
@@ -89,7 +86,7 @@ export default function ImageViewer({
                         e.stopPropagation();
                         onNext();
                     }}
-                    
+
                 >
                     →
                 </button>
