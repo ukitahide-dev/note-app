@@ -11,12 +11,15 @@ type Props = {
     onClose: () => void;
 };
 
-// 親: NoteDetailModal.tsx、
+// 親: NoteDetailModal,
+
 
 export function HistoryPanel({ note, onClose }: Props) {
+
     const [histories, setHistories] = useState<History[]>([]);
 
     useEffect(() => {
+
         const fetchHistory = async () => {
             const data = await getNoteHistoryApi(note.id);
             setHistories(data);
@@ -24,9 +27,12 @@ export function HistoryPanel({ note, onClose }: Props) {
         };
 
         fetchHistory();
+
     }, [note.id]);
 
+
     const formatDate = (dateString: string) => {
+
         const date = new Date(dateString);
 
         const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
@@ -36,14 +42,18 @@ export function HistoryPanel({ note, onClose }: Props) {
         return `${date.getFullYear()}年 ${date.getMonth() + 1}月${date.getDate()}日(${weekDay}) ${String(date.getHours()).padStart(2, "0")}時${String(date.getMinutes()).padStart(2, "0")}分`;
     };
 
+
     return (
+
         <div
             className={styles.overlay}
             onClick={(e) => e.stopPropagation()} // これがないと、親にクリックイベントが伝播して、NoteDetailModalが開く。
 
             // onClick={() => onSave(note.id, title, content)}
         >
+
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+
                 <div className={styles.top}>
                     <h1>変更履歴</h1>
                     <button onClick={onClose}>×</button>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 
 
@@ -97,74 +97,11 @@ export default function NoteDetailModal({
 
     // Store
     const {
-        // updateNote,
-        // updateNoteColor,
         createNote,
         moveToTrash,
         deleteNoteImage,
-        // incrementNoteView,
-        // updateNoteViewTime,
-
 
     } = useNoteStore();
-
-
-
-
-
-    // useRefの理由: 値を保存しておきたいけど、その値が変わったことで再レンダリングする必要はないから。
-    // const closed = useRef(false);   // { current: false }
-
-    // const viewed = useRef(false);   // このモーダルはもう閲覧数加算処理を実行したか？を記録する箱。{ current: false }
-    // const startTime = useRef(0);    // ノート詳細を開いた瞬間の時刻を保存しておく箱。{ current: 0 }という箱ができる。
-
-
-
-    // const handleClose = async () => {
-
-    //     if (closed.current) {   // モーダルを閉じる処理を、1回だけ実行するためのストッパー。APIを複数回呼ぶ可能性を消している。
-    //         return;
-    //     }
-
-    //     closed.current = true;
-
-    //     const seconds = Math.floor((Date.now() - startTime.current) / 1000);
-
-    //     await updateNoteViewTime(note.id, seconds);
-
-
-    //     if (title !== note.title || content !== note.content) {
-    //         await updateNote(note.id, title, content);
-    //     }
-
-    //     if (tempColor !== note.color) {
-    //         await updateNoteColor(note.id, tempColor);
-    //         // await saveColor();  // ここでuseNoteColor hookを経由する意味がない気がする
-    //     }
-
-    //     onClose(); // 親に閉じてとお願いするだけ。閉じ方は親が知っている。
-
-    // };
-
-
-
-
-    // useEffect(() => {
-
-    //     if (viewed.current) {   // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
-    //         return;
-    //     }
-
-    //     startTime.current = Date.now();
-
-    //     viewed.current = true;
-
-    //     incrementNoteView(note.id);
-
-    // }, [note.id]);   // note.id が変わったときに、この処理を実行する
-
-
-
 
 
 

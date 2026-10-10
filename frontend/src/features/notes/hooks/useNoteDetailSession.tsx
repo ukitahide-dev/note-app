@@ -52,12 +52,14 @@ export default function useNoteDetailSession({
 
     useEffect(() => {
 
-        if (viewed.current) {
+        console.log(viewed);
+
+        if (viewed.current) {  // 開発環境で StrictMode が有効だと、React はマウント時の useEffect を意図的にもう一度実行することがある。
             // Reactの開発環境で StrictMode が有効のせいで、useEffectが2回実行され、閲覧数が+2される。それを防ぐためのコード。
             return;
         }
 
-        startTime.current = Date.now();
+        startTime.current = Date.now();   // 「ノートを開いた時刻を記録する」
 
         viewed.current = true;
 

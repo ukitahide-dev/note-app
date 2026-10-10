@@ -78,7 +78,7 @@ export default function NoteList({
     // const [selectedNote, setSelectedNote] = useState<Note | null>(null);      // ノート詳細を開く用途。
     const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);   // ノート詳細を開く用途
 
-    const selectedNote = [...notes, ...pinnedNotes].find(
+    const selectedNote = [...notes, ...pinnedNotes].find(    // find()は見つからなければundefinedを返す。
         (note) => note.id === selectedNoteId
     ) ?? null;   // ??: Null合体演算子。左側が null または undefined だったら、右側の null を使うという意味。
 

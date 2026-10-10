@@ -118,12 +118,7 @@ describe("NoteForm", () => {   // describe("NoteForm", ...): ここからNoteFor
             screen.queryByPlaceholderText("タイトル")   // こっちは、もう一度取得しなおす。投稿後、タイトル欄はDOMから消えるから、投稿前に取得したtitleInputはDOMから消えてる。だから、改めて取得しなおす。
         ).not.toBeInTheDocument();
 
-        // expect(   // expect(): ()内を対象としてチェックする。
-        //     textarea    // こっちは、投稿前に取得したtextareaを使う。投稿後もDOMに存在してるから、わざわざ取得しなおす必要がない。
-        //     // screen.getByPlaceholderText("ノートを入力...")
-        // ).toHaveValue("");
-
-        // 『タイトル』という入力欄が、画面に存在しないことを確認する。
+       
 
 
     });
