@@ -44,6 +44,7 @@ export function useNoteImageViewer(
     };
 
 
+    
     const handlePrevImage = () => {
 
         if (selectedImageIndex === null) return;

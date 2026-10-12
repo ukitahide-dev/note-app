@@ -57,7 +57,7 @@ type Props = {
         } | null>
     >;
 
-    
+
     setSelectedNoteId: React.Dispatch<
         React.SetStateAction<number | null>
     >;

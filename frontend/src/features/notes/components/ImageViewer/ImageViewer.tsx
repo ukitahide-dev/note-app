@@ -47,8 +47,11 @@ export default function ImageViewer({
 
             <button
                 className={styles.closeButton}
-
-                // onClick={onClose}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClose();
+                }}
+                
             >
                 ✕
             </button>

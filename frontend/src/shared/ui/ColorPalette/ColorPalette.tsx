@@ -19,7 +19,7 @@ type Props = {
     paletteRef?: React.RefObject<HTMLDivElement | null>;
 
 
-    onClose?: () => void;  // onCloseを実行して、親で色変更のapiを呼ぶ形にする。onUpdateColorやnoteを渡してもらう必要がなくなる。
+    // onClose?: () => void;  // onCloseを実行して、親で色変更のapiを呼ぶ形にする。onUpdateColorやnoteを渡してもらう必要がなくなる。
 
 }
 
@@ -41,7 +41,7 @@ const colors = [
 
 
 
-// 親: NoteCard.tsx、NoteDetailModal.tsx、NoteForm.tsx、Header.tsx、
+// 親: NoteCard、NoteDetailModal、NoteForm、Header、
 
 
 export default function ColorPalette({

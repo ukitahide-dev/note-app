@@ -18,7 +18,7 @@ type Props = {
 
 
 
-// 呼び出し元: NoteCard,
+// 呼び出し元: NoteCard, NoteDetailModal, 
 
 
 export function useNoteLabels({ note }: Props) {
@@ -27,11 +27,11 @@ export function useNoteLabels({ note }: Props) {
         note.labels.map((label) => label.id), // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
     );
 
-    // useNoteStore
+    // Store
     const { updateNoteLabels } = useNoteStore();
 
 
-    // useLabelStore
+    // Store
     const { labels } = useLabelStore();
 
 

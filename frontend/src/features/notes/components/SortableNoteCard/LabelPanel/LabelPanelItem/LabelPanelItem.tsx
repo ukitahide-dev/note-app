@@ -7,11 +7,6 @@ import styles from "./LabelPanelItem.module.css";
 import type { Label } from "../../../../../../types/api/note";
 import type { LabelState } from "../../../../../../types/ui/label";
 
-// type LabelState = {
-//     id: number;
-//     state: "checked" | "unchecked" | "indeterminate";
-// };
-
 
 
 type Props = {
@@ -25,7 +20,8 @@ type Props = {
 
 
 
-// 親: LabelPanel.tsx、
+
+// 親: LabelPanel,
 
 export default function LabelPanelItem({
     label,

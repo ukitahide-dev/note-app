@@ -20,7 +20,7 @@ type Props = {
 
     tempColor: string;
     onSelectColor: (color: string) => void;
-    onCloseColor: () => void;
+    // onCloseColor: () => void;
 
     labelStates: LabelState[];
     onSelectLabel: (labelId: number) => void;
@@ -45,7 +45,7 @@ export default function NoteDetailModalPanel({
 
     tempColor,
     onSelectColor,
-    onCloseColor,
+    // onCloseColor,
 
     labelStates,
     onSelectLabel,
@@ -93,7 +93,7 @@ export default function NoteDetailModalPanel({
             <ColorPalette
                 tempColor={tempColor}
                 onSelectColor={onSelectColor}
-                onClose={onCloseColor}
+                // onClose={onCloseColor}
             />
 
         );

@@ -65,7 +65,12 @@ export default function NoteDetailModal({
 
 
     // hook
-    const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
+    const {
+        tempColor,
+        handleSelectColor,
+        // saveColor ,
+
+    } = useNoteColor(note);
 
 
     // hook
@@ -180,7 +185,7 @@ export default function NoteDetailModal({
 
                     tempColor={tempColor}
                     onSelectColor={handleSelectColor}
-                    onCloseColor={saveColor}
+                    // onCloseColor={saveColor}
 
                     labelStates={labelStates}
                     onSelectLabel={handleSelectLabel}
@@ -200,9 +205,9 @@ export default function NoteDetailModal({
             <ImageViewer
                 images={note.images}
                 currentIndex={selectedImageIndex}
-                onClose={handleCloseImageViewer}
                 onNext={handleNextImage}
                 onPrev={handlePrevImage}
+                onClose={handleCloseImageViewer}
 
             />
 

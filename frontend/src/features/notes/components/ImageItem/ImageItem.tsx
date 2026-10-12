@@ -21,7 +21,7 @@ type Props = {
 
 
 
-// 親: ImageList, 
+// 親: ImageList,
 
 
 export default function ImageItem({
@@ -67,8 +67,7 @@ export default function ImageItem({
             ref={setNodeRef}
             style={style}
             className={`${styles.imageWrapper} ${wrapperClass}`}
-            // {...attributes}
-            // {...listeners}
+            
         >
 
             <img

@@ -30,18 +30,17 @@ export function useNoteColor(
 
 
 
-    const handleSelectColor = (color: string) => {
+    const handleSelectColor = (
+        color: string
 
-        console.log("選択", note.id, color);
-        // console.log("選択", color);
+    ) => {
+
         setTempColor(color);
-        // console.log(`handleSelectColor内のtempColor: ${tempColor}`);
+
     };
 
 
     const saveColor = async () => {
-
-        // console.log("保存", note.id, tempColor);
 
         await updateNoteColor(note.id, tempColor);
 
@@ -52,5 +51,6 @@ export function useNoteColor(
         tempColor,
         handleSelectColor,
         saveColor,
+        
     };
 }

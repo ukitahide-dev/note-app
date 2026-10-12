@@ -60,7 +60,7 @@ export default function NoteDetailModalImages ({
     } = useSortableNoteImages(
         note.images,
         note.id,
-        
+
     );
 
 

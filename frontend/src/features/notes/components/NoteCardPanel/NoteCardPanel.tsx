@@ -62,7 +62,7 @@ export default function NoteCardPanel({
         );
     }
 
-    
+
     if (panelType === "history") {
 
         return (
