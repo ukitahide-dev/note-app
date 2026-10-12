@@ -18,7 +18,7 @@ type Props = {
 
 
 
-// 呼び出し元: NoteCard, NoteDetailModal, 
+// 呼び出し元: NoteCard, NoteDetailModal,
 
 
 export function useNoteLabels({ note }: Props) {

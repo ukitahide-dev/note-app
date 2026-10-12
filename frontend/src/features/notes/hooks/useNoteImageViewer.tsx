@@ -25,6 +25,7 @@ export function useNoteImageViewer(
             (image) => image.id === imageId
         );
 
+        // 存在しない画像 ID が渡された場合、findIndex() は -1 を返す
         if (index === -1) return;
 
         setSelectedImageIndex(index);
@@ -44,7 +45,7 @@ export function useNoteImageViewer(
     };
 
 
-    
+
     const handlePrevImage = () => {
 
         if (selectedImageIndex === null) return;
