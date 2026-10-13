@@ -60,7 +60,7 @@ export default function ColorPalette({
             data-testid="color-palette"  // テストからこのHTML要素を見つけるための目印。testファイルで、screen.getByTestId("color-palette")で、このDOM要素を取得できる。
             onClick={(e) => e.stopPropagation()}
         >
-
+            
             {colors.map((color) => (
 
                 <button

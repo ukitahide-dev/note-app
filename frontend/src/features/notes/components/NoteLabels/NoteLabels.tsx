@@ -15,6 +15,7 @@ type Props = {
 
 
 // 親：NoteCard, NoteDetailModal,
+// 役割: 各ノートが所持しているラベルを、ノートカードに表示する。
 
 
 export function NoteLabels({

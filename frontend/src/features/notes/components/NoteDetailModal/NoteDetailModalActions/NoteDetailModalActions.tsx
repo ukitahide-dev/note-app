@@ -18,7 +18,7 @@ type Props = {
 // 親: NoteDetailModal,
 
 
-export default function ({
+export default function NoteDetailModalActions({
     onOpenColor,
     onOpenMenu,
     onClose,

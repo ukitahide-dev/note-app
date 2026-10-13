@@ -51,6 +51,6 @@ export function useNoteColor(
         tempColor,
         handleSelectColor,
         saveColor,
-        
+
     };
 }

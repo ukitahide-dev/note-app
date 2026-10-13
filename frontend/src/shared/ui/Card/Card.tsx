@@ -5,6 +5,7 @@ import styles from "./Card.module.css";
 type Props = {
     children: React.ReactNode;
     className?: string;
+    "data-testid"?: string;
     onClick?: () => void;
     style?: React.CSSProperties;
 };
@@ -19,6 +20,7 @@ const Card = forwardRef<
         {
             children,
             className,
+            "data-testid": dataTestId,
             onClick,
             style,
         },
@@ -33,6 +35,7 @@ const Card = forwardRef<
                     ${styles.card}
                     ${className || ""}
                 `}
+                data-testid={dataTestId}
                 onClick={onClick}
                 style={style}
             >

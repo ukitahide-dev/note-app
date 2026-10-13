@@ -68,7 +68,7 @@ vi.mock(
 
 
 vi.mock(
-    "../../features/notes/hooks/useNoteLabels",
+    "../../features/notes/hooks/useNoteLabels/useNoteLabels",
     () => ({
         useNoteLabels: () => ({
             labelStates: [
@@ -293,6 +293,36 @@ describe("NoteDetailModal", () => {
 
 
 
+    // ---- メニュー関連 ----
+
+    it("⋮ ボタンを押すと、メニューパネルが表示される", () => {
+
+        const note: Note = {
+            id: 1,
+            title: "テストタイトル",
+            content: "テスト本文",
+            color: "#ffffff",
+            is_favorite: false,
+            is_pinned: false,
+            labels: [],
+            images: [],
+            view_count: 0,
+            total_view_seconds: 0,
+            created_at: "2026-10-10T00:00:00Z",
+            order: 0,
+            pinned_order: 0,
+        };
+
+        render(<NoteDetailModal note={note} onClose={mocks.handleClose} />);
+
+        fireEvent.click(screen.getByRole("button", { name: "⋮" }));
+
+        expect(screen.getByText("削除")).toBeInTheDocument();
+        expect(screen.getByText("コピーを作成")).toBeInTheDocument();
+
+    });
+
+
 
 
 
@@ -371,7 +401,7 @@ describe("NoteDetailModal", () => {
 
 
 
-
+    // ---- 色関係 ----
 
     it("色ボタンを押すと、色パネルが表示される", () => {
 
@@ -464,6 +494,7 @@ describe("NoteDetailModal", () => {
 
 
 
+    // ---- ラベル関係 ----
 
     it("メニューからラベルを選ぶと、登録済みの全ラベルが表示される", () => {
 
@@ -506,7 +537,7 @@ describe("NoteDetailModal", () => {
 
 
 
-    // ---- ラベル関連 ----
+
 
     it("ラベルをクリックすると、ラベルIDを渡して選択処理を呼ぶ", () => {
 

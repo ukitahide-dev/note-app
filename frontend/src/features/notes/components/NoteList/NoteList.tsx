@@ -75,7 +75,7 @@ export default function NoteList({
     } | null>(null);
 
 
-    // const [selectedNote, setSelectedNote] = useState<Note | null>(null);      // ノート詳細を開く用途。
+    
     const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);   // ノート詳細を開く用途
 
     const selectedNote = [...notes, ...pinnedNotes].find(    // find()は見つからなければundefinedを返す。

@@ -1,11 +1,11 @@
 import { useState } from "react";
 // import { updateNoteLabelsApi } from "../api/noteApi";
 
-import { useNoteStore } from "../store/useNoteStore";
-import { useLabelStore } from "../../labels/store/labelStore";
+import { useNoteStore } from "../../store/useNoteStore";
+import { useLabelStore } from "../../../labels/store/labelStore";
 
-import type { Note } from "../../../types/api/note";
-import type { LabelState } from "../../../types/ui/label";
+import type { Note } from "../../../../types/api/note";
+import type { LabelState } from "../../../../types/ui/label";
 
 type Props = {
     note: Note;
@@ -16,16 +16,18 @@ type Props = {
 // 「NoteCardに必要なラベル機能のロジック」をNoteCardから切り離している。
 // 1つのNoteについてラベルを操作するロジック
 
-
-
 // 呼び出し元: NoteCard, NoteDetailModal,
+
+
 
 
 export function useNoteLabels({ note }: Props) {
 
+
     const [selectedLabels, setSelectedLabels] = useState<number[]>( // selectedLabels は「各ノート固有の状態」だから、このコンポーネント(各ノートのコンポ)に書く
         note.labels.map((label) => label.id), // ex) selectedLabels = [1, 2, 3] チェックボックスの選択状態を管理するだけだから、id配列で取り出す。nameとか不要な情報は除く。
     );
+
 
     // Store
     const { updateNoteLabels } = useNoteStore();
@@ -36,8 +38,7 @@ export function useNoteLabels({ note }: Props) {
 
 
     // ある1つのノートの、ラベル選択状態を調べる。
-    const labelStates: LabelState[] = labels.map((label) => ({
-        // ({  はmapの短縮記法
+    const labelStates: LabelState[] = labels.map((label) => ({  // ({  はmapの短縮記法
 
         id: label.id,
 
@@ -47,36 +48,26 @@ export function useNoteLabels({ note }: Props) {
 
 
 
-    const updateLabels = async (
-        newIds: number[],
+    const updateLabels = async (newIds: number[]) => {
 
-    ) => {
+        setSelectedLabels(newIds);   // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
 
-        setSelectedLabels(newIds);  // こう書いてるけど、すぐにselectedLabelsの値が更新されるわけではない。
-
-        await updateNoteLabels(note.id, newIds);  // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
+        await updateNoteLabels(note.id, newIds);   // newIdsじゃなくて、selectedLabelsを渡すとバグる。selectedLabelsはこの時点では、まだ古い値だから。
 
     };
 
 
 
-    const handleSelectLabel = async (
-        labelId: number,
-
-    ) => {
+    const handleSelectLabel = async (labelId: number) => {
 
         try {
 
             let newIds;
 
             if (selectedLabels.includes(labelId)) {
-
                 newIds = selectedLabels.filter((id) => id !== labelId);
-
             } else {
-
                 newIds = [...selectedLabels, labelId];
-
             }
 
             await updateLabels(newIds);
@@ -86,33 +77,29 @@ export function useNoteLabels({ note }: Props) {
             console.error(error);
 
         }
+
     };
 
 
-
-    const handleRemoveNoteLabel = async (
-        labelId: number,
-
-    ) => {
+    const handleRemoveNoteLabel = async (labelId: number) => {
 
         try {
-
             const newIds = selectedLabels.filter((id) => id !== labelId);
 
             await updateLabels(newIds);
 
-        }  catch (error) {
-
+        } catch (error) {
             console.error(error);
-
         }
     };
+
+
+
 
     return {
         labelStates,
         selectedLabels,
         handleSelectLabel,
         handleRemoveNoteLabel,
-
     };
 }
