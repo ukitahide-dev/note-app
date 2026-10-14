@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Note } from "../../../types/api/note";
+import type { Note } from "../../../../types/api/note";
 
-import { useNoteStore } from "../store/useNoteStore";
+import { useNoteStore } from "../../store/useNoteStore";
 
 // ノートの色を変更するために必要な状態・操作・保存処理を、ひとまとまりの機能として管理する
 // 色変更機能のロジックを担当する hook
@@ -10,14 +10,10 @@ import { useNoteStore } from "../store/useNoteStore";
 
 
 
-export function useNoteColor(
-    note: Note,
 
-) {
-
+export function useNoteColor(note: Note) {
 
     const [tempColor, setTempColor] = useState(note.color);
-
 
     // store
     const { updateNoteColor } = useNoteStore();
@@ -30,27 +26,21 @@ export function useNoteColor(
 
 
 
-    const handleSelectColor = (
-        color: string
-
-    ) => {
-
+    const handleSelectColor = (color: string) => {
         setTempColor(color);
-
     };
+
 
 
     const saveColor = async () => {
-
         await updateNoteColor(note.id, tempColor);
-
     };
 
 
+    
     return {
         tempColor,
         handleSelectColor,
         saveColor,
-
     };
 }

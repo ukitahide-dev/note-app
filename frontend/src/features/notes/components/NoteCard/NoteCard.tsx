@@ -12,7 +12,7 @@ import type { Note } from "../../../../types/api/note";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useNoteStore } from "../../store/useNoteStore";
 
-import { useNoteColor } from "../../hooks/useNoteColor";
+import { useNoteColor } from "../../hooks/useNoteColor/useNoteColor";
 
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";

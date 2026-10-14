@@ -8,7 +8,7 @@ import { useNoteLabels } from "../../hooks/useNoteLabels/useNoteLabels";
 // ---- types ----
 import type { Note } from "../../../../types/api/note";
 import { useNoteStore } from "../../store/useNoteStore";
-import { useNoteColor } from "../../hooks/useNoteColor";
+import { useNoteColor } from "../../hooks/useNoteColor/useNoteColor";
 
 import ImageViewer from "../ImageViewer/ImageViewer";
 import { NoteLabels } from "../NoteLabels/NoteLabels";

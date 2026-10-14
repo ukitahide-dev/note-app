@@ -60,6 +60,7 @@ const createNote = (
 
 describe("useNoteLabels", () => {
 
+
     it("ノートに付いているラベルはチェック済みになる", () => {
 
         const note = createNote([
@@ -112,6 +113,27 @@ describe("useNoteLabels", () => {
         });
 
         expect(result.current.selectedLabels).toEqual([10, 20]);
+
+    });
+
+
+
+
+    it("ラベルを選択すると、チェック済みになる", async () => {
+
+        const note = createNote();
+
+        const { result } = renderHook(() => useNoteLabels({ note }));
+
+        await act(async () => {
+            await result.current.handleSelectLabel(10);
+        });
+
+        expect(result.current.labelStates).toEqual([
+            { id: 10, state: "checked" },
+            { id: 20, state: "unchecked" },
+            { id: 30, state: "unchecked" },
+        ]);
 
     });
 
@@ -217,7 +239,7 @@ describe("useNoteLabels", () => {
             { id: 20, state: "unchecked" },
             { id: 30, state: "unchecked" },
         ]);
-        
+
     });
 
 });
