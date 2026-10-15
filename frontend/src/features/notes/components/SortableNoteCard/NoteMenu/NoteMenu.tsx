@@ -41,6 +41,7 @@ export default function NoteMenu({
 
         <Menu
             menuRef={menuRef}
+            data-testid="note-menu"
         >
             <button
                 onClick={onOpenLabel}

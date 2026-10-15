@@ -19,8 +19,11 @@ import { useNoteLabels } from "../../features/notes/hooks/useNoteLabels/useNoteL
 const mocks = vi.hoisted(() => ({  // vi.hoisted(): vi.mock() より先に準備しておきたい変数を作るために使う。
     togglePin: vi.fn(),   // vi.fn(): 呼び出しを記録できる、テスト用の偽物の関数を作る。
     toggleFavorite: vi.fn(),
+    moveToTrash: vi.fn(),
+    createNote: vi.fn(),
     handleSelectLabel: vi.fn(),
     handleRemoveNoteLabel: vi.fn(),
+    updateNoteColor: vi.fn(),
 
 }));
 
@@ -28,10 +31,11 @@ const mocks = vi.hoisted(() => ({  // vi.hoisted(): vi.mock() より先に準備
 
 vi.mock("../../features/notes/store/useNoteStore", () => ({  // NoteCardがuseNoteStoreを呼び出すと、ここで設定した偽物のuseNoteStoreが使われる。
     useNoteStore: () => ({
-        createNote: vi.fn(),
-        moveToTrash: vi.fn(),
+        createNote: mocks.createNote,
+        moveToTrash: mocks.moveToTrash,
         toggleFavorite: mocks.toggleFavorite,
         togglePin: mocks.togglePin,
+        updateNoteColor: mocks.updateNoteColor,
         searchParams: {
             query: "",
         },
@@ -63,6 +67,21 @@ vi.mock("../../features/notes/hooks/useNoteLabels/useNoteLabels", () => ({
 
     }),
 }));
+
+
+
+
+vi.mock(  // NoteCard.test.tsx のテスト中に HistoryPanel が使われると、本物の代わりにこの偽物が使われる。本物では、API通信してるから、テストではしないために、偽物使う。
+    "../../features/notes/components/HistoryPanel/HistoryPanel",
+    () => ({
+        HistoryPanel: ({ onClose }: { onClose: () => void }) => (  // onClose 自体は、本物のNoteCardから渡された関数を受け取っている。だから、これは本物。クリックすると、このdivが消える。モックはコンポーネントを丸ごと置き換えるけど、親から渡される props まで勝手に偽物にするわけじゃない。
+            <div data-testid="history-panel">
+                <h1>変更履歴</h1>
+                <button onClick={onClose}>閉じる</button>
+            </div>
+        ),
+    }),
+);
 
 
 
@@ -114,7 +133,7 @@ function NoteCardWithState({
 
 
     return (
-
+        <>
         <NoteCard
             note={noteOverride ?? note}
             context="notes"
@@ -126,6 +145,13 @@ function NoteCardWithState({
             panelType={panelType}
             setPanelType={setPanelType}
         />
+
+        {/* この <div> は本来のアプリの機能には必要ない。テストのためだけに追加したもの。 冗長ではある。*/}
+        <div data-testid="panel-type">
+            {panelType ?? "null"}
+        </div>
+
+        </>
     );
 }
 
@@ -259,8 +285,54 @@ describe("NoteCard", () => {
 
 
 
+    it("メニューの削除をクリックすると、moveToTrashにノートIDが渡されて実行される", () => {
+
+        mocks.moveToTrash.mockClear();
+
+        render(<NoteCardWithState />);
+
+        // メニューを開く
+        fireEvent.click(screen.getByRole("button", { name: "⋮" }));
+
+        // 削除をクリックする
+        fireEvent.click(screen.getByRole("button", { name: "削除" }));
+
+        // ノートID「1」で削除処理が呼ばれたことを確認
+        expect(mocks.moveToTrash).toHaveBeenCalledWith(1);
+
+    });
 
 
+
+
+
+    it("コピーを作成をクリックすると、元ノートの情報でcreateNoteが呼ばれる", () => {
+
+        mocks.createNote.mockClear();
+
+        render(<NoteCardWithState />);
+
+        // メニューを開く
+        fireEvent.click(screen.getByRole("button", { name: "⋮" }));
+
+        // 「コピーを作成」をクリックする
+        fireEvent.click(
+            screen.getByRole("button", { name: "コピーを作成" })
+        );
+
+        // 元ノートの情報が渡されたことを確認する
+        expect(mocks.createNote).toHaveBeenCalledWith(
+            note.title,
+            note.content,
+            note.labels.map((label) => label.id),
+            note.color,
+        );
+
+    });
+
+
+
+    // ---- メニュー関連 ----
 
     it("メニューボタンをクリックするとsetOpenMenuが呼ばれる", () => {
         const setOpenColor = vi.fn();
@@ -300,6 +372,47 @@ describe("NoteCard", () => {
         fireEvent.click(screen.getByRole("button", { name: "⋮" }));   // 親である本物のNoteListとかはレンダーされない。
 
         expect(screen.getByText("削除")).toBeInTheDocument();
+
+    });
+
+
+
+
+
+    it("メニューの外側をクリックすると、メニューが閉じてpanelTypeもリセットされる", () => {
+        render(<NoteCardWithState />);
+
+        // メニューボタンをクリックする
+        fireEvent.click(screen.getByRole("button", { name: "⋮"}));
+
+        // メニューが表示されたことを確認
+        expect(screen.getByTestId("note-menu")).toBeInTheDocument();
+
+        expect(screen.getByTestId("panel-type")).toHaveTextContent("null");
+
+
+        fireEvent.click(screen.getByRole("button", { name: "ラベル追加"}));
+
+        // ラベルパネルが表示されたことを確認する
+        expect(
+            screen.getByPlaceholderText("新しいラベル")
+        ).toBeInTheDocument();
+
+        // パネルタイプがラベルになったことを確認する。
+        expect(screen.getByTestId("panel-type")).toHaveTextContent("label");
+
+
+        // ノートや、ラベルパネルの外側をクリックする
+        fireEvent.click(document.body);
+
+         // メニューが閉じたことを確認
+        expect(screen.queryByText("ラベル追加")).not.toBeInTheDocument();
+
+        // ラベルパネルが閉じたことを確認
+        expect(screen.queryByText("新しいラベル")).not.toBeInTheDocument();
+
+        expect(screen.getByTestId("panel-type")).toHaveTextContent("null");
+
 
     });
 
@@ -347,6 +460,45 @@ describe("NoteCard", () => {
 
     });
 
+
+
+
+
+
+    it("カラーパレットの外側をクリックすると、色が保存されてパレットが閉じる", () => {
+
+        mocks.updateNoteColor.mockClear();
+
+        render(<NoteCardWithState />);
+
+        // カラーボタンをクリックする
+        fireEvent.click(screen.getByRole("button", { name: "🎨"}));
+
+        const palette = screen.getByTestId("color-palette");
+
+        // ピンク色を選択する
+        const pinkButton = palette.querySelector(
+            'button[style*="rgb(242, 139, 130)"]'
+        );
+
+        expect(pinkButton).not.toBeNull();
+
+        fireEvent.click(pinkButton!);
+
+        // カードの外側をクリックする
+        fireEvent.click(document.body);
+
+        // updateNoteColorが呼ばれる
+        expect(mocks.updateNoteColor).toHaveBeenCalledWith(1, "#f28b82");
+
+
+        // カラーパレットが閉じたことを確認する
+        expect(screen.queryByTestId("color-palette")).not.toBeInTheDocument();
+
+
+
+
+    });
 
 
 
@@ -565,9 +717,61 @@ describe("NoteCard", () => {
 
 
 
+    // ---- History関連 ----
+    it("変更履歴をクリックすると、変更履歴パネルが表示される", () => {
+
+        render(<NoteCardWithState />);
+
+        // メニューを開く
+        fireEvent.click(screen.getByRole("button", { name: "⋮" }));
+
+        // 変更履歴をクリック
+        fireEvent.click(screen.getByRole("button", { name: "変更履歴" }));
+
+        // panelTypeがhistoryになったことを確認
+        expect(screen.getByTestId("panel-type")).toHaveTextContent("history");
+
+         // 変更履歴パネルが表示されたことを確認する
+        expect(
+            screen.getByTestId("history-panel")
+        ).toBeInTheDocument();
+
+    });
 
 
 
+
+
+
+    it("変更履歴の閉じるボタンをクリックすると、Historyパネルが消える", () => {
+
+        render(<NoteCardWithState />);
+
+        // メニューを開く
+        fireEvent.click(
+            screen.getByRole("button", { name: "⋮" })
+        );
+
+        // 変更履歴を開く
+        fireEvent.click(
+            screen.getByRole("button", { name: "変更履歴" })
+        );
+
+        // パネルが表示されていることを確認
+        expect(
+            screen.getByTestId("history-panel")
+        ).toBeInTheDocument();
+
+        // 閉じるボタンをクリック
+        fireEvent.click(
+            screen.getByRole("button", { name: "閉じる" })
+        );
+
+        // パネルが消えたことを確認
+        expect(
+            screen.queryByTestId("history-panel")
+        ).not.toBeInTheDocument();
+    });
 
 
 

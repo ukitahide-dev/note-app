@@ -21,8 +21,10 @@ export function HistoryPanel({ note, onClose }: Props) {
     useEffect(() => {
 
         const fetchHistory = async () => {
+            
             const data = await getNoteHistoryApi(note.id);
             setHistories(data);
+
             console.log(data);
         };
 

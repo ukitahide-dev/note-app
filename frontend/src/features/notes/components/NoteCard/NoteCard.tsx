@@ -89,8 +89,10 @@ export default function NoteCard({
             note,
         });
 
+
     // hook
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
+
 
     // Store
     const {
@@ -125,6 +127,7 @@ export default function NoteCard({
     const isMenuOpen =
         openMenu?.noteId === note.id && openMenu?.context === context;
 
+
     // hook
     useClickOutside(
         [cardRef, menuRef, labelPanelRef, paletteRef],
@@ -153,6 +156,7 @@ export default function NoteCard({
         isColorOpen || isMenuOpen, // この条件が肝。これがないと、全ノートカードで、無条件にドキュメント監視イベントが登録され、あるノートの外側クリックをすると、全ノートの外側クリックが発火し、バグる。
     );
 
+    
     const highlightText = (text: string) => {
         if (!searchParams.query.trim()) {
             return text;
@@ -187,7 +191,11 @@ export default function NoteCard({
         await uploadNoteImage(note.id, file);
     };
 
+
+
+
     return (
+
         <Card
             ref={cardRef}
             className={cardStyles.noteCard}
@@ -240,6 +248,7 @@ export default function NoteCard({
                 )}
             </div>
 
+
             <NoteCardActions
                 note={note}
                 onOpenColor={() => {
@@ -269,6 +278,8 @@ export default function NoteCard({
                 onImageChange={handleImageChange}
             />
 
+
+
             {openMenu?.noteId === note.id && openMenu?.context === context && (
                 <NoteCardPanel
                     panelType={panelType}
@@ -292,6 +303,8 @@ export default function NoteCard({
                 />
             )}
 
+
+
             {/* 背景色 */}
             {openColor?.noteId === note.id &&
                 openColor?.context === context && (
@@ -300,6 +313,7 @@ export default function NoteCard({
                         paletteRef={paletteRef}
                     />
                 )}
+
         </Card>
     );
 }
