@@ -58,7 +58,7 @@ vi.mock("../../features/labels/store/labelStore", () => ({
 }));
 
 
-useNoteLabels
+
 vi.mock("../../features/notes/hooks/useNoteLabels/useNoteLabels", () => ({
     useNoteLabels: () => ({
         labelStates: [],
@@ -364,7 +364,7 @@ describe("NoteCard", () => {
 
 
 
-    it("メニューボタンをクリックするとメニューの内容が表示される", () => {
+    it("メニューボタンをクリックするとメニューが表示される", () => {
 
         render(<NoteCardWithState />);  // テスト用に作った親をレンダリング。
 

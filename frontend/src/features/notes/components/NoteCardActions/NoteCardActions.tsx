@@ -71,6 +71,7 @@ export default function NoteCardActions({
                 </Tooltip>
 
                 <Tooltip text="画像を追加">
+
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
