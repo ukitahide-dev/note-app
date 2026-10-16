@@ -76,7 +76,9 @@ export default function NoteCard({
 
     panelType,
     setPanelType,
+
 }: Props) {
+
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +101,7 @@ export default function NoteCard({
         selectedNoteIds,
         toggleSelect,
         previewColor, // 複数のNoteCard色変更用
+        
     } = useNoteSelectionStore();
 
     // Store
@@ -112,6 +115,7 @@ export default function NoteCard({
 
         uploadNoteImage,
     } = useNoteStore();
+
 
     // このノートが選択中で、かつ previewColor が存在するなら previewColor を使う。そうでなければ tempColor を使う
     const displayColor =
