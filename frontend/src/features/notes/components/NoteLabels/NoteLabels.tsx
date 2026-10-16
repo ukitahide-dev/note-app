@@ -42,37 +42,7 @@ export function NoteLabels({
 
         </>
 
-        // <div className={styles.labels}>
-
-        //     {labels.map((label) => (
-        //         <LabelItem
-        //             key={label.id}
-        //             label={label}
-        //             onRemoveLabel={onRemoveLabel}
-        //         />
-        //     ))}
-
-        // </div>
-
-
-
-        // <div className={styles.labels}>
-
-        //     {labels.slice(0, 2).map((label) => (
-        //         <LabelItem
-        //             key={label.id}
-        //                 label={label}
-        //                 onRemoveLabel={onRemoveLabel}
-        //             />
-        //         ))}
-
-        //         {labels.length > 2 && (
-        //             <span className={styles.moreLabels}>
-        //                 他{labels.length - 2}件
-        //             </span>
-        //         )}
-
-        //     </div>
+        
     )
 
 

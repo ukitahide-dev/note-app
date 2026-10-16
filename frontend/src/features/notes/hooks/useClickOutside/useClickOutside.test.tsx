@@ -14,6 +14,8 @@ type Props = {
 };
 
 
+
+// テスト用に自分で親コンポを用意
 function TestComponent({
     onClickOutside,
     enabled = true,
