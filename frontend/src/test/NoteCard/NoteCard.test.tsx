@@ -201,6 +201,7 @@ describe("NoteCard", () => {
         const setSelectedNoteId = vi.fn();
         const setPanelType = vi.fn();
 
+
         render(
             <NoteCard
                 note={note}
@@ -380,6 +381,7 @@ describe("NoteCard", () => {
 
 
     it("メニューの外側をクリックすると、メニューが閉じてpanelTypeもリセットされる", () => {
+        
         render(<NoteCardWithState />);
 
         // メニューボタンをクリックする

@@ -34,7 +34,7 @@ export function useClickOutside(
         };
 
 
-        document.addEventListener("click", handleClick);
+        document.addEventListener("click", handleClick);   // Webページ全体のクリックを監視して、クリックされたら handleClick を実行して、と登録するコード
 
         return () => {
             document.removeEventListener("click", handleClick);

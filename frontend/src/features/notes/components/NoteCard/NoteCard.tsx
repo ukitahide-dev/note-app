@@ -16,7 +16,7 @@ import { useNoteColor } from "../../hooks/useNoteColor/useNoteColor";
 
 import type { NoteContext } from "../../../../types/ui/noteContext";
 import NoteCardPanel from "../NoteCardPanel/NoteCardPanel";
-import { useClickOutside } from "../../hooks/useClickOutside";
+import { useClickOutside } from "../../hooks/useClickOutside/useClickOutside";
 import NoteCardActions from "../NoteCardActions/NoteCardActions";
 import { NoteLabels } from "../NoteLabels/NoteLabels";
 import NoteCardHeader from "../NoteCardHeader/NoteCardHeader";
@@ -156,7 +156,7 @@ export default function NoteCard({
         isColorOpen || isMenuOpen, // この条件が肝。これがないと、全ノートカードで、無条件にドキュメント監視イベントが登録され、あるノートの外側クリックをすると、全ノートの外側クリックが発火し、バグる。
     );
 
-    
+
     const highlightText = (text: string) => {
         if (!searchParams.query.trim()) {
             return text;
