@@ -38,7 +38,6 @@ export default function LabelPanelItem({
 
         if (checkboxRef.current) {   // checkboxRef.currentはinput要素のこと
 
-
             checkboxRef.current.indeterminate =
                 labelState?.state === "indeterminate";
         }

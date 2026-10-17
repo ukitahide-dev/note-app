@@ -15,19 +15,14 @@ import type { LabelState } from "../../../../../types/ui/label";
 
 
 type Props = {
-
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
-
     labelStates?: LabelState[];
-
     onSelectLabel: (labelId: number) => void;
-
-
 };
 
 
 
-// 親: NoteCard.tsx、NoteDetailModal.tsx、Header.tsx
+// 親: NoteCard、NoteDetailModal、Header
 
 export default function LabelPanel({
     labelPanelRef,

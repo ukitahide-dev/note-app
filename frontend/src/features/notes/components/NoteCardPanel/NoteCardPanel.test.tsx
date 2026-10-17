@@ -64,7 +64,7 @@ const renderNoteCardPanel = (
 
 }
 
-
+ 
 
 describe("NoteCardPanel", () => {
 
@@ -94,5 +94,5 @@ describe("NoteCardPanel", () => {
 
         expect(screen.getByText("NoteMenu")).toBeInTheDocument();
     });
-    
+
 });
