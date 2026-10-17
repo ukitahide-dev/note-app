@@ -14,7 +14,7 @@ import styles from "./Tooltip.module.css";
 
 
 
-// 呼び出し元: NoteCard,
+// 呼び出し元: NoteCardHeader,
 
 
 // 役割: 共通の親コンポーネント(Tooltip)で包んで、バラバラの子供たちに共通機能(ホバーしたらツールチップ表示)を与える。
