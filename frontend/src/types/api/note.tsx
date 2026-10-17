@@ -11,6 +11,7 @@ export type NoteImage = {
     id: number;
     note: number;
     image: string;
+    order: number;
 }
 
 

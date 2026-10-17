@@ -32,6 +32,8 @@ export default function ImageItem({
 
 }: Props) {
 
+    // console.log(image);
+    // console.log(isLarge)
 
     const {
         attributes,   // dnd-kitが必要とする属性
@@ -67,7 +69,7 @@ export default function ImageItem({
             ref={setNodeRef}
             style={style}
             className={`${styles.imageWrapper} ${wrapperClass}`}
-            
+
         >
 
             <img

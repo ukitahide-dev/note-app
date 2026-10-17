@@ -69,7 +69,7 @@ vi.mock("./LabelPanelItem/LabelPanelItem", () => ({
 
         </div>
 
-        
+
     ),
 
 }));

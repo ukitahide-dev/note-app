@@ -42,7 +42,7 @@ export function NoteLabels({
 
         </>
 
-        
+
     )
 
 
