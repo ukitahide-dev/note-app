@@ -243,7 +243,11 @@ type NoteStore = {
     updateNoteViewTime: (noteId: number, seconds: number) => Promise<void>;
 };
 
+
+
+
 export const useNoteStore = create<NoteStore>((set, get) => ({
+
     notes: [],
 
     pinnedNotes: [],
@@ -1140,7 +1144,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
         } = get();
 
-        
+
 
         try {
 

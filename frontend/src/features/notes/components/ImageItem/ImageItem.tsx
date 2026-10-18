@@ -24,9 +24,9 @@ type Props = {
 // 親: ImageList,
 
 
-export default function ImageItem({
+export default function ImageItem({   // 分割代入でプロパティの値を取得している。
     image,
-    isLarge,
+    isLarge,     // isLargeはfalseかtrueという値そのもの。
     onDeleteImage,
     onSelectImage,
 
@@ -37,8 +37,8 @@ export default function ImageItem({
 
     const {
         attributes,   // dnd-kitが必要とする属性
-        listeners,    // 「この要素を操作したらドラッグ開始できます」
-        setNodeRef,   //「この要素が並び替える対象です」
+        listeners,    // 「この要素を操作したらドラッグ開始」
+        setNodeRef,   //「この要素が並び替える対象」
         transform,    // 並び替え時の移動
         transition,
 
