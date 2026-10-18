@@ -14,7 +14,7 @@ import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
 import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
 import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels/useSelectedNoteLabels";
-import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions";
+import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions/useSelectedNoteActions";
 
 // ---- react-icon ----
 import { BsPin } from "react-icons/bs";

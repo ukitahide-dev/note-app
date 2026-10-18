@@ -7,9 +7,6 @@ import { useNoteStore } from "../../store/useNoteStore";
 import { useNoteSelectionStore } from "../../store/useNoteSelectionStore";
 import { useLabelStore } from "../../../labels/store/labelStore";
 
-// vi.mock("../store/useNoteStore");
-// vi.mock("../store/useNoteSelectionStore");
-// vi.mock("../../labels/store/labelStore");
 
 
 
@@ -431,7 +428,7 @@ describe("useSelectedNoteLabels", () => {
         expect(() => result.current.handleSelectLabel(999)).not.toThrow();
 
         expect(updateSelectedNoteLabels).not.toHaveBeenCalled();
-        
+
     });
 
 
