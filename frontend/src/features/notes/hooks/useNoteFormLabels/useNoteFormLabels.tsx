@@ -1,37 +1,30 @@
 import { useEffect, useState } from "react";
-// import useLabels from "../../labels/hooks/useLabels";
-import { useLabelStore } from "../../labels/store/labelStore";
+
+import { useLabelStore } from "../../../labels/store/labelStore";
 
 
 
+export function useNoteFormLabels(
+    labelName?: string,   // LabelNotesPage経由で呼ばれたときに渡される。
 
-
-
-export function useNoteFormLabels (
-    labelName?: string,
 
 ) {
 
-
-
-    const {
-        labels
-    } = useLabelStore();
-
-
+    // Store
+    const { labels } = useLabelStore();
 
     const [selectedLabels, setSelectedLabels] = useState<number[]>([]);
-
 
 
     useEffect(() => {
         if (!labelName) return;
 
-        const label = labels.find((l) => l.name === labelName);
+        const label = labels.find((l) => l.name === labelName);   // find(): 配列の中から条件に一致する最初の要素を1つ返すメソッド。見つからなければ、undefined を返す。
 
         if (label) {
             setSelectedLabels([label.id]);
         }
+
 
     }, [labelName, labels]);
 
@@ -42,37 +35,22 @@ export function useNoteFormLabels (
         .map((label) => label.name);
 
 
-
     const labelStates = labels.map((label) => ({
-
         id: label.id,
 
-        state: selectedLabels.includes(label.id) ? "checked" : "unchecked"
-
-
+        state: selectedLabels.includes(label.id) ? "checked" : "unchecked",
     }));
 
 
 
-    const handleSelectLabel = (
-        labelId: number,
-    ) => {
+    const handleSelectLabel = (labelId: number) => {
 
         if (selectedLabels.includes(labelId)) {
-
             setSelectedLabels(selectedLabels.filter((id) => id !== labelId));
-
         } else {
-
-            setSelectedLabels(
-                [
-                    labelId,
-                    ...selectedLabels,
-                ]
-            );
+            setSelectedLabels([labelId, ...selectedLabels]);
         }
-
-    }
+    };
 
 
 
@@ -81,9 +59,5 @@ export function useNoteFormLabels (
         selectedLabelNames,
         labelStates,
         handleSelectLabel,
-    }
-
-
-
-
+    };
 }

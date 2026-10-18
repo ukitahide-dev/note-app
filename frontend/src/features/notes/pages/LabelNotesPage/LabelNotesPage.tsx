@@ -22,7 +22,7 @@ export default function LabelNotesPage() {
         notes,
         pinnedNotes,
         fetchPinnedNotes,
-        // fetchNotes,
+       
         fetchLabelNotes,
 
         pageSize,
