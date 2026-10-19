@@ -2,9 +2,9 @@ import { create } from "zustand";
 import type { Note, NoteImage } from "../../../types/api/note";
 import {
     createNoteApi,
-    deleteNoteForeverApi,
+    // deleteNoteForeverApi,
     deleteNoteImageApi,
-    emptyTrashApi,
+    // emptyTrashApi,
     getAllNotesApi,
     getCalendarDayNotesApi,
     getDailyNoteCountsApi,
@@ -15,11 +15,11 @@ import {
     getSearchNotesApi,
     getTrashNotesApi,
     incrementNoteViewApi,
-    moveToTrashApi,
+    // moveToTrashApi,
     reorderNoteImageApi,
     reorderNotesApi,
     reorderPinnedNotesApi,
-    restoreNoteApi,
+    // restoreNoteApi,
     updateNoteApi,
     updateNoteColorApi,
     updateNoteFavoriteApi,
@@ -40,6 +40,10 @@ import axios from "axios";
 import type { DailyNoteCounts } from "../../../types/api/calendar";
 
 
+
+import { createNoteTrashActions } from "./noteTrashActions";
+
+
 type DeletedNote = {
     note: Note;
     index: number;
@@ -57,7 +61,7 @@ type SearchParams = {
 
 
 
-type NoteStore = {
+export type NoteStore = {
 
     // 通常ノート、ピン止めノート、検索結果ノート、これらはバックエンドでデータ取得を分けた。
     notes: Note[];
@@ -246,7 +250,9 @@ type NoteStore = {
 
 
 
-export const useNoteStore = create<NoteStore>((set, get) => ({
+export const useNoteStore = create<NoteStore>((set, get, api) => ({
+
+    ...createNoteTrashActions(set, get, api),   // createNoteActionsを実行する。返ってくるのはオブジェクト。...でオブジェクトを展開。
 
     notes: [],
 
@@ -812,6 +818,7 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
     // Undoを閉じる
     hideUndo: () => {
+
         const timer = get().undoTimer;
         console.log(`timerの中身: ${timer}`);
 
@@ -830,244 +837,244 @@ export const useNoteStore = create<NoteStore>((set, get) => ({
 
 
     // ノート単体をゴミ箱に移動する
-    moveToTrash: async (
-        id: number,
+    // moveToTrash: async (
+    //     id: number,
 
-    ) => {
+    // ) => {
 
-        try {
+    //     try {
 
-            // 削除対象のノートを、削除前に取得する。
-            const deletedNote = get().notes.find((note) => note.id === id);
+    //         // 削除対象のノートを、削除前に取得する。
+    //         const deletedNote = get().notes.find((note) => note.id === id);
 
-            // 削除対象のノートのインデックスを、削除前に取得する。
-            const deletedIndex = get().notes.findIndex(
-                (note) => note.id === id,
-            );
+    //         // 削除対象のノートのインデックスを、削除前に取得する。
+    //         const deletedIndex = get().notes.findIndex(
+    //             (note) => note.id === id,
+    //         );
 
-            if (!deletedNote) return;
-
-
-            // 以前のタイマーがあれば削除
-            const oldTimer = get().undoTimer;
-            // console.log(`oldTimerの中身: ${oldTimer}`);
-
-            if (oldTimer) {
-                clearTimeout(oldTimer);
-            }
-
-            await moveToTrashApi(id);
-
-            set((state) => ({
-                // deletedNote: {  // このdeletedNote: Storeで定義したもの。
-                //     note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
-                //     index: deletedIndex,
-
-                // },
-
-                deletedNotes: [
-                    {
-                        note: deletedNote,
-                        index: deletedIndex,
-                    },
-                ],
-
-                showUndo: true,
-
-                notes: state.notes.filter((note) => note.id !== id),
-
-            }));
+    //         if (!deletedNote) return;
 
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         // 以前のタイマーがあれば削除
+    //         const oldTimer = get().undoTimer;
+    //         // console.log(`oldTimerの中身: ${oldTimer}`);
+
+    //         if (oldTimer) {
+    //             clearTimeout(oldTimer);
+    //         }
+
+    //         await moveToTrashApi(id);
+
+    //         set((state) => ({
+    //             // deletedNote: {  // このdeletedNote: Storeで定義したもの。
+    //             //     note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
+    //             //     index: deletedIndex,
+
+    //             // },
+
+    //             deletedNotes: [
+    //                 {
+    //                     note: deletedNote,
+    //                     index: deletedIndex,
+    //                 },
+    //             ],
+
+    //             showUndo: true,
+
+    //             notes: state.notes.filter((note) => note.id !== id),
+
+    //         }));
 
 
-            // 新しいタイマーを作る。5秒後にUndo終了
-            const timer = setTimeout(() => {
-                get().hideUndo();
-            }, 5000);
+    //         await useLabelStore.getState().fetchUsedLabels();
 
-            // console.log("moveToTrash!");
 
-            // 今動いているタイマーはこれだと、Storeに保存する。これを書かないと、ノートA削除中に、ノートB削除みたいに連続で削除すると、バグる。
-            set({
-                undoTimer: timer,
-            });
+    //         // 新しいタイマーを作る。5秒後にUndo終了
+    //         const timer = setTimeout(() => {
+    //             get().hideUndo();
+    //         }, 5000);
 
-        } catch (error) {
-            // get().setError(error);
+    //         // console.log("moveToTrash!");
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //         // 今動いているタイマーはこれだと、Storeに保存する。これを書かないと、ノートA削除中に、ノートB削除みたいに連続で削除すると、バグる。
+    //         set({
+    //             undoTimer: timer,
+    //         });
 
-            // console.error(error);
-        }
-    },
+    //     } catch (error) {
+    //         // get().setError(error);
+
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+
+    //         // console.error(error);
+    //     }
+    // },
 
 
 
     // 削除処理をキャンセルする。元に戻すを押したとき。
-    undoDelete: async () => {
+    // undoDelete: async () => {
 
-        const deletedNotes = get().deletedNotes;   // Storeに保存しておいた削除したノートを取り出す。
+    //     const deletedNotes = get().deletedNotes;   // Storeに保存しておいた削除したノートを取り出す。
 
-        if (!deletedNotes.length) return;
+    //     if (!deletedNotes.length) return;
 
-        // 現在のundoTimerを取得し、止める。
-        const timer = get().undoTimer;
+    //     // 現在のundoTimerを取得し、止める。
+    //     const timer = get().undoTimer;
 
-        if (timer) {
-            clearTimeout(timer);
-        }
-
-
-        try {
-
-            await Promise.all(
-                deletedNotes.map((item) => restoreNoteApi(item.note.id)),
-            );
+    //     if (timer) {
+    //         clearTimeout(timer);
+    //     }
 
 
-            set((state) => {
+    //     try {
 
-                const newNotes = [...state.notes];
-
-                deletedNotes.forEach((item) =>
-                    newNotes.splice(item.index, 0, item.note),
-                );
-
-                return {
-                    notes: newNotes,
-                    showUndo: false,
-                    deletedNotes: [],
-                    undoTimer: null,
-                };
-
-            });
+    //         await Promise.all(
+    //             deletedNotes.map((item) => restoreNoteApi(item.note.id)),
+    //         );
 
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         set((state) => {
 
-        } catch (error) {
+    //             const newNotes = [...state.notes];
 
-            console.error(error);
+    //             deletedNotes.forEach((item) =>
+    //                 newNotes.splice(item.index, 0, item.note),
+    //             );
 
-        }
-    },
+    //             return {
+    //                 notes: newNotes,
+    //                 showUndo: false,
+    //                 deletedNotes: [],
+    //                 undoTimer: null,
+    //             };
+
+    //         });
+
+
+    //         await useLabelStore.getState().fetchUsedLabels();
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // },
 
 
 
     // 選択した複数のノートをゴミ箱に移動する
-    moveSelectedToTrash: async (ids: number[]) => {
+    // moveSelectedToTrash: async (ids: number[]) => {
 
-        try {
-            // 削除対象のノートとそのインデックスを、削除前に取得する。
-            const deletedNotes = get()
-                .notes.map((note, index) => ({
-                    note: note,
-                    index: index,
-                }))
-                .filter((item) => ids.includes(item.note.id));
+    //     try {
+    //         // 削除対象のノートとそのインデックスを、削除前に取得する。
+    //         const deletedNotes = get()
+    //             .notes.map((note, index) => ({
+    //                 note: note,
+    //                 index: index,
+    //             }))
+    //             .filter((item) => ids.includes(item.note.id));
 
-            // 以前のタイマーがあれば削除
-            const oldTimer = get().undoTimer;
-            // console.log(`oldTimerの中身: ${oldTimer}`);
+    //         // 以前のタイマーがあれば削除
+    //         const oldTimer = get().undoTimer;
+    //         // console.log(`oldTimerの中身: ${oldTimer}`);
 
-            if (oldTimer) {
-                clearTimeout(oldTimer);
-            }
+    //         if (oldTimer) {
+    //             clearTimeout(oldTimer);
+    //         }
 
-            await Promise.all(ids.map((id) => moveToTrashApi(id)));
+    //         await Promise.all(ids.map((id) => moveToTrashApi(id)));
 
-            // 新しいタイマーを作る。5秒後にUndo終了
-            const timer = setTimeout(() => {
-                get().hideUndo();
-            }, 5000);
+    //         // 新しいタイマーを作る。5秒後にUndo終了
+    //         const timer = setTimeout(() => {
+    //             get().hideUndo();
+    //         }, 5000);
 
 
-            set((state) => ({
-                deletedNotes: deletedNotes,
-                showUndo: true,
-                undoTimer: timer,
+    //         set((state) => ({
+    //             deletedNotes: deletedNotes,
+    //             showUndo: true,
+    //             undoTimer: timer,
 
-                notes: state.notes.filter((note) => !ids.includes(note.id)),
-            }));
+    //             notes: state.notes.filter((note) => !ids.includes(note.id)),
+    //         }));
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         await useLabelStore.getState().fetchUsedLabels();
 
-        } catch (error) {
-            // get().setError(error);
+    //     } catch (error) {
+    //         // get().setError(error);
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
 
 
     // ノート単体を削除する
-    deleteNoteForever: async (id: number) => {
+    // deleteNoteForever: async (id: number) => {
 
-        try {
+    //     try {
 
-            await deleteNoteForeverApi(id);
+    //         await deleteNoteForeverApi(id);
 
-            set((state) => ({
-                notes: state.notes.filter((note) => note.id !== id),
-            }));
-
-
-            await useLabelStore.getState().fetchUsedLabels();
+    //         set((state) => ({
+    //             notes: state.notes.filter((note) => note.id !== id),
+    //         }));
 
 
-        } catch (error) {
-            // get().setError(error);
-
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
+    //         await useLabelStore.getState().fetchUsedLabels();
 
 
+    //     } catch (error) {
+    //         // get().setError(error);
 
-    // ゴミ箱にあるノートを復活させる
-    restoreNote: async (id: number) => {
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
-        try {
 
-            await restoreNoteApi(id);
 
-            set((state) => ({
-                notes: state.notes.filter((note) => note.id !== id),
-            }));
+    // // ゴミ箱にあるノートを復活させる
+    // restoreNote: async (id: number) => {
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //     try {
 
-        } catch (error) {
-            // get().setError(error);
+    //         await restoreNoteApi(id);
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
+    //         set((state) => ({
+    //             notes: state.notes.filter((note) => note.id !== id),
+    //         }));
+
+    //         await useLabelStore.getState().fetchUsedLabels();
+
+    //     } catch (error) {
+    //         // get().setError(error);
+
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
 
 
     // ゴミ箱内のノートをすべて削除する
-    emptyTrash: async () => {
+    // emptyTrash: async () => {
 
-        try {
+    //     try {
 
-            await emptyTrashApi();
+    //         await emptyTrashApi();
 
-            set({
-                notes: [],
-            });
+    //         set({
+    //             notes: [],
+    //         });
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         await useLabelStore.getState().fetchUsedLabels();
 
-        } catch (error) {
-            // get().setError(error);
+    //     } catch (error) {
+    //         // get().setError(error);
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
 
 

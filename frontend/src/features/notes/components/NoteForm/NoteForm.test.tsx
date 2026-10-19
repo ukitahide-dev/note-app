@@ -2,13 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, fireEvent, waitFor,  } from "@testing-library/react";
 import axios from "axios";
 
-import NoteForm from "../../features/notes/components/NoteForm/NoteForm";
+import NoteForm from "./NoteForm";
+
 
 
 const mockCreateNote = vi.fn();    // テスト用の偽物の関数を1個作っている。createNote の代わりになる偽物の関数を作った
 
 
-vi.mock("../../features/notes/store/useNoteStore", () => ({   // テスト中だけ、本物の useNoteStore の代わりに、mockCreateNote を使う、偽物の useNoteStore に差し替える
+vi.mock("../../store/useNoteStore", () => ({   // テスト中だけ、本物の useNoteStore の代わりに、mockCreateNote を使う、偽物の useNoteStore に差し替える
     useNoteStore: () => ({
         createNote: mockCreateNote,
     }),
@@ -118,7 +119,7 @@ describe("NoteForm", () => {   // describe("NoteForm", ...): ここからNoteFor
             screen.queryByPlaceholderText("タイトル")   // こっちは、もう一度取得しなおす。投稿後、タイトル欄はDOMから消えるから、投稿前に取得したtitleInputはDOMから消えてる。だから、改めて取得しなおす。
         ).not.toBeInTheDocument();
 
-       
+
 
 
     });

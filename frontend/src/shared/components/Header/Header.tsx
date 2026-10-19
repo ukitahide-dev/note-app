@@ -108,7 +108,6 @@ export default function Header({ onMenuClick }: Props) {
         return () => {
             document.removeEventListener(
                 "click",
-                // "mousedown",
                 handleClickOutside,
             );
         };
