@@ -17,8 +17,8 @@ import {
     incrementNoteViewApi,
     // moveToTrashApi,
     // reorderNoteImageApi,
-    reorderNotesApi,
-    reorderPinnedNotesApi,
+    // reorderNotesApi,
+    // reorderPinnedNotesApi,
     // restoreNoteApi,
     // updateNoteApi,
     // updateNoteColorApi,
@@ -46,6 +46,7 @@ import { createNoteFetchActions } from "./noteFetchActions";
 import { createNoteMutationActions } from "./noteMutationActions";
 import { createNoteSelectionActions } from "./noteSelectionActions";
 import { createNoteImageActions } from "./noteImageActions";
+import { createNoteOrderingActions } from "./noteOrderingActions";
 
 
 
@@ -260,7 +261,7 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     ...createNoteMutationActions(set, get, api),
     ...createNoteSelectionActions(set, get, api),
     ...createNoteImageActions(set, get, api),
-
+     ...createNoteOrderingActions(set, get, api),
 
     notes: [],
 
@@ -1580,61 +1581,61 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    reorderNotes: async (newNotes: Note[]) => {
-        const orders = newNotes.map((note) => note.order).sort((a, b) => a - b);
+    // reorderNotes: async (newNotes: Note[]) => {
+    //     const orders = newNotes.map((note) => note.order).sort((a, b) => a - b);
 
-        console.log(orders);
+    //     console.log(orders);
 
-        // Apiに渡すデータに変換するため、idとorderだけを抽出。
-        const reorderedNotes = newNotes.map((note, index) => ({
-            id: note.id,
-            order: orders[index],
-        }));
+    //     // Apiに渡すデータに変換するため、idとorderだけを抽出。
+    //     const reorderedNotes = newNotes.map((note, index) => ({
+    //         id: note.id,
+    //         order: orders[index],
+    //     }));
 
-        // フロントで更新するために、orderをここで書き換える。newNotesのままだと、orderが書き換えられていないから。
-        const updatedNotes = newNotes.map((note, index) => ({
-            ...note,
-            order: orders[index],
-        }));
+    //     // フロントで更新するために、orderをここで書き換える。newNotesのままだと、orderが書き換えられていないから。
+    //     const updatedNotes = newNotes.map((note, index) => ({
+    //         ...note,
+    //         order: orders[index],
+    //     }));
 
-        // const reorderedNotes = newNotes.map((note, index) => ({
+    //     // const reorderedNotes = newNotes.map((note, index) => ({
 
-        //     id: note.id,
-        //     order: index,
+    //     //     id: note.id,
+    //     //     order: index,
 
-        // }));
+    //     // }));
 
-        console.log(reorderedNotes);
+    //     console.log(reorderedNotes);
 
-        try {
-            await reorderNotesApi(reorderedNotes);
+    //     try {
+    //         await reorderNotesApi(reorderedNotes);
 
-            set({
-                notes: updatedNotes,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    },
+    //         set({
+    //             notes: updatedNotes,
+    //         });
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // },
 
 
 
-    reorderPinnedNotes: async (newPinnedNotes: Note[]) => {
-        const reorderedNotes = newPinnedNotes.map((note, index) => ({
-            id: note.id,
-            pinned_order: index,
-        }));
+    // reorderPinnedNotes: async (newPinnedNotes: Note[]) => {
+    //     const reorderedNotes = newPinnedNotes.map((note, index) => ({
+    //         id: note.id,
+    //         pinned_order: index,
+    //     }));
 
-        try {
-            await reorderPinnedNotesApi(reorderedNotes);
+    //     try {
+    //         await reorderPinnedNotesApi(reorderedNotes);
 
-            set({
-                pinnedNotes: newPinnedNotes,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    },
+    //         set({
+    //             pinnedNotes: newPinnedNotes,
+    //         });
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // },
 
 
 

@@ -132,19 +132,22 @@ export const createNoteImageActions: StateCreator<
         newImages: NoteImage[],
 
     ) => {
-        
+
         const reorderedImages = newImages.map((image, index) => ({
             id: image.id,
             order: index,
         }));
 
+
         try {
+            
             await reorderNoteImageApi(
                 noteId,
                 reorderedImages,
             );
 
             set((state) => ({
+
                 notes: state.notes.map((note) =>
                     note.id === noteId
                         ? {
@@ -163,6 +166,7 @@ export const createNoteImageActions: StateCreator<
                         : note,
                 ),
             }));
+
         } catch (error) {
             console.error(error);
         }
