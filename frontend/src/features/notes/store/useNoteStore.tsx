@@ -3,7 +3,7 @@ import type { Note, NoteImage } from "../../../types/api/note";
 import {
     // createNoteApi,
     // deleteNoteForeverApi,
-    deleteNoteImageApi,
+    // deleteNoteImageApi,
     // emptyTrashApi,
     // getAllNotesApi,
     // getCalendarDayNotesApi,
@@ -16,7 +16,7 @@ import {
     // getTrashNotesApi,
     incrementNoteViewApi,
     // moveToTrashApi,
-    reorderNoteImageApi,
+    // reorderNoteImageApi,
     reorderNotesApi,
     reorderPinnedNotesApi,
     // restoreNoteApi,
@@ -26,7 +26,7 @@ import {
     // updateNoteLabelsApi,
     // updateNotePinnedApi,
     updateNoteViewTimeApi,
-    uploadNoteImageApi,
+    // uploadNoteImageApi,
 } from "../api/noteApi";
 
 
@@ -45,6 +45,9 @@ import { createNoteTrashActions } from "./noteTrashActions";
 import { createNoteFetchActions } from "./noteFetchActions";
 import { createNoteMutationActions } from "./noteMutationActions";
 import { createNoteSelectionActions } from "./noteSelectionActions";
+import { createNoteImageActions } from "./noteImageActions";
+
+
 
 type DeletedNote = {
     note: Note;
@@ -256,7 +259,7 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     ...createNoteFetchActions(set, get, api),
     ...createNoteMutationActions(set, get, api),
     ...createNoteSelectionActions(set, get, api),
-
+    ...createNoteImageActions(set, get, api),
 
 
     notes: [],
@@ -1413,167 +1416,167 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    uploadNoteImage: async (
-        noteId: number,
-        file: File,
+    // uploadNoteImage: async (
+    //     noteId: number,
+    //     file: File,
 
-    ) => {
+    // ) => {
 
-        try {
+    //     try {
 
-            const uploadedImage = await uploadNoteImageApi(noteId, file);
+    //         const uploadedImage = await uploadNoteImageApi(noteId, file);
 
-            set(state => ({
-                notes: state.notes.map(note =>
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: [...note.images, uploadedImage]
-                        }
-                        : note
+    //         set(state => ({
+    //             notes: state.notes.map(note =>
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: [...note.images, uploadedImage]
+    //                     }
+    //                     : note
 
-                ),
+    //             ),
 
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: [...note.images, uploadedImage]
-                        }
-                        : note
-                ),
+    //             pinnedNotes: state.pinnedNotes.map(note =>
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: [...note.images, uploadedImage]
+    //                     }
+    //                     : note
+    //             ),
 
-                searchResultNotes: state.searchResultNotes.map(note =>
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: [...note.images, uploadedImage]
-                        }
-                        : note
+    //             searchResultNotes: state.searchResultNotes.map(note =>
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: [...note.images, uploadedImage]
+    //                     }
+    //                     : note
 
-                ),
+    //             ),
 
-            }));
+    //         }));
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
+    //         console.error(error);
 
-        }
-
-
-    },
+    //     }
 
 
-    // 各ノートが所持している画像を削除する
-    deleteNoteImage: async (
-        noteId: number,
-        imageId: number,
-
-    ) => {
-
-        try {
-
-            await deleteNoteImageApi(imageId);
-
-            set((state) => ({
-
-                notes: state.notes.map((note) =>
-
-                    note.id === noteId
-                        ? {
-                              ...note,
-                              images: note.images.filter(
-                                  (image) => image.id !== imageId,
-                              ),
-                          }
-                        : note,
-                ),
-
-                pinnedNotes: state.pinnedNotes.map(note =>
-
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: note.images.filter(
-                                image => image.id !== imageId
-                            ),
-                        }
-                        : note,
-
-                ),
-
-                searchResultNotes: state.searchResultNotes.map(note =>
-
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: note.images.filter(
-                                image => image.id !== imageId
-                            ),
-                        }
-                        : note,
-
-                ),
-
-            }));
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-    },
+    // },
 
 
+    // // 各ノートが所持している画像を削除する
+    // deleteNoteImage: async (
+    //     noteId: number,
+    //     imageId: number,
 
-    // ノートの画像並び順を更新する
-    updateNoteImageOrder: async (
-        noteId: number,
-        newImages: NoteImage[],
+    // ) => {
 
-    ) => {
+    //     try {
 
-        // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。API用データに変換している。
-        const reorderedImages = newImages.map((image, index) => ({
-            id: image.id,
-            order: index,
-        }));
+    //         await deleteNoteImageApi(imageId);
 
-        // console.log(`reorderedImages: ${reorderedImages}`);
+    //         set((state) => ({
 
-        try {
+    //             notes: state.notes.map((note) =>
 
-            await reorderNoteImageApi(noteId, reorderedImages);
+    //                 note.id === noteId
+    //                     ? {
+    //                           ...note,
+    //                           images: note.images.filter(
+    //                               (image) => image.id !== imageId,
+    //                           ),
+    //                       }
+    //                     : note,
+    //             ),
 
-            set((state) => ({
+    //             pinnedNotes: state.pinnedNotes.map(note =>
 
-                notes: state.notes.map((note) =>
-                    note.id === noteId
-                        ? {
-                              ...note,
-                              images: newImages,
-                          }
-                        : note,
-                ),
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: note.images.filter(
+    //                             image => image.id !== imageId
+    //                         ),
+    //                     }
+    //                     : note,
 
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === noteId
-                        ? {
-                            ...note,
-                            images: newImages,
-                        }
-                        : note,
-                ),
+    //             ),
 
-            }));
+    //             searchResultNotes: state.searchResultNotes.map(note =>
 
-        } catch (error) {
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: note.images.filter(
+    //                             image => image.id !== imageId
+    //                         ),
+    //                     }
+    //                     : note,
 
-            console.error(error);
+    //             ),
 
-        }
-    },
+    //         }));
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // },
+
+
+
+    // // ノートの画像並び順を更新する
+    // updateNoteImageOrder: async (
+    //     noteId: number,
+    //     newImages: NoteImage[],
+
+    // ) => {
+
+    //     // newImagesから、画像idだけ抽出し、orderにはindexを順番に割り当てる。API用データに変換している。
+    //     const reorderedImages = newImages.map((image, index) => ({
+    //         id: image.id,
+    //         order: index,
+    //     }));
+
+    //     // console.log(`reorderedImages: ${reorderedImages}`);
+
+    //     try {
+
+    //         await reorderNoteImageApi(noteId, reorderedImages);
+
+    //         set((state) => ({
+
+    //             notes: state.notes.map((note) =>
+    //                 note.id === noteId
+    //                     ? {
+    //                           ...note,
+    //                           images: newImages,
+    //                       }
+    //                     : note,
+    //             ),
+
+    //             pinnedNotes: state.pinnedNotes.map(note =>
+    //                 note.id === noteId
+    //                     ? {
+    //                         ...note,
+    //                         images: newImages,
+    //                     }
+    //                     : note,
+    //             ),
+
+    //         }));
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // },
 
 
 
