@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Note, NoteImage } from "../../../types/api/note";
 import {
-    createNoteApi,
+    // createNoteApi,
     // deleteNoteForeverApi,
     deleteNoteImageApi,
     // emptyTrashApi,
@@ -21,10 +21,10 @@ import {
     reorderPinnedNotesApi,
     // restoreNoteApi,
     // updateNoteApi,
-    updateNoteColorApi,
+    // updateNoteColorApi,
     // updateNoteFavoriteApi,
-    updateNoteLabelsApi,
-    updateNotePinnedApi,
+    // updateNoteLabelsApi,
+    // updateNotePinnedApi,
     updateNoteViewTimeApi,
     uploadNoteImageApi,
 } from "../api/noteApi";
@@ -32,7 +32,7 @@ import {
 
 // import { useErrorStore } from "../../../shared/stores/useErrorStore";
 
-import { useLabelStore } from "../../labels/store/labelStore";
+// import { useLabelStore } from "../../labels/store/labelStore";
 
 // import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
@@ -44,7 +44,7 @@ import type { DailyNoteCounts } from "../../../types/api/calendar";
 import { createNoteTrashActions } from "./noteTrashActions";
 import { createNoteFetchActions } from "./noteFetchActions";
 import { createNoteMutationActions } from "./noteMutationActions";
-
+import { createNoteSelectionActions } from "./noteSelectionActions";
 
 type DeletedNote = {
     note: Note;
@@ -255,6 +255,9 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     ...createNoteTrashActions(set, get, api),   // createNoteActionsを実行する。返ってくるのはオブジェクト。...でオブジェクトを展開。
     ...createNoteFetchActions(set, get, api),
     ...createNoteMutationActions(set, get, api),
+    ...createNoteSelectionActions(set, get, api),
+
+
 
     notes: [],
 
@@ -1196,93 +1199,93 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
     // 選択中のノートのピンを切り替える
-    updateSelectedNotePin: async (
-        noteIds: number[],
-        mode: "add" | "remove",
+    // updateSelectedNotePin: async (
+    //     noteIds: number[],
+    //     mode: "add" | "remove",
 
-    ) => {
+    // ) => {
 
-        const notes = get().notes;
-        const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
+    //     const notes = get().notes;
+    //     const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
 
-        try {
-            const updatedNotes = await Promise.all(
-                selectedNotes.map(async (note) => {
-                    return await updateNotePinnedApi(note.id, mode === "add");
-                }),
-            );
+    //     try {
+    //         const updatedNotes = await Promise.all(
+    //             selectedNotes.map(async (note) => {
+    //                 return await updateNotePinnedApi(note.id, mode === "add");
+    //             }),
+    //         );
 
-            set((state) => ({
-                notes: state.notes.map((note) => {
-                    const updatedNote = updatedNotes.find(
-                        (n) => n.id === note.id,
-                    );
+    //         set((state) => ({
+    //             notes: state.notes.map((note) => {
+    //                 const updatedNote = updatedNotes.find(
+    //                     (n) => n.id === note.id,
+    //                 );
 
-                    return updatedNote ?? note;
-                }),
-            }));
-        } catch (error) {
-            // get().setError(error);
-            console.error(error);
-        }
-    },
+    //                 return updatedNote ?? note;
+    //             }),
+    //         }));
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         console.error(error);
+    //     }
+    // },
 
 
 
 
     // 選択した複数のノートの色を変える
-    updateSelectedNoteColor: async (ids: number[], color: string) => {
+    // updateSelectedNoteColor: async (ids: number[], color: string) => {
 
-        try {
-            await Promise.all(ids.map((id) => updateNoteColorApi(id, color)));
+    //     try {
+    //         await Promise.all(ids.map((id) => updateNoteColorApi(id, color)));
 
-            set((state) => ({
-                notes: state.notes.map((note) =>
-                    ids.includes(note.id)
-                        ? {
-                              ...note, // noteはコピーして展開し、
-                              color, // 色だけ変更する
-                          }
-                        : note,
-                ),
-            }));
-        } catch (error) {
-            // get().setError(error);
-            console.error(error);
-        }
-    },
+    //         set((state) => ({
+    //             notes: state.notes.map((note) =>
+    //                 ids.includes(note.id)
+    //                     ? {
+    //                           ...note, // noteはコピーして展開し、
+    //                           color, // 色だけ変更する
+    //                       }
+    //                     : note,
+    //             ),
+    //         }));
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         console.error(error);
+    //     }
+    // },
 
 
 
-    // 選択した複数のノートをコピーする
-    duplicateSelectedNotes: async (ids: number[]) => {
+    // // 選択した複数のノートをコピーする
+    // duplicateSelectedNotes: async (ids: number[]) => {
 
-        const notes = get().notes;
+    //     const notes = get().notes;
 
-        try {
+    //     try {
 
-            const newNotes = await Promise.all(
-                notes
-                    .filter((note) => ids.includes(note.id))
-                    .map((note) =>
-                        createNoteApi(
-                            note.title,
-                            note.content,
-                            note.labels.map((label) => label.id),
-                            note.color,
-                        ),
-                    ),
-            );
+    //         const newNotes = await Promise.all(
+    //             notes
+    //                 .filter((note) => ids.includes(note.id))
+    //                 .map((note) =>
+    //                     createNoteApi(
+    //                         note.title,
+    //                         note.content,
+    //                         note.labels.map((label) => label.id),
+    //                         note.color,
+    //                     ),
+    //                 ),
+    //         );
 
-            set((state) => ({
-                notes: [...newNotes, ...state.notes],
-            }));
+    //         set((state) => ({
+    //             notes: [...newNotes, ...state.notes],
+    //         }));
 
-        } catch (error) {
-            // get().setError(error);
-            console.error(error);
-        }
-    },
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         console.error(error);
+    //     }
+    // },
 
 
 
@@ -1344,68 +1347,68 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
     // 選択中のノートのラベルを更新する
-    updateSelectedNoteLabels: async (
-        noteIds: number[],
-        labelId: number,
-        mode: "add" | "remove",
+    // updateSelectedNoteLabels: async (
+    //     noteIds: number[],
+    //     labelId: number,
+    //     mode: "add" | "remove",
 
-    ) => {
+    // ) => {
 
-        const notes = get().notes;
+    //     const notes = get().notes;
 
-        // noteIdsを使い、選択中のノートを抽出する。
-        const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
+    //     // noteIdsを使い、選択中のノートを抽出する。
+    //     const selectedNotes = notes.filter((note) => noteIds.includes(note.id));
 
-        try {
+    //     try {
 
-            const updatedNotes = await Promise.all(
-                // Promise.all() は、Promise.all(配列)の形じゃないとだめ。選択中の全ノートに対してラベル更新を同時に実行する。
+    //         const updatedNotes = await Promise.all(
+    //             // Promise.all() は、Promise.all(配列)の形じゃないとだめ。選択中の全ノートに対してラベル更新を同時に実行する。
 
-                selectedNotes.map(async (note) => {
+    //             selectedNotes.map(async (note) => {
 
-                    const currentIds = note.labels.map((label) => label.id);
+    //                 const currentIds = note.labels.map((label) => label.id);
 
-                    let newIds: number[];
+    //                 let newIds: number[];
 
-                    if (mode == "add") {
+    //                 if (mode == "add") {
 
-                        if (currentIds.includes(labelId)) {
-                            newIds = currentIds;
-                        } else {
-                            newIds = [labelId, ...currentIds];
-                        }
+    //                     if (currentIds.includes(labelId)) {
+    //                         newIds = currentIds;
+    //                     } else {
+    //                         newIds = [labelId, ...currentIds];
+    //                     }
 
-                    } else {
+    //                 } else {
 
-                        newIds = currentIds.filter((id) => id !== labelId);
+    //                     newIds = currentIds.filter((id) => id !== labelId);
 
-                    }
+    //                 }
 
-                    return await updateNoteLabelsApi(note.id, newIds);
+    //                 return await updateNoteLabelsApi(note.id, newIds);
 
-                }),
-            );
-
-
-            set((state) => ({
-                notes: state.notes.map((note) => {
-                    const updatedNote = updatedNotes.find(
-                        (n) => n.id === note.id,
-                    );
-
-                    return updatedNote ?? note;
-                }),
-            }));
+    //             }),
+    //         );
 
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         set((state) => ({
+    //             notes: state.notes.map((note) => {
+    //                 const updatedNote = updatedNotes.find(
+    //                     (n) => n.id === note.id,
+    //                 );
 
-        } catch (error) {
+    //                 return updatedNote ?? note;
+    //             }),
+    //         }));
 
-            console.error(error);
 
-        }
-    },
+    //         await useLabelStore.getState().fetchUsedLabels();
+
+    //     } catch (error) {
+
+    //         console.error(error);
+
+    //     }
+    // },
 
 
 
