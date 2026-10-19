@@ -1,33 +1,33 @@
 import { create } from "zustand";
 import type { Note, NoteImage } from "../../../types/api/note";
-import {
-    // createNoteApi,
-    // deleteNoteForeverApi,
-    // deleteNoteImageApi,
-    // emptyTrashApi,
-    // getAllNotesApi,
-    // getCalendarDayNotesApi,
-    // getDailyNoteCountsApi,
-    // getFavoriteNotesApi,
-    // getLabelNotesApi,
-    // getNotesApi,
-    // getPinnedNotesApi,
-    // getSearchNotesApi,
-    // getTrashNotesApi,
-    incrementNoteViewApi,
-    // moveToTrashApi,
-    // reorderNoteImageApi,
-    // reorderNotesApi,
-    // reorderPinnedNotesApi,
-    // restoreNoteApi,
-    // updateNoteApi,
-    // updateNoteColorApi,
-    // updateNoteFavoriteApi,
-    // updateNoteLabelsApi,
-    // updateNotePinnedApi,
-    updateNoteViewTimeApi,
-    // uploadNoteImageApi,
-} from "../api/noteApi";
+// import {
+//     // createNoteApi,
+//     // deleteNoteForeverApi,
+//     // deleteNoteImageApi,
+//     // emptyTrashApi,
+//     // getAllNotesApi,
+//     // getCalendarDayNotesApi,
+//     // getDailyNoteCountsApi,
+//     // getFavoriteNotesApi,
+//     // getLabelNotesApi,
+//     // getNotesApi,
+//     // getPinnedNotesApi,
+//     // getSearchNotesApi,
+//     // getTrashNotesApi,
+//     // incrementNoteViewApi,
+//     // moveToTrashApi,
+//     // reorderNoteImageApi,
+//     // reorderNotesApi,
+//     // reorderPinnedNotesApi,
+//     // restoreNoteApi,
+//     // updateNoteApi,
+//     // updateNoteColorApi,
+//     // updateNoteFavoriteApi,
+//     // updateNoteLabelsApi,
+//     // updateNotePinnedApi,
+//     // updateNoteViewTimeApi,
+//     // uploadNoteImageApi,
+// } from "../api/noteApi";
 
 
 // import { useErrorStore } from "../../../shared/stores/useErrorStore";
@@ -47,7 +47,7 @@ import { createNoteMutationActions } from "./noteMutationActions";
 import { createNoteSelectionActions } from "./noteSelectionActions";
 import { createNoteImageActions } from "./noteImageActions";
 import { createNoteOrderingActions } from "./noteOrderingActions";
-
+import { createNoteViewActions } from "./noteViewActions";
 
 
 type DeletedNote = {
@@ -261,7 +261,8 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     ...createNoteMutationActions(set, get, api),
     ...createNoteSelectionActions(set, get, api),
     ...createNoteImageActions(set, get, api),
-     ...createNoteOrderingActions(set, get, api),
+    ...createNoteOrderingActions(set, get, api),
+    ...createNoteViewActions(set, get, api),
 
     notes: [],
 
@@ -1639,79 +1640,79 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    incrementNoteView: async (noteId: number) => {
+//     incrementNoteView: async (noteId: number) => {
 
-        try {
+//         try {
 
-            const data = await incrementNoteViewApi(noteId);
-
-
-            set((state) => ({
-                notes: state.notes.map((note) =>
-                    note.id === noteId
-                        ? {
-                              ...note,
-                              view_count: data.view_count,
-                              // view_count: note.view_count + 1,
-                          }
-                        : note,
-                ),
-
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === noteId
-                        ? { ...note, view_count: data.view_count }
-                        : note,
-                ),
-
-                searchResultNotes: state.searchResultNotes.map(note =>
-                    note.id === noteId
-                        ? { ...note, view_count: data.view_count }
-                        : note,
-                ),
-
-            }));
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-    },
+//             const data = await incrementNoteViewApi(noteId);
 
 
+//             set((state) => ({
+//                 notes: state.notes.map((note) =>
+//                     note.id === noteId
+//                         ? {
+//                               ...note,
+//                               view_count: data.view_count,
+//                               // view_count: note.view_count + 1,
+//                           }
+//                         : note,
+//                 ),
 
-    updateNoteViewTime: async (noteId: number, seconds: number) => {
+//                 pinnedNotes: state.pinnedNotes.map(note =>
+//                     note.id === noteId
+//                         ? { ...note, view_count: data.view_count }
+//                         : note,
+//                 ),
 
-        try {
-            const data = await updateNoteViewTimeApi(noteId, seconds);
+//                 searchResultNotes: state.searchResultNotes.map(note =>
+//                     note.id === noteId
+//                         ? { ...note, view_count: data.view_count }
+//                         : note,
+//                 ),
 
-            set((state) => ({
-                notes: state.notes.map((note) =>
-                    note.id === noteId
-                        ? {
-                              ...note,
-                              total_view_seconds: data.total_view_seconds,
-                          }
-                        : note,
-                ),
+//             }));
 
-                pinnedNotes: state.pinnedNotes.map((note) =>
+//         } catch (error) {
 
-                    note.id === noteId
-                        ? {
-                              ...note,
-                              total_view_seconds: data.total_view_seconds,
-                          }
-                        : note,
+//             console.error(error);
 
-                ),
+//         }
+//     },
 
 
-            }));
 
-            // await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);
-        } catch (error) {
-            console.error(error);
-        }
-    },
+//     updateNoteViewTime: async (noteId: number, seconds: number) => {
+
+//         try {
+//             const data = await updateNoteViewTimeApi(noteId, seconds);
+
+//             set((state) => ({
+//                 notes: state.notes.map((note) =>
+//                     note.id === noteId
+//                         ? {
+//                               ...note,
+//                               total_view_seconds: data.total_view_seconds,
+//                           }
+//                         : note,
+//                 ),
+
+//                 pinnedNotes: state.pinnedNotes.map((note) =>
+
+//                     note.id === noteId
+//                         ? {
+//                               ...note,
+//                               total_view_seconds: data.total_view_seconds,
+//                           }
+//                         : note,
+
+//                 ),
+
+
+//             }));
+
+//             // await get().fetchNotes(get().currentPage, get().pageSize, get().ordering);
+//         } catch (error) {
+//             console.error(error);
+//         }
+//     },
 }));
