@@ -9,8 +9,10 @@ import styles from "./Pagination.module.css";
 
 
 type Props = {
+
     onPageChange: (
         page: number,
+
     ) => void;
 
     onPageSizeChange: (
@@ -141,7 +143,6 @@ export default function Pagination({
                             : styles.sizeButton
                     }
                     onClick={() => onPageSizeChange(size)}
-                    // onClick={() => setPageSize(size)}
                 >
                     {size}
                 </button>

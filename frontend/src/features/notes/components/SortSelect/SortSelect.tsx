@@ -18,7 +18,7 @@ type Props = {
 }
 
 
-// 親: NotesPage.tsx、
+// 親: NoteList, 
 
 export default function SortSelect({
     ordering,
@@ -26,10 +26,6 @@ export default function SortSelect({
     manualOrderValue,
 
 }: Props) {
-
-
-    
-
 
 
 

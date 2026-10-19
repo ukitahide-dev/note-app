@@ -5,15 +5,15 @@ import {
     // deleteNoteForeverApi,
     deleteNoteImageApi,
     // emptyTrashApi,
-    getAllNotesApi,
-    getCalendarDayNotesApi,
-    getDailyNoteCountsApi,
-    getFavoriteNotesApi,
-    getLabelNotesApi,
-    getNotesApi,
-    getPinnedNotesApi,
-    getSearchNotesApi,
-    getTrashNotesApi,
+    // getAllNotesApi,
+    // getCalendarDayNotesApi,
+    // getDailyNoteCountsApi,
+    // getFavoriteNotesApi,
+    // getLabelNotesApi,
+    // getNotesApi,
+    // getPinnedNotesApi,
+    // getSearchNotesApi,
+    // getTrashNotesApi,
     incrementNoteViewApi,
     // moveToTrashApi,
     reorderNoteImageApi,
@@ -42,6 +42,7 @@ import type { DailyNoteCounts } from "../../../types/api/calendar";
 
 
 import { createNoteTrashActions } from "./noteTrashActions";
+import { createNoteFetchActions } from "./noteFetchActions";
 
 
 type DeletedNote = {
@@ -78,7 +79,6 @@ export type NoteStore = {
     previous: string | null;
 
     currentView: "notes" | "favorite" | "label";
-
     setCurrentView: (
         view: "notes" |
         "favorite" |
@@ -89,12 +89,8 @@ export type NoteStore = {
     currentLabelName: string | null;
     setCurrentLabelName: (labelName: string | null) => void;
 
-
     searchParams: SearchParams;
-
-
     setSearchParams: (params: SearchParams) => void;
-
 
     pageSize: number;
     setPageSize: (size: number) => void;
@@ -113,9 +109,11 @@ export type NoteStore = {
 
     hideUndo: () => void;
 
+
     refreshSearchResults: (
 
     ) => Promise<void>;
+
 
     fetchNotes: (
         page?: number,
@@ -124,6 +122,7 @@ export type NoteStore = {
         labelName?: string,
 
     ) => Promise<void>;
+
 
     fetchPinnedNotes: (ordering?: string) => Promise<void>;
 
@@ -253,6 +252,7 @@ export type NoteStore = {
 export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
     ...createNoteTrashActions(set, get, api),   // createNoteActionsを実行する。返ってくるのはオブジェクト。...でオブジェクトを展開。
+    ...createNoteFetchActions(set, get, api),
 
     notes: [],
 
@@ -323,183 +323,183 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    refreshSearchResults: async () => {
+    // refreshSearchResults: async () => {
 
-        const {
-            searchParams,
-            currentPage,
-            pageSize,
-            ordering,
+    //     const {
+    //         searchParams,
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
 
-        } = get();
+    //     } = get();
 
-        const {
-            query,
-            labelName,
-            color,
-            month,
+    //     const {
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
 
-        } = searchParams;
-
-
-        if (!query && !labelName && !color && !month) {
-            return;
-        }
+    //     } = searchParams;
 
 
-        await get().searchNotes(
-            query,
-            labelName,
-            color,
-            month,
-            currentPage,
-            pageSize,
-            ordering,
-        );
-    },
+    //     if (!query && !labelName && !color && !month) {
+    //         return;
+    //     }
 
 
-
-
-    fetchNotes: async (
-        page = 1,    // pageが渡されなかったら1を使う。
-        pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
-
-        ordering = "order",
-
-
-    ) => {
-        // console.log(`pageSize: ${pageSize}`);
-
-        set({
-            isFetchtingNotes: true,
-        });
-
-        try {
-
-            const data = await getNotesApi(page, pageSize, ordering);
-
-            console.log(data);
-
-            set({
-                notes: data.results,
-                currentPage: page,
-                count: data.count,
-                next: data.next,
-                previous: data.previous,
-            });
-
-        } catch (error) {
-
-            useErrorStore.getState().setError(error);
-            console.error(error);
-
-        } finally {
-
-            set({
-                isFetchtingNotes: false,
-            });
-
-        }
-    },
+    //     await get().searchNotes(
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
+    //     );
+    // },
 
 
 
-    fetchPinnedNotes: async (ordering = "pinned_order") => {
 
-        try {
+    // fetchNotes: async (
+    //     page = 1,    // pageが渡されなかったら1を使う。
+    //     pageSize = get().pageSize,  // pageSizeが渡されなかったら、get().pageSizeを使う。
 
-            const data = await getPinnedNotesApi(ordering);
-
-            set({
-
-                pinnedNotes: data,
-
-            });
-
-        } catch (error) {
-
-            useErrorStore.getState().setError(error);
-            console.error(error);
-
-        }
-    },
+    //     ordering = "order",
 
 
+    // ) => {
+    //     // console.log(`pageSize: ${pageSize}`);
 
-    // 検索結果に合致するノートを取得する
-    searchNotes: async (
-        query,
-        labelName,
-        color,
-        month,
+    //     set({
+    //         isFetchtingNotes: true,
+    //     });
 
-        page = 1,
-        pageSize = get().pageSize,   // pageSizeが渡されなかったら、get().pageSizeを使う。
-        ordering = "order",
+    //     try {
 
-    ) => {
+    //         const data = await getNotesApi(page, pageSize, ordering);
 
-        const data = await getSearchNotesApi(
-            query,
-            labelName,
-            color,
-            month,
+    //         console.log(data);
 
-            page,
-            pageSize,
-            ordering,
-        );
+    //         set({
+    //             notes: data.results,
+    //             currentPage: page,
+    //             count: data.count,
+    //             next: data.next,
+    //             previous: data.previous,
+    //         });
 
-        // console.log("searchResultNotes:", data);
-        // console.log(`searchResultNotes: ${data}`)
+    //     } catch (error) {
 
-        set({
-            searchResultNotes: data.results,
-            searchParams: {
-                query,
-                labelName,
-                color,
-                month,
-            },
+    //         useErrorStore.getState().setError(error);
+    //         console.error(error);
 
-            currentPage: page,
-            count: data.count,
-            next: data.next,
-            previous: data.previous,
-        });
+    //     } finally {
 
-    },
+    //         set({
+    //             isFetchtingNotes: false,
+    //         });
+
+    //     }
+    // },
 
 
-    // いまぼところ、Calendar.tsxで使ってる。
-    fetchAllNotes: async () => {
 
-        set({
-            isFetchtingNotes: true,
-        });
+    // fetchPinnedNotes: async (ordering = "pinned_order") => {
+
+    //     try {
+
+    //         const data = await getPinnedNotesApi(ordering);
+
+    //         set({
+
+    //             pinnedNotes: data,
+
+    //         });
+
+    //     } catch (error) {
+
+    //         useErrorStore.getState().setError(error);
+    //         console.error(error);
+
+    //     }
+    // },
 
 
-        try {
 
-            const data = await getAllNotesApi();
+    // // 検索結果に合致するノートを取得する
+    // searchNotes: async (
+    //     query,
+    //     labelName,
+    //     color,
+    //     month,
 
-            console.log(data);
+    //     page = 1,
+    //     pageSize = get().pageSize,   // pageSizeが渡されなかったら、get().pageSizeを使う。
+    //     ordering = "order",
 
-            set({
-                notes: data.results,
-            });
-        } catch (error) {
-            // get().setError(error);
-            useErrorStore.getState().setError(error);
-            console.error(error);
+    // ) => {
 
-        } finally {
-            set({
-                isFetchtingNotes: false,
-            });
-        }
-    },
+    //     const data = await getSearchNotesApi(
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
+
+    //         page,
+    //         pageSize,
+    //         ordering,
+    //     );
+
+    //     // console.log("searchResultNotes:", data);
+    //     // console.log(`searchResultNotes: ${data}`)
+
+    //     set({
+    //         searchResultNotes: data.results,
+    //         searchParams: {
+    //             query,
+    //             labelName,
+    //             color,
+    //             month,
+    //         },
+
+    //         currentPage: page,
+    //         count: data.count,
+    //         next: data.next,
+    //         previous: data.previous,
+    //     });
+
+    // },
+
+
+    // // いまぼところ、Calendar.tsxで使ってる。
+    // fetchAllNotes: async () => {
+
+    //     set({
+    //         isFetchtingNotes: true,
+    //     });
+
+
+    //     try {
+
+    //         const data = await getAllNotesApi();
+
+    //         console.log(data);
+
+    //         set({
+    //             notes: data.results,
+    //         });
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         useErrorStore.getState().setError(error);
+    //         console.error(error);
+
+    //     } finally {
+    //         set({
+    //             isFetchtingNotes: false,
+    //         });
+    //     }
+    // },
 
 
 
@@ -518,15 +518,12 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     setOrdering: async (
         ordering: string,
 
-
     ) => {
 
         set({
             currentPage: 1,
             ordering: ordering,
         });
-
-        // await get().fetchNotes(1, get().pageSize, ordering);
 
     },
 
@@ -545,180 +542,180 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    fetchTrashNotes: async (
-        page = 1, // pageが渡されなかったら1を使う。
-        pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
-        ordering = "-created_at",
+    // fetchTrashNotes: async (
+    //     page = 1, // pageが渡されなかったら1を使う。
+    //     pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
+    //     ordering = "-created_at",
 
-    ) => {
+    // ) => {
 
-        set({
-            isFetchtingNotes: true,
-        });
+    //     set({
+    //         isFetchtingNotes: true,
+    //     });
 
-        try {
-            const data = await getTrashNotesApi(page, pageSize, ordering);
+    //     try {
+    //         const data = await getTrashNotesApi(page, pageSize, ordering);
 
-            set({
-                notes: data.results,
-                currentPage: page,
-                count: data.count,
-                next: data.next,
-                previous: data.previous,
-            });
+    //         set({
+    //             notes: data.results,
+    //             currentPage: page,
+    //             count: data.count,
+    //             next: data.next,
+    //             previous: data.previous,
+    //         });
 
-            // set({
-            //     notes: data
-            // });
-        } catch (error) {
-            // get().setError(error);
-            useErrorStore.getState().setError(error);
-            console.error(error);
-        } finally {
-            set({
-                isFetchtingNotes: false,
-            });
-        }
-    },
-
-
-
-    fetchFavoriteNotes: async (
-        page = 1, // pageが渡されなかったら1を使う。
-        pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
-        ordering = "-created_at",
-
-    ) => {
-
-        set({
-            isFetchtingNotes: true,
-        });
-
-
-        try {
-            // const data = await getNotesApi(page, pageSize, ordering);
-            const data = await getFavoriteNotesApi(page, pageSize, ordering);
-
-            console.log(data);
-
-            set({
-                notes: data.results,
-                currentPage: page,
-                count: data.count,
-                next: data.next,
-                previous: data.previous,
-            });
-
-            console.log(get().notes);
-
-        } catch (error) {
-
-            useErrorStore.getState().setError(error);
-            console.error(error);
-
-        } finally {
-
-            set({
-                isFetchtingNotes: false,
-            });
-
-        }
-    },
+    //         // set({
+    //         //     notes: data
+    //         // });
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         useErrorStore.getState().setError(error);
+    //         console.error(error);
+    //     } finally {
+    //         set({
+    //             isFetchtingNotes: false,
+    //         });
+    //     }
+    // },
 
 
 
+    // fetchFavoriteNotes: async (
+    //     page = 1, // pageが渡されなかったら1を使う。
+    //     pageSize = get().pageSize, // pageSizeが渡されなかったら、get().pageSizeを使う。
+    //     ordering = "-created_at",
+
+    // ) => {
+
+    //     set({
+    //         isFetchtingNotes: true,
+    //     });
 
 
-    fetchLabelNotes: async (
-        labelName,
-        page = 1,
-        pageSize = get().pageSize,
-        ordering = get().ordering,
+    //     try {
+    //         // const data = await getNotesApi(page, pageSize, ordering);
+    //         const data = await getFavoriteNotesApi(page, pageSize, ordering);
 
-    ) => {
+    //         console.log(data);
 
-        set({ isFetchtingNotes: true });
+    //         set({
+    //             notes: data.results,
+    //             currentPage: page,
+    //             count: data.count,
+    //             next: data.next,
+    //             previous: data.previous,
+    //         });
 
-        try {
+    //         console.log(get().notes);
 
-            const data = await getLabelNotesApi(
-                labelName,
-                page,
-                pageSize,
-                ordering,
-            );
+    //     } catch (error) {
 
-            set({
-                notes: data.results,
-                currentPage: page,
-                count: data.count,
-                next: data.next,
-                previous: data.previous,
-            });
+    //         useErrorStore.getState().setError(error);
+    //         console.error(error);
 
-        } finally {
+    //     } finally {
 
-            set({ isFetchtingNotes: false });
+    //         set({
+    //             isFetchtingNotes: false,
+    //         });
 
-        }
-    },
-
-
-
-    fetchDailyNoteCounts: async (
-        year: number,
-        month: number,
-
-    ) => {
-
-        const data = await getDailyNoteCountsApi(
-            year,
-            month,
-        );
-
-        set({
-            dailyNoteCounts: data,
-        });
-
-    },
+    //     }
+    // },
 
 
 
-    // その日付に投稿されたノートを取得する
-    fetchCalendarDayNotes: async (
-        date: string,
-
-    ) => {
 
 
+    // fetchLabelNotes: async (
+    //     labelName,
+    //     page = 1,
+    //     pageSize = get().pageSize,
+    //     ordering = get().ordering,
 
-        // const cachedNotes = get().calendarDayNotes[date];   // 日付のノート一覧は「同じ日を何度もホバーする」という明確な再利用があるので、キャッシュを作る。
+    // ) => {
 
-        // if (cachedNotes) {
-        //     return cachedNotes;
-        // };
+    //     set({ isFetchtingNotes: true });
+
+    //     try {
+
+    //         const data = await getLabelNotesApi(
+    //             labelName,
+    //             page,
+    //             pageSize,
+    //             ordering,
+    //         );
+
+    //         set({
+    //             notes: data.results,
+    //             currentPage: page,
+    //             count: data.count,
+    //             next: data.next,
+    //             previous: data.previous,
+    //         });
+
+    //     } finally {
+
+    //         set({ isFetchtingNotes: false });
+
+    //     }
+    // },
 
 
-        const data = await getCalendarDayNotesApi(date);
 
-        console.log(" getCalendarDayNotesApiが実行された");
+    // fetchDailyNoteCounts: async (
+    //     year: number,
+    //     month: number,
 
-        // set(state => ({
+    // ) => {
 
-        //     calendarDayNotes: {
-        //         ...state.calendarDayNotes,
-        //         [date]: data,
-        //     },
+    //     const data = await getDailyNoteCountsApi(
+    //         year,
+    //         month,
+    //     );
 
-        // }));
+    //     set({
+    //         dailyNoteCounts: data,
+    //     });
 
-        set({
-            calendarDayNotes: data,
-        });
+    // },
 
-        return data;
 
-    },
+
+    // // その日付に投稿されたノートを取得する
+    // fetchCalendarDayNotes: async (
+    //     date: string,
+
+    // ) => {
+
+
+
+    //     // const cachedNotes = get().calendarDayNotes[date];   // 日付のノート一覧は「同じ日を何度もホバーする」という明確な再利用があるので、キャッシュを作る。
+
+    //     // if (cachedNotes) {
+    //     //     return cachedNotes;
+    //     // };
+
+
+    //     const data = await getCalendarDayNotesApi(date);
+
+    //     console.log(" getCalendarDayNotesApiが実行された");
+
+    //     // set(state => ({
+
+    //     //     calendarDayNotes: {
+    //     //         ...state.calendarDayNotes,
+    //     //         [date]: data,
+    //     //     },
+
+    //     // }));
+
+    //     set({
+    //         calendarDayNotes: data,
+    //     });
+
+    //     return data;
+
+    // },
 
 
 
