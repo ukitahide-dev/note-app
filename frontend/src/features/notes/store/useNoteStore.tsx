@@ -20,9 +20,9 @@ import {
     reorderNotesApi,
     reorderPinnedNotesApi,
     // restoreNoteApi,
-    updateNoteApi,
+    // updateNoteApi,
     updateNoteColorApi,
-    updateNoteFavoriteApi,
+    // updateNoteFavoriteApi,
     updateNoteLabelsApi,
     updateNotePinnedApi,
     updateNoteViewTimeApi,
@@ -30,19 +30,20 @@ import {
 } from "../api/noteApi";
 
 
-import { useErrorStore } from "../../../shared/stores/useErrorStore";
+// import { useErrorStore } from "../../../shared/stores/useErrorStore";
 
 import { useLabelStore } from "../../labels/store/labelStore";
 
 // import { getApiErrorMessage } from "../../../shared/errors/apiError";
 
-import axios from "axios";
+// import axios from "axios";
 import type { DailyNoteCounts } from "../../../types/api/calendar";
 
 
 
 import { createNoteTrashActions } from "./noteTrashActions";
 import { createNoteFetchActions } from "./noteFetchActions";
+import { createNoteMutationActions } from "./noteMutationActions";
 
 
 type DeletedNote = {
@@ -253,6 +254,7 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
     ...createNoteTrashActions(set, get, api),   // createNoteActionsを実行する。返ってくるのはオブジェクト。...でオブジェクトを展開。
     ...createNoteFetchActions(set, get, api),
+    ...createNoteMutationActions(set, get, api),
 
     notes: [],
 
@@ -720,116 +722,116 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
     // 新規ノート作成。単体ノート複製もこのメソッドを使っている。
-    createNote: async (title, content, labels, color) => {
+    // createNote: async (title, content, labels, color) => {
 
-        try {
+    //     try {
 
-            const newNote = await createNoteApi(title, content, labels, color);
+    //         const newNote = await createNoteApi(title, content, labels, color);
 
-            set((state) => ({
+    //         set((state) => ({
 
-                notes: [newNote, ...state.notes],
+    //             notes: [newNote, ...state.notes],
 
-            }));
+    //         }));
 
-            await useLabelStore.getState().fetchUsedLabels();
+    //         await useLabelStore.getState().fetchUsedLabels();
 
-        } catch (error) {
+    //     } catch (error) {
 
-            console.error(error);
-            const status = error.response?.status;
-            console.log(`エラーステータス: ${status}`);
-            console.log("affwfw");
+    //         console.error(error);
+    //         const status = error.response?.status;
+    //         console.log(`エラーステータス: ${status}`);
+    //         console.log("affwfw");
 
-            useErrorStore.getState().setError(error);
+    //         useErrorStore.getState().setError(error);
 
-            // get().setError(error);
+    //         // get().setError(error);
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-            // set({
-            //     errorMessage: getApiErrorMessage(error)
-            // });
-        }
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //         // set({
+    //         //     errorMessage: getApiErrorMessage(error)
+    //         // });
+    //     }
 
-    },
-
-
+    // },
 
 
 
 
-    updateNote: async (id: number, title: string, content: string) => {
-
-        try {
-
-            const updatedNote = await updateNoteApi(Number(id), title, content);
-
-            set((state) => ({
-                notes: state.notes.map((note) =>
-                    note.id === updatedNote.id ? updatedNote : note,
-                ),
-
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === updatedNote.id ? updatedNote : note,
-                ),
-
-            }));
-
-        } catch (error) {
-            // get().setError(error);
-
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
 
 
+    // updateNote: async (id: number, title: string, content: string) => {
 
-    updateNoteColor: async (id: number, color: string) => {
+    //     try {
 
-        try {
+    //         const updatedNote = await updateNoteApi(Number(id), title, content);
 
-            const updatedNote = await updateNoteColorApi(id, color);
+    //         set((state) => ({
+    //             notes: state.notes.map((note) =>
+    //                 note.id === updatedNote.id ? updatedNote : note,
+    //             ),
 
-            set((state) => ({
+    //             pinnedNotes: state.pinnedNotes.map(note =>
+    //                 note.id === updatedNote.id ? updatedNote : note,
+    //             ),
 
-                notes: state.notes.map((note) =>
-                    note.id === updatedNote.id ? updatedNote : note,
-                ),
+    //         }));
 
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === updatedNote.id ? updatedNote : note,
-                ),
+    //     } catch (error) {
+    //         // get().setError(error);
 
-            }));
-
-            await get().refreshSearchResults();
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
 
 
-        } catch (error) {
-            // get().setError(error);
+    // updateNoteColor: async (id: number, color: string) => {
 
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-        }
-    },
+    //     try {
+
+    //         const updatedNote = await updateNoteColorApi(id, color);
+
+    //         set((state) => ({
+
+    //             notes: state.notes.map((note) =>
+    //                 note.id === updatedNote.id ? updatedNote : note,
+    //             ),
+
+    //             pinnedNotes: state.pinnedNotes.map(note =>
+    //                 note.id === updatedNote.id ? updatedNote : note,
+    //             ),
+
+    //         }));
+
+    //         await get().refreshSearchResults();
+
+
+
+    //     } catch (error) {
+    //         // get().setError(error);
+
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+    //     }
+    // },
 
     // Undoを閉じる
-    hideUndo: () => {
+    // hideUndo: () => {
 
-        const timer = get().undoTimer;
-        console.log(`timerの中身: ${timer}`);
+    //     const timer = get().undoTimer;
+    //     console.log(`timerの中身: ${timer}`);
 
-        if (timer) {
-            clearTimeout(timer);
-        }
+    //     if (timer) {
+    //         clearTimeout(timer);
+    //     }
 
-        set({
-            showUndo: false,
-            // deletedNote: null,
-            deletedNotes: [],
-            undoTimer: null,
-        });
-    },
+    //     set({
+    //         showUndo: false,
+    //         // deletedNote: null,
+    //         deletedNotes: [],
+    //         undoTimer: null,
+    //     });
+    // },
 
 
 
@@ -1076,120 +1078,120 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
     // お気に入りを切り替える
-    toggleFavorite: async (id: number, is_favorite: boolean) => {
+    // toggleFavorite: async (id: number, is_favorite: boolean) => {
 
-        const {
-            currentPage,
-            pageSize,
-            ordering,
-            currentView,
+    //     const {
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
+    //         currentView,
 
-        } = get();
+    //     } = get();
 
-        try {
+    //     try {
 
-            const updatedNote = await updateNoteFavoriteApi(id, !is_favorite);
+    //         const updatedNote = await updateNoteFavoriteApi(id, !is_favorite);
 
-            set((state) => ({
+    //         set((state) => ({
 
-                notes: state.notes.map((note) =>
-                    note.id === id ? updatedNote : note,
-                ),
+    //             notes: state.notes.map((note) =>
+    //                 note.id === id ? updatedNote : note,
+    //             ),
 
-                pinnedNotes: state.pinnedNotes.map((note) =>
-                    note.id === id ? updatedNote : note,
-                ),
+    //             pinnedNotes: state.pinnedNotes.map((note) =>
+    //                 note.id === id ? updatedNote : note,
+    //             ),
 
-                searchResultNotes: state.searchResultNotes.map(note =>
-                    note.id === id ? updatedNote : note,
-                ),
+    //             searchResultNotes: state.searchResultNotes.map(note =>
+    //                 note.id === id ? updatedNote : note,
+    //             ),
 
-            }));
-
-
-            // お気に入りページにいるときは、お気に入りトグルしたら、お気に入りノートを再取得する。お気に入りを解除したときに、そのノートが瞬時にお気に入り一覧から消えるようにするため。
-            if (currentView === "favorite") {
-
-                await get().fetchFavoriteNotes(
-                    currentPage,
-                    pageSize,
-                    ordering,
-                );
-
-            }
-
-            // await get().fetchFavoriteNotes(currentPage, pageSize, ordering,);
-
-        } catch (error) {
-
-            throw error; // 捕まえたエラーを、もう一度外側へ投げる。
-
-        }
-    },
+    //         }));
 
 
+    //         // お気に入りページにいるときは、お気に入りトグルしたら、お気に入りノートを再取得する。お気に入りを解除したときに、そのノートが瞬時にお気に入り一覧から消えるようにするため。
+    //         if (currentView === "favorite") {
 
-    // ピンのつけ外し
-    togglePin: async (
-        noteId: number,
-        is_pinned: boolean,
+    //             await get().fetchFavoriteNotes(
+    //                 currentPage,
+    //                 pageSize,
+    //                 ordering,
+    //             );
 
-    ) => {
+    //         }
 
-        const {
-            // searchParams,
-            currentPage,
-            pageSize,
-            ordering,
-            pinnedOrdering,
+    //         // await get().fetchFavoriteNotes(currentPage, pageSize, ordering,);
 
-            currentView,
-            currentLabelName,
+    //     } catch (error) {
 
-        } = get();
+    //         throw error; // 捕まえたエラーを、もう一度外側へ投げる。
+
+    //     }
+    // },
 
 
 
-        try {
+    // // ピンのつけ外し
+    // togglePin: async (
+    //     noteId: number,
+    //     is_pinned: boolean,
 
-            // const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
-            const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
+    // ) => {
 
-            await get().fetchPinnedNotes(pinnedOrdering);
+    //     const {
+    //         // searchParams,
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
+    //         pinnedOrdering,
 
+    //         currentView,
+    //         currentLabelName,
 
-            if (currentView === "notes") {
-
-                await get().fetchNotes(currentPage, pageSize, ordering,);
-
-            };
-
-
-            if (currentView === "label" && currentLabelName) {
-
-                await get().fetchLabelNotes(currentLabelName, currentPage, pageSize, ordering,);
-
-            };
+    //     } = get();
 
 
-            set((state) => ({
 
-                notes: state.notes.map((note) =>
-                    note.id === noteId ? updatedNote : note,
-                ),
+    //     try {
 
-                pinnedNotes: state.pinnedNotes.map((note) =>
-                    note.id === noteId ? updatedNote : note,
-                ),
+    //         // const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
+    //         const updatedNote = await updateNotePinnedApi(noteId, !is_pinned);
 
-            }));
+    //         await get().fetchPinnedNotes(pinnedOrdering);
 
-        } catch (error) {
-            // get().setError(error);
-            console.error(error);
 
-        }
-    },
+    //         if (currentView === "notes") {
+
+    //             await get().fetchNotes(currentPage, pageSize, ordering,);
+
+    //         };
+
+
+    //         if (currentView === "label" && currentLabelName) {
+
+    //             await get().fetchLabelNotes(currentLabelName, currentPage, pageSize, ordering,);
+
+    //         };
+
+
+    //         set((state) => ({
+
+    //             notes: state.notes.map((note) =>
+    //                 note.id === noteId ? updatedNote : note,
+    //             ),
+
+    //             pinnedNotes: state.pinnedNotes.map((note) =>
+    //                 note.id === noteId ? updatedNote : note,
+    //             ),
+
+    //         }));
+
+    //     } catch (error) {
+    //         // get().setError(error);
+    //         console.error(error);
+
+    //     }
+    // },
 
 
 
@@ -1285,59 +1287,59 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
     // ノートについているラベルを更新する
-    updateNoteLabels: async (noteId: number, labelIds: number[]) => {
+    // updateNoteLabels: async (noteId: number, labelIds: number[]) => {
 
-        try {
+    //     try {
 
-            const updatedNote = await updateNoteLabelsApi(noteId, labelIds);
+    //         const updatedNote = await updateNoteLabelsApi(noteId, labelIds);
 
-            set((state) => ({
+    //         set((state) => ({
 
-                notes: state.notes.map((note) =>
-                    note.id === noteId ? updatedNote : note,
-                ),
+    //             notes: state.notes.map((note) =>
+    //                 note.id === noteId ? updatedNote : note,
+    //             ),
 
-                pinnedNotes: state.pinnedNotes.map(note =>
-                    note.id === noteId ? updatedNote : note,
-                ),
+    //             pinnedNotes: state.pinnedNotes.map(note =>
+    //                 note.id === noteId ? updatedNote : note,
+    //             ),
 
-            }));
-
-
-            await get().refreshSearchResults();
-
-            await useLabelStore.getState().fetchUsedLabels();
-
-            // const { searchParams } = get();
-
-            //  if (
-            //     searchParams.query ||
-            //     searchParams.labelName ||
-            //     searchParams.color
-            // ) {
-            //     await get().searchNotes(
-            //         searchParams.query,
-            //         searchParams.labelName,
-            //         searchParams.color,
-            //         get().currentPage,
-            //         get().pageSize,
-            //         get().ordering,
-            //     );
-            // }
+    //         }));
 
 
+    //         await get().refreshSearchResults();
+
+    //         await useLabelStore.getState().fetchUsedLabels();
+
+    //         // const { searchParams } = get();
+
+    //         //  if (
+    //         //     searchParams.query ||
+    //         //     searchParams.labelName ||
+    //         //     searchParams.color
+    //         // ) {
+    //         //     await get().searchNotes(
+    //         //         searchParams.query,
+    //         //         searchParams.labelName,
+    //         //         searchParams.color,
+    //         //         get().currentPage,
+    //         //         get().pageSize,
+    //         //         get().ordering,
+    //         //     );
+    //         // }
 
 
 
-        } catch (error) {
 
-            if (axios.isAxiosError(error)) {
-                console.error("response data:", error.response?.data);
-                console.error("response status:", error.response?.status);
-            }
 
-        }
-    },
+    //     } catch (error) {
+
+    //         if (axios.isAxiosError(error)) {
+    //             console.error("response data:", error.response?.data);
+    //             console.error("response status:", error.response?.status);
+    //         }
+
+    //     }
+    // },
 
 
 
