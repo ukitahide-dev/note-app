@@ -53,11 +53,13 @@ export const createNoteTrashActions: StateCreator<
     moveToTrash: async (id: number) => {
 
         try {
-            
+
+            // 削除対象のノートを、削除前に取得する。
             const deletedNote = get().notes.find(
                 (note) => note.id === id
             );
 
+            // 削除対象のノートのインデックスを、削除前に取得する。
             const deletedIndex = get().notes.findIndex(
                 (note) => note.id === id
             );
@@ -71,10 +73,18 @@ export const createNoteTrashActions: StateCreator<
             await moveToTrashApi(id);
 
             set((state) => ({
+
+                deletedNote: {  // このdeletedNote: Storeで定義したもの。
+                     note: deletedNote,    // このdeletedNote: 上で定義した変数。削除対象のノートをStoreで保存しておく。
+                    index: deletedIndex,
+
+                },
+
                 deletedNotes: [
                     { note: deletedNote, index: deletedIndex },
                 ],
                 showUndo: true,
+
                 notes: state.notes.filter(
                     (note) => note.id !== id
                 ),
@@ -96,7 +106,9 @@ export const createNoteTrashActions: StateCreator<
 
 
     moveSelectedToTrash: async (ids: number[]) => {
+
         try {
+            
             const deletedNotes = get().notes
                 .map((note, index) => ({ note, index }))
                 .filter((item) => ids.includes(item.note.id));

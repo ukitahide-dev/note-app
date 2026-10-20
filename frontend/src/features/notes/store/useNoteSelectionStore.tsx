@@ -59,7 +59,7 @@ export const useNoteSelectionStore = create<NoteSelectionStore>((set) => ({
                     ? state.selectedNoteIds.filter(
                         (noteId) => noteId !== id
                     )
-                    
+
                     : [
 
                         id,

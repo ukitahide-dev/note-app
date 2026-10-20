@@ -48,6 +48,7 @@ import { createNoteSelectionActions } from "./noteSelectionActions";
 import { createNoteImageActions } from "./noteImageActions";
 import { createNoteOrderingActions } from "./noteOrderingActions";
 import { createNoteViewActions } from "./noteViewActions";
+import { createNoteSearchActions } from "./noteSearchActions";
 
 
 type DeletedNote = {
@@ -263,15 +264,12 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     ...createNoteImageActions(set, get, api),
     ...createNoteOrderingActions(set, get, api),
     ...createNoteViewActions(set, get, api),
+    ...createNoteSearchActions(set, get, api),
 
     notes: [],
-
     pinnedNotes: [],
-
     searchResultNotes: [],
-
     calendarDayNotes: [],
-    // calendarDayNotes: {},
 
     dailyNoteCounts: [],
 
@@ -281,7 +279,6 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     previous: null,
 
     pageSize: 20,
-
 
     ordering: "order",
 
@@ -310,13 +307,13 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
     },
 
 
-    setSearchParams: (params: SearchParams) => {
+    // setSearchParams: (params: SearchParams) => {
 
-        set({
-            searchParams: params,
-        });
+    //     set({
+    //         searchParams: params,
+    //     });
 
-    },
+    // },
 
 
     pinnedOrdering: "pinned_order",
@@ -525,30 +522,30 @@ export const useNoteStore = create<NoteStore>((set, get, api) => ({
 
 
 
-    setOrdering: async (
-        ordering: string,
+    // setOrdering: async (
+    //     ordering: string,
 
-    ) => {
+    // ) => {
 
-        set({
-            currentPage: 1,
-            ordering: ordering,
-        });
+    //     set({
+    //         currentPage: 1,
+    //         ordering: ordering,
+    //     });
 
-    },
-
-
+    // },
 
 
-    setPinnedOrdering: async (ordering) => {
 
-        set({
-            pinnedOrdering: ordering,
-        });
 
-        // await get().fetchPinnedNotes(ordering);
+    // setPinnedOrdering: async (ordering) => {
 
-    },
+    //     set({
+    //         pinnedOrdering: ordering,
+    //     });
+
+    //     // await get().fetchPinnedNotes(ordering);
+
+    // },
 
 
 

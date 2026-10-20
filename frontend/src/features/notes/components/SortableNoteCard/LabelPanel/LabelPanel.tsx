@@ -24,6 +24,8 @@ type Props = {
 
 // 親: NoteCard、NoteDetailModal、Header
 
+
+
 export default function LabelPanel({
     labelPanelRef,
     labelStates,

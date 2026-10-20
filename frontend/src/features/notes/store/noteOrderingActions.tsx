@@ -9,8 +9,11 @@ import {
 
 
 type NoteOrderingActionNames =
+    | "setOrdering"
+    | "setPinnedOrdering"
     | "reorderNotes"
     | "reorderPinnedNotes";
+
 
 
 export const createNoteOrderingActions: StateCreator<
@@ -18,7 +21,24 @@ export const createNoteOrderingActions: StateCreator<
     [],
     [],
     Pick<NoteStore, NoteOrderingActionNames>
+
 > = (set) => ({
+
+
+    setOrdering: async (ordering: string) => {
+        set({
+            currentPage: 1,
+            ordering: ordering,
+        });
+    },
+
+    setPinnedOrdering: async (ordering: string) => {
+        set({
+            pinnedOrdering: ordering,
+        });
+
+        // await get().fetchPinnedNotes(ordering);
+    },
 
 
     reorderNotes: async (newNotes: Note[]) => {
@@ -42,7 +62,7 @@ export const createNoteOrderingActions: StateCreator<
         try {
             await reorderNotesApi(reorderedNotes);
             set({ notes: updatedNotes });
-            
+
         } catch (error) {
             console.error(error);
         }

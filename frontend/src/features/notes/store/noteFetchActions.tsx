@@ -19,10 +19,10 @@ import { useErrorStore } from "../../../shared/stores/useErrorStore";
 
 // NoteStore の中から、今回分割する10個のアクション名だけを取り出すための型
 type FetchActionNames =
-    | "refreshSearchResults"
+    // | "refreshSearchResults"
     | "fetchNotes"
     | "fetchPinnedNotes"
-    | "searchNotes"
+    // | "searchNotes"
     | "fetchAllNotes"
     | "fetchTrashNotes"
     | "fetchFavoriteNotes"
@@ -42,41 +42,41 @@ export const createNoteFetchActions: StateCreator<
 > = (set, get) => ({
 
 
-    refreshSearchResults: async () => {
+    // refreshSearchResults: async () => {
 
-        const {
-            searchParams,
-            currentPage,
-            pageSize,
-            ordering,
+    //     const {
+    //         searchParams,
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
 
-        } = get();
-
-
-        const {
-            query,
-            labelName,
-            color,
-            month,
-
-        } = searchParams;
+    //     } = get();
 
 
-        if (!query && !labelName && !color && !month) {
-            return;
-        }
+    //     const {
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
 
-        await get().searchNotes(
-            query,
-            labelName,
-            color,
-            month,
-            currentPage,
-            pageSize,
-            ordering,
-        );
+    //     } = searchParams;
 
-    },
+
+    //     if (!query && !labelName && !color && !month) {
+    //         return;
+    //     }
+
+    //     await get().searchNotes(
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
+    //         currentPage,
+    //         pageSize,
+    //         ordering,
+    //     );
+
+    // },
 
 
 
@@ -145,42 +145,43 @@ export const createNoteFetchActions: StateCreator<
         }
     },
 
+
     // 検索結果に合致するノートを取得する
-    searchNotes: async (
-        query,
-        labelName,
-        color,
-        month,
-        page = 1,
-        pageSize = get().pageSize,
-        ordering = "order",
+    // searchNotes: async (
+    //     query,
+    //     labelName,
+    //     color,
+    //     month,
+    //     page = 1,
+    //     pageSize = get().pageSize,
+    //     ordering = "order",
 
-    ) => {
+    // ) => {
 
-        const data = await getSearchNotesApi(
-            query,
-            labelName,
-            color,
-            month,
-            page,
-            pageSize,
-            ordering,
-        );
+    //     const data = await getSearchNotesApi(
+    //         query,
+    //         labelName,
+    //         color,
+    //         month,
+    //         page,
+    //         pageSize,
+    //         ordering,
+    //     );
 
-        set({
-            searchResultNotes: data.results,
-            searchParams: {
-                query,
-                labelName,
-                color,
-                month,
-            },
-            currentPage: page,
-            count: data.count,
-            next: data.next,
-            previous: data.previous,
-        });
-    },
+    //     set({
+    //         searchResultNotes: data.results,
+    //         searchParams: {
+    //             query,
+    //             labelName,
+    //             color,
+    //             month,
+    //         },
+    //         currentPage: page,
+    //         count: data.count,
+    //         next: data.next,
+    //         previous: data.previous,
+    //     });
+    // },
 
 
     // Calendar.tsx で使用

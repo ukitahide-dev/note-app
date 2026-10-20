@@ -14,7 +14,15 @@ import type { LabelState } from "../../../../types/ui/label";
 export function useSelectedNoteLabels() {
 
     // Store
-    const { notes, updateSelectedNoteLabels } = useNoteStore();
+    const {
+        notes,
+        pinnedNotes,
+        searchResultNotes,
+        calendarDayNotes,
+        updateSelectedNoteLabels
+
+    } = useNoteStore();
+
 
     // Store
     const { selectedNoteIds } = useNoteSelectionStore();
@@ -23,8 +31,28 @@ export function useSelectedNoteLabels() {
     const { labels } = useLabelStore();
 
 
-    const selectedNotes = notes.filter((note) =>
-        selectedNoteIds.includes(note.id),
+    // 各一覧のノートをまとめる
+    const allNotes = [
+        ...notes,
+        ...pinnedNotes,
+        ...searchResultNotes,
+        ...calendarDayNotes,
+    ];
+
+
+    // これだと、notesの中からしかノートを探せない。洗濯したノートがpinnedNotesの場合、除外される。
+    // const selectedNotes = notes.filter((note) =>
+    //     selectedNoteIds.includes(note.id),
+    // );
+
+
+    // 選択中のノートを取得し、ID の重複を除外する
+    const selectedNotes = Array.from(  // Array.from(): 配列に変換するメソッド。
+        new Map(
+            allNotes
+                .filter((note) => selectedNoteIds.includes(note.id))
+                .map((note) => [note.id, note]),
+        ).values(),
     );
 
 
@@ -32,8 +60,9 @@ export function useSelectedNoteLabels() {
     const labelStates: LabelState[] = labels.map((label) => {
         // => {} と書いた場合は、アロー関数のこと。{}には関数内の処理を書く。 => ({})のように、()で囲むのは、省略記法。今回はifとか使いたいから、{}で、関数内の処理として書く必要がある。
 
+
         const count = selectedNotes.filter(
-            (note) => note.labels.some((l) => l.id === label.id), // 選択中のノートが、今見ているラベルを所持しているかを調べる。
+            (note) => note.labels.some((l) => l.id === label.id),  // 選択中のノートが、今見ているラベルを所持しているかを調べる。
         ).length;
 
 
@@ -59,7 +88,10 @@ export function useSelectedNoteLabels() {
 
 
 
-    const handleSelectLabel = (labelId: number) => {
+    const handleSelectLabel = (
+        labelId: number
+
+    ) => {
 
         // const labelState = labelStates.find((l) => l.id === labelId)!; // 選択したラベルの状態を抽出する・!はTypescriptに、この値は絶対にnullやundefinedではないことを教える。!消すとlabelStateに赤線出る。
 

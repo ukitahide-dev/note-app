@@ -32,6 +32,10 @@ type Props = {
     onMenuClick: () => void; // onMenuClickプロパティの型は関数型という意味。
 };
 
+
+
+
+
 export default function Header({ onMenuClick }: Props) {
     // 分割代入でpropsからonMenuClickを取り出している。props全体の型はProps。
 
@@ -45,12 +49,16 @@ export default function Header({ onMenuClick }: Props) {
 
     const paletteRef = useRef<HTMLDivElement | null>(null);
 
+
+
     // Store
     const {
-        selectedNoteIds, // SelectedNotesの計算と、Headerの表示切替に使う。
+        selectedNoteIds,  // SelectedNotesの計算と、Headerの表示切替に使う。
         previewColor,
         setPreviewColor,
+
     } = useNoteSelectionStore();
+
 
     // Store
     const {
@@ -60,37 +68,51 @@ export default function Header({ onMenuClick }: Props) {
 
         searchParams,
         setSearchParams,
+
     } = useNoteStore();
 
+
     // hooks
-    const { labelStates, handleSelectLabel } = useSelectedNoteLabels();
+    const {
+        selectedNotes,
+        labelStates,
+        handleSelectLabel,
+
+    } = useSelectedNoteLabels();
 
     // hooks
     const { handleMoveToTrash, handleDuplicateNotes } =
         useSelectedNoteActions();
 
-    const selectedNotes = notes.filter((note) =>
-        selectedNoteIds.includes(note.id),
-    );
+
+
+    // const selectedNotes = notes.filter((note) =>
+    //     selectedNoteIds.includes(note.id),
+    // );
 
     const pinnedState = selectedNotes.some((note) => !note.is_pinned)
         ? "add"
         : "remove";
-    // console.log(pinnedState)
+
+
 
     const handleSaveSelectedColor = async () => {
+
         setPanelType(null);
 
-        if (!previewColor) return; // previewColorがnullの場合は、ここで処理を止める。
+        if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。
 
         updateSelectedNoteColor(selectedNoteIds, previewColor);
 
         // clearSelection();  // これ書くとバグる
     };
 
+
     // 外クリック処理
     useEffect(() => {
+
         const handleClickOutside = (event: MouseEvent) => {
+
             if (
                 !paletteRef.current ||
                 !paletteRef.current.contains(event.target as Node)
@@ -98,6 +120,7 @@ export default function Header({ onMenuClick }: Props) {
                 handleSaveSelectedColor();
             }
         };
+
 
         document.addEventListener(
             "click",
@@ -111,12 +134,18 @@ export default function Header({ onMenuClick }: Props) {
                 handleClickOutside,
             );
         };
+
     }, [previewColor]); // previewColorを書かないと、previewColorの値が初回マウント時のまま、外クリックイベントに登録されてしまう。
 
+
+
     return (
+
         <>
             {selectedNoteIds.length > 0 ? (
+
                 <header className={styles.header}>
+
                     <h1 className={styles.logo}>
                         {selectedNoteIds.length}件を選択中
                     </h1>
@@ -153,12 +182,13 @@ export default function Header({ onMenuClick }: Props) {
 
                         <button
                             onClick={(e) => {
-                                e.stopPropagation(); // これがないとdocumentにクリックが伝播してバグる
+                                e.stopPropagation();   // これがないとdocumentにクリックが伝播してバグる
                                 setPanelType("menu");
                             }}
                         >
                             ⋮
                         </button>
+
                     </div>
 
                     {panelType === "color" && (
@@ -189,7 +219,9 @@ export default function Header({ onMenuClick }: Props) {
                         />
                     )}
                 </header>
+
             ) : (
+
                 <header className={styles.header}>
                     <button className={styles.menuButton} onClick={onMenuClick}>
                         ☰
