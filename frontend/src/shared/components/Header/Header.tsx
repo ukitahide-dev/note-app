@@ -48,14 +48,15 @@ export default function Header({ onMenuClick }: Props) {
     const navigate = useNavigate();
 
     const paletteRef = useRef<HTMLDivElement | null>(null);
-
+    const headerRef = useRef<HTMLDivElement | null>(null);
 
 
     // Store
     const {
-        selectedNoteIds,  // SelectedNotesの計算と、Headerの表示切替に使う。
+        selectedNoteIds,   // SelectedNotesの計算と、Headerの表示切替に使う。
         previewColor,
         setPreviewColor,
+        clearSelection,
 
     } = useNoteSelectionStore();
 
@@ -102,46 +103,119 @@ export default function Header({ onMenuClick }: Props) {
 
         if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。
 
-        updateSelectedNoteColor(selectedNoteIds, previewColor);
+        await updateSelectedNoteColor(selectedNoteIds, previewColor);   // Zustand の色更新処理が終わるまで待つ。
 
-        // clearSelection();  // これ書くとバグる
     };
 
 
     // 外クリック処理
     useEffect(() => {
 
-        const handleClickOutside = (event: MouseEvent) => {
+        const handleClickOutside = async (event: MouseEvent) => {
 
-            if (
+            const target = event.target as Node;
+
+            const clickedOutsidePalette =
                 !paletteRef.current ||
-                !paletteRef.current.contains(event.target as Node)
-            ) {
-                handleSaveSelectedColor();
+                !paletteRef.current.contains(target);
+
+            const clickedOutsideHeader =
+                headerRef.current &&
+                !headerRef.current.contains(target);
+
+
+            // カラーパレットの外をクリックした場合
+            if (panelType === "color" && clickedOutsidePalette) {
+
+                const savePromise = handleSaveSelectedColor();
+
+                // ヘッダーの外なら、保存完了後に選択を解除する
+                if (clickedOutsideHeader) {
+                    await savePromise;   // 色の保存処理全体が終わるまで待つ。これで、NoteCardのtempColorに、先に更新後の色が入るようになる。色変更後に、外クリック処理で、一瞬だけ元の色がちらつくバグを防げる。
+                    clearSelection();   // 保存処理とsetでの更新が終わってから、selectedNoteIdsを空にする。
+                }
+
+                return;
+            }
+
+            // ヘッダーの外をクリックした場合
+            if (clickedOutsideHeader) {
+                clearSelection();
             }
         };
 
-
-        document.addEventListener(
-            "click",
-            // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
-            handleClickOutside,
-        );
+        document.addEventListener("click", handleClickOutside);
 
         return () => {
-            document.removeEventListener(
-                "click",
-                handleClickOutside,
-            );
+            document.removeEventListener("click", handleClickOutside);
         };
 
-    }, [previewColor]); // previewColorを書かないと、previewColorの値が初回マウント時のまま、外クリックイベントに登録されてしまう。
+    }, [
+        panelType,
+        handleSaveSelectedColor,
+        clearSelection,
+    ]);
 
+
+    // 外クリック処理
+    // useEffect(() => {
+
+    //     const handleClickOutside = (event: MouseEvent) => {
+
+    //         if (
+    //             !paletteRef.current ||
+    //             !paletteRef.current.contains(event.target as Node)
+    //         ) {
+    //             handleSaveSelectedColor();
+    //         }
+    //     };
+
+
+    //     document.addEventListener(
+    //         "click",
+    //         // "mousedown",  mousedownにすると、LabelPanelが開かなくなる。reactのクリックイベントよりも先に実行され、LabelPanelRefが存在しない状態になり、handleClickOutsideの条件に引っかかるから。
+    //         handleClickOutside,
+    //     );
+
+    //     return () => {
+    //         document.removeEventListener(
+    //             "click",
+    //             handleClickOutside,
+    //         );
+    //     };
+
+    // }, [previewColor]); // previewColorを書かないと、previewColorの値が初回マウント時のまま、外クリックイベントに登録されてしまう。
+
+
+
+
+    // useEffect(() => {
+
+    //     const handleClickOutside = (event: MouseEvent) => {
+
+    //         if (
+    //             headerRef.current &&
+    //             !headerRef.current.contains(event.target as Node)
+    //         ) {
+    //             clearSelection();
+    //         }
+    //     };
+
+
+    //     document.addEventListener("click", handleClickOutside);
+
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+
+
+    // }, [clearSelection]);
 
 
     return (
 
-        <>
+        <div ref={headerRef}>
+
             {selectedNoteIds.length > 0 ? (
 
                 <header className={styles.header}>
@@ -218,11 +292,13 @@ export default function Header({ onMenuClick }: Props) {
                             onSelectLabel={handleSelectLabel}
                         />
                     )}
+
                 </header>
 
             ) : (
 
                 <header className={styles.header}>
+
                     <button className={styles.menuButton} onClick={onMenuClick}>
                         ☰
                     </button>
@@ -266,8 +342,9 @@ export default function Header({ onMenuClick }: Props) {
 
                         {isAccountMenuOpen && <AccountMenu />}
                     </div>
+
                 </header>
             )}
-        </>
+        </div>
     );
 }

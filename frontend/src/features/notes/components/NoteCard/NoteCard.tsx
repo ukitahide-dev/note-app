@@ -60,6 +60,8 @@ type Props = {
     >;
 };
 
+
+
 export default function NoteCard({
     note,
     context,
@@ -77,6 +79,7 @@ export default function NoteCard({
     panelType,
     setPanelType,
 }: Props) {
+
     const cardRef = useRef<HTMLDivElement | null>(null);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const labelPanelRef = useRef<HTMLDivElement | null>(null);
@@ -92,7 +95,7 @@ export default function NoteCard({
     // hook
     const { tempColor, handleSelectColor, saveColor } = useNoteColor(note);
 
-    
+
     // Store
     const {
         selectedNoteIds,
@@ -114,11 +117,13 @@ export default function NoteCard({
         uploadNoteImage,
     } = useNoteStore();
 
+
     // このノートが選択中で、かつ previewColor が存在するなら previewColor を使う。そうでなければ tempColor を使う
     const displayColor =
         selectedNoteIds.includes(note.id) && previewColor
             ? previewColor
             : tempColor;
+
 
     const selected = selectedNoteIds.includes(note.id);
 
@@ -190,7 +195,11 @@ export default function NoteCard({
         await uploadNoteImage(note.id, file);
     };
 
+
+
+
     return (
+
         <Card
             ref={cardRef}
             className={cardStyles.noteCard}

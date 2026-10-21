@@ -77,18 +77,39 @@ export const createNoteSelectionActions: StateCreator<
 
         try {
 
-            await Promise.all(
+            await Promise.all(    // 選択したすべてのノートの API 呼び出しが完了するまで待つ。
                 ids.map((id) => updateNoteColorApi(id, color)),
             );
 
             // これ無くても挙動は正しい。NoteCard側で、カードの色が瞬時に変わるように書いてるから。
-            // set((state) => ({
-            //     notes: state.notes.map((note) =>
-            //         ids.includes(note.id)
-            //             ? { ...note, color }
-            //             : note,
-            //     ),
-            // }));
+            set((state) => ({
+
+                notes: state.notes.map((note) =>
+                    ids.includes(note.id)
+                        ? { ...note, color }
+                        : note,
+                ),
+
+
+                pinnedNotes: state.pinnedNotes.map((note) =>
+                    ids.includes(note.id)
+                        ? { ...note, color }
+                        : note,
+                ),
+
+                searchResultNotes: state.searchResultNotes.map((note) =>
+                    ids.includes(note.id)
+                        ? { ...note, color }
+                        : note,
+                ),
+
+                calendarDayNotes: state.calendarDayNotes.map((note) =>
+                    ids.includes(note.id)
+                        ? { ...note, color }
+                        : note,
+                ),
+
+            }));
 
         } catch (error) {
             console.error(error);
@@ -115,7 +136,7 @@ export const createNoteSelectionActions: StateCreator<
 
         // const notes = get().notes;
 
-
+        // 全ノートを対象にする
         const allNotes = [
             ...notes,
             ...pinnedNotes,
@@ -140,9 +161,9 @@ export const createNoteSelectionActions: StateCreator<
 
         try {
 
-            const updatedNotes = await Promise.all(
+            const updatedNotes = await Promise.all(   // Promise.all()：複数のPromiseの完了をまとめて待つ。
 
-                selectedNotes.map(async (note) => {
+                selectedNotes.map(async (note) => {   // async：非同期処理を扱う関数を定義する。
 
                     const currentIds = note.labels.map(
                         (label) => label.id,
@@ -183,8 +204,9 @@ export const createNoteSelectionActions: StateCreator<
             set((state) => ({
 
                 notes: state.notes.map(
-                    (note) => updatedNotesMap.get(note.id) ?? note,
+                    (note) => updatedNotesMap.get(note.id) ?? note
                 ),
+
 
                 // notes: state.notes.map((note) => {
 
@@ -228,20 +250,22 @@ export const createNoteSelectionActions: StateCreator<
         } catch (error) {
 
             console.error(error);
-            
+
         }
     },
 
 
     // 選択したノートをまとめて複製する
-    duplicateSelectedNotes: async (ids: number[]) => {
+    duplicateSelectedNotes: async (noteIds: number[]) => {
 
         const notes = get().notes;
 
         try {
+
             const newNotes = await Promise.all(
+
                 notes
-                    .filter((note) => ids.includes(note.id))
+                    .filter((note) => noteIds.includes(note.id))
                     .map((note) =>
                         createNoteApi(
                             note.title,
@@ -255,6 +279,7 @@ export const createNoteSelectionActions: StateCreator<
             set((state) => ({
                 notes: [...newNotes, ...state.notes],
             }));
+
         } catch (error) {
             console.error(error);
         }
