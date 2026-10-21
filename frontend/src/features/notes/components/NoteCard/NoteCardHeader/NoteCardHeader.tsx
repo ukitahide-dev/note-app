@@ -32,7 +32,7 @@ export default function ({
                                 ${styles.headerButton}
                                 ${selected ? styles.selected : ""}`}
                     onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation();  // これで、ドキュメントの外側クリックイベントも実行されなくなる。ノート選択でHeaderの外側クリック処理と競合しなくなる。
                         onToggleSelect();  // 親が「何をするか」を準備して、子は「クリックされたらそれを実行する」だけ。
                     }}
                 >

@@ -22,6 +22,10 @@ import { MdPushPin } from "react-icons/md";
 import { logoutApi } from "../../../features/auth/api/authApi";
 import AccountMenu from "../../../features/account/components/AccountMenu/AccountMenu";
 
+import { useHeaderClickOutside } from "./hooks/useHeaderClickOutside";
+
+
+
 type Props = {
     // Props object の中にonMenuClickというプロパティがあるという意味。
     //     // searchText: string;
@@ -63,7 +67,7 @@ export default function Header({ onMenuClick }: Props) {
 
     // Store
     const {
-        notes,
+        // notes,
         updateSelectedNoteColor,
         updateSelectedNotePin,
 
@@ -87,6 +91,9 @@ export default function Header({ onMenuClick }: Props) {
 
 
 
+
+
+
     // const selectedNotes = notes.filter((note) =>
     //     selectedNoteIds.includes(note.id),
     // );
@@ -100,61 +107,78 @@ export default function Header({ onMenuClick }: Props) {
     const handleSaveSelectedColor = async () => {
 
         setPanelType(null);
+        console.log("previewColor", previewColor);
 
-        if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。
+        if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。色を選択していないから、APIを呼ぶ必要がない。
 
         await updateSelectedNoteColor(selectedNoteIds, previewColor);   // Zustand の色更新処理が終わるまで待つ。
 
     };
 
-
-    // 外クリック処理
-    useEffect(() => {
-
-        const handleClickOutside = async (event: MouseEvent) => {
-
-            const target = event.target as Node;
-
-            const clickedOutsidePalette =
-                !paletteRef.current ||
-                !paletteRef.current.contains(target);
-
-            const clickedOutsideHeader =
-                headerRef.current &&
-                !headerRef.current.contains(target);
-
-
-            // カラーパレットの外をクリックした場合
-            if (panelType === "color" && clickedOutsidePalette) {
-
-                const savePromise = handleSaveSelectedColor();
-
-                // ヘッダーの外なら、保存完了後に選択を解除する
-                if (clickedOutsideHeader) {
-                    await savePromise;   // 色の保存処理全体が終わるまで待つ。これで、NoteCardのtempColorに、先に更新後の色が入るようになる。色変更後に、外クリック処理で、一瞬だけ元の色がちらつくバグを防げる。
-                    clearSelection();   // 保存処理とsetでの更新が終わってから、selectedNoteIdsを空にする。
-                }
-
-                return;
-            }
-
-            // ヘッダーの外をクリックした場合
-            if (clickedOutsideHeader) {
-                clearSelection();
-            }
-        };
-
-        document.addEventListener("click", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-
-    }, [
+    // hooks
+    useHeaderClickOutside({
+        paletteRef,
+        headerRef,
         panelType,
         handleSaveSelectedColor,
         clearSelection,
-    ]);
+
+    });
+
+
+
+    // 外クリック処理
+    // useEffect(() => {
+
+    //     const handleClickOutside = async (event: MouseEvent) => {
+
+    //         const target = event.target as Node;
+
+    //         const clickedOutsidePalette =
+    //             !paletteRef.current ||
+    //             !paletteRef.current.contains(target);
+
+    //         const clickedOutsideHeader =
+    //             headerRef.current &&
+    //             !headerRef.current.contains(target);
+
+
+    //         // カラーパレットの外をクリックした場合
+    //         if (panelType === "color" && clickedOutsidePalette) {
+
+    //             const savePromise = handleSaveSelectedColor();
+
+    //             // ヘッダーの外なら、保存完了後に選択を解除する
+    //             if (clickedOutsideHeader) {
+    //                 await savePromise;   // 色の保存処理全体が終わるまで待つ。これで、NoteCardのtempColorに、先に更新後の色が入るようになる。色変更後に、外クリック処理で、一瞬だけ元の色がちらつくバグを防げる。
+    //                 clearSelection();   // 保存処理とsetでの更新が終わってから、selectedNoteIdsを空にする。
+    //             }
+
+    //             setPanelType(null);
+    //             return;
+    //         }
+
+    //         // ヘッダーの外をクリックした場合
+    //         if (clickedOutsideHeader) {
+    //             setPanelType(null);
+    //             clearSelection();
+    //         }
+    //     };
+
+    //     document.addEventListener("click", handleClickOutside);
+
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+
+    // }, [
+    //     panelType,
+    //     handleSaveSelectedColor,
+    //     clearSelection,
+    // ]);
+
+
+
 
 
     // 外クリック処理
