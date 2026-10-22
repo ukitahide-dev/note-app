@@ -1,28 +1,30 @@
 // ----react ----
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 // ---- store ----
 import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
 
 // ---- component ----
-import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
-import ColorPalette from "../../ui/ColorPalette/ColorPalette";
+// import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
+// import ColorPalette from "../../ui/ColorPalette/ColorPalette";
 
 // ---- css ----
 import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
-import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
-import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels/useSelectedNoteLabels";
+// import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
+// import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels/useSelectedNoteLabels";
 import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions/useSelectedNoteActions";
 
 // ---- react-icon ----
-import { BsPin } from "react-icons/bs";
-import { MdPushPin } from "react-icons/md";
+// import { BsPin } from "react-icons/bs";
+// import { MdPushPin } from "react-icons/md";
 import { logoutApi } from "../../../features/auth/api/authApi";
 import AccountMenu from "../../../features/account/components/AccountMenu/AccountMenu";
 
 import { useHeaderClickOutside } from "./hooks/useHeaderClickOutside";
+import SelectedNotesHeader from "./SelectedNotesHeader";
+// import { useSelectedNotes } from "../../../features/notes/hooks/useSelectedNotes/useSelectedNotes";
 
 
 
@@ -57,7 +59,7 @@ export default function Header({ onMenuClick }: Props) {
 
     // Store
     const {
-        selectedNoteIds,   // SelectedNotesの計算と、Headerの表示切替に使う。
+        selectedNoteIds,
         previewColor,
         setPreviewColor,
         clearSelection,
@@ -67,7 +69,6 @@ export default function Header({ onMenuClick }: Props) {
 
     // Store
     const {
-        // notes,
         updateSelectedNoteColor,
         updateSelectedNotePin,
 
@@ -78,12 +79,14 @@ export default function Header({ onMenuClick }: Props) {
 
 
     // hooks
-    const {
-        selectedNotes,
-        labelStates,
-        handleSelectLabel,
+    // const {
+    //     selectedNotes,
+    // //  labelStates,
+    // //  handleSelectLabel,
 
-    } = useSelectedNoteLabels();
+    // } = useSelectedNoteLabels();
+
+
 
     // hooks
     const { handleMoveToTrash, handleDuplicateNotes } =
@@ -98,9 +101,9 @@ export default function Header({ onMenuClick }: Props) {
     //     selectedNoteIds.includes(note.id),
     // );
 
-    const pinnedState = selectedNotes.some((note) => !note.is_pinned)
-        ? "add"
-        : "remove";
+    // const pinnedState = selectedNotes.some((note) => !note.is_pinned)
+    //     ? "add"
+    //     : "remove";
 
 
 
@@ -242,82 +245,107 @@ export default function Header({ onMenuClick }: Props) {
 
             {selectedNoteIds.length > 0 ? (
 
-                <header className={styles.header}>
+                <SelectedNotesHeader
+                    selectedNoteCount={selectedNoteIds.length}
+                    onTogglePin={(pinnedState) =>  // => の後に {} を書かない。アロー関数の省略形。updateSelectedNotePin() の実行結果が、そのまま戻り値になる。
+                        updateSelectedNotePin(
+                            selectedNoteIds,
+                            pinnedState,
+                        )
+                    }
+                    // pinnedState={pinnedState}
+                    // onTogglePin={() =>
+                    //     updateSelectedNotePin(
+                    //         selectedNoteIds,
+                    //         pinnedState,
+                    //     )
+                    // }
+                    panelType={panelType}
+                    setPanelType={setPanelType}
+                    paletteRef={paletteRef}
+                    setPreviewColor={setPreviewColor}
+                    // labelStates={labelStates}
+                    // handleSelectLabel={handleSelectLabel}
+                    handleMoveToTrash={handleMoveToTrash}
+                    handleDuplicateNotes={handleDuplicateNotes}
+                />
 
-                    <h1 className={styles.logo}>
-                        {selectedNoteIds.length}件を選択中
-                    </h1>
+                // <header className={styles.header}>
 
-                    <div className={styles.buttons}>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                updateSelectedNotePin(
-                                    selectedNoteIds,
-                                    pinnedState,
-                                );
-                            }}
-                        >
-                            {pinnedState === "remove" ? (
-                                <MdPushPin size={22} color="#04c5fb" />
-                            ) : (
-                                <BsPin
-                                    size={20}
-                                    color="#f459fc"
-                                    // color="#22b4dc"
-                                />
-                            )}
-                        </button>
+                //     <h1 className={styles.logo}>
+                //         {selectedNoteIds.length}件を選択中
+                //     </h1>
 
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
-                                setPanelType("color");
-                            }}
-                        >
-                            🎨
-                        </button>
+                //     <div className={styles.buttons}>
+                //         <button
+                //             onClick={(e) => {
+                //                 e.stopPropagation();
+                //                 updateSelectedNotePin(
+                //                     selectedNoteIds,
+                //                     pinnedState,
+                //                 );
+                //             }}
+                //         >
+                //             {pinnedState === "remove" ? (
+                //                 <MdPushPin size={22} color="#04c5fb" />
+                //             ) : (
+                //                 <BsPin
+                //                     size={20}
+                //                     color="#f459fc"
+                //                     // color="#22b4dc"
+                //                 />
+                //             )}
+                //         </button>
 
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();   // これがないとdocumentにクリックが伝播してバグる
-                                setPanelType("menu");
-                            }}
-                        >
-                            ⋮
-                        </button>
+                //         <button
+                //             onClick={(e) => {
+                //                 e.stopPropagation(); // これがないと、ColorPaletteにクリックイベントが伝播して、クリックでColorPaletteが開くと同時に、閉じてしまう。
+                //                 setPanelType("color");
+                //             }}
+                //         >
+                //             🎨
+                //         </button>
 
-                    </div>
+                //         <button
+                //             onClick={(e) => {
+                //                 e.stopPropagation();   // これがないとdocumentにクリックが伝播してバグる
+                //                 setPanelType("menu");
+                //             }}
+                //         >
+                //             ⋮
+                //         </button>
 
-                    {panelType === "color" && (
-                        <ColorPalette
-                            onSelectColor={setPreviewColor}
-                            paletteRef={paletteRef}
-                        />
-                    )}
+                //     </div>
 
-                    {panelType === "menu" && (
-                        <NoteMenu
-                            onMoveToTrash={async () => {
-                                await handleMoveToTrash();
-                                setPanelType(null);
-                            }}
-                            onOpenLabel={() => setPanelType("label")}
-                            onDuplicateNote={async () => {
-                                await handleDuplicateNotes();
-                                setPanelType(null);
-                            }}
-                        />
-                    )}
+                //     {panelType === "color" && (
+                //         <ColorPalette
+                //             onSelectColor={setPreviewColor}
+                //             paletteRef={paletteRef}
+                //         />
+                //     )}
 
-                    {panelType === "label" && (
-                        <LabelPanel
-                            labelStates={labelStates}
-                            onSelectLabel={handleSelectLabel}
-                        />
-                    )}
+                //     {panelType === "menu" && (
+                //         <NoteMenu
+                //             onMoveToTrash={async () => {
+                //                 await handleMoveToTrash();
+                //                 setPanelType(null);
+                //             }}
+                //             onOpenLabel={() => setPanelType("label")}
+                //             onDuplicateNote={async () => {
+                //                 await handleDuplicateNotes();
+                //                 setPanelType(null);
+                //             }}
+                //         />
+                //     )}
 
-                </header>
+                //     {panelType === "label" && (
+                //         <LabelPanel
+                //             labelStates={labelStates}
+                //             onSelectLabel={handleSelectLabel}
+                //         />
+                //     )}
+
+                // </header>
 
             ) : (
 
