@@ -1,11 +1,14 @@
 
 import { useEffect } from "react";
-import type { RefObject } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
+
+
 
 type Props = {
     paletteRef: RefObject<HTMLElement | null>;
     headerRef: RefObject<HTMLElement | null>;
     panelType: string | null;
+    setPanelType: Dispatch<SetStateAction<"color" | "menu" | "label" | null>>;
     handleSaveSelectedColor: () => Promise<void>;
     clearSelection: () => void;
 
@@ -18,6 +21,7 @@ export function useHeaderClickOutside({
     paletteRef,
     headerRef,
     panelType,
+    setPanelType,
     handleSaveSelectedColor,
     clearSelection,
 
@@ -44,6 +48,7 @@ export function useHeaderClickOutside({
             // カラーパレットの外をクリックした場合
             if(clickedOutsidePalette) {
 
+                setPanelType(null);
                 // console.log("clickedOutsidePaletteの中")
                 const savePromise = handleSaveSelectedColor();
                 await savePromise;   // 色の保存処理全体が終わるまで待つ。これで、NoteCardのtempColorに、先に更新後の色が入るようになる。色変更後に、外クリック処理で、一瞬だけ元の色がちらつくバグを防げる。
@@ -55,11 +60,12 @@ export function useHeaderClickOutside({
                 }
 
                 return;
-                
+
             }
 
             // ヘッダーの外をクリックした場合
             if (clickedOutsideHeader) {
+                setPanelType(null);
                 console.log("clickedOutsideHeader単体の中")
                 clearSelection();
             }

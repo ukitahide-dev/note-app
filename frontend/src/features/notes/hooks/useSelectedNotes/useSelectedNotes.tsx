@@ -27,7 +27,7 @@ export function useSelectedNotes() {
         ...calendarDayNotes,
     ];
 
-    // 選択中のノートを取得し、ID の重複を除外する
+    // 選択中のノートを取得し、ID の重複を除外する。selectedNotesはhookで管理する。仮に、useNoteSelectionStoreで管理すると、NoteStoreのnotesと二重管理になり、データの整合性が崩れる可能性が出てくる。
     const selectedNotes = Array.from(
         new Map(
             allNotes
