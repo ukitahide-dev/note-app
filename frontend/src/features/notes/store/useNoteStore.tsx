@@ -84,11 +84,12 @@ export type NoteStore = {
     next: string | null;
     previous: string | null;
 
-    currentView: "notes" | "favorite" | "label";
+    currentView: "notes" | "favorite" | "label" | "search";
     setCurrentView: (
         view: "notes" |
         "favorite" |
-        "label"
+        "label" |
+        "search"
 
     ) => void;
 

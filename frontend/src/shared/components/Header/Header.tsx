@@ -5,37 +5,27 @@ import { useRef, useState } from "react";
 // ---- store ----
 import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
 
-// ---- component ----
-// import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
-// import ColorPalette from "../../ui/ColorPalette/ColorPalette";
+
 
 // ---- css ----
 import styles from "./Header.module.css";
 import { useNoteStore } from "../../../features/notes/store/useNoteStore";
-// import LabelPanel from "../../../features/notes/components/SortableNoteCard/LabelPanel/LabelPanel";
-// import { useSelectedNoteLabels } from "../../../features/notes/hooks/useSelectedNoteLabels/useSelectedNoteLabels";
+
 import { useSelectedNoteActions } from "../../../features/notes/hooks/useSelectedNoteActions/useSelectedNoteActions";
 
-// ---- react-icon ----
-// import { BsPin } from "react-icons/bs";
-// import { MdPushPin } from "react-icons/md";
+
+
 import { logoutApi } from "../../../features/auth/api/authApi";
 import AccountMenu from "../../../features/account/components/AccountMenu/AccountMenu";
 
 import { useHeaderClickOutside } from "./hooks/useHeaderClickOutside";
 import SelectedNotesHeader from "./SelectedNotesHeader";
 import { useSelectedNoteColor } from "../../../features/notes/hooks/useSelectedNoteColor/useSelectedNoteColor";
-// import { useSelectedNotes } from "../../../features/notes/hooks/useSelectedNotes/useSelectedNotes";
+
 
 
 
 type Props = {
-    // Props object の中にonMenuClickというプロパティがあるという意味。
-    //     // searchText: string;
-    //     // setSearchText: React.Dispatch<
-    //         // React.SetStateAction<string>
-    //     // >;
-
     onMenuClick: () => void; // onMenuClickプロパティの型は関数型という意味。
 };
 
@@ -43,8 +33,8 @@ type Props = {
 
 
 
-export default function Header({ onMenuClick }: Props) {
-    // 分割代入でpropsからonMenuClickを取り出している。props全体の型はProps。
+export default function Header({ onMenuClick }: Props) {     // 分割代入でpropsからonMenuClickを取り出している。props全体の型はProps。
+
 
     const [panelType, setPanelType] = useState<
         "color" | "menu" | "label" | null
@@ -61,7 +51,7 @@ export default function Header({ onMenuClick }: Props) {
     // Store
     const {
         selectedNoteIds,
-        // previewColor,
+
         setPreviewColor,
         clearSelection,
 
@@ -70,7 +60,7 @@ export default function Header({ onMenuClick }: Props) {
 
     // Store
     const {
-        // updateSelectedNoteColor,
+        
         updateSelectedNotePin,
 
         searchParams,
@@ -89,19 +79,7 @@ export default function Header({ onMenuClick }: Props) {
     const { handleSaveSelectedColor } = useSelectedNoteColor();
 
 
-
-    // const handleSaveSelectedColor = async () => {
-
-    //     setPanelType(null);
-    //     console.log("previewColor", previewColor);
-
-    //     if (!previewColor) return;  // previewColorがnullの場合は、ここで処理を止める。色を選択していないから、APIを呼ぶ必要がない。
-
-    //     await updateSelectedNoteColor(selectedNoteIds, previewColor);   // Zustand の色更新処理が終わるまで待つ。
-
-    // };
-
-    // hooks
+    // hook
     useHeaderClickOutside({
         paletteRef,
         headerRef,

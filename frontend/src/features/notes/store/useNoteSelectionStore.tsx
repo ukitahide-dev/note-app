@@ -5,7 +5,7 @@ import { create } from "zustand";
 
 type NoteSelectionStore = {
 
-    selectedNoteIds: number[];
+    selectedNoteIds: number[];   // ユーザーの操作によって状態が変わる。独立した状態。こういうのはStoreに置く。
 
 
     previewColor: string | null;

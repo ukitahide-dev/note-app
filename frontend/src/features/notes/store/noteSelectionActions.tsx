@@ -34,11 +34,38 @@ export const createNoteSelectionActions: StateCreator<
 
     ) => {
 
-        const notes = get().notes;
+        const {
+            notes,
+            pinnedNotes,
+            searchResultNotes,
+            calendarDayNotes,
 
-        const selectedNotes = notes.filter(
+            currentPage,
+            pageSize,
+            ordering,
+            pinnedOrdering,
+            currentView,
+            currentLabelName,
+
+            searchParams,
+
+        } = get();
+
+
+
+        // 全ノートを対象にする
+        const allNotes = [
+            ...notes,
+            ...pinnedNotes,
+            ...searchResultNotes,
+            ...calendarDayNotes,
+        ];
+
+
+        const selectedNotes = allNotes.filter(
             (note) => noteIds.includes(note.id),
         );
+
 
         try {
 
@@ -52,16 +79,83 @@ export const createNoteSelectionActions: StateCreator<
                 }),
             );
 
+            await get().fetchPinnedNotes(pinnedOrdering);
+
+
+            if (currentView === "notes") {   // 通常notes一覧とピン止めノート一覧は両立しないから、ここでnotesを再取得する。再取得しないと、ピン止めしたのに、瞬時にノート一覧から消えてくれない。
+                await get().fetchNotes(
+                    currentPage,
+                    pageSize,
+                    ordering,
+                );
+            }
+
+            // if (currentView === "label" && currentLabelName) {   // ラベル一覧とピン止め一覧は両立するから、わざわざ再取得しなくていい。
+            //     await get().fetchLabelNotes(
+            //         currentLabelName,
+            //         currentPage,
+            //         pageSize,
+            //         ordering,
+            //     );
+            // }
+
+            // if (currentView === "search") {   // 検索結果ノート一覧と、ピン止めノート一覧、両立するから、再取得必要なし。
+
+            //     await get().searchNotes(
+            //         searchParams.query,
+            //         searchParams.labelName,
+            //         searchParams.color,
+            //         searchParams.month,
+            //         currentPage,
+            //         pageSize,
+            //         ordering
+            //     );
+
+            // }
+
 
             set((state) => ({
-                notes: state.notes.map((note) => {
-                    const updatedNote = updatedNotes.find(
-                        (updatedNote) => updatedNote.id === note.id,
-                    );
 
-                    return updatedNote ?? note;
+                ...(currentView !== "notes" && {    // 通常notesの場合は上で最新のnotesを取得して、画面更新してるから、ここでは更新しないようにする。お気に入りやラベル用の更新。
+                    notes: state.notes.map((note) => {
+                        const updatedNote = updatedNotes.find(
+                            (updatedNote) => updatedNote.id === note.id,
+                        );
+
+                        return updatedNote ?? note;
+                    }),
                 }),
+                // notes: state.notes.map((note) => {   // 不要だと思ったが、label一覧の時とか使う。これ書かないと、ピン止めマークが瞬時に切り替わらない。
+                //     const updatedNote = updatedNotes.find(
+                //         (updatedNote) => updatedNote.id === note.id,
+                //     );
+
+                //     return updatedNote ?? note;
+                // }),
+
+                // pinnedNotes: state.pinnedNotes.map((pinnedNote) => {
+                //     const updatedNote = updatedNotes.find(
+                //         (updatedNote) => updatedNote.id === pinnedNote.id
+                //     );
+
+                //     return updatedNote ?? pinnedNote;
+
+                // }),
+
+                searchResultNotes: state.searchResultNotes.map((note) => {
+                    const updatedNote = updatedNotes.find(
+                        (updatedNote) => updatedNote.id === note.id
+                    )
+
+                    return updatedNote ?? note
+                }),
+
+
+
+
+
             }));
+
         } catch (error) {
             console.error(error);
         }

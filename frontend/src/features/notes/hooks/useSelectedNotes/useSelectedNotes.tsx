@@ -14,11 +14,13 @@ export function useSelectedNotes() {
         pinnedNotes,
         searchResultNotes,
         calendarDayNotes,
+
     } = useNoteStore();
 
     // Store
     const { selectedNoteIds } = useNoteSelectionStore();
 
+    
     // 各一覧のノートをまとめる
     const allNotes = [
         ...notes,

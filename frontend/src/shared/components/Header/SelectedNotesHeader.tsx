@@ -3,7 +3,7 @@ import type { Dispatch, RefObject, SetStateAction } from "react";
 
 // ---- store ----
 import { useNoteSelectionStore } from "../../../features/notes/store/useNoteSelectionStore";
-// import { useNoteStore } from "../../../features/notes/store/useNoteStore";
+
 
 // ---- component ----
 import NoteMenu from "../../../features/notes/components/SortableNoteCard/NoteMenu/NoteMenu";
@@ -29,7 +29,7 @@ type PanelType = "color" | "menu" | "label" | null;
 type Props = {
 
     selectedNoteCount: number;
-    // pinnedState: "add" | "remove";
+
     onTogglePin: (pinnedState: "add" | "remove") => void;
 
     panelType: PanelType;
@@ -41,13 +41,7 @@ type Props = {
         typeof useNoteSelectionStore.getState
     >["setPreviewColor"];
 
-    // labelStates: ReturnType<
-    //     typeof useSelectedNoteLabels
-    // >["labelStates"];
 
-    // handleSelectLabel: ReturnType<
-    //     typeof useSelectedNoteLabels
-    // >["handleSelectLabel"];
 
     handleMoveToTrash: ReturnType<
         typeof useSelectedNoteActions
@@ -61,14 +55,13 @@ type Props = {
 
 export default function SelectedNotesHeader({
     selectedNoteCount,
-    // pinnedState,
+
     onTogglePin,
     panelType,
     setPanelType,
     paletteRef,
     setPreviewColor,
-    // labelStates,
-    // handleSelectLabel,
+
     handleMoveToTrash,
     handleDuplicateNotes,
 
@@ -76,7 +69,7 @@ export default function SelectedNotesHeader({
 
     // hooks
     const {
-        // selectedNotes,
+        
         labelStates,
         handleSelectLabel,
 

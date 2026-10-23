@@ -10,7 +10,7 @@ import {
     getLabelNotesApi,
     getNotesApi,
     getPinnedNotesApi,
-    getSearchNotesApi,
+    // getSearchNotesApi,
     getTrashNotesApi,
 } from "../api/noteApi";
 

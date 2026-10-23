@@ -89,7 +89,7 @@ export default function NoteList({
 
     const [isPinnedOpen, setIsPinnedOpen] = useState(true);
 
-    
+
     // Store
     const {
         reorderNotes,
@@ -184,7 +184,11 @@ export default function NoteList({
 
                     <button
                         className={styles.pinnedHeader}
-                        onClick={() => setIsPinnedOpen((prev) => !prev)}
+                        onClick={(e) => {
+                            setIsPinnedOpen((prev) => !prev);
+                            e.stopPropagation();  // これでHeaderの外側クリック検知から外れる。
+                        }}
+                        
                     >
 
                         <span className={styles.pinnedTitle}>

@@ -31,9 +31,6 @@ import Pagination from "../../../notes/components/Pagination/Pagination";
 
 export default function SearchResultsPage () {
 
-
-
-
     const [usedColors, setUsedColors] = useState<string[]>([]);
 
 
@@ -54,6 +51,8 @@ export default function SearchResultsPage () {
         searchParams,
         setSearchParams,
 
+        setCurrentView,
+
     } = useNoteStore();
 
 
@@ -68,12 +67,8 @@ export default function SearchResultsPage () {
     } = useLabelStore();
 
 
-
-
-
     const [showAllLabels, setShowAllLabels] = useState(false);
     const [showAllColors, setShowAllColors] = useState(false);
-
 
 
     const displayLabels = showAllLabels
@@ -89,10 +84,8 @@ export default function SearchResultsPage () {
 
     useEffect(() => {
 
-
         fetchPinnedNotes();
         fetchUsedLabels();
-
 
         const fetchUsedColors = async () => {
 
@@ -111,7 +104,6 @@ export default function SearchResultsPage () {
         fetchUsedColors();
 
     }, []);
-
 
 
 
@@ -136,7 +128,6 @@ export default function SearchResultsPage () {
             pageSize,
             ordering,
 
-
         );
 
     }, [
@@ -150,15 +141,16 @@ export default function SearchResultsPage () {
 
 
 
+    useEffect(() => {
 
+        setCurrentView("search");
 
-
+    }, []);
 
 
 
 
     return (
-
 
         !searchParams.labelName &&
         !searchParams.color &&

@@ -37,6 +37,7 @@ export const createNoteSearchActions: StateCreator<
         page = 1,
         pageSize = get().pageSize,
         ordering = "order",
+
     ) => {
 
         const data = await getSearchNotesApi(
@@ -65,7 +66,7 @@ export const createNoteSearchActions: StateCreator<
     },
 
 
-    
+
     // 現在の検索条件で検索結果を更新する
     refreshSearchResults: async () => {
 
