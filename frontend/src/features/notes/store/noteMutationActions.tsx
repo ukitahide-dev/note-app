@@ -181,7 +181,7 @@ export const createNoteMutationActions: StateCreator<
             ordering,
             pinnedOrdering,
             currentView,
-            currentLabelName,
+            // currentLabelName,
 
         } = get();
 
@@ -202,23 +202,36 @@ export const createNoteMutationActions: StateCreator<
                 );
             }
 
-            if (currentView === "label" && currentLabelName) {
-                await get().fetchLabelNotes(
-                    currentLabelName,
-                    currentPage,
-                    pageSize,
-                    ordering,
-                );
-            }
+            // if (currentView === "label" && currentLabelName) {   これは不要。labelノート一覧と、ピン止めノート一覧は両立するから、再取得する必要ない。通常ノートみたいに、ピン止めしたときに、瞬時にラベル一覧から消す必要がない。
+            //     await get().fetchLabelNotes(
+            //         currentLabelName,
+            //         currentPage,
+            //         pageSize,
+            //         ordering,
+            //     );
+            // }
 
-            set((state) => ({
-                notes: state.notes.map((note) =>
-                    note.id === noteId ? updatedNote : note,
-                ),
+            set((state) => ({  // => ({ : これは、オブジェクトを返すことを表してる。
+
+                ...(currentView !== "notes" && {    // 通常notesの場合は上で最新のnotesを取得して、画面更新してるから、ここでは更新しないようにする。お気に入りやラベル用の更新。
+                    notes: state.notes.map((note) =>
+                        note.id === noteId ? updatedNote : note,
+                    ),
+                }),
+
+                // notes: state.notes.map((note) =>
+                //     note.id === noteId ? updatedNote : note,
+                // ),
 
                 pinnedNotes: state.pinnedNotes.map((note) =>
                     note.id === noteId ? updatedNote : note,
                 ),
+
+                searchResultNotes: state.searchResultNotes.map((note) =>
+                    note.id === noteId ? updatedNote : note,
+                ),
+
+
             }));
 
         } catch (error) {
@@ -230,7 +243,7 @@ export const createNoteMutationActions: StateCreator<
 
     // ノートについているラベルを更新する
     updateNoteLabels: async (noteId, labelIds) => {
-        
+
         try {
             const updatedNote = await updateNoteLabelsApi(
                 noteId,
