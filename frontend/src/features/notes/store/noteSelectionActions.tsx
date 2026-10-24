@@ -45,9 +45,6 @@ export const createNoteSelectionActions: StateCreator<
             ordering,
             pinnedOrdering,
             currentView,
-            currentLabelName,
-
-            searchParams,
 
         } = get();
 
@@ -114,45 +111,31 @@ export const createNoteSelectionActions: StateCreator<
             // }
 
 
-            set((state) => ({
+            set((state) => ({   // 括弧で囲んでいるのは、ここで {} が関数の処理ブロックではなく、オブジェクトだと JavaScript に伝えるため。
 
-                ...(currentView !== "notes" && {    // 通常notesの場合は上で最新のnotesを取得して、画面更新してるから、ここでは更新しないようにする。お気に入りやラベル用の更新。
+                ...(currentView !== "notes" && {    // 通常notesの場合は上で最新のnotesを取得して、画面更新してるから、ここでは更新しないようにする。お気に入りやラベル用の更新。&&の直後の{}はオブジェクトのこと。&&は、左側がtrueなら右側が実行される。
+
                     notes: state.notes.map((note) => {
+
                         const updatedNote = updatedNotes.find(
                             (updatedNote) => updatedNote.id === note.id,
                         );
 
                         return updatedNote ?? note;
+
                     }),
+
                 }),
-                // notes: state.notes.map((note) => {   // 不要だと思ったが、label一覧の時とか使う。これ書かないと、ピン止めマークが瞬時に切り替わらない。
-                //     const updatedNote = updatedNotes.find(
-                //         (updatedNote) => updatedNote.id === note.id,
-                //     );
 
-                //     return updatedNote ?? note;
-                // }),
-
-                // pinnedNotes: state.pinnedNotes.map((pinnedNote) => {
-                //     const updatedNote = updatedNotes.find(
-                //         (updatedNote) => updatedNote.id === pinnedNote.id
-                //     );
-
-                //     return updatedNote ?? pinnedNote;
-
-                // }),
 
                 searchResultNotes: state.searchResultNotes.map((note) => {
+
                     const updatedNote = updatedNotes.find(
                         (updatedNote) => updatedNote.id === note.id
                     )
 
                     return updatedNote ?? note
                 }),
-
-
-
-
 
             }));
 
@@ -228,7 +211,7 @@ export const createNoteSelectionActions: StateCreator<
 
         } = get();
 
-        // const notes = get().notes;
+        
 
         // 全ノートを対象にする
         const allNotes = [
@@ -247,11 +230,6 @@ export const createNoteSelectionActions: StateCreator<
             ).values(),
         );
 
-
-        // これがバグの原因。これだと、pinnedNotesを選択した場合に、pinnedNotesからノートを取得できない。notesからfilterしてるから。
-        // const selectedNotes = notes.filter(
-            // (note) => noteIds.includes(note.id),
-        // );
 
         try {
 

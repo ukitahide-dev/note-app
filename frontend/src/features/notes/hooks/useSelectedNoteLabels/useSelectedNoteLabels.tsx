@@ -16,10 +16,7 @@ export function useSelectedNoteLabels() {
 
     // Store
     const {
-        // notes,
-        // pinnedNotes,
-        // searchResultNotes,
-        // calendarDayNotes,
+
         updateSelectedNoteLabels
 
     } = useNoteStore();
@@ -36,26 +33,6 @@ export function useSelectedNoteLabels() {
     const { selectedNotes } = useSelectedNotes();
 
 
-    // ----- この一連のselectedNotesを求める処理、このファイルに書くのは変。
-    // このファイルは選択したノートのラベルに関するロジックを書く場所だから。
-    // --------
-
-    // 各一覧のノートをまとめる
-    // const allNotes = [
-    //     ...notes,
-    //     ...pinnedNotes,
-    //     ...searchResultNotes,
-    //     ...calendarDayNotes,
-    // ];
-
-    // 選択中のノートを取得し、ID の重複を除外する
-    // const selectedNotes = Array.from(  // Array.from(): 配列に変換するメソッド。
-    //     new Map(
-    //         allNotes
-    //             .filter((note) => selectedNoteIds.includes(note.id))
-    //             .map((note) => [note.id, note]),
-    //     ).values(),
-    // );
 
 
     // 今選択しているノートを対象に、全ラベルについて『全員持っている』『誰も持っていない』『一部だけ持っている』のどれなのかを調べている。
@@ -112,7 +89,6 @@ export function useSelectedNoteLabels() {
 
 
     return {
-        // selectedNotes,
         labelStates,
         handleSelectLabel,
     };
