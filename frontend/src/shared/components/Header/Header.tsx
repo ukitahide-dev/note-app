@@ -60,7 +60,7 @@ export default function Header({ onMenuClick }: Props) {     // 分割代入でp
 
     // Store
     const {
-        
+
         updateSelectedNotePin,
 
         searchParams,
@@ -203,7 +203,10 @@ export default function Header({ onMenuClick }: Props) {     // 分割代入でp
 
     return (
 
-        <div ref={headerRef}>
+        <div
+            ref={headerRef}
+            className={styles.headerWrapper}
+        >
 
             {selectedNoteIds.length > 0 ? (
 
