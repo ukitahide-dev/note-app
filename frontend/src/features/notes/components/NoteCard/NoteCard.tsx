@@ -161,6 +161,8 @@ export default function NoteCard({
         isColorOpen || isMenuOpen, // この条件が肝。これがないと、全ノートカードで、無条件にドキュメント監視イベントが登録され、あるノートの外側クリックをすると、全ノートの外側クリックが発火し、バグる。
     );
 
+
+
     const highlightText = (text: string) => {
         if (!searchParams.query.trim()) {
             return text;
@@ -207,6 +209,7 @@ export default function NoteCard({
             style={{ backgroundColor: displayColor }}
             onClick={() => setSelectedNoteId(note.id)}
         >
+
             <NoteCardHeader
                 note={note}
                 selected={selected}
