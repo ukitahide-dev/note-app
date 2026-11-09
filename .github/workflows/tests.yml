@@ -4,36 +4,28 @@ on:
   push:
 
 jobs:
-  test:
+  frontend-test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend    # 作業場所をfrontendにする
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Confirm workflow execution
-        run: echo "GitHub Actions is working!"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
+      - name: Install dependencies
+        run: npm ci
 
-
-# ワークフローの名前
-# name: Tests
-
-# # 自動実行するきっかけ
-# on:
-#   push:
-
-
-
-# jobs:   # jobs: 実行する作業のまとまり
-#   test:
-#     runs-on: ubuntu-latest  # runs-on: 作業を実行する環境
-
-#     steps:   # steps: 実行する具体的な手順
-#       - name: Checkout repository
-#         uses: actions/checkout@v4   # uses: 既存のアクションを利用する
-
-#       - name: Run tests
-#         run: echo "Tests will run here"   # run: コマンドを実行する
+      - name: Run tests
+        run: npm run test -- --run
 
 
