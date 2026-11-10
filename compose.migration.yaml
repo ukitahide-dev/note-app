@@ -1,0 +1,52 @@
+# migration_test は、新しいサーバーへの移行を練習するために、今のPC上に作った仮想的な移行先フォルダ
+
+
+
+services:
+  backend:
+    image: ukitahide/note-app-backend:1.0
+
+    env_file:
+      - ./migration_test/.env
+
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings_prod
+
+    command:
+      - sh
+      - -c
+      - python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+
+    volumes:
+      # バインドマウント
+      - ./migration_test/backend/db.sqlite3:/app/db.sqlite3
+      - ./migration_test/backend/media:/app/media
+
+      # 名前付きボリューム
+      - staticfiles:/app/staticfiles
+
+    expose:
+      - "8000"
+
+    restart: unless-stopped
+
+  frontend:
+    image: ukitahide/note-app-frontend:1.0
+
+    ports:
+        - "8080:80"
+        
+    # ports:
+    #   - "80:80"
+
+    volumes:
+      - staticfiles:/usr/share/nginx/html/static:ro
+      - ./migration_test/backend/media:/usr/share/nginx/html/media:ro
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+volumes:
+  staticfiles:

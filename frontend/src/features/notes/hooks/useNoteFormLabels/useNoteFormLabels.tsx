@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useLabelStore } from "../../../labels/store/labelStore";
+import type { LabelState } from "../../../../types/ui/label";
 
 
 
@@ -35,7 +36,7 @@ export function useNoteFormLabels(
         .map((label) => label.name);
 
 
-    const labelStates = labels.map((label) => ({
+    const labelStates = labels.map((label): LabelState => ({   // : LabelState は戻り値の型。つまり、このアロー関数は LabelState 型のオブジェクトを返しますと指定している。
         id: label.id,
 
         state: selectedLabels.includes(label.id) ? "checked" : "unchecked",

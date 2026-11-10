@@ -7,10 +7,17 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     plugins: [react()],
 
+    // Docker内でファイル変更を検知する
+    server: {
+        watch: {
+            usePolling: true,
+        },
+    },
+
     // --- 追記 ----
     test: {
         environment: 'jsdom',
-        setupFiles: "./src/test/setup.ts",  // 
+        setupFiles: "./src/test/setup.ts",  //
     },
 
 

@@ -1,0 +1,32 @@
+# Dockerfile は、Dockerイメージを作るための設計図（手順書）
+
+
+# Pythonの実行環境を用意する
+FROM python:3.12-slim
+
+# Pythonが実行時に .pyc ファイルを作るのを抑える
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Pythonの出力をバッファにため込まず、ログに反映しやすくする
+ENV PYTHONUNBUFFERED=1
+
+# コンテナ内で作業する場所を /app にする。以降の命令でファイルをコピーしたり、コマンドを実行したりするとき、この場所が基準になる。
+WORKDIR /app
+
+# ホスト側にある requirements.txt を、コンテナ内の現在の作業ディレクトリ /app にコピーする。自分のパソコン側の requirements.txt が、コンテナ内の /app/requirements.txt にコピーされる。
+COPY requirements.txt .
+
+# RUN: イメージを作る途中でコマンドを実行する。コンテナ内のPython環境に、requirements.txtに記載されたライブラリをインストールするという意味。コピーした requirements.txt を使って、必要なPythonライブラリをインストールする。
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Dockerイメージを作るときに、指定されたファイルをイメージの中にコピーするという意味。
+# COPY ・・: Docker Compose(compose.prod.yaml)の build.context で指定したフォルダの中身を、Dockerfileの WORKDIR で指定したフォルダにコピーする命令。
+# .dockerignore に書かれているファイルはコピー対象にならない。
+COPY . .
+
+# このコンテナのアプリが、通常は 8000番ポートで通信を受け付ける想定だと宣言する。
+EXPOSE 8000
+
+# CMD：Dockerコンテナを起動したときに実行する命令。コンテナ起動時にDjangoを動かす。CMD は、コンテナを起動したときに実行するデフォルトのコマンドを指定する命令。
+# compose.prod.yamlのcommandに上書きされる。だから、消しても良い。
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

@@ -68,7 +68,7 @@ class NoteImage(models.Model):
         related_name="images"  # Noteモデルから、NoteImageモデルへの逆参照。note.images。
     )
 
-    image = models.ImageField(upload_to="note_images/")
+    image = models.ImageField(upload_to="note_images/")   # アップロードされた画像を media の中の note_images というフォルダに保存する指定。
     order = models.PositiveIntegerField(default=0)
 
 

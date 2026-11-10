@@ -1,4 +1,4 @@
-import { useNoteStore } from "../../store/useNoteStore"
+// import { useNoteStore } from "../../store/useNoteStore"
 
 
 
@@ -18,7 +18,7 @@ type Props = {
 }
 
 
-// 親: NoteList, 
+// 親: NoteList,
 
 export default function SortSelect({
     ordering,

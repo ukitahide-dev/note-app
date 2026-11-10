@@ -3,10 +3,14 @@
 import axios from "axios";
 import { refreshAccessToken } from "../../features/auth/api/authApi";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 
 // このアプリ専用のAxiosを1個作る
 const api = axios.create({  // create は自分用にカスタマイズしたaxiosを作るという意味。
-    baseURL: "http://127.0.0.1:8000/api",
+    // baseURL: "http://127.0.0.1:8000/api",
+    baseURL: API_BASE_URL,
 });
 
 
@@ -107,8 +111,8 @@ api.interceptors.response.use(
 
 //  認証系API専用のAxios
 export const authApi = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
-
+    // baseURL: "http://127.0.0.1:8000/api",
+    baseURL: API_BASE_URL,
 
 });
 

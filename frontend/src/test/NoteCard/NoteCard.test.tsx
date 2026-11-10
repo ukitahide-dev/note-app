@@ -5,14 +5,14 @@ import NoteCard from "../../features/notes/components/NoteCard/NoteCard";
 
 
 // Store
-import { useNoteSelectionStore } from "../../features/notes/store/useNoteSelectionStore";
+// import { useNoteSelectionStore } from "../../features/notes/store/useNoteSelectionStore";
 
 
 import type { Note } from "../../types/api/note";
 
 import { useState } from "react";
 import type { NoteContext } from "../../types/ui/noteContext";
-import { useNoteLabels } from "../../features/notes/hooks/useNoteLabels/useNoteLabels";
+// import { useNoteLabels } from "../../features/notes/hooks/useNoteLabels/useNoteLabels";
 
 
 
@@ -127,7 +127,7 @@ function NoteCardWithState({
         "label" | "history" | null
     >(null);
 
-    const [selectedNoteId, setSelectedNoteId] = useState<number | null>(
+    const [, setSelectedNoteId] = useState<number | null>(
         null
     );
 
@@ -381,7 +381,7 @@ describe("NoteCard", () => {
 
 
     it("メニューの外側をクリックすると、メニューが閉じてpanelTypeもリセットされる", () => {
-        
+
         render(<NoteCardWithState />);
 
         // メニューボタンをクリックする

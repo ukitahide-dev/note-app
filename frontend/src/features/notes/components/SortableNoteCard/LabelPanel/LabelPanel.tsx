@@ -18,6 +18,7 @@ type Props = {
     labelPanelRef?: React.RefObject<HTMLDivElement | null>;
     labelStates?: LabelState[];
     onSelectLabel: (labelId: number) => void;
+    
 };
 
 

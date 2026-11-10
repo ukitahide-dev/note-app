@@ -1,0 +1,29 @@
+# Dockerイメージをビルドするときに、Dockerへ送るファイル群から特定のファイルやフォルダを除外するための設定ファイル
+# .dockerignore の除外対象は、compose.prod.yaml の build.context に指定したディレクトリを基準に考える。
+# だから、今回のbackendでは backend/ が基準になる。
+# .dockerignore には Dockerイメージを作るときに必要ないファイルや、イメージに含めたくないファイルを書く
+# .dockerignore は、Dockerイメージを作るためにDockerへ送るファイル群から、特定のファイルやフォルダを取り除くための設定ファイル。
+
+
+# Python の仮想環境はコンテナにコピーしない
+venv/
+
+# Python が自動生成するキャッシュ
+__pycache__/
+*.py[cod]
+
+# Git の管理データ
+.git/
+
+# 環境変数などの秘密情報を含むファイル
+.env
+.env.*
+
+# ローカルの SQLite データベース
+db.sqlite3
+
+# テストや開発ツールのキャッシュ
+.pytest_cache/
+.mypy_cache/
+
+media/

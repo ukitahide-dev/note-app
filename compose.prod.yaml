@@ -1,0 +1,63 @@
+# 本番環境でノートアプリを動かすためのDocker Compose設定ファイル。Dockerを使って、ReactとDjangoを一緒に動かすための指示書。
+# docker-compose.yml（Composeファイル）は、複数のコンテナをどのように作成・起動するのかをまとめて設定するファイル。
+
+
+services:  # services は、Dockerで動かすプログラム（サービス）を定義する場所。
+  backend:   # Djangoを動かすコンテナの設定。Docker ComposeでDjangoを動かすサービスの名前。名前は自分で決められる。
+
+    # build は「この場所にあるDockerfileを使ってイメージを作って」という指定。
+    build:   # build は、Dockerイメージを作るための設定。ここで、backend用のDockerイメージを作るようにDocker Composeに指示している。
+      context: ./backend     # context: Dockerイメージを作るときに、どのフォルダを材料として使うかを指定するもの。プロジェクトのルートフォルダにある backend フォルダを材料にするという意味。
+      dockerfile: Dockerfile.prod    # dockerfile: Dockerイメージを作るときに、どのDockerfileを使うかを指定するもの。
+
+    env_file:     # env_file: 環境変数を書いたファイルを、コンテナに読み込ませる設定。
+      - .env      # .env ファイルに書かれた環境変数をbackendコンテナに渡す設定。note_app/.envファイルのこと。
+
+    environment:  # environment: コンテナに渡す環境変数を、Composeファイルに直接書く設定。
+      DJANGO_SETTINGS_MODULE: config.settings_prod     # Djangoは本番環境用の settings_prod.py を設定ファイルとして使う。
+
+    command:  # command: Dockerコンテナを起動したときに、コンテナ内で実行するコマンドを指定する設定。ComposeのcommandがDockerfileのCMDを上書きする。Dockerコンテナが起動したときに、collectstatic を実行し、成功したら、Gunicornを起動する。
+      - sh   # Linuxでコマンドを実行するためのシェル
+      - -c   # その後ろに書かれた文字列をコマンドとして実行してねという指定
+
+      # collectstaticコマンドで静的ファイルを集める。それに成功したら、Gunicornを起動し、Djangoアプリケーションが8000番ポートで待ち受ける
+      - python manage.py collectstatic --noinput && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3    # gunicorn config.wsgi:application: Gunicornに対して、「config/wsgi.py にある application という名前のオブジェクトを使って、Djangoアプリケーションを動かして」と指定している。config.wsgi:application: config.wsgi.py 内の application という変数。この変数から、DjangoのWSGIアプリケーションを取得して、Djangoにリクエストを渡す。
+
+    # Volume: バインドマウントと名前付きボリュームがある。
+    volumes:  # コンテナ間でファイルを共有・保存する設定。コンテナの外にあるデータや、コンテナ同士で共有したいデータを扱う設定。
+
+      # バインドマウント
+      - ./backend/db.sqlite3:/app/db.sqlite3    # これは、バインドマウント。パソコン側にある backend/db.sqlite3 を、バックエンドコンテナ内の /app/db.sqlite3 として使う設定。Djangoがコンテナ内でデータベースを更新すると、パソコン側のデータベースファイルにも反映される。
+      - ./backend/media:/app/media     # Windows側の ./backend/media と、バックエンドコンテナ内の /app/media をつないでいる。
+
+      # 名前付きボリューム
+      - staticfiles:/app/staticfiles    # これは名前付きボリューム。staticfiles: 自分で付けた名前付きボリュームの名前。Dockerが管理する保存領域。/app/staticfiles: コンテナ内にあるフォルダの場所。ここに名前付きボリュームを接続する。
+
+    # expose	コンテナ間の通信で使用するポートを示す。backendコンテナの8000番ポートを公開する設定。同じDockerネットワーク内の別のコンテナからアクセスできるようにするという意味。今回の構成では、Nginxコンテナから通信を受け付けるために書いている。backendコンテナの設定にportsを書いていないのは、今回の構成では、ブラウザから直接アクセスを受け付けるのがNginxだから。portsは外部からのアクセスを受け付けるために書く。backendコンテナはNginxコンテナという別コンテナからアクセスを受けるから、portsを書かなくていい。
+    expose:
+      - "8000"
+
+    # コンテナが停止したときに、自動的に再起動するかどうかを決める設定。
+    restart: unless-stopped     # unless-stopped: 手動で、docker docker compose stop backendコマンドなどを実行しない限り、自動で再起動をする。
+
+
+  frontend:  # Nginxを動かすコンテナの設定
+    build:
+      context: ./frontend    # Windows側のfrontendフォルダをビルド対象にする。
+      dockerfile: Dockerfile.prod   # そのフォルダにあるDockerfile.prodを使ってイメージを作る。
+
+    # ports は、ホストPC(自分のパソコン)とコンテナの間で通信できるようにポートをつなぐ設定。ブラウザから自分のパソコンで80にアクセスすると、コンテナの80にアクセスされるという意味。
+    ports:
+      - "80:80"  # 左側の80：パソコン側のポート。右側の80：コンテナ側のポート。つまり、パソコンの80番ポートに届いた通信を、Nginxコンテナの80番ポートに届ける。
+    volumes:
+      - staticfiles:/usr/share/nginx/html/static:ro     # /usr/share/nginx/html/static は、Nginxが静的ファイルを配信するときに使う場所。
+      - ./backend/media:/usr/share/nginx/html/media:ro  # ./backend/media	Windows側の画像保存フォルダ。/usr/share/nginx/html/media: Nginxコンテナ内での参照先。
+
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+
+# 名前付きボリュームの定義
+volumes:
+  staticfiles:

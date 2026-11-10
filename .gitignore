@@ -1,12 +1,27 @@
+#  note_app/ 直下にある .gitignore なので、
+# 基本的には note_app/ を基準にして、Gitの管理対象から除外するファイルやフォルダを指定している
 
+# note_app 以下にある venv フォルダ
 venv/
+
+# note_app 以下にある node_modules フォルダ
 node_modules/
+
+# note_app 以下にある __pycache__ フォルダ
 __pycache__/
+
+# note_app 以下にある db.sqlite3 ファイル
 db.sqlite3
+
+# note_app 以下にある .env ファイル
 .env
 
 
 
-# 追記
+# ------ 追記 ------
+
+# note_app 以下にある memos フォルダ
 memos/
+
+# note_app/backend/media/
 backend/media/

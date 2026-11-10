@@ -7,8 +7,8 @@ import type { NoteImage } from "../../types/api/note";
 
 // ② テスト用の画像データ
 const images: NoteImage[] = [
-    { id: 101, note: 1, image: "/image1.jpg" },
-    { id: 202, note: 1, image: "/image2.jpg" },
+    { id: 101, note: 1, image: "/image1.jpg", order: 0 },
+    { id: 202, note: 1, image: "/image2.jpg", order: 1 },
 ];
 
 

@@ -20,7 +20,7 @@ export function useSelectedNotes() {
     // Store
     const { selectedNoteIds } = useNoteSelectionStore();
 
-    
+
     // 各一覧のノートをまとめる
     const allNotes = [
         ...notes,

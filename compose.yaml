@@ -1,0 +1,25 @@
+# 複数の Docker コンテナを、まとめて設定・起動するためのファイル
+
+
+
+services:   # 起動するサービスの設定を書く場所。
+  backend:   # Django のサービスに付けた名前。
+    build: ./backend   # backend フォルダの Dockerfile を使って Image を作るよう指定する。
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"    # パソコンのポート 8000 と、コンテナのポート 8000 をつなぐ。
+    volumes:   # volumes: パソコンにあるファイルやフォルダを、Docker の中から使えるようにつなぐ設定。
+      - ./backend/db.sqlite3:/app/db.sqlite3
+      - ./backend/media:/app/media
+      - ./backend:/app    #  ./backend： Windows側の backend フォルダ。 /app：コンテナ側のディレクトリ。Windows側の backend フォルダを、コンテナ内の /app に直接つなぐ設定。つまり、Windows側のDjangoのコードを、コンテナ内の /app から使えるようにする。
+
+  frontend:
+    build: ./frontend    # frontend フォルダの Dockerfile を使って環境を作る。
+    ports:
+      - "5173:5173"    # パソコンの 5173 番ポートから、コンテナの 5173 番ポートへ接続できるようにする。
+    volumes:
+      - ./frontend:/app   # Windows側のフロントエンドのコードをDocker内と共有する。
+      - /app/node_modules   # Docker内のNode.js用パッケージを維持する。Windows側のパッケージで上書きされるのを防ぐ。
+    depends_on:
+      - backend   # 起動時に backend を先に起動するよう指定する。

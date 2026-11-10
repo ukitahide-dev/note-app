@@ -1,3 +1,8 @@
+# note_app/frontend/ の中にある .gitignore なので、基本的に frontend/ 以下のファイルやフォルダが対象。
+# .gitignore のパターンは、基本的にその .gitignore が置かれているフォルダを基準に解釈されるから
+
+
+
 # Logs
 logs
 *.log

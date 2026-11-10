@@ -20,7 +20,7 @@ import ConfirmModal from "../../../shared/ui/ConfirmModal/ConfirmModal";
 import { useNoteStore } from "../store/useNoteStore";
 import NoteListSkeleton from "../components/NoteListSkeleton/NoteListSkeleton";
 import Pagination from "../components/Pagination/Pagination";
-import SortSelect from "../components/SortSelect/SortSelect";
+// import SortSelect from "../components/SortSelect/SortSelect";
 import { Snackbar } from "../../../shared/ui/Snackbar/Snackbar";
 
 
@@ -43,7 +43,7 @@ export default function TrashNotesPage() {
         pageSize,
         ordering,
         setPageSize,
-        setOrdering,
+        // setOrdering,
     } = useNoteStore();
 
 
@@ -73,7 +73,7 @@ export default function TrashNotesPage() {
                 }}
             />
 
-            <SortSelect
+            {/* <SortSelect
                 onPageOrderChange={async (ordering) => {
 
                     setOrdering(ordering);
@@ -82,7 +82,7 @@ export default function TrashNotesPage() {
 
                 }}
 
-            />
+            /> */}
 
             <div className={styles.container}>
 

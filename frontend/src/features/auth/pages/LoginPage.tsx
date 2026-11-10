@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useNavigate } from 'react-router-dom'
 
-import { loginApi, refreshAccessToken } from "../api/authApi";
+import { loginApi } from "../api/authApi";
 
 
 import styles from "./LoginPage.module.css";

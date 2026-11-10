@@ -6,7 +6,7 @@ import { useNoteStore } from "../../store/useNoteStore"
 
 
 // ---- css ----
-import styles from "./UndoSnackbar.module.css";
+// import styles from "./UndoSnackbar.module.css";
 
 
 

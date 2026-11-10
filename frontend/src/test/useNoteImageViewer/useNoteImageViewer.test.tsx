@@ -16,8 +16,8 @@ const note: Note = {
     is_pinned: false,
     labels: [],
     images: [
-        { id: 101, note: 1, image: "/image1.jpg" },
-        { id: 202, note: 1, image: "/image2.jpg" },
+        { id: 101, note: 1, image: "/image1.jpg", order: 0 },
+        { id: 202, note: 1, image: "/image2.jpg", order: 1 },
     ],
     view_count: 0,
     total_view_seconds: 0,
@@ -211,7 +211,7 @@ describe("useNoteImageViewer", () => {
 
 
     it("画像ビューアを閉じると、選択中のインデックスがnullになる", () => {
-        
+
         const { result } = renderHook(() => useNoteImageViewer(note));
 
         // 1枚目の画像を選択する
