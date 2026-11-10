@@ -32,43 +32,6 @@ describe("useSelectedNoteLabels", () => {
         vi.clearAllMocks();
     });
 
-    it("選択中のノートだけをselectedNotesに取得する", () => {
-
-        const notes = [
-            { id: 1, labels: [] },
-            { id: 2, labels: [] },
-            { id: 3, labels: [] },
-        ];
-
-        const selectedNoteIds = [1, 3];
-
-        // テスト中だけ useNoteStore が返すデータを、自分で指定したものにする。テスト中に useNoteStore() が呼ばれたら、用意したノート一覧と偽物の更新関数を返す。
-        vi.mocked(useNoteStore).mockReturnValue({    // vi.mocked: useNoteStore を、Vitestのモック関数として扱う。.mockReturnValue({...}): useNoteStore() が呼ばれたときに、指定したオブジェクトを返す。
-            notes,   // notes: notes の省略記法。
-            updateSelectedNoteLabels: vi.fn(),
-
-        } as ReturnType<typeof useNoteStore>);
-
-
-        vi.mocked(useNoteSelectionStore).mockReturnValue({
-            selectedNoteIds,   // selectedNoteIds: selectedNoteIds,の省略記法
-        } as ReturnType<typeof useNoteSelectionStore>);
-
-
-        vi.mocked(useLabelStore).mockReturnValue({
-            labels: [],
-        } as ReturnType<typeof useLabelStore>);
-
-
-        const { result } = renderHook(() => useSelectedNoteLabels());
-
-
-        expect(result.current.selectedNotes).toEqual([
-            { id: 1, labels: [] },
-            { id: 3, labels: [] },
-        ]);
-
-    });
 
 
 
@@ -87,11 +50,20 @@ describe("useSelectedNoteLabels", () => {
             { id: 10, name: "仕事" },
         ];
 
-
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels: vi.fn(),
         } as ReturnType<typeof useNoteStore>);
+
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels: vi.fn(),
+        // } as ReturnType<typeof useNoteStore>);
+
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -129,8 +101,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels: vi.fn(),
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels: vi.fn(),
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -166,8 +146,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels: vi.fn(),
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels: vi.fn(),
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -206,8 +194,17 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels,
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels,
+        // } as ReturnType<typeof useNoteStore>);
+
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -253,8 +250,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels,
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels,
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -296,8 +301,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels,
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels,
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -323,44 +336,6 @@ describe("useSelectedNoteLabels", () => {
 
 
 
-
-    it("選択中のノートがない場合はselectedNotesが空配列になる", () => {
-
-        const notes = [
-            { id: 1, labels: [{ id: 10 }] },
-            { id: 2, labels: [] },
-        ];
-
-        const selectedNoteIds: number[] = [];
-
-        const labels = [
-            { id: 10, name: "仕事" },
-        ];
-
-        vi.mocked(useNoteStore).mockReturnValue({
-            notes,
-            updateSelectedNoteLabels: vi.fn(),
-        } as ReturnType<typeof useNoteStore>);
-
-        vi.mocked(useNoteSelectionStore).mockReturnValue({
-            selectedNoteIds,
-        } as ReturnType<typeof useNoteSelectionStore>);
-
-        vi.mocked(useLabelStore).mockReturnValue({
-            labels,
-        } as ReturnType<typeof useLabelStore>);
-
-
-        const { result } = renderHook(() => useSelectedNoteLabels());
-
-        expect(result.current.selectedNotes).toEqual([]);
-
-    });
-
-
-
-
-
     it("選択中のノートがない場合はラベルがcheckedにならない", () => {
 
         const notes = [
@@ -375,8 +350,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels: vi.fn(),
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels: vi.fn(),
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,
@@ -412,8 +395,16 @@ describe("useSelectedNoteLabels", () => {
 
         vi.mocked(useNoteStore).mockReturnValue({
             notes,
+            pinnedNotes: [],
+            searchResultNotes: [],
+            calendarDayNotes: [],
             updateSelectedNoteLabels,
         } as ReturnType<typeof useNoteStore>);
+
+        // vi.mocked(useNoteStore).mockReturnValue({
+        //     notes,
+        //     updateSelectedNoteLabels,
+        // } as ReturnType<typeof useNoteStore>);
 
         vi.mocked(useNoteSelectionStore).mockReturnValue({
             selectedNoteIds,

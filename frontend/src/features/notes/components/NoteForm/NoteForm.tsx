@@ -27,6 +27,7 @@ type FieldErrors = {
 export default function NoteForm({
     labelName, // LabelNotesPageから呼ばれると渡される。今開いているLabelページと同じラベルを、フォームにセットするため。
 }: Props) {
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [isExpanded, setIsExpanded] = useState(false);
@@ -45,6 +46,7 @@ export default function NoteForm({
         selectedLabelNames,
         labelStates,
         handleSelectLabel,
+
     } = useNoteFormLabels(labelName);
 
     const [tempColor, setTempColor] = useState("#ffffff");
@@ -259,7 +261,7 @@ export default function NoteForm({
 
                         {activePanel === "label" && (
                             <LabelPanel
-                                selectedLabels={selectedLabels}
+                                // selectedLabels={selectedLabels}
                                 labelStates={labelStates}
                                 onSelectLabel={handleSelectLabel}
                             />

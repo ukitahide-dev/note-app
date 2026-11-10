@@ -7,6 +7,9 @@ jobs:
   frontend-test:
     runs-on: ubuntu-latest
 
+    env:
+      TZ: Asia/Tokyo
+
     defaults:
       run:
         working-directory: frontend    # 作業場所をfrontendにする
