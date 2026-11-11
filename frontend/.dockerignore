@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.git/
+.env
+.env.*
+
+# 除外した .env.* のうち、.env.production だけは除外しないという意味。これでDockerのビルド時にViteが /api を読み込める。
+!.env.production

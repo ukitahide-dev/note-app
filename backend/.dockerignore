@@ -6,6 +6,7 @@
 
 
 # Python の仮想環境はコンテナにコピーしない
+Venv/
 venv/
 
 # Python が自動生成するキャッシュ
@@ -21,9 +22,16 @@ __pycache__/
 
 # ローカルの SQLite データベース
 db.sqlite3
+db_backup.sqlite3
+db_restore_test.sqlite3
+
 
 # テストや開発ツールのキャッシュ
 .pytest_cache/
 .mypy_cache/
 
+
 media/
+staticfiles/
+
+
