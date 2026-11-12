@@ -25,3 +25,10 @@ memos/
 
 # note_app/backend/media/
 backend/media/
+
+
+backend/db_backup.sqlite3
+backend/db_restore_test.sqlite3
+backend/media_backup/
+migration_test/backend/media/
+pull_test/media/
