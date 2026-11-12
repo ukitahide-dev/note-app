@@ -1,0 +1,41 @@
+
+
+services:
+  backend:
+    image: ukitahide/note-app-backend:latest
+
+    env_file:
+      - .env
+
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings_prod
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+
+    command:
+      - sh
+      - -c
+      - python manage.py migrate --noinput && python manage.py collectstatic --noinput && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3
+
+    volumes:
+      - ./pull_test/db.sqlite3:/app/db.sqlite3
+      - ./pull_test/media:/app/media
+      - pull_test_staticfiles:/app/staticfiles
+
+    expose:
+      - "8000"
+
+  frontend:
+    image: ukitahide/note-app-frontend:latest
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - pull_test_staticfiles:/usr/share/nginx/html/static:ro
+      - ./pull_test/media:/usr/share/nginx/html/media:ro
+
+    depends_on:
+      - backend
+
+volumes:
+  pull_test_staticfiles:
